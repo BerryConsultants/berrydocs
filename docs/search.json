@@ -6,6 +6,7 @@
     "section": "",
     "text": "1 Introduction\nFACTS 7.0.0 is now available for download via App Center. This release marks the addition of two new FACTS design types: Platform Trial Design – Continuous and Platform Trial Design – Dichotomous.\nPlease contact us regarding any questions.\n\n\n2 FACTS Platform Trial Features\nWithin these new Platform Trial design types, FACTS users can now:\n\nSimulate a platform trial, for a continuous/dichotomous endpoint, with various trial level participant and arm constraints. In particular, users can specify a maximum enrollment time, number of participants, successful treatments, participants per arm and concurrent treatments.\nSimulate a platform trial with treatments arriving at different times during the trial.\nSpecify simulated mean arm responses/effects to be a fixed value or sampled from a distribution.\nSimulate participant accrual, responses, and dropout rates as per FACTS Core.\nSpecify a constant proportion of participants allocated to the control arm, or an allocation dependent on the number of treatments currently in the trial, with the option of performing response adaptive randomization.\nAnalyze participant data and estimate mean treatment responses using a Bayesian independent arm model, or frequentist p-values, comparing treatment arms to a common control arm.\nSpecify “Trial Update” information and frequency, at which analyses are performed and allocation ratios may get updated.\nSpecify when to evaluate “Treatment Milestones”, at which decisions are made about treatment outcomes.\nSpecify success/futility criteria that apply to all treatments, or to specific treatments.\nClassify treatments as Good, Mediocre or Unacceptable to get summary statistics such as the proportion of ‘Good’ treatments that are successful/inconclusive/unsuccessful and similarly for the other classifications.\nView granular simulation and summary results of various Platform Trial operating characteristics.\nGenerate a Platform Trial design report outlining the characteristics of the simulated design in a Word document.\n\n\n\n3 FACTS Core and Staged Improvements\n\nIn FACTS Core and Staged designs (except Time-to-Event designs), users can now simulate single arm trials, with options for both Bayesian and Frequentist p-values to be calculated comparing the data on the experimental arm to an objective reference response/response rate specified on the QOI tab.\nFACTS Core and Staged designs (except Time-to-Event designs) will now correctly handle frequentist calculations when a control arm is not present and comparison is performed against an objective reference response/response rate.\np-value calculations have been updated to better accommodate their use at interims, with dropouts and incomplete subjects now handled differently. No incomplete subjects have a final endpoint imputed, but subjects that are known dropouts and have had the opportunity to complete are imputed/ignored according to the “Handle missingness” option for the p-value.\nLOCF behavior has been made consistent. LOCF will impute a participant’s baseline value as their final outcome if a baseline value is observed and no non-baseline visit data is observed.\nFACTS Staged designs will now correctly handle the mirroring of Stage 1 data in Stage 2 for the Dose Response and Longitudinal models.\n\n\n\n4 FACTS Enrichment Design Improvements\n\nIn FACTS Enrichment Time-to-Event designs, FACTS will now correctly apply the user specified alpha levels per group when calculating frequentist output summaries.\nIn FACTS Enrichment Time-to-Event designs, FACTS will now correctly calculate frequentist output when the underlying design has only specified one group.\nIn FACTS Enrichment designs, FACTS will now enforce group caps to be strictly greater than zero.\n\n\n\n5 FACTS Dose Escalation Improvements\n\nOn the Analysis tab, FACTS will now enforce the specification of the cohort number when uploading a subject data file to run an analysis.\nIn 2D-CRM, FACTS will now correctly handle a rare situation in the row-by-row run-in scheme.\nIn 2D-CRM, the engines when run in a Linux environment will have a correctly formatted simulation results output header.\n\n\n\n6 General Improvements\n\nBREAKING CHANGE: FACTS will now consistently handle the “Date” column in a patients file to be in weeks rather than days, making it consistent with the rest of FACTS. “Patients” files generated from FACTS simulations will report the “Date” column as “DateInWeeks” to avoid any ambiguity.\nBREAKING CHANGE: The “Date” column in Deterministic Accrual external data files will need to be manually updated to specify the date in weeks rather than days.\nBREAKING CHANGE: The “Date” column in subject data file provided when running a FACTS Analysis will need to be updated to specify the date in weeks rather than days. If performing FACTS Analysis via the GUI, the FACTS Analysis tab provides a “Convert Date from Days to Weeks” utility that does the conversion.\nThe precision of results output in FACTS will now consistently be up to 6 decimal places for all design types, except for Time-to-Event designs which will display output up to 8 decimal places.\nFACTS will now correctly handle interactions with the latest version of RStudio to date (2023.03.0). This includes the generation of design reports and the importing of FACTS results output to RStudio via the “Open in R” button on the Simulation tab. Note that FACTS will continue to support older version of RStudio.",
     "crumbs": [
+      "Release Notes",
       "FACTS 7 Release Notes",
       "FACTS 7.0.0 Release Notes"
     ]
@@ -72,6 +73,7 @@
     "section": "",
     "text": "Landing Page for Getting Started.",
     "crumbs": [
+      "Getting Started",
       "First Steps"
     ]
   },
@@ -140,6 +142,7 @@
     "section": "",
     "text": "Explain different sections",
     "crumbs": [
+      "Encyclopedia",
       "About"
     ]
   },
@@ -150,6 +153,7 @@
     "section": "",
     "text": "Several Examples per Topic (topics related to FACTS engines or different ordering?)",
     "crumbs": [
+      "Examples",
       "About"
     ]
   },
@@ -382,5 +386,197 @@
     "title": "Pricing",
     "section": "",
     "text": "Industry\nWe offer a 3-months free FACTS Evaluation License to showcase the power and features of our FACTS simulation tool. Please contact us to learn more about this offer or our regular licenses.\n\n\nAcademia / Research Institutions / Charities\nTo academic and other non-profit research institutions, we will generally offer a free FACTS license under certain conditions. Please contact us to see if your organization qualifies."
+  },
+  {
+    "objectID": "userguides/facts650/crm.html",
+    "href": "userguides/facts650/crm.html",
+    "title": "FACTS Dose Escalation CRM",
+    "section": "",
+    "text": "This document describes how use the FACTS Dose Escalation (DE) N-CRM design engine. It is intended for all end users of the system.\n\n\n\nThis document covers the FACTS Dose Escalation N-CRM design engine user interface.\nThis document does not address the internal workings of the design engines or algorithms, which are addressed in the associated Design Engine Specification. It also does not address the use of FACTS Core Designs or Enrichment Designs, which are covered in other User Guides.\nThe screenshots provided are specific to a particular installation and may not reflect the exact layout of the information seen by any particular user. They were taken from FACTS 6.3 and later installed on Windows 10. Different versions of Windows or the use of different Windows themes will introduce some differences in appearance. The contents of each tab, however, will be consistent with the software.\n\n\n\nThis document has been updated for the version 7.1 release of Dose Escalation FACTS.\n\n\n\nIf writing in LaTex and using Bibtex, if you wish to cite FACTS (thank you!), can we suggest the following:\n@techreport{FACTS71,\n  author = {{FACTS Development Team}},\n  title = {{FACTS}: Fixed and Adaptive Clinical Trial Simulator},\n  year  = {2024},\n  month = {11},\n  number = {Version 7.1},\n  type         = {Computer Software},\n  institution = {Berry Consultants LLC},\n  address = {Austin, TX},\n  note   = {https://www.berryconsultants.com/software/facts/}\n}\nThis will result in a reference that, for example in the APA style, will look like the following:\nFACTS Development Team (2024). FACTS: Fixed and adaptive clinical trial simulator. Computer Software Version 7.1, Berry Consultants LLC, Austin, TX. https://www.berryconsultants.com/software/facts/.\n\n\n\nTable 1 gives an overview of the acronyms and abbreviations used in this document.\n\n\n\nTable 1: List of terms used in the CRM user guide\n\n\n\n\n\n\n\n\n\nName\nDefinition\n\n\n\n\nCap\nA limit on the number of subjects recruited. In FACTS N-CRM users can specify a cap on the overall number of subjects to be recruited in the trial (the ‘Overall Cap’) and specify stopping rules to define when the trial should stop before it reaches cap.\n\n\nControl\nIs the treatment arm with which the novel treatment(s) are principally being compared. Control may be placebo, or some existing standard of care, or therapy, against which the novel treatment has to be benchmarked in order to determine its likely usefulness.\n\n\nCore\nFACTS Core: A mode of FACTS for designing trials where multiple treatments, (possibly different doses of a novel treatment) are tested against a control and optionally an active comparator.\n\n\nCRM\nContinual Reassessment Method – a dose escalation design where the dose-toxicity is estimated using a simple Bayesian model, and the resulting estimates used to control the dose escalation and estimate the Maximum Tolerated Dose (MTD).\n\n\nDE\nDose Escalation: a mode of FACTS where subjects are treated in cohorts and dose escalation is determined by the number of toxicities observed.\n\n\nED\nEnrichment Designs: a mode of FACTS for designing trials where the same treatment is testing in different settings for example different sub-populations or different but related indications.\n\n\nFACTS\nFixed and Adaptive Clinical Trial Simulator.\n\n\nFinal Endpoint\nThe final value, or state, of a subject’s endpoint.\n\n\nGUI\nGraphical User Interface, the part of the FACTS application that the user interacts with.\n\n\nMethod\nIn the FACTS documentation we try to reserve the term ‘method’ for the algorithms used in the simulation (as opposed to the analysis) part of the program. In the analysis part we use the term ‘Model’, see below.\n\n\nModel\nIn the FACTS documentation we try to reserve the term ‘model’ for the statistical models used in the analysis of the trial data (in the ‘design’ section of the FACTS user interface). Where mathematical algorithms are used for other purposes in FACTS (for instance in the generation of the simulated data) we try to use the term ‘method’. We have found that initially it is very easy for users to be confused between these two parts of FACTS and we feel that using distinct terminology may help to reduce this.\n\n\nMTD\nThe dose most likely to be the Maximum Tolerated Dose (MTD) – the dose with the highest Pr(MTD).\n\n\nMTD+\nThe dose most likely to be the MTD+ – the dose with the highest Pr(MTD+).\n\n\nPr(MTD)\nA dose’s probability of being MTD is the probability that it is the dose with the highest probability of having a toxicity rate in the acceptable toxicity band, and (if a threshold has been specified) does not have a probability of excess or unacceptable toxicity above the threshold. This estimate of MTD is constrained to select one of the available doses.\n\n\nPr(MTD+)\nA dose’s probability of being the MTD+ is the probability that it is the dose with the highest probability of having a toxicity rate in the acceptable band, and (if a threshold has been specified) does not have a probability of excess or unacceptable toxicity above the threshold. Unlike Pr(MTD), Pr(MTD+) includes estimating whether a dose below or a dose above the range of those being tested is more likely to have a toxicity in the acceptable band than any of the doses in the range.\n\n\nProfile\nA profile is a specification of one aspect of a scenario. A scenario is made up of one profile of each of the required types for the type of trial being simulated. FACTS allows the user to specify multiple profiles of each type and then presents all the possible combinations of profiles as scenarios that can be used to drive simulations.\n\n\nResponse\nThe change in a subject’s endpoint compared to their baseline state.\n\n\nScenario\nA scenario is the complete specification of the unknown external factors that determine the data observed on the trial and its timing. The exact factors depend on the type of trial being simulated but typically include:  -) the distribution of the final change from base line, or probability of response or rate of events in the different treatment groups  -) the properties of subjects’ early responses and the correlation with their final outcome  -) the rate at which subjects are recruited into the trial  -) the rate at which subjects drop out of the trial.\n\n\nSPEC\nThe Design Engine Specification, describes the system algorithms, and meaning of parameters.\n\n\nResponse\nThe change in a subject’s endpoint compared to their baseline state.\n\n\nSubject\nSomeone recruited onto a clinical trial for the purposes of learning about the properties of a treatment. Depending on the type of trial they might be patients or they might be healthy volunteers.\n\n\nTreatment Arm\nSubjects on entering the study are randomized to different ‘treatment arms’. Subjects randomized to the same arm receive the same treatment and the responses of the subjects in the arm analyzed to determine the expected response to that treatment, allowing the expected responses to the different treatments to be compared.\n\n\nUG\nThe User Guide; describes how to use the system.\n\n\n\n\n\n\n\n\n\n[N-CRM] = (Neuenschwander, Branson, and Gsponer 2008)\n[Backfill] = (Dehbi, O’Quigley, and Iasonos 2021)\n[Open Enrollment] = (Broglio et al. 2015)\n[CRM 2 Sample] = (O’Quigley, Shen, and Gamst 1999)\n[bCRM] = (Braun 2002)\n[CRM Ordinal] = (deMoor et al. 1996)\n\n\n\nContact us\nSee the following example\nSee Figure 1 for a trial run.\n\n\n\n\n\n\nFigure 1: Overview of Test",
+    "crumbs": [
+      "User Guides",
+      "FACTS 6.5.0",
+      "FACTS Dose Escalation CRM"
+    ]
+  },
+  {
+    "objectID": "userguides/facts650/crm.html#sec-purpose",
+    "href": "userguides/facts650/crm.html#sec-purpose",
+    "title": "FACTS Dose Escalation CRM",
+    "section": "",
+    "text": "This document describes how use the FACTS Dose Escalation (DE) N-CRM design engine. It is intended for all end users of the system.",
+    "crumbs": [
+      "User Guides",
+      "FACTS 6.5.0",
+      "FACTS Dose Escalation CRM"
+    ]
+  },
+  {
+    "objectID": "userguides/facts650/crm.html#sec-scope",
+    "href": "userguides/facts650/crm.html#sec-scope",
+    "title": "FACTS Dose Escalation CRM",
+    "section": "",
+    "text": "This document covers the FACTS Dose Escalation N-CRM design engine user interface.\nThis document does not address the internal workings of the design engines or algorithms, which are addressed in the associated Design Engine Specification. It also does not address the use of FACTS Core Designs or Enrichment Designs, which are covered in other User Guides.\nThe screenshots provided are specific to a particular installation and may not reflect the exact layout of the information seen by any particular user. They were taken from FACTS 6.3 and later installed on Windows 10. Different versions of Windows or the use of different Windows themes will introduce some differences in appearance. The contents of each tab, however, will be consistent with the software.",
+    "crumbs": [
+      "User Guides",
+      "FACTS 6.5.0",
+      "FACTS Dose Escalation CRM"
+    ]
+  },
+  {
+    "objectID": "userguides/facts650/crm.html#sec-context",
+    "href": "userguides/facts650/crm.html#sec-context",
+    "title": "FACTS Dose Escalation CRM",
+    "section": "",
+    "text": "This document has been updated for the version 7.1 release of Dose Escalation FACTS.",
+    "crumbs": [
+      "User Guides",
+      "FACTS 6.5.0",
+      "FACTS Dose Escalation CRM"
+    ]
+  },
+  {
+    "objectID": "userguides/facts650/crm.html#sec-citing",
+    "href": "userguides/facts650/crm.html#sec-citing",
+    "title": "FACTS Dose Escalation CRM",
+    "section": "",
+    "text": "If writing in LaTex and using Bibtex, if you wish to cite FACTS (thank you!), can we suggest the following:\n@techreport{FACTS71,\n  author = {{FACTS Development Team}},\n  title = {{FACTS}: Fixed and Adaptive Clinical Trial Simulator},\n  year  = {2024},\n  month = {11},\n  number = {Version 7.1},\n  type         = {Computer Software},\n  institution = {Berry Consultants LLC},\n  address = {Austin, TX},\n  note   = {https://www.berryconsultants.com/software/facts/}\n}\nThis will result in a reference that, for example in the APA style, will look like the following:\nFACTS Development Team (2024). FACTS: Fixed and adaptive clinical trial simulator. Computer Software Version 7.1, Berry Consultants LLC, Austin, TX. https://www.berryconsultants.com/software/facts/.",
+    "crumbs": [
+      "User Guides",
+      "FACTS 6.5.0",
+      "FACTS Dose Escalation CRM"
+    ]
+  },
+  {
+    "objectID": "userguides/facts650/crm.html#sec-definitions",
+    "href": "userguides/facts650/crm.html#sec-definitions",
+    "title": "FACTS Dose Escalation CRM",
+    "section": "",
+    "text": "Table 1 gives an overview of the acronyms and abbreviations used in this document.\n\n\n\nTable 1: List of terms used in the CRM user guide\n\n\n\n\n\n\n\n\n\nName\nDefinition\n\n\n\n\nCap\nA limit on the number of subjects recruited. In FACTS N-CRM users can specify a cap on the overall number of subjects to be recruited in the trial (the ‘Overall Cap’) and specify stopping rules to define when the trial should stop before it reaches cap.\n\n\nControl\nIs the treatment arm with which the novel treatment(s) are principally being compared. Control may be placebo, or some existing standard of care, or therapy, against which the novel treatment has to be benchmarked in order to determine its likely usefulness.\n\n\nCore\nFACTS Core: A mode of FACTS for designing trials where multiple treatments, (possibly different doses of a novel treatment) are tested against a control and optionally an active comparator.\n\n\nCRM\nContinual Reassessment Method – a dose escalation design where the dose-toxicity is estimated using a simple Bayesian model, and the resulting estimates used to control the dose escalation and estimate the Maximum Tolerated Dose (MTD).\n\n\nDE\nDose Escalation: a mode of FACTS where subjects are treated in cohorts and dose escalation is determined by the number of toxicities observed.\n\n\nED\nEnrichment Designs: a mode of FACTS for designing trials where the same treatment is testing in different settings for example different sub-populations or different but related indications.\n\n\nFACTS\nFixed and Adaptive Clinical Trial Simulator.\n\n\nFinal Endpoint\nThe final value, or state, of a subject’s endpoint.\n\n\nGUI\nGraphical User Interface, the part of the FACTS application that the user interacts with.\n\n\nMethod\nIn the FACTS documentation we try to reserve the term ‘method’ for the algorithms used in the simulation (as opposed to the analysis) part of the program. In the analysis part we use the term ‘Model’, see below.\n\n\nModel\nIn the FACTS documentation we try to reserve the term ‘model’ for the statistical models used in the analysis of the trial data (in the ‘design’ section of the FACTS user interface). Where mathematical algorithms are used for other purposes in FACTS (for instance in the generation of the simulated data) we try to use the term ‘method’. We have found that initially it is very easy for users to be confused between these two parts of FACTS and we feel that using distinct terminology may help to reduce this.\n\n\nMTD\nThe dose most likely to be the Maximum Tolerated Dose (MTD) – the dose with the highest Pr(MTD).\n\n\nMTD+\nThe dose most likely to be the MTD+ – the dose with the highest Pr(MTD+).\n\n\nPr(MTD)\nA dose’s probability of being MTD is the probability that it is the dose with the highest probability of having a toxicity rate in the acceptable toxicity band, and (if a threshold has been specified) does not have a probability of excess or unacceptable toxicity above the threshold. This estimate of MTD is constrained to select one of the available doses.\n\n\nPr(MTD+)\nA dose’s probability of being the MTD+ is the probability that it is the dose with the highest probability of having a toxicity rate in the acceptable band, and (if a threshold has been specified) does not have a probability of excess or unacceptable toxicity above the threshold. Unlike Pr(MTD), Pr(MTD+) includes estimating whether a dose below or a dose above the range of those being tested is more likely to have a toxicity in the acceptable band than any of the doses in the range.\n\n\nProfile\nA profile is a specification of one aspect of a scenario. A scenario is made up of one profile of each of the required types for the type of trial being simulated. FACTS allows the user to specify multiple profiles of each type and then presents all the possible combinations of profiles as scenarios that can be used to drive simulations.\n\n\nResponse\nThe change in a subject’s endpoint compared to their baseline state.\n\n\nScenario\nA scenario is the complete specification of the unknown external factors that determine the data observed on the trial and its timing. The exact factors depend on the type of trial being simulated but typically include:  -) the distribution of the final change from base line, or probability of response or rate of events in the different treatment groups  -) the properties of subjects’ early responses and the correlation with their final outcome  -) the rate at which subjects are recruited into the trial  -) the rate at which subjects drop out of the trial.\n\n\nSPEC\nThe Design Engine Specification, describes the system algorithms, and meaning of parameters.\n\n\nResponse\nThe change in a subject’s endpoint compared to their baseline state.\n\n\nSubject\nSomeone recruited onto a clinical trial for the purposes of learning about the properties of a treatment. Depending on the type of trial they might be patients or they might be healthy volunteers.\n\n\nTreatment Arm\nSubjects on entering the study are randomized to different ‘treatment arms’. Subjects randomized to the same arm receive the same treatment and the responses of the subjects in the arm analyzed to determine the expected response to that treatment, allowing the expected responses to the different treatments to be compared.\n\n\nUG\nThe User Guide; describes how to use the system.",
+    "crumbs": [
+      "User Guides",
+      "FACTS 6.5.0",
+      "FACTS Dose Escalation CRM"
+    ]
+  },
+  {
+    "objectID": "userguides/facts650/crm.html#references",
+    "href": "userguides/facts650/crm.html#references",
+    "title": "FACTS Dose Escalation CRM",
+    "section": "",
+    "text": "[N-CRM] = (Neuenschwander, Branson, and Gsponer 2008)\n[Backfill] = (Dehbi, O’Quigley, and Iasonos 2021)\n[Open Enrollment] = (Broglio et al. 2015)\n[CRM 2 Sample] = (O’Quigley, Shen, and Gamst 1999)\n[bCRM] = (Braun 2002)\n[CRM Ordinal] = (deMoor et al. 1996)",
+    "crumbs": [
+      "User Guides",
+      "FACTS 6.5.0",
+      "FACTS Dose Escalation CRM"
+    ]
+  },
+  {
+    "objectID": "userguides/facts650/crm.html#testing-quarto",
+    "href": "userguides/facts650/crm.html#testing-quarto",
+    "title": "FACTS Dose Escalation CRM",
+    "section": "",
+    "text": "Contact us\nSee the following example\nSee Figure 1 for a trial run.\n\n\n\n\n\n\nFigure 1: Overview of Test",
+    "crumbs": [
+      "User Guides",
+      "FACTS 6.5.0",
+      "FACTS Dose Escalation CRM"
+    ]
+  },
+  {
+    "objectID": "userguides/facts700/crm.html",
+    "href": "userguides/facts700/crm.html",
+    "title": "FACTS Dose Escalation CRM",
+    "section": "",
+    "text": "This document describes how use the FACTS Dose Escalation (DE) N-CRM design engine. It is intended for all end users of the system.\n\n\n\nThis document covers the FACTS Dose Escalation N-CRM design engine user interface.\nThis document does not address the internal workings of the design engines or algorithms, which are addressed in the associated Design Engine Specification. It also does not address the use of FACTS Core Designs or Enrichment Designs, which are covered in other User Guides.\nThe screenshots provided are specific to a particular installation and may not reflect the exact layout of the information seen by any particular user. They were taken from FACTS 6.3 and later installed on Windows 10. Different versions of Windows or the use of different Windows themes will introduce some differences in appearance. The contents of each tab, however, will be consistent with the software.\n\n\n\nThis document has been updated for the version 7.1 release of Dose Escalation FACTS.\n\n\n\nIf writing in LaTex and using Bibtex, if you wish to cite FACTS (thank you!), can we suggest the following:\n@techreport{FACTS71,\n  author = {{FACTS Development Team}},\n  title = {{FACTS}: Fixed and Adaptive Clinical Trial Simulator},\n  year  = {2024},\n  month = {11},\n  number = {Version 7.1},\n  type         = {Computer Software},\n  institution = {Berry Consultants LLC},\n  address = {Austin, TX},\n  note   = {https://www.berryconsultants.com/software/facts/}\n}\nThis will result in a reference that, for example in the APA style, will look like the following:\nFACTS Development Team (2024). FACTS: Fixed and adaptive clinical trial simulator. Computer Software Version 7.1, Berry Consultants LLC, Austin, TX. https://www.berryconsultants.com/software/facts/.\n\n\n\nTable 1 gives an overview of the acronyms and abbreviations used in this document.\n\n\n\nTable 1: List of terms used in the CRM user guide\n\n\n\n\n\n\n\n\n\nName\nDefinition\n\n\n\n\nCap\nA limit on the number of subjects recruited. In FACTS N-CRM users can specify a cap on the overall number of subjects to be recruited in the trial (the ‘Overall Cap’) and specify stopping rules to define when the trial should stop before it reaches cap.\n\n\nControl\nIs the treatment arm with which the novel treatment(s) are principally being compared. Control may be placebo, or some existing standard of care, or therapy, against which the novel treatment has to be benchmarked in order to determine its likely usefulness.\n\n\nCore\nFACTS Core: A mode of FACTS for designing trials where multiple treatments, (possibly different doses of a novel treatment) are tested against a control and optionally an active comparator.\n\n\nCRM\nContinual Reassessment Method – a dose escalation design where the dose-toxicity is estimated using a simple Bayesian model, and the resulting estimates used to control the dose escalation and estimate the Maximum Tolerated Dose (MTD).\n\n\nDE\nDose Escalation: a mode of FACTS where subjects are treated in cohorts and dose escalation is determined by the number of toxicities observed.\n\n\nED\nEnrichment Designs: a mode of FACTS for designing trials where the same treatment is testing in different settings for example different sub-populations or different but related indications.\n\n\nFACTS\nFixed and Adaptive Clinical Trial Simulator.\n\n\nFinal Endpoint\nThe final value, or state, of a subject’s endpoint.\n\n\nGUI\nGraphical User Interface, the part of the FACTS application that the user interacts with.\n\n\nMethod\nIn the FACTS documentation we try to reserve the term ‘method’ for the algorithms used in the simulation (as opposed to the analysis) part of the program. In the analysis part we use the term ‘Model’, see below.\n\n\nModel\nIn the FACTS documentation we try to reserve the term ‘model’ for the statistical models used in the analysis of the trial data (in the ‘design’ section of the FACTS user interface). Where mathematical algorithms are used for other purposes in FACTS (for instance in the generation of the simulated data) we try to use the term ‘method’. We have found that initially it is very easy for users to be confused between these two parts of FACTS and we feel that using distinct terminology may help to reduce this.\n\n\nMTD\nThe dose most likely to be the Maximum Tolerated Dose (MTD) – the dose with the highest Pr(MTD).\n\n\nMTD+\nThe dose most likely to be the MTD+ – the dose with the highest Pr(MTD+).\n\n\nPr(MTD)\nA dose’s probability of being MTD is the probability that it is the dose with the highest probability of having a toxicity rate in the acceptable toxicity band, and (if a threshold has been specified) does not have a probability of excess or unacceptable toxicity above the threshold. This estimate of MTD is constrained to select one of the available doses.\n\n\nPr(MTD+)\nA dose’s probability of being the MTD+ is the probability that it is the dose with the highest probability of having a toxicity rate in the acceptable band, and (if a threshold has been specified) does not have a probability of excess or unacceptable toxicity above the threshold. Unlike Pr(MTD), Pr(MTD+) includes estimating whether a dose below or a dose above the range of those being tested is more likely to have a toxicity in the acceptable band than any of the doses in the range.\n\n\nProfile\nA profile is a specification of one aspect of a scenario. A scenario is made up of one profile of each of the required types for the type of trial being simulated. FACTS allows the user to specify multiple profiles of each type and then presents all the possible combinations of profiles as scenarios that can be used to drive simulations.\n\n\nResponse\nThe change in a subject’s endpoint compared to their baseline state.\n\n\nScenario\nA scenario is the complete specification of the unknown external factors that determine the data observed on the trial and its timing. The exact factors depend on the type of trial being simulated but typically include:  -) the distribution of the final change from base line, or probability of response or rate of events in the different treatment groups  -) the properties of subjects’ early responses and the correlation with their final outcome  -) the rate at which subjects are recruited into the trial  -) the rate at which subjects drop out of the trial.\n\n\nSPEC\nThe Design Engine Specification, describes the system algorithms, and meaning of parameters.\n\n\nResponse\nThe change in a subject’s endpoint compared to their baseline state.\n\n\nSubject\nSomeone recruited onto a clinical trial for the purposes of learning about the properties of a treatment. Depending on the type of trial they might be patients or they might be healthy volunteers.\n\n\nTreatment Arm\nSubjects on entering the study are randomized to different ‘treatment arms’. Subjects randomized to the same arm receive the same treatment and the responses of the subjects in the arm analyzed to determine the expected response to that treatment, allowing the expected responses to the different treatments to be compared.\n\n\nUG\nThe User Guide; describes how to use the system.\n\n\n\n\n\n\n\n\n\n[N-CRM] = (Neuenschwander, Branson, and Gsponer 2008)\n[Backfill] = (Dehbi, O’Quigley, and Iasonos 2021)\n[Open Enrollment] = (Broglio et al. 2015)\n[CRM 2 Sample] = (O’Quigley, Shen, and Gamst 1999)\n[bCRM] = (Braun 2002)\n[CRM Ordinal] = (deMoor et al. 1996)\n\n\n\nContact us\nSee the following example\nSee Figure 1 for a trial run.\n\n\n\n\n\n\nFigure 1: Overview of Test",
+    "crumbs": [
+      "User Guides",
+      "FACTS 7.0.0",
+      "FACTS Dose Escalation CRM"
+    ]
+  },
+  {
+    "objectID": "userguides/facts700/crm.html#sec-purpose",
+    "href": "userguides/facts700/crm.html#sec-purpose",
+    "title": "FACTS Dose Escalation CRM",
+    "section": "",
+    "text": "This document describes how use the FACTS Dose Escalation (DE) N-CRM design engine. It is intended for all end users of the system.",
+    "crumbs": [
+      "User Guides",
+      "FACTS 7.0.0",
+      "FACTS Dose Escalation CRM"
+    ]
+  },
+  {
+    "objectID": "userguides/facts700/crm.html#sec-scope",
+    "href": "userguides/facts700/crm.html#sec-scope",
+    "title": "FACTS Dose Escalation CRM",
+    "section": "",
+    "text": "This document covers the FACTS Dose Escalation N-CRM design engine user interface.\nThis document does not address the internal workings of the design engines or algorithms, which are addressed in the associated Design Engine Specification. It also does not address the use of FACTS Core Designs or Enrichment Designs, which are covered in other User Guides.\nThe screenshots provided are specific to a particular installation and may not reflect the exact layout of the information seen by any particular user. They were taken from FACTS 6.3 and later installed on Windows 10. Different versions of Windows or the use of different Windows themes will introduce some differences in appearance. The contents of each tab, however, will be consistent with the software.",
+    "crumbs": [
+      "User Guides",
+      "FACTS 7.0.0",
+      "FACTS Dose Escalation CRM"
+    ]
+  },
+  {
+    "objectID": "userguides/facts700/crm.html#sec-context",
+    "href": "userguides/facts700/crm.html#sec-context",
+    "title": "FACTS Dose Escalation CRM",
+    "section": "",
+    "text": "This document has been updated for the version 7.1 release of Dose Escalation FACTS.",
+    "crumbs": [
+      "User Guides",
+      "FACTS 7.0.0",
+      "FACTS Dose Escalation CRM"
+    ]
+  },
+  {
+    "objectID": "userguides/facts700/crm.html#sec-citing",
+    "href": "userguides/facts700/crm.html#sec-citing",
+    "title": "FACTS Dose Escalation CRM",
+    "section": "",
+    "text": "If writing in LaTex and using Bibtex, if you wish to cite FACTS (thank you!), can we suggest the following:\n@techreport{FACTS71,\n  author = {{FACTS Development Team}},\n  title = {{FACTS}: Fixed and Adaptive Clinical Trial Simulator},\n  year  = {2024},\n  month = {11},\n  number = {Version 7.1},\n  type         = {Computer Software},\n  institution = {Berry Consultants LLC},\n  address = {Austin, TX},\n  note   = {https://www.berryconsultants.com/software/facts/}\n}\nThis will result in a reference that, for example in the APA style, will look like the following:\nFACTS Development Team (2024). FACTS: Fixed and adaptive clinical trial simulator. Computer Software Version 7.1, Berry Consultants LLC, Austin, TX. https://www.berryconsultants.com/software/facts/.",
+    "crumbs": [
+      "User Guides",
+      "FACTS 7.0.0",
+      "FACTS Dose Escalation CRM"
+    ]
+  },
+  {
+    "objectID": "userguides/facts700/crm.html#sec-definitions",
+    "href": "userguides/facts700/crm.html#sec-definitions",
+    "title": "FACTS Dose Escalation CRM",
+    "section": "",
+    "text": "Table 1 gives an overview of the acronyms and abbreviations used in this document.\n\n\n\nTable 1: List of terms used in the CRM user guide\n\n\n\n\n\n\n\n\n\nName\nDefinition\n\n\n\n\nCap\nA limit on the number of subjects recruited. In FACTS N-CRM users can specify a cap on the overall number of subjects to be recruited in the trial (the ‘Overall Cap’) and specify stopping rules to define when the trial should stop before it reaches cap.\n\n\nControl\nIs the treatment arm with which the novel treatment(s) are principally being compared. Control may be placebo, or some existing standard of care, or therapy, against which the novel treatment has to be benchmarked in order to determine its likely usefulness.\n\n\nCore\nFACTS Core: A mode of FACTS for designing trials where multiple treatments, (possibly different doses of a novel treatment) are tested against a control and optionally an active comparator.\n\n\nCRM\nContinual Reassessment Method – a dose escalation design where the dose-toxicity is estimated using a simple Bayesian model, and the resulting estimates used to control the dose escalation and estimate the Maximum Tolerated Dose (MTD).\n\n\nDE\nDose Escalation: a mode of FACTS where subjects are treated in cohorts and dose escalation is determined by the number of toxicities observed.\n\n\nED\nEnrichment Designs: a mode of FACTS for designing trials where the same treatment is testing in different settings for example different sub-populations or different but related indications.\n\n\nFACTS\nFixed and Adaptive Clinical Trial Simulator.\n\n\nFinal Endpoint\nThe final value, or state, of a subject’s endpoint.\n\n\nGUI\nGraphical User Interface, the part of the FACTS application that the user interacts with.\n\n\nMethod\nIn the FACTS documentation we try to reserve the term ‘method’ for the algorithms used in the simulation (as opposed to the analysis) part of the program. In the analysis part we use the term ‘Model’, see below.\n\n\nModel\nIn the FACTS documentation we try to reserve the term ‘model’ for the statistical models used in the analysis of the trial data (in the ‘design’ section of the FACTS user interface). Where mathematical algorithms are used for other purposes in FACTS (for instance in the generation of the simulated data) we try to use the term ‘method’. We have found that initially it is very easy for users to be confused between these two parts of FACTS and we feel that using distinct terminology may help to reduce this.\n\n\nMTD\nThe dose most likely to be the Maximum Tolerated Dose (MTD) – the dose with the highest Pr(MTD).\n\n\nMTD+\nThe dose most likely to be the MTD+ – the dose with the highest Pr(MTD+).\n\n\nPr(MTD)\nA dose’s probability of being MTD is the probability that it is the dose with the highest probability of having a toxicity rate in the acceptable toxicity band, and (if a threshold has been specified) does not have a probability of excess or unacceptable toxicity above the threshold. This estimate of MTD is constrained to select one of the available doses.\n\n\nPr(MTD+)\nA dose’s probability of being the MTD+ is the probability that it is the dose with the highest probability of having a toxicity rate in the acceptable band, and (if a threshold has been specified) does not have a probability of excess or unacceptable toxicity above the threshold. Unlike Pr(MTD), Pr(MTD+) includes estimating whether a dose below or a dose above the range of those being tested is more likely to have a toxicity in the acceptable band than any of the doses in the range.\n\n\nProfile\nA profile is a specification of one aspect of a scenario. A scenario is made up of one profile of each of the required types for the type of trial being simulated. FACTS allows the user to specify multiple profiles of each type and then presents all the possible combinations of profiles as scenarios that can be used to drive simulations.\n\n\nResponse\nThe change in a subject’s endpoint compared to their baseline state.\n\n\nScenario\nA scenario is the complete specification of the unknown external factors that determine the data observed on the trial and its timing. The exact factors depend on the type of trial being simulated but typically include:  -) the distribution of the final change from base line, or probability of response or rate of events in the different treatment groups  -) the properties of subjects’ early responses and the correlation with their final outcome  -) the rate at which subjects are recruited into the trial  -) the rate at which subjects drop out of the trial.\n\n\nSPEC\nThe Design Engine Specification, describes the system algorithms, and meaning of parameters.\n\n\nResponse\nThe change in a subject’s endpoint compared to their baseline state.\n\n\nSubject\nSomeone recruited onto a clinical trial for the purposes of learning about the properties of a treatment. Depending on the type of trial they might be patients or they might be healthy volunteers.\n\n\nTreatment Arm\nSubjects on entering the study are randomized to different ‘treatment arms’. Subjects randomized to the same arm receive the same treatment and the responses of the subjects in the arm analyzed to determine the expected response to that treatment, allowing the expected responses to the different treatments to be compared.\n\n\nUG\nThe User Guide; describes how to use the system.",
+    "crumbs": [
+      "User Guides",
+      "FACTS 7.0.0",
+      "FACTS Dose Escalation CRM"
+    ]
+  },
+  {
+    "objectID": "userguides/facts700/crm.html#references",
+    "href": "userguides/facts700/crm.html#references",
+    "title": "FACTS Dose Escalation CRM",
+    "section": "",
+    "text": "[N-CRM] = (Neuenschwander, Branson, and Gsponer 2008)\n[Backfill] = (Dehbi, O’Quigley, and Iasonos 2021)\n[Open Enrollment] = (Broglio et al. 2015)\n[CRM 2 Sample] = (O’Quigley, Shen, and Gamst 1999)\n[bCRM] = (Braun 2002)\n[CRM Ordinal] = (deMoor et al. 1996)",
+    "crumbs": [
+      "User Guides",
+      "FACTS 7.0.0",
+      "FACTS Dose Escalation CRM"
+    ]
+  },
+  {
+    "objectID": "userguides/facts700/crm.html#testing-quarto",
+    "href": "userguides/facts700/crm.html#testing-quarto",
+    "title": "FACTS Dose Escalation CRM",
+    "section": "",
+    "text": "Contact us\nSee the following example\nSee Figure 1 for a trial run.\n\n\n\n\n\n\nFigure 1: Overview of Test",
+    "crumbs": [
+      "User Guides",
+      "FACTS 7.0.0",
+      "FACTS Dose Escalation CRM"
+    ]
   }
 ]
