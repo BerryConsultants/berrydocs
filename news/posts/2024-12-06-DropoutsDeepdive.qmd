@@ -1,0 +1,46 @@
+---
+title: "2024-12-06-DropoutRateExplanation"
+description: "Deep dive into dropout rate specification."
+author:
+  - name: FACTS Development Team
+    url: https://factshub.berryconsultants.com/
+    affiliation: Berry Consultants
+    affiliation-url: https://berryconsultants.com/ 
+date: 2024-12-06
+categories: [Core, Staged, Deepdive] # self-defined categories
+execute:
+  echo: false
+filters:
+  - shinylive
+draft: false # setting this to `true` will prevent your post from appearing on your listing page until you're ready!
+---
+
+# How to specify dropouts in FACTS
+
+For the continuous and dichotomous engines, and the multiple endpoint engine, the default dropout scenario is that no subjects drop out of the study before observing their final endpoint data. If dropouts are expected, the user can specify either the “Dropouts per Dose,” or “Dropouts per Dose per Visit.”
+
+## Dropouts Per Dose
+If “Dropouts per Dose” is selected, then each subject has a probability of not having an observable final endpoint value equal to the dropout rate of the dose that subject is randomized to. If each subject has multiple visits and “Dropouts per Dose” is selected, then the conditional probability of dropping out before each visit given that the subject had not dropped out up to the visit before rates are all equal. In other words, if the total dropout rate is π_D, the probability of dropping out between visits i and i+1 given that the subject had not dropped out at visit $i$ is
+$$
+1-\left(1-\pi_D\right)^{(\frac{1}{V})}\text{ where } V \text{ is the total number of visits.}
+$$
+
+### Dropout Per Dose Guide
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+
+library(shiny)
+library(tidyr)
+
+source("../apps/DropoutsPerDose/app.R")
+```
+
+## Dropouts Per Dose Per Visit
+
+If “Dropouts per Dose per Visit” is selected, then each subject has a user specified probability of dropping out before a visit v that is specified as the conditional probability of dropping out before visit v given that that they had not dropped out by visit v-1. This leads to a total dropout rate π_D for a participant that is equal to:
+
+$$
+\pi_D = 1-\Pi_{v=0}^V(1-\pi_v)
+$$
