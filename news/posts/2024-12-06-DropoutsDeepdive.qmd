@@ -32,8 +32,6 @@ $$
 #| viewerHeight: 600
 
 library(shiny)
-library(tidyr)
-library(dplyr)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -60,17 +58,18 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   
-  output$visitsGuide <- renderTable({
-    data.frame(Visits = 1:input$numVisits,
-               ConditionalDropoutRate = 1-(1-input$dropoutRate)^(1/input$numVisits)) %>%
-      mutate(TotalDropoutRate = 1-cumprod(1-ConditionalDropoutRate),
-             MarginalDropoutRate = c(TotalDropoutRate[1], TotalDropoutRate[-1] - TotalDropoutRate[-n()])) %>%
-      select(Visits, ConditionalDropoutRate, MarginalDropoutRate, TotalDropoutRate) %>%
-      rename("Visit number" = "Visits",
-             "Prob. dropout given not dropped before previous visit" = "ConditionalDropoutRate",
-             "Prob. dropout between previous visit and current visit" = "MarginalDropoutRate",
-             "Prob. dropout before visit" = "TotalDropoutRate")
-  }, digits = 4)
+  df = data.frame(Visits = 1:input$numVisits,
+               ConditionalDropoutRate = 1-(1-input$dropoutRate)^(1/input$numVisits))
+  df$TotalDropoutRate = 1-cumprod(1-df$ConditionalDropoutRate)
+  df$MarginalDropoutRate = c(df$TotalDropoutRate[1], df$TotalDropoutRate[-1] - df$TotalDropoutRate[-n()])
+  
+  df = df[,c("Visits", "ConditionalDropoutRate", "MarginalDropoutRate", "TotalDropoutRate")]
+  names(df) = c("Visit number",
+             "Prob. dropout given not dropped before previous visit",
+             "Prob. dropout between previous visit and current visit",
+             "Prob. dropout before visit")
+  
+  output$visitsGuide <- renderTable(df, digits = 4)
 }
 
 # Run the application 
