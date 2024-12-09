@@ -33,46 +33,42 @@ $$
 
 library(shiny)
 
-# Define UI for application that draws a histogram
 ui <- fluidPage(
   
-  # Application title
   titlePanel("Dropout Per Dose"),
-  
-  # Sidebar with a slider input for number of bins 
   sidebarLayout(
     sidebarPanel(
-      numericInput("dropoutRate", "Desired Dropout Rate:", value = 0.1),
+      numericInput("dropoutRate", "Desired Dropout Rate:", value = 0.1, min = 0.0, max = 1.0, step = 0.05),
       sliderInput("numVisits", "Number of visits:", 
                   min = 1, max = 20, value = 5)
-      
     ),
-    
-    # Show a plot of the generated distribution
     mainPanel(
       tableOutput("visitsGuide")
     )
   )
 )
 
-# Define server logic required to draw a histogram
 server <- function(input, output) {
   
-  df = data.frame(Visits = 1:input$numVisits,
-               ConditionalDropoutRate = 1-(1-input$dropoutRate)^(1/input$numVisits))
-  df$TotalDropoutRate = 1-cumprod(1-df$ConditionalDropoutRate)
-  df$MarginalDropoutRate = c(df$TotalDropoutRate[1], df$TotalDropoutRate[-1] - df$TotalDropoutRate[-n()])
+  output$visitsGuide <- renderTable({
+    
+    if(is.na(input$dropoutRate)) {stop(safeError("Please enter a dropout rate."))}
+    else if(input$dropoutRate < 0 | input$dropoutRate > 1) {stop(safeError("Dropout rate must be between 0 and 1."))}
+    else {
+      df = data.frame(Visits = 1:input$numVisits,
+                                                     ConditionalDropoutRate = 1-(1-input$dropoutRate)^(1/input$numVisits))
+      df$TotalDropoutRate = 1-cumprod(1-df$ConditionalDropoutRate)
+      df$MarginalDropoutRate = c(df$TotalDropoutRate[1], df$TotalDropoutRate[-1] - df$TotalDropoutRate[-nrow(df)])
   
-  df = df[,c("Visits", "ConditionalDropoutRate", "MarginalDropoutRate", "TotalDropoutRate")]
-  names(df) = c("Visit number",
-             "Prob. dropout given not dropped before previous visit",
-             "Prob. dropout between previous visit and current visit",
-             "Prob. dropout before visit")
-  
-  output$visitsGuide <- renderTable(df, digits = 4)
+      df = df[,c("Visits", "ConditionalDropoutRate", "MarginalDropoutRate", "TotalDropoutRate")]
+      colnames(df) = c("Visit number",
+                "Prob. dropout given not dropped before previous visit",
+                "Prob. dropout between previous visit and current visit",
+                "Prob. dropout before visit")
+    df}
+  }, digits = 4)
 }
 
-# Run the application 
 shinyApp(ui = ui, server = server)
 ```
 
