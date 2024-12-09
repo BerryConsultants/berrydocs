@@ -1,0 +1,334 @@
+---
+title: "FACTS Dose Escalation CRM"
+subtitle: "CRM / N-CRM / BLRM (Bayesian Logistic Regression Model)"
+date: 03-24-2023
+format: 
+  html:
+    toc: true
+    toc-depth: 4
+    toc-title: "Table of Contents"
+    number-sections: true
+    number-depth: 4
+---
+
+# Introduction {#sec-introduction}
+
+## Purpose of this document {#sec-purpose}
+
+This document describes how use the FACTS Dose Escalation (DE) N-CRM design engine. It is intended for all end users of the system.
+
+## Scope of this document {#sec-scope}
+
+This document covers the FACTS Dose Escalation N-CRM design engine user interface.
+
+This document does not address the internal workings of the design engines or algorithms, which are addressed in the associated Design Engine Specification. It also does not address the use of FACTS Core Designs or Enrichment Designs, which are covered in other User Guides.
+
+The screenshots provided are specific to a particular installation and may not reflect the exact layout of the information seen by any particular user. They were taken from FACTS 6.3.0 and later installed on Windows 10. Different versions of Windows or the use of different Windows themes will introduce some differences in appearance. The contents of each tab, however, will be consistent with the software.
+
+## Context of this Issue {#sec-context}
+
+This document has been updated for the version 7.0.0 release of Dose Escalation FACTS.
+
+## Citing FACTS {#sec-citing}
+
+If writing in LaTex and using Bibtex, if you wish to cite FACTS (thank you!), can we suggest the following:
+
+``` default
+@techreport{FACTS71,
+  author = {{FACTS Development Team}},
+  title = {{FACTS}: Fixed and Adaptive Clinical Trial Simulator},
+  year  = {2024},
+  month = {11},
+  number = {Version 7.1},
+  type         = {Computer Software},
+  institution = {Berry Consultants LLC},
+  address = {Austin, TX},
+  note   = {https://www.berryconsultants.com/software/facts/}
+}
+```
+
+This will result in a reference that, for example in the APA style, will look like the following:
+
+FACTS Development Team (2024). FACTS: Fixed and adaptive clinical trial simulator. Computer Software Version 7.1, Berry Consultants LLC, Austin, TX. https://www.berryconsultants.com/software/facts/.
+
+## Definition of Terms {#sec-definitions}
+
+@tbl-crmterms gives an overview of the acronyms and abbreviations used in this document.
+
+| Name | Definition |
+|:-----------------------------------|:-----------------------------------|
+| Cap | A limit on the number of subjects recruited. In FACTS N-CRM users can specify a cap on the overall number of subjects to be recruited in the trial (the ‘Overall Cap’) and specify stopping rules to define when the trial should stop before it reaches cap. |
+| Control | Is the treatment arm with which the novel treatment(s) are principally being compared. Control may be placebo, or some existing standard of care, or therapy, against which the novel treatment has to be benchmarked in order to determine its likely usefulness. |
+| Core | FACTS Core: A mode of FACTS for designing trials where multiple treatments, (possibly different doses of a novel treatment) are tested against a control and optionally an active comparator. |
+| CRM | Continual Reassessment Method – a dose escalation design where the dose-toxicity is estimated using a simple Bayesian model, and the resulting estimates used to control the dose escalation and estimate the Maximum Tolerated Dose (MTD). |
+| DE | Dose Escalation: a mode of FACTS where subjects are treated in cohorts and dose escalation is determined by the number of toxicities observed. |
+| ED | Enrichment Designs: a mode of FACTS for designing trials where the same treatment is testing in different settings for example different sub-populations or different but related indications. |
+| FACTS | Fixed and Adaptive Clinical Trial Simulator. |
+| Final Endpoint | The final value, or state, of a subject’s endpoint. |
+| GUI | Graphical User Interface, the part of the FACTS application that the user interacts with. |
+| Method | In the FACTS documentation we try to reserve the term ‘method’ for the algorithms used in the simulation (as opposed to the analysis) part of the program. In the analysis part we use the term ‘Model’, see below. |
+| Model | In the FACTS documentation we try to reserve the term ‘model’ for the statistical models used in the analysis of the trial data (in the ‘design’ section of the FACTS user interface). Where mathematical algorithms are used for other purposes in FACTS (for instance in the generation of the simulated data) we try to use the term ‘method’. We have found that initially it is very easy for users to be confused between these two parts of FACTS and we feel that using distinct terminology may help to reduce this. |
+| MTD | The dose most likely to be the Maximum Tolerated Dose (MTD) – the dose with the highest Pr(MTD). |
+| MTD+ | The dose most likely to be the MTD+ – the dose with the highest Pr(MTD+). |
+| Pr(MTD) | A dose’s probability of being MTD is the probability that it is the dose with the highest probability of having a toxicity rate in the acceptable toxicity band, and (if a threshold has been specified) does not have a probability of excess or unacceptable toxicity above the threshold. This estimate of MTD is constrained to select one of the available doses. |
+| Pr(MTD+) | A dose's probability of being the MTD+ is the probability that it is the dose with the highest probability of having a toxicity rate in the acceptable band, and (if a threshold has been specified) does not have a probability of excess or unacceptable toxicity above the threshold. Unlike Pr(MTD), Pr(MTD+) includes estimating whether a dose below or a dose above the range of those being tested is more likely to have a toxicity in the acceptable band than any of the doses in the range. |
+| Profile | A profile is a specification of one aspect of a scenario. A scenario is made up of one profile of each of the required types for the type of trial being simulated. FACTS allows the user to specify multiple profiles of each type and then presents all the possible combinations of profiles as scenarios that can be used to drive simulations. |
+| Response | The change in a subject’s endpoint compared to their baseline state. |
+| Scenario | A scenario is the complete specification of the unknown external factors that determine the data observed on the trial and its timing. The exact factors depend on the type of trial being simulated but typically include: <br/> -) the distribution of the final change from base line, or probability of response or rate of events in the different treatment groups <br/> -) the properties of subjects’ early responses and the correlation with their final outcome <br/> -) the rate at which subjects are recruited into the trial <br/> -) the rate at which subjects drop out of the trial. |
+| SPEC | The Design Engine Specification, describes the system algorithms, and meaning of parameters. |
+| Response | The change in a subject’s endpoint compared to their baseline state. |
+| Subject | Someone recruited onto a clinical trial for the purposes of learning about the properties of a treatment. Depending on the type of trial they might be patients or they might be healthy volunteers. |
+| Treatment Arm | Subjects on entering the study are randomized to different ‘treatment arms’. Subjects randomized to the same arm receive the same treatment and the responses of the subjects in the arm analyzed to determine the expected response to that treatment, allowing the expected responses to the different treatments to be compared. |
+| UG | The User Guide; describes how to use the system. |
+
+: List of terms used in the CRM user guide {#tbl-crmterms .striped .hover tbl-colwidths="\[15,85\]"}
+
+## References
+
+\[N-CRM\] = [@neuenschwander2008critical]
+
+\[Backfill\] = [@dehbi2021controlled]
+
+\[Open Enrollment\] = [@broglio2015bayesian]
+
+\[CRM 2 Sample\] = [@o1999two]
+
+\[bCRM\] = [@braun2002bivariate]
+
+\[CRM Ordinal\] = [@de1996incorporating]
+
+# FACTS Overview
+
+This user guide assumes some limited general familiarity with FACTS and concentrates on describing the interface for designs using the N-CRM approach. See the FACTS Dose Escalation user guide for a general introduction to the FACTS Dose Escalation user interface.
+
+The N-CRM is based on the method described in the paper [@neuenschwander2008critical]. It is designed for use in oncology phase 1 trials, and we understand generally in use at Novartis for the majority of their trials of this type:
+
+-   Dosing starts at a (very) low dose, strongly believed to be safe.
+-   Usually after a cohort of subjects have completed their current dose, the dose to be used for the next cohort is selected. The selection of this dose is dictated by a combination of dose escalation rules, the estimate of the toxicity rate on the different doses and the target maximum tolerated toxicity, or toxicity band.
+-   The endpoint per subject is binary: toxicity observed or not.
+-   There is either a predefined set of doses to explore, or a dose range.
+-   There is limited sample size.
+
+## FACTS 7.0.0 Changes to N-CRM
+
+In FACTS 7.0.0 the only change was on the Analysis tab, when entering subject data manually, the FACTS GUI now ensures that a cohort number is entered for every subject.
+
+## FACTS 6.5 Changes to N-CRM
+
+In FACTS 6.5.0 there was a new feature added to N-CRM:
+
+-   It is now possible to generate a design report – a Word document describing design - once the design has been simulated. In FACTS 6.5.0 there was two small changes to the functionality:
+-   When deriving toxicity/efficacy priors from quantiles at the lowest and highest doses, the “middle” probability option now refers to the median dose rather than the reference dose and is now optional. When pre-6.5.0 FACTS files are loaded in FACTS 6.5.0, the “middle” probability option will be ignored and replaced by 0.5.
+-   When deriving toxicity/efficacy priors from specific quantiles the specification of at least two dose levels is now required whereas previously the specification of at least three dose levels was required.
+
+In FACTS 6.5.0 there were some improvements in the simulated behavior:
+
+-   Designs which include efficacy, the “Maximum cohorts used to determine MTD” parameter on the Allocation Rule tab is now observed, in FACTS 6.4.0 and earlier it was ignored.
+-   In N-CRM designs using open enrollment without accrual pausing, FACTS will now output entries in the cohort file for subjects that have been lost following stopping rules being met.
+-   In N-CRM designs using open enrollment, FACTS will no longer prematurely apply stopping conditions when there are still subjects whose outcomes have been observed, but not yet processed.
+-   In N-CRM designs using open enrollment, FACTS will now report the selected MTD/MED/OSD and associated state to be the dose where the stopping conditions were first met, unless the MTD has subsequently decreased post stopping rules being met. This is to prevent a dose above the one selected when the stopping conditions were met being reported as the MTD when it is very likely that there is insufficient data on this higher dose to justify its selection. If rather than reporting the MTD at the point when the stopping rules where met, you would like the trial to resume if the dose selected as MTD has changed (and this the stopping rules possibly no longer met), ensure that the ”Pause accrual and wait for completers” option is selected on the “Stopping Criteria” tab. This allows the trial to resume if the recruitment cap has not been met.
+-   FACTS Command Line mode and FLFLL (FACTS Linux File Loader Lite) now correctly handle the processing of N-CRM designs whose prior was derived using the “Legacy Prior” option.
+
+## FACTS 6.4.0 Changes to N-CRM
+
+In FACTS 6.4.0 there were no changes to the Dose Escalation simulators.
+
+## FACTS 6.3.0 Changes to N-CRM
+
+In FACTS 6.3.0 a number of changes were made to improve facilities in N-CRM, or improve the way existing facilities were implemented. These were:
+
+1.  New run-in options: the existing run-in scheme is available as “simple run-in”, “custom run-in” allows a specific sequence of doses and number of subjects to test at each dose to be specified, “small cohort pre-escalation” allows a run that uses a smaller cohort size but follows the dose escalation rules and over dose control.
+2.  New “backfill” options in open enrolment. Backfill allows subjects that become available at a time when they can’t be allocated to the current dose (because the maximum number of subjects without final results have already been allocated to the current dose).
+3.  Improved handling of “maximum subjects without final results” in open enrolment. In earlier versions of FACTS this was a “global” maximum, which led to a suboptimal allocation pattern and overly cautious rejection of subjects that became available. The new model applies a maximum “per dose” so that once the trial has escalated to a new dose strength, any subjects without final results on lower doses do not block allocation to the new dose, in addition it is possible to specify two different maximums – one for when a dose has just been escalated to but has not been “cleared” (typically smaller and more cautious), and one when a dose has been cleared but we continue to allocate to it because it is the target dose (typically larger and more confident). This method is such an improvement that we recommend moving any design using open enrolment to this new version of FACTS.
+4.  Improved Ordinal Toxicity model – the way the likelihood is calculated has been improved – reducing the uncertainty in the model fit. Any design using an ordinal model will need to re-calibrate the prior if you move the design to FACTS 6.3.0. If you have a design already complete, or in execution we recommend you remain using the earlier version of FACTS for that trial.
+
+## FACTS 6.2.0 Changes to N-CRM
+
+In FACTS 6.2.0 features available separately in the other FACTS CRM engines (CRM (Toxicity), bCRM & CRM Ordinal) were all incorporated into N-CRM. This allowed these features to be used in conjunction with N-CRM’s target toxicity band methodology, overdose control and open enrollment features, as well as in conjunction with each other for the first time.
+
+The new features are:
+
+1.  From CRM (Toxicity) the option to specify that the data is coming from ‘two groups’ and for the toxicity experienced in the two groups to be modelled with a joint model \[CRM 2 Sample\]. This allows a trial where there are two patient populations (such as adults and children) or where there are two versions of the treatment to be simulated.
+2.  From bCRM the option to model a second binary efficacy endpoint \[bCRM\] and the for dose allocation to proceed in two stages – the first to establish an MTD and the second to establish an MED.
+3.  From CRM Ordinal the option for the toxicity endpoint to be modelled not as binary endpoint, but one with different categories of toxicity, and with a joint model applied to the different categories \[CRM Ordinal\]. The endpoint can be to model either 3 or 4 categories of toxicity:
+    a.  category 1 is “no toxicity”,
+    b.  category 2 is “mild toxicity”,
+    c.  category 3 is “toxicity”
+    d.  category 4 (if included) is “severe toxicity”
+
+All decision making is made in terms of the probability of observing a category 3 (or worse) toxicity.
+
+## FACTS 6.1.0 Changes to N-CRM
+
+In FACTS 6.1.0 N-CRM has the new feature of ‘design variants’ that allow the user to easily simulate and evaluate an N-CRM design at different sample sizes. This change includes 4 elements:
+
+1.  Under the ‘Study’ tab the user can now specify the number of design variants, and for each variant the maximum study size in Cohorts.
+2.  On the simulation tab FACTS will display a copy of each simulation scenario for each variant.
+3.  The simulation results now include the Ppn of trials that stopped for each stopping reason: stopping because all doses are too toxic (the toxicity estimates exceed the overdose criteria), because a stopping rule was met or because the study cap was reached.
+4.  There are now a set of cross variant graphs that show trellis plots of the key summary graphs by design variant and scenario.
+
+# Starting FACTS
+
+FACTS is usually first started using the FACTS icon installed on the Windows desktop or from the Windows Start \\\> Programs menu.
+
+When the application opens, you are presented with the main introduction screen of FACTS ([@fig-intro]). From here you can start designing an N-CRM trial, by double clicking N-CRM in the list of available designs, or by selecting the N-CRM design option from the File \\\> New \\\> Dose Escalation menu.
+
+FACTS will also be associated the parameter files it writes out with a ‘.facts’ file extension. Clicking on any one of these files will automatically start FACTS with that file opened.
+
+Note: Depending on your license, some design options may not be available.
+
+![FACTS introduction screen](images/clipboard-4175651506.png){#fig-intro width="80%" fig-align="center"}
+
+From this screen a new design can be started by selecting the design type in the list and double clicking it, or clicking on the ‘create new’ button at the bottom of the list.
+
+In the ‘Recent Work’ panel, the use can select from the list of most recently opened FACTS files, or from the list of directories where those files were located, opening the folder and selecting a FACTS file from there.
+
+Once a FACTS design has been created, the appropriate FACTS design module can be launched by double clicking on the “.facts” file in Windows Explorer.
+
+Once a specific type of FACTS design has been selected or an existing FACTS file opened, the FACTS GUI displays the tabs and parameters appropriate to that type of trial design.
+
+# The FACTS N-CRM GUI
+
+The FACTS N-CRM GUI conforms to the standard FACTS GUI layout, with information and displays divided across various standard tabs ([@fig-tablayout]).
+
+-   The Study Tab has sub-tabs for entering Study Information and specifying the Treatment Arms (doses) available in the study. This is where the user specifies the ‘given’ requirements, or constraints, of the trial to be designed.
+-   The Virtual Subject Response tab has sub-tabs for specifying Explicitly Defined response scenarios to simulate and loading External data files of simulated subject responses. This is where a set of different toxicity rates per dose are specified that should represent the expected ‘space’ of the expected dose-toxicity profiles for the compound being tested.
+-   The Design has sub-tabs for specifying the Allocation Rules, Stopping rule and Toxicity Response model. These are the design choices open to the trial biostatistician. The expected consequences of these design choices are estimated by running simulations of the trials using the various virtual subject response profiles defined.
+-   On the Simulation Tab, the user controls and runs simulations and can view the simulation results.
+-   On the Analysis tab, the user can use the design to analyze a specific data set and report the result of fitting the specified toxicity response model and the recommended dose for the next cohort.
+
+![Tab layout of FACTS](images/clipboard-3201765865.png){#fig-tablayout width="50%" fig-align="center"}
+
+Also on the menu bar, on the right hand side of the FACTS Window, is a button labeled “Notes”; clicking this button reveals a simple “notepad” window in which the user can maintain some simple notes that will be stored within the “.facts” file (see [@fig-notes] and [@fig-designnotes])
+
+![The 'Notes' button](images/clipboard-2023108780.png){#fig-notes width="50%" fig-align="center"}
+
+![Example design notes](images/clipboard-2814137677.png){#fig-designnotes width="70%" fig-align="center"}
+
+The notepad window comes with two further buttons: one to change the window to a free floating one that can be moved away from the FACTCS window; and the other to close it.
+
+The Notes field can be used for any text the user wishes to store with the file. Suggested uses are: to record the changes made in a particular version of a design and why; and to comment on the simulation results. This will help when coming back to work that has been set aside, to recall what gave rise to the different version of a design.
+
+# The Standard FACTS Menus
+
+## The "File" Menu
+
+FACTS has a File menu with commands similar to those found in most Windows applications, but also some unique to FACTS. The commands can be found in [@tbl-filecommands].
+
+| Command | Definition |
+|:-----------------------------------|:-----------------------------------|
+| New | Allows the user to select a trial design type and start a new design; if there are unsaved changes in the current design the user is prompted to save them first. |
+| Open | Allows the user to select an existing FACTS file and open it; if there are unsaved changes in the current design the user is prompted to save them first. |
+| Save | Saves the current changes in the design to the currently open FACTS file. |
+| Save As | Allows the current version of the design to be saved to a new FATCS file; this file is then the “currently open” FACTS file going forward. |
+| Export Project | Creates a “Zip” archive containing the current FACTS file and all the simulation results, so these can be easily archived, emailed, saved, etc. |
+| Recent Projects | Contains entries for the last ten FACTS files opened: selecting one re-opens it. |
+| Recent Folders | Contains entries for the folders that contain the last ten FACTS files opened: selecting one opens a file browser window on that folder allowing a ‘.facts’ file in that folder to be selected (or allowing the user to navigate to some different folder and select a ‘.facts’ file there). |
+| Examples | Contains example projects for the different design engines: selecting one opens it. |
+| Close | Closes the current FACTS file, returning the user to the FACTS introduction screen. |
+| Exit | Closes FACTS altogether. |
+: List of commands in the CRM file menu {#tbl-filecommands .striped .hover tbl-colwidths="\[15,85\]"}
+
+## FACTS Settings Menu
+
+The "Settings" command menu allows the user to do 2 things:
+
+-   Set various FACTS options to local settings -- see below for details.
+-   Reset the options based on the stored configuration file. This file, "config.xml", will initially be installed during the FACTS installation process and is stored in the Windows "Program Files" folder, in the sub-folder where FACTS get installed.
+-   Change the stored configuration file. This command allows you to select a new configuration file and have FACTS copy it to the sub-folder within the Windows "Program Files" folder, where FACTS get installed so it becomes the new stored configuration file. This allows IT support to easily disseminate configuration changes.
+-   Enter a new or changed license key.
+
+### Set Options
+
+The FACTS Options dialog allows the user to:
+
+-   Set and Test the connection parameters to access a compute grid for running simulations.
+-   Configure the version and location of R or R Studio that can be launched from within FACTS
+-   Select how gamma distributions are parameterized.
+
+#### Grid Configuration
+
+A grid compute facility for running simulations will only be available if your local IT services have set one up. If they have done so, they
+
+-   May have already set the appropriate parameters In the FACTS configuration file included with the FACTS installation files.
+-   Inform you of the parameters to be set manually via this dialog
+-   Send a new configuration file that can be installed using the "Load Options" menu command.
+
+If modifying the grid options manually, select the "Options" menu command and enter the values on the "Grid Configuration" tab of the displayed dialog window.
+
+![Webservice Configuration](images/clipboard-1963956967.png){#fig-webservice width="60%" fig-align="center"}
+
+First select the type of interface to the grid to be used, this is either:
+
+-   Via a network shared drive (with a “sweeper script” running on a client machine to transfer jobs to the grid management system and return results from it).
+-   Via a web service system using a webserver and database to communicate to a grid management system. The IT group supporting the grid should be able to tell you which interface they have implemented, if any. If access to the grid is via a Network Share it is necessary to specify:
+-   The location of the network share folder, usually in the form \\\<server name\>\\\<folder name\\\>.
+-   Whether the grid client is running Windows or Linux (so end-of-line characters can be corrected)
+-   The listener delay – this is the interval between “looks” when FACTS is waiting for simulation results to be complete
+
+Once specified it is possible to use the “Test” button to check that the Network Shared folder is accessible and writeable.
+
+If access to the grid is via a web service:
+
+-   The location of the web service endpoint.
+
+Clicking on “Test Configuration” and will cause FACTS will attempt to connect to the FACTS grid controller. The control will show which components of the connection are working.
+
+See the FACTS Installation Guide and FACTS Simple Grid Interface Guide for more details of setting up a grid.
+
+#### R Configuration
+
+In FACTS on the Simulation tab there are two controls that launch R – “Open in R” and “ Design Report” (in FACTS 6.2.0 the latter only available for FACTS Core designs).
+
+To enable these to work the user must specify where the R or RStudio executable is installed and (if there is more than one version of R installed) which version of R to use.
+
+![The R Configuration Dialog](images/clipboard-1268844426.png){#fig-rconfig width="60%" fig-align="center"}
+
+The dialog allows the user to Add, Edit, Test and Remove links to versions of R.
+
+![Adding a link to R](images/clipboard-272657384.png){#fig-rlink width="60%" fig-align="center"}
+
+Clicking on “Add” opens a normal Windows directory browser window, the user must navigate to the location of an R installation (for example “C:\\Program Files\\R\\R-2.15.2\\bin”, select the file R.exe, and click “Open”. This adds a new entry on the R configuration dialog.
+
+Clicking on “Edit” operates similarly to “Add” above, except the selected location replaces that currently selected entry on the R configuration dialog rather than adding a new one.
+
+Clicking on “Test” checks whether the currently selected entry on the R configuration dialog is available, if it is not an error dialog is displayed:
+
+![Example of R Configuration error](images/clipboard-2537319102.png){#fig-rconfigerror width="60%" fig-align="center"}
+
+Clicking on “Remove” removes the currently selected location on the R configuration dialog.
+
+The version of R to use by default is selected by clicking on the ‘Active’ check box of the version to use.
+
+#### Gamma Distribution Parameters
+
+In FACTS a number of parameters require inverse gamma distributions to be specified as priors for the parameter value. There are two different parameterization of the inverse gamma provided so that the user can select the form they find the most intuitive.
+
+![The parameterisation of Inverse Gamma Distributions](images/clipboard-718655442.png){#fig-gammaparam width="60%" fig-align="center"}
+
+The first form uses parameters that are the mean of the distribution and the equivalent weight in terms of the equivalent number of observations. The second form uses an ‘Alpha’ and ‘Beta’ parameterization that some statisticians are familiar with and will find natural to use.
+
+### Enter a license key
+
+If a new license key is required, this command can be used to enter one. There are two ways of entering a new license:
+
+![Enter FACTS License Key](images/clipboard-1671179033.png){#fig-licensekey width="60%" fig-align="center"}
+
+The key can be entered directly, along with the associated Organization name, or by selecting a supplied license file.
+
+## The Help Menu
+
+FACTS has a Help menu with commands to assist you with the use of FACTS, providing links to users guides, tutorial and training videos. The commands are:
+
+| Command | Definition |
+|:-----------------------------------|:-----------------------------------|
+|User Guides |	Provides access to documents such as this one, with (mainly) one user guide to each design type within FACTS. Exceptions to this simple structure are: <br> 1. Core Design User Guide: A guide to the options under the ‘Design” tab for FACTS Core for all endpoints. <br> 2.	Staged Design User Guide: As the staged design allows the design of one FACTS Core stage followed by a second, most of the interface is common to the basic FACTS Core. This guide describes the differences and additional aspects for all endpoints. <br> 3.	Dose Escalation User Guide: This covers all the Dose Escalation engines except for N-CRM and 2D-CRM that have their own. It thus covers the 3+3, mTPI, CRM(Toxicity), CRM(Ordinal), CRM(Efficacy) and bCRM engines. |
+|Tutorials |	Provides access to all the tutorial documents, which describes detailed examples of use of all the engines in FACTS and many of their options. The examples under the File > Examples menu option largely correspond to the different tutorials described here. |
+| Design Specifications |	These are technical documents that describe the mathematical models implemented in FACTS in detail. |
+| Execution Guides |	The FACTS GUI can be run in command line mode so simulations can be run/re-run from scripts. With the simulation command line flag, and passed a directory rather than a file, FACTS will run simulations for every “.facts” file in that directory – and recurse into any sub-directories and simulate any “.facts” files there too. A full guide to command line mode can be found here. The FACTS simulation engines are also available in “command line executable” form. There are guides here that document their command line parameters and how to use them to analyse a data set – e.g. to perform an interim analysis whilst executing a trial designed with FACTS. |
+| FACTS file XML Specs |	These guides describe the parameters in the “.facts” files, which are text files in XML format. For expert users understanding this format allows them to use scripts to generate versions of an initial “.facts” file with slight variations in the parameters such as stopping thresholds or priors. Modification of “.facts” files outside of FACTS needs to be done with care, errors may render the file unusable by FACTS. |
+| Videos |	Provides access to links to the introductory, training and webinar videos that Berry Consultants has recorded and makes available over the internet to FACTS users. |
+| View log… |	If an error has occurred in FACTS, often the FACTS log file can shed light on what is going wrong. The log file is hidden away in some unfashionable and hard to locate Windows folder; this command option provides easy access to it. Allowing you to email facts support with a description of what occurred, attaching a copy of this log file having saved it somewhere convenient such as your desktop. |
+| Support |	Launch a simple editor for sending an email to our support account: facts@berryconsultants.net |
+| About |	Displays a simple “about box” that includes the detailed version number of FACTS. |
+: List of commands in the CRM help menu {#tbl-helpcommands .striped .hover tbl-colwidths="\[15,85\]"}
