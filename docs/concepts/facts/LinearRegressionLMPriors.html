@@ -337,9 +337,15 @@ Y_i\mid y_{it} \sim \alpha_t+\beta_t y_{it}+\text{N}(0,\lambda_t^2 ).
 <p>The default setting of “Same priors across all model instances and visits,” implies that each parameter <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, and <span class="math inline">\(\lambda\)</span> have the same prior for all visits <span class="math inline">\(t\)</span>. Estimation of the posterior distribution for these parameters is still done independently for each model instance.</p>
 <section id="same-prior-for-all-visits-and-model-instances" class="level3">
 <h3 class="anchored" data-anchor-id="same-prior-for-all-visits-and-model-instances">Same prior for all visits and model instances</h3>
-<p>The one prior across all model instance are formulated as: <span class="math display">\[\alpha_t \sim \text{N}\left(\alpha_\mu, \alpha_{\sigma}^2\right)\]</span> <span class="math display">\[\beta_t \sim \text{N}\left(\beta_\mu, \beta_{\sigma}^2\right)\]</span> <span class="math display">\[\lambda_t^2 \sim \text{IG}\left(\frac{\lambda_n}{2}, \frac{\lambda_\mu^2 \lambda_n}{2}\right)\]</span> ### Same prior for all model instances, different prior per visit</p>
+<p>The one prior across all model instance are formulated as: <span class="math display">\[\alpha_t \sim \text{N}\left(\alpha_\mu, \alpha_{\sigma}^2\right)\]</span> <span class="math display">\[\beta_t \sim \text{N}\left(\beta_\mu, \beta_{\sigma}^2\right)\]</span> <span class="math display">\[\lambda_t^2 \sim \text{IG}\left(\frac{\lambda_n}{2}, \frac{\lambda_\mu^2 \lambda_n}{2}\right)\]</span></p>
+</section>
+<section id="same-prior-for-all-model-instances-different-prior-per-visit" class="level3">
+<h3 class="anchored" data-anchor-id="same-prior-for-all-model-instances-different-prior-per-visit">Same prior for all model instances, different prior per visit</h3>
 <p>Since each visit will likely have a different estimated intercept and slope needed to accurately impute the final endpoint, the above prior formulation may not be desirable if specifying priors that are not extremely diffuse – especially on the <span class="math inline">\(\beta\)</span> parameters. Instead, selecting “Specify priors per visit across all model instances,” will share the prior specification across all instances of the model, but allows for different priors to be put on the parameters associated with each visit. The user inputted prior parameters are now subscripted with <span class="math inline">\(t\)</span> to denote the visit they correspond to. These priors apply to all model instances:</p>
-<p><span class="math display">\[\alpha_t \sim \text{N}\left(\alpha_{\mu_t}, \alpha_{\sigma_t}^2\right)\]</span> <span class="math display">\[\beta_t \sim \text{N}\left(\beta_{\mu_t}, \beta_{\sigma_t}^2\right)\]</span> <span class="math display">\[\lambda_t^2 \sim \text{IG}\left(\frac{\lambda_{n_t}}{2}, \frac{\lambda_{\mu_t}^2 \lambda_{n_t}}{2}\right)\]</span> ### Different prior for all model instances and visits</p>
+<p><span class="math display">\[\alpha_t \sim \text{N}\left(\alpha_{\mu_t}, \alpha_{\sigma_t}^2\right)\]</span> <span class="math display">\[\beta_t \sim \text{N}\left(\beta_{\mu_t}, \beta_{\sigma_t}^2\right)\]</span> <span class="math display">\[\lambda_t^2 \sim \text{IG}\left(\frac{\lambda_{n_t}}{2}, \frac{\lambda_{\mu_t}^2 \lambda_{n_t}}{2}\right)\]</span></p>
+</section>
+<section id="different-prior-for-all-model-instances-and-visits" class="level3">
+<h3 class="anchored" data-anchor-id="different-prior-for-all-model-instances-and-visits">Different prior for all model instances and visits</h3>
 <p>It is also possible to specify priors “Per model instance and visit,” in which every visit has separate priors, and those differing priors vary across model instances. This is the most flexible prior specification method. The user inputted prior parameters are now subscripted by both t for visit and i for model instance. <span class="math display">\[\alpha_{ti} \sim \text{N}\left(\alpha_{\mu_{ti}}, \alpha_{\sigma_{ti}}^2\right)\]</span> <span class="math display">\[\beta_{ti} \sim \text{N}\left(\beta_{\mu_{ti}}, \beta_{\sigma_{ti}}^2\right)\]</span> <span class="math display">\[\lambda_{ti}^2 \sim \text{IG}\left(\frac{\lambda_{n_{ti}}}{2}, \frac{\lambda_{\mu_{ti}}^2 \lambda_{n_{ti}}}{2}\right)\]</span></p>
 </section>
 </section>
@@ -403,7 +409,7 @@ ui &lt;- fluidPage(
                           min = 1, max = 20, value = 5, step = 1)),
   DTOutput("dataInputTable"),
   br(),
-  titlePanel(h2("Plot a Subjects Prior Predictive", align = "center")),
+  titlePanel(h2("Plot a subject's prior predictive", align = "center")),
   fluidRow(
     #column(5, offset = 1, uiOutput("slider")),
     column(5, offset = 1, sliderInput(inputId = "lastVisitWithData", 
@@ -465,9 +471,9 @@ server &lt;- function(input, output, session) {
     options = list(
       dom = "t",
       autoWidth = TRUE,
-      columnDefs = list(list(width = '150px', targets = 1:8))
+      columnDefs = list(list(width = '150px', targets = 0:7))
     ),
-    rownames = TRUE,
+    rownames = FALSE,
    # escape = FALSE,
     selection = 'none',
     editable = list(target = "cell", disable = list(columns = 1))

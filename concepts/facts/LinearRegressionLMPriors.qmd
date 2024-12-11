@@ -65,6 +65,7 @@ The one prior across all model instance are formulated as:
 $$\alpha_t \sim \text{N}\left(\alpha_\mu, \alpha_{\sigma}^2\right)$$
 $$\beta_t \sim \text{N}\left(\beta_\mu, \beta_{\sigma}^2\right)$$
 $$\lambda_t^2 \sim \text{IG}\left(\frac{\lambda_n}{2}, \frac{\lambda_\mu^2 \lambda_n}{2}\right)$$
+
 ### Same prior for all model instances, different prior per visit
 
 Since each visit will likely have a different estimated intercept and
@@ -81,6 +82,7 @@ model instances:
 $$\alpha_t \sim \text{N}\left(\alpha_{\mu_t}, \alpha_{\sigma_t}^2\right)$$
 $$\beta_t \sim \text{N}\left(\beta_{\mu_t}, \beta_{\sigma_t}^2\right)$$
 $$\lambda_t^2 \sim \text{IG}\left(\frac{\lambda_{n_t}}{2}, \frac{\lambda_{\mu_t}^2 \lambda_{n_t}}{2}\right)$$
+
 ### Different prior for all model instances and visits
 
 It is also possible to specify priors “Per model instance and visit,” in
@@ -143,7 +145,7 @@ ui <- fluidPage(
                           min = 1, max = 20, value = 5, step = 1)),
   DTOutput("dataInputTable"),
   br(),
-  titlePanel(h2("Plot a Subjects Prior Predictive", align = "center")),
+  titlePanel(h2("Plot a subject's prior predictive", align = "center")),
   fluidRow(
     #column(5, offset = 1, uiOutput("slider")),
     column(5, offset = 1, sliderInput(inputId = "lastVisitWithData", 
@@ -205,9 +207,9 @@ server <- function(input, output, session) {
     options = list(
       dom = "t",
       autoWidth = TRUE,
-      columnDefs = list(list(width = '150px', targets = 1:8))
+      columnDefs = list(list(width = '150px', targets = 0:7))
     ),
-    rownames = TRUE,
+    rownames = FALSE,
    # escape = FALSE,
     selection = 'none',
     editable = list(target = "cell", disable = list(columns = 1))
