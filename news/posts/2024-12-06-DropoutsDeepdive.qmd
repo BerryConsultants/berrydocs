@@ -3,7 +3,7 @@ title: "Dropout Rate Explanation"
 description: "Deep dive into dropout rate specification."
 author:
   - name: FACTS Development Team
-    url: https://factshub.berryconsultants.com/
+    url: https://docs.berryconsultants.com/
     affiliation: Berry Consultants
     affiliation-url: https://berryconsultants.com/ 
 date: 2024-12-06
@@ -23,7 +23,8 @@ For the continuous and dichotomous engines, and the multiple endpoint engine, th
 
 If “Dropouts per Dose” is selected, then each subject has a probability of not having an observable final endpoint value equal to the dropout rate of the dose that subject is randomized to. If each subject has multiple visits and “Dropouts per Dose” is selected, then the conditional probability of dropping out before each visit given that the subject had not dropped out up to the visit before rates are all equal. In other words, if the total dropout rate is π_D, the probability of dropping out between visits i and i+1 given that the subject had not dropped out at visit $i$ is $$
 1-\left(1-\pi_D\right)^{(\frac{1}{V})}\text{ where } V \text{ is the total number of visits.}
-$$ The following interactive widget takes in the desired dropout rate and the number of visits a subject will have during their follow-up, and returns information about the dropout rate that FACTS will simulate by visit.
+$$
+The following interactive widget takes in the desired dropout rate for a single dose and the number of visits a subject will have during their follow-up, and returns information about the dropout rate that FACTS will simulate by visit for that dose.
 
 The columns in the dynamic output table are:
 
@@ -47,7 +48,7 @@ Cumulative Dropout Prob.
 
 ```{shinylive-r}
 #| standalone: true
-#| viewerHeight: 600
+#| viewerHeight: 450
 
 library(shiny)
 
@@ -97,11 +98,27 @@ If “Dropouts per Dose per Visit” is selected, then each subject has a user s
 $$
 \pi_D = 1-\Pi_{v=0}^V(1-\pi_v)
 $$
-When specifying Dropouts Per Dose Per Visit in FACTS, the user inputs the conditional visit dropout rate for each visit. This can make it not completely intuitive to get the exact desired cumulative dropout rate. The below application allows the user to enter either the conditional visit dropout rates or the marginal visit dropout rates, and provides the implied dropout profile from those inputs. *In order to simulate dropouts from the below profile in FACTS, enter the Conditional Visit Dropout Rate into the FACTS Dropout Rate tab.*
+When specifying Dropouts Per Dose Per Visit in FACTS, the user inputs the conditional visit dropout rate for each visit. This can make it not completely intuitive to get the exact desired cumulative dropout rate. The below application allows the user to enter either the conditional visit dropout rates or the marginal visit dropout rates for a single dose, and provides the implied dropout profile from those inputs. Again, the columns of the table represent:
+
+Visit number
+
+:   The index of the visit that a subject would observe.
+
+Conditional Visit Dropout Rate
+
+:   The probability that a subject drops out before row specified visit given that they have not dropped out after the previous visit.
+
+Marginal Visit Dropout Rate
+
+:   The probability that a subject that has not yet been enrolled in the study will dropout before row specified visit and after the previous row's visit.
+
+Cumulative Dropout Prob.
+
+:   The probability that a subject will drop out at the row specified visit or before. At the last visit row this value will equal the Desired Dropout Rate.
 
 ```{shinylive-r}
 #| standalone: true
-#| viewerHeight: 800
+#| viewerHeight: 600
 
 library(shiny)
 library(DT)
@@ -211,3 +228,4 @@ server <- function(input, output) {
 
 shinyApp(ui = ui, server = server)
 ```
+**In order to simulate dropouts from the below profile in FACTS, enter the Conditional Visit Dropout Rate into the FACTS Dropout Rate tab.**
