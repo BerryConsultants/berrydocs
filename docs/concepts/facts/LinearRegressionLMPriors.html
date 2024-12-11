@@ -332,16 +332,16 @@ Jump to widget
 Y_i\mid y_{it} \sim \alpha_t+\beta_t y_{it}+\text{N}(0,\lambda_t^2 ).
 \]</span></p>
 <p>The parameter <span class="math inline">\(\alpha_t\)</span> is the intercept of the model for visit t, and the parameter <span class="math inline">\(\beta_t\)</span> is a multiplicative modifier (slope) of the response observed at visit <span class="math inline">\(t\)</span>. So, to impute a value for <span class="math inline">\(Y_i\)</span>, simply take the early visit value, multiply it by <span class="math inline">\(\beta_t\)</span>, add <span class="math inline">\(\alpha_t\)</span>, and then jitter a normal deviation with variance <span class="math inline">\(\lambda_t^2\)</span> around that value.</p>
-</section>
-<section id="prior-specification-for-the-linear-regression-multiple-imputation-model" class="level1">
-<h1>Prior Specification for the Linear Regression Multiple Imputation Model</h1>
+<section id="prior-specification-for-the-linear-regression-multiple-imputation-model" class="level2">
+<h2 class="anchored" data-anchor-id="prior-specification-for-the-linear-regression-multiple-imputation-model">Prior Specification for the Linear Regression Multiple Imputation Model</h2>
 <p>The default setting of “Same priors across all model instances and visits,” implies that each parameter <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, and <span class="math inline">\(\lambda\)</span> have the same prior for all visits <span class="math inline">\(t\)</span>. Estimation of the posterior distribution for these parameters is still done independently for each model instance.</p>
-<section id="same-prior-for-all-visits-and-model-instances" class="level2">
-<h2 class="anchored" data-anchor-id="same-prior-for-all-visits-and-model-instances">Same prior for all visits and model instances</h2>
-<p>The one prior across all model instance are formulated as: <span class="math display">\[\alpha_t \sim \text{N}\left(\alpha_\mu, \alpha_{\sigma}^2\right)\]</span> <span class="math display">\[\beta_t \sim \text{N}\left(\beta_\mu, \beta_{\sigma}^2\right)\]</span> <span class="math display">\[\lambda_t^2 \sim \text{IG}\left(\frac{\lambda_n}{2}, \frac{\lambda_\mu^2 \lambda_n}{2}\right)\]</span> ## Same prior for all model instances, different prior per visit</p>
+<section id="same-prior-for-all-visits-and-model-instances" class="level3">
+<h3 class="anchored" data-anchor-id="same-prior-for-all-visits-and-model-instances">Same prior for all visits and model instances</h3>
+<p>The one prior across all model instance are formulated as: <span class="math display">\[\alpha_t \sim \text{N}\left(\alpha_\mu, \alpha_{\sigma}^2\right)\]</span> <span class="math display">\[\beta_t \sim \text{N}\left(\beta_\mu, \beta_{\sigma}^2\right)\]</span> <span class="math display">\[\lambda_t^2 \sim \text{IG}\left(\frac{\lambda_n}{2}, \frac{\lambda_\mu^2 \lambda_n}{2}\right)\]</span> ### Same prior for all model instances, different prior per visit</p>
 <p>Since each visit will likely have a different estimated intercept and slope needed to accurately impute the final endpoint, the above prior formulation may not be desirable if specifying priors that are not extremely diffuse – especially on the <span class="math inline">\(\beta\)</span> parameters. Instead, selecting “Specify priors per visit across all model instances,” will share the prior specification across all instances of the model, but allows for different priors to be put on the parameters associated with each visit. The user inputted prior parameters are now subscripted with <span class="math inline">\(t\)</span> to denote the visit they correspond to. These priors apply to all model instances:</p>
-<p><span class="math display">\[\alpha_t \sim \text{N}\left(\alpha_{\mu_t}, \alpha_{\sigma_t}^2\right)\]</span> <span class="math display">\[\beta_t \sim \text{N}\left(\beta_{\mu_t}, \beta_{\sigma_t}^2\right)\]</span> <span class="math display">\[\lambda_t^2 \sim \text{IG}\left(\frac{\lambda_{n_t}}{2}, \frac{\lambda_{\mu_t}^2 \lambda_{n_t}}{2}\right)\]</span> ## Different prior for all model instances and visits</p>
+<p><span class="math display">\[\alpha_t \sim \text{N}\left(\alpha_{\mu_t}, \alpha_{\sigma_t}^2\right)\]</span> <span class="math display">\[\beta_t \sim \text{N}\left(\beta_{\mu_t}, \beta_{\sigma_t}^2\right)\]</span> <span class="math display">\[\lambda_t^2 \sim \text{IG}\left(\frac{\lambda_{n_t}}{2}, \frac{\lambda_{\mu_t}^2 \lambda_{n_t}}{2}\right)\]</span> ### Different prior for all model instances and visits</p>
 <p>It is also possible to specify priors “Per model instance and visit,” in which every visit has separate priors, and those differing priors vary across model instances. This is the most flexible prior specification method. The user inputted prior parameters are now subscripted by both t for visit and i for model instance. <span class="math display">\[\alpha_{ti} \sim \text{N}\left(\alpha_{\mu_{ti}}, \alpha_{\sigma_{ti}}^2\right)\]</span> <span class="math display">\[\beta_{ti} \sim \text{N}\left(\beta_{\mu_{ti}}, \beta_{\sigma_{ti}}^2\right)\]</span> <span class="math display">\[\lambda_{ti}^2 \sim \text{IG}\left(\frac{\lambda_{n_{ti}}}{2}, \frac{\lambda_{\mu_{ti}}^2 \lambda_{n_{ti}}}{2}\right)\]</span></p>
+</section>
 </section>
 <section id="choosing-values-for-prior-parameters" class="level2">
 <h2 class="anchored" data-anchor-id="choosing-values-for-prior-parameters">Choosing Values for Prior Parameters</h2>
@@ -356,7 +356,7 @@ standard deviation <span class="math inline">\(\ge\)</span> the largest expected
 </dd>
 <dt><span class="math inline">\(\beta\)</span></dt>
 <dd>
-mean of either 0 or <span class="math inline">\(\frac{\text{final visit time}{\text{early visit time}\)</span>]
+mean of either 0 or <span class="math inline">\(\frac{\text{final visit time}}{\text{early visit time}}\)</span>
 </dd>
 <dd>
 standard deviation <span class="math inline">\(\ge\)</span> the largest expected ratio of final visit to first visit response
@@ -366,10 +366,7 @@ standard deviation <span class="math inline">\(\ge\)</span> the largest expected
 mean of the expected final visit endpoint standard deviation (<span class="math inline">\(\sigma\)</span>)
 </dd>
 <dd>
-weight of 1.
-</dd>
-<dd>
-The variability of the prediction from the longitudinal model (based on an observed intermediate response) should be less than the variability based solely on the treatment allocation, thus this is a weakly pessimistic prior on the effectiveness of the longitudinal model that should be quickly overwhelmed by the data.
+weight of 1. The variability of the prediction from the longitudinal model (based on an observed intermediate response) should be less than the variability based solely on the treatment allocation, thus this is a weakly pessimistic prior on the effectiveness of the longitudinal model that should be quickly overwhelmed by the data.
 </dd>
 </dl>
 </section>
@@ -379,8 +376,174 @@ The variability of the prediction from the longitudinal model (based on an obser
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
-#| viewerHeight: 450
-</code></pre>
+#| viewerHeight: 800
+
+library(shiny)
+library(DT)
+library(ggplot2)
+
+alignCenter &lt;- function(el) {
+  htmltools::tagAppendAttributes(el,
+                                 style="margin-left:auto;margin-right:auto;"
+  )
+}
+
+ui &lt;- fluidPage(
+  tags$head(
+    # Note the wrapping of the string in HTML()
+    tags$style(HTML("
+      .my_col_class {
+         align-content: center;
+      }")
+    )
+  ),
+  
+  titlePanel(h1("Linear Regression LM Priors", align = "center")),
+  alignCenter(sliderInput("numVisits", "Number of visits:", 
+                          min = 1, max = 20, value = 5, step = 1)),
+  DTOutput("dataInputTable"),
+  br(),
+  titlePanel(h2("Plot a Subjects Prior Predictive", align = "center")),
+  fluidRow(
+    #column(5, offset = 1, uiOutput("slider")),
+    column(5, offset = 1, sliderInput(inputId = "lastVisitWithData", 
+                                      label = "Last complete visit:", 
+                                      min = 1, max = 5,
+                                      value = 3, step = 1)),
+    column(6, fluidRow(
+      column(6, offset = 2, checkboxInput("fixAlpha", "Fix alpha at its mean?", value = FALSE, width = "100%")),
+      column(6, offset = 2, checkboxInput("fixBeta", "Fix beta at its mean?", value = FALSE, width = "100%"))
+    ))
+  ),
+  plotOutput("priorPredictive")
+)
+
+shinyInput &lt;- function(FUN, len, id, ...) {
+  inputs &lt;- character(len)
+  for (i in seq_len(len)) {
+    inputs[i] &lt;- as.character(FUN(paste0(id, i), label = NULL, ...))
+    print(inputs[i])
+  }
+  inputs
+}
+
+getLowerMedianUpper = function(earlyVisitVal, alpha = c(0,1), beta = c(0,1), lambda = c(1,1)) {
+  distMeanFinal = c(alpha[1] + beta[1]*earlyVisitVal,
+                    sqrt(alpha[2]^2 + beta[2]^2*earlyVisitVal^2))
+  
+  deviates = rnorm(10000)
+  deviates = (deviates - mean(deviates))/(sd(deviates))
+  dev2 = sample(deviates)
+  
+  samps = (deviates*distMeanFinal[2] + distMeanFinal[1]) + dev2*lambda[1]
+  
+  distValueFinal = c(mean(samps), sd(samps))
+  
+  return(list("meanFinal" = data.frame(lower = distMeanFinal[1] + qnorm(.025)*distMeanFinal[2],
+                         median = distMeanFinal[1],
+                         upper = distMeanFinal[1] + qnorm(0.975)*distMeanFinal[2]),
+              "predictionFinal" = data.frame(lower = distValueFinal[1] + qnorm(.025)*distValueFinal[2],
+                         median = distValueFinal[1],
+                         upper = distValueFinal[1] + qnorm(0.975)*distValueFinal[2])))
+}
+
+
+
+server &lt;- function(input, output, session) {
+  
+  df = data.frame(Visits = 1:5,
+                  VisitResponse = 0,
+                  alphaPriorMean = 0,
+                  alphaPriorSD = 10,
+                  betaPriorMean = 0,
+                  betaPriorSD = 10,
+                  lambdaPriorCenter = 10, 
+                  lambdaPriorWeight = 1)
+  
+  ## Render DF to actually change
+  output$dataInputTable = renderDT(datatable(df, 
+    options = list(
+      dom = "t",
+      autoWidth = TRUE,
+      columnDefs = list(list(width = '150px', targets = 1:8))
+    ),
+    rownames = TRUE,
+   # escape = FALSE,
+    selection = 'none',
+    editable = list(target = "cell", disable = list(columns = 1))
+    ) |&gt; formatRound(2, digits = 4) |&gt; formatRound(3:8, digits = 2)
+  )
+  
+  ## Update from Conditional
+  proxy = dataTableProxy('dataInputTable')
+  
+  observeEvent(input$dataInputTable_cell_edit, {
+    info = input$dataInputTable_cell_edit
+    str(info)
+    i = info$row
+    j = info$col
+    v = info$value
+    
+    df &lt;&lt;- editData(df, info)
+    
+    replaceData(proxy, df) 
+  })
+  
+  observe({
+    nv = input$numVisits
+    if(nv &gt; nrow(df)) {
+      for(i in 1:(nv-nrow(df))) {
+        df &lt;&lt;- rbind(df, setNames(data.frame(matrix(c(1+nrow(df), df[nrow(df),-1]), nrow = 1)), names(df)))
+      }
+    } else if(nv &lt; nrow(df)) {
+      df &lt;&lt;- df[1:nv,]
+    }
+    replaceData(proxy, df) 
+    
+    updateSliderInput(session, "lastVisitWithData", max = nv, value = min(nv, input$lastVisitWithData))
+  })
+  
+  output$priorPredictive = renderPlot({
+    lvIndex = input$lastVisitWithData
+    finalVisitIndex = input$numVisits
+    tempDF = df
+    dataToPlot = getLowerMedianUpper(tempDF[lvIndex,2],
+                                     alpha = c(tempDF[lvIndex,3], ifelse(input$fixAlpha, 0, tempDF[lvIndex,4])),
+                                     beta = c(tempDF[lvIndex,5], ifelse(input$fixBeta, 0, tempDF[lvIndex,6])),
+                                     lambda = c(tempDF[lvIndex,7], tempDF[lvIndex,8]))
+    
+    tempDF$visitKnown = ifelse(1:nrow(tempDF) &lt;= lvIndex, "included", "excluded")
+    p1 = ggplot() + 
+      geom_point(dat = tempDF, aes(x = Visits, y = VisitResponse, color = visitKnown)) + 
+      scale_color_manual(breaks = c("included", "excluded"), values = c("black", "gray70"), guide = "none") +
+      coord_cartesian(xlim = c(1, finalVisitIndex)) + 
+      xlab("Visit Index") + ylab("Response") +
+      theme_bw()
+    
+    if(lvIndex &lt; finalVisitIndex) {
+      p1 = p1 + 
+        geom_segment(data = dataToPlot[[2]], aes(x = finalVisitIndex, y = lower, yend = upper), color = "darkgreen", linewidth = 2.5) +
+        annotate(geom = "point", x = finalVisitIndex, y = dataToPlot[[2]]$median, color = "darkgreen", size = 3, shape = 18) +
+        annotate(geom = "ribbon", x = c(lvIndex, finalVisitIndex),
+                 ymin = c(tempDF$VisitResponse[lvIndex], dataToPlot[[2]]$lower),
+                 ymax = c(tempDF$VisitResponse[lvIndex], dataToPlot[[2]]$upper),
+                 fill = "darkgreen", color = NA, alpha = .15) +
+        geom_segment(data = dataToPlot[[1]], aes(x = finalVisitIndex, y = lower, yend = upper), color = "darkblue", linewidth = 1.5) +
+        annotate(geom = "point", x = finalVisitIndex, y = dataToPlot[[1]]$median, color = "darkblue", size = 3, shape = 18) +
+        annotate(geom = "ribbon", x = c(lvIndex, finalVisitIndex),
+                 ymin = c(tempDF$VisitResponse[lvIndex], dataToPlot[[1]]$lower),
+                 ymax = c(tempDF$VisitResponse[lvIndex], dataToPlot[[1]]$upper),
+                 fill = "darkblue", color = NA, alpha = .4)
+    } else {
+      p1 = p1 + annotate(geom="text", label = "Final Visit Value Known",
+                         alpha = .5, size = 10, x = (finalVisitIndex+1)/2, y = Inf, vjust = 1.3)
+    }
+    
+    p1
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
 
 
 </section>
