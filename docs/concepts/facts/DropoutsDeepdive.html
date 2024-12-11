@@ -71,12 +71,19 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 
+
+
 <!-- Roboto Serif -->
+
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
 
+
+
 <!-- Roboto Sans -->
+
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
@@ -259,6 +266,12 @@ window.Quarto = {
  <span class="menu-text">Dropout Rate Explanation</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../concepts/facts/LinearRegressionLMPriors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Linear Regression Multiple Imputation Model</span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
@@ -301,7 +314,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="dropouts-per-dose">Dropouts Per Dose</h2>
 <p>If “Dropouts per Dose” is selected, then each subject has a probability of not having an observable final endpoint value equal to the dropout rate of the dose that subject is randomized to. If each subject has multiple visits and “Dropouts per Dose” is selected, then the conditional probability of dropping out before each visit given that the subject had not dropped out up to the visit before rates are all equal. In other words, if the total dropout rate is π_D, the probability of dropping out between visits i and i+1 given that the subject had not dropped out at visit <span class="math inline">\(i\)</span> is <span class="math display">\[
 1-\left(1-\pi_D\right)^{(\frac{1}{V})}\text{ where } V \text{ is the total number of visits.}
-\]</span> The following interactive widget takes in the desired dropout rate and the number of visits a subject will have during their follow-up, and returns information about the dropout rate that FACTS will simulate by visit.</p>
+\]</span> The following interactive widget takes in the desired dropout rate for a single dose and the number of visits a subject will have during their follow-up, and returns information about the dropout rate that FACTS will simulate by visit for that dose.</p>
 <p>The columns in the dynamic output table are:</p>
 <dl>
 <dt>Visit number</dt>
@@ -327,7 +340,7 @@ window.Quarto = {
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
-#| viewerHeight: 600
+#| viewerHeight: 450
 
 library(shiny)
 
@@ -375,12 +388,30 @@ shinyApp(ui = ui, server = server)</code></pre>
 <p>If “Dropouts per Dose per Visit” is selected, then each subject has a user specified probability of dropping out before a visit v that is specified as the conditional probability of dropping out before visit v given that that they had not dropped out by visit v-1. This leads to a total dropout rate π_D for a participant that is equal to:</p>
 <p><span class="math display">\[
 \pi_D = 1-\Pi_{v=0}^V(1-\pi_v)
-\]</span> When specifying Dropouts Per Dose Per Visit in FACTS, the user inputs the conditional visit dropout rate for each visit. This can make it not completely intuitive to get the exact desired cumulative dropout rate. The below application allows the user to enter either the conditional visit dropout rates or the marginal visit dropout rates, and provides the implied dropout profile from those inputs. <em>In order to simulate dropouts from the below profile in FACTS, enter the Conditional Visit Dropout Rate into the FACTS Dropout Rate tab.</em></p>
+\]</span> When specifying Dropouts Per Dose Per Visit in FACTS, the user inputs the conditional visit dropout rate for each visit. This can make it not completely intuitive to get the exact desired cumulative dropout rate. The below application allows the user to enter either the conditional visit dropout rates or the marginal visit dropout rates for a single dose, and provides the implied dropout profile from those inputs. Again, the columns of the table represent:</p>
+<dl>
+<dt>Visit number</dt>
+<dd>
+<p>The index of the visit that a subject would observe.</p>
+</dd>
+<dt>Conditional Visit Dropout Rate</dt>
+<dd>
+<p>The probability that a subject drops out before row specified visit given that they have not dropped out after the previous visit.</p>
+</dd>
+<dt>Marginal Visit Dropout Rate</dt>
+<dd>
+<p>The probability that a subject that has not yet been enrolled in the study will dropout before row specified visit and after the previous row’s visit.</p>
+</dd>
+<dt>Cumulative Dropout Prob.</dt>
+<dd>
+<p>The probability that a subject will drop out at the row specified visit or before. At the last visit row this value will equal the Desired Dropout Rate.</p>
+</dd>
+</dl>
 <pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
-#| viewerHeight: 800
+#| viewerHeight: 600
 
 library(shiny)
 library(DT)
@@ -489,6 +520,7 @@ server &lt;- function(input, output) {
 }
 
 shinyApp(ui = ui, server = server)</code></pre>
+<p><strong>In order to simulate dropouts from the below profile in FACTS, enter the Conditional Visit Dropout Rate into the FACTS Dropout Rate tab.</strong></p>
 
 
 </section>

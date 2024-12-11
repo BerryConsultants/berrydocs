@@ -1,0 +1,122 @@
+---
+title: "Linear Regression Multiple Imputation Model"
+description: "A description of the Linear Regression multiple imputation model and a tool for helping specifying its prior."
+execute:
+  echo: false
+filters:
+  - shinylive
+---
+
+::: {.callout-tip}
+## Jump to widget
+
+[Click to jump straight to prior specification application.](LinearRegressionLMPriors.qmd#sec-priorSpecWidget)
+:::
+
+# Multiple Imputation in FACTS
+
+When simulated subjects have multiple visits during the course of their
+follow-up it is common that at the time of an analysis not all subjects
+have complete known data. This can be because the subjects dropped out
+(was lost to follow-up) or because the subject has not yet had time to
+complete the visits that occur later in their follow-up window. Subjects
+that are still in follow-up, but do not have final visit data are always
+multiply imputed by FACTS through the specified longitudinal model.
+Subjects who drop out may or may not be imputed based on user input in
+"Handling of Missing Data Due to Dropouts" on the Design \> Dose
+Response tab.
+
+# The Linear Regression Multiple Imputation Model
+
+The linear regression multiple imputation model is very simple. For each
+early visit, it estimates an intercept and a slope that dictates how the
+early visit data should be used to predict the final visit data. Only
+the latest observed data point for a subject is used to impute their
+final endpoint value, so if a subject can have 6 total visits and they
+have known data at visits 1, 2, and 3, but missing data at visits 4, 5,
+and 6, then the visit 3 data will be used to multiply impute the visit 6
+data. No intermediate visits are imputed.
+
+In the equation below, $Y_i\mid y_{it}$ is the final endpoint for
+subject $i$ given an early value at visit $t$. Then,
+
+$$
+Y_i\mid y_{it} \sim \alpha_t+\beta_t y_{it}+\text{N}(0,\lambda_t^2 ).
+$$
+
+The parameter $\alpha_t$ is the intercept of the model for visit t,
+and the parameter $\beta_t$ is a multiplicative modifier (slope) of the
+response observed at visit $t$. So, to impute a value for $Y_i$, simply
+take the early visit value, multiply it by $\beta_t$, add $\alpha_t$,
+and then jitter a normal deviation with variance $\lambda_t^2$ around
+that value.
+
+# Prior Specification for the Linear Regression Multiple Imputation Model
+
+The default setting of “Same priors across all model instances and
+visits,” implies that each parameter $\alpha$, $\beta$, and $\lambda$
+have the same prior for all visits $t$. Estimation of the posterior
+distribution for these parameters is still done independently for each
+model instance.
+
+## Same prior for all visits and model instances
+
+The one prior across all model instance are formulated as:
+$$\alpha_t \sim \text{N}\left(\alpha_\mu, \alpha_{\sigma}^2\right)$$
+$$\beta_t \sim \text{N}\left(\beta_\mu, \beta_{\sigma}^2\right)$$
+$$\lambda_t^2 \sim \text{IG}\left(\frac{\lambda_n}{2}, \frac{\lambda_\mu^2 \lambda_n}{2}\right)$$
+\## Same prior for all model instances, different prior per visit
+
+Since each visit will likely have a different estimated intercept and
+slope needed to accurately impute the final endpoint, the above prior
+formulation may not be desirable if specifying priors that are not
+extremely diffuse – especially on the $\beta$ parameters. Instead,
+selecting “Specify priors per visit across all model instances,” will
+share the prior specification across all instances of the model, but
+allows for different priors to be put on the parameters associated with
+each visit. The user inputted prior parameters are now subscripted with
+$t$ to denote the visit they correspond to. These priors apply to all
+model instances:
+
+$$\alpha_t \sim \text{N}\left(\alpha_{\mu_t}, \alpha_{\sigma_t}^2\right)$$
+$$\beta_t \sim \text{N}\left(\beta_{\mu_t}, \beta_{\sigma_t}^2\right)$$
+$$\lambda_t^2 \sim \text{IG}\left(\frac{\lambda_{n_t}}{2}, \frac{\lambda_{\mu_t}^2 \lambda_{n_t}}{2}\right)$$
+\## Different prior for all model instances and visits
+
+It is also possible to specify priors “Per model instance and visit,” in
+which every visit has separate priors, and those differing priors vary
+across model instances. This is the most flexible prior specification
+method. The user inputted prior parameters are now subscripted by both t
+for visit and i for model instance.
+$$\alpha_{ti} \sim \text{N}\left(\alpha_{\mu_{ti}}, \alpha_{\sigma_{ti}}^2\right)$$
+$$\beta_{ti} \sim \text{N}\left(\beta_{\mu_{ti}}, \beta_{\sigma_{ti}}^2\right)$$
+$$\lambda_{ti}^2 \sim \text{IG}\left(\frac{\lambda_{n_{ti}}}{2}, \frac{\lambda_{\mu_{ti}}^2 \lambda_{n_{ti}}}{2}\right)$$
+
+## Choosing Values for Prior Parameters
+
+A potential starting place for non-informative prior values would be:
+
+$\mathbf \alpha$
+:   mean of 0
+:   standard deviation $\ge$ the largest expected response
+
+$\beta$
+:   mean of either 0 or $\frac{\text{final visit time}{\text{early visit time}$]
+:   standard deviation $\ge$ the largest expected ratio of final visit to first visit response
+
+$\lambda$
+:   mean of the expected final visit endpoint standard deviation ($\sigma$)
+:   weight of 1.
+:   The variability of the prediction from the longitudinal model (based on an
+observed intermediate response) should be less than the variability based solely on
+the treatment allocation, thus this is a weakly pessimistic prior on the
+effectiveness of the longitudinal model that should be quickly
+overwhelmed by the data.
+
+## Prior Specification Widget {#sec-priorSpecWidget}
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 450
+
+```
