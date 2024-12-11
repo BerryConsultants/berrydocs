@@ -1,0 +1,528 @@
+---
+title: "FACTS Dose Escalation CRM"
+subtitle: "CRM / N-CRM / BLRM (Bayesian Logistic Regression Model)"
+format: 
+  html:
+    toc: true
+    toc-depth: 4
+    toc-title: "Table of Contents"
+    number-sections: true
+    number-depth: 4
+---
+
+# Introduction {#sec-introduction}
+
+## Purpose of this document {#sec-purpose}
+
+This document describes how use the FACTS Dose Escalation (DE) CRM design engine. It is intended for all end users of the system.
+
+## Scope of this document {#sec-scope}
+
+This document covers the FACTS Dose Escalation N-CRM design engine user interface.
+
+This document does not address the internal workings of the design engines or algorithms, which are addressed in the associated Design Engine Specification. It also does not address the use of FACTS Core Designs or Enrichment Designs, which are covered in other User Guides.
+
+The screenshots provided are specific to a particular installation and may not reflect the exact layout of the information seen by any particular user. They were taken from FACTS 6.3 and later installed on Windows 10. Different versions of Windows or the use of different Windows themes will introduce some differences in appearance. The contents of each tab, however, will be consistent with the software.
+
+## Context of this Issue {#sec-context}
+
+This document has been updated for the version 7.1 release of Dose Escalation FACTS.
+
+## Citing FACTS {#sec-citing}
+
+If writing in LaTex and using Bibtex, if you wish to cite FACTS (thank you!), can we suggest the following:
+
+``` default
+@techreport{FACTS71,
+  author = {{FACTS Development Team}},
+  title = {{FACTS}: Fixed and Adaptive Clinical Trial Simulator},
+  year  = {2024},
+  month = {12},
+  number = {Version 7.1},
+  type         = {Computer Software},
+  institution = {Berry Consultants LLC},
+  address = {Austin, TX},
+  note   = {https://www.berryconsultants.com/software/facts/}
+}
+```
+
+This will result in a reference that, for example in the APA style, will look like the following:
+
+FACTS Development Team (2024). FACTS: Fixed and adaptive clinical trial simulator. Computer Software Version 7.1, Berry Consultants LLC, Austin, TX. https://www.berryconsultants.com/software/facts/.
+
+## Definition of Terms {#sec-definitions}
+
+@tbl-crmterms gives an overview of the acronyms and abbreviations used in this document.
+
+| Name | Definition |
+|:-----------------------------------|:-----------------------------------|
+| Cap | A limit on the number of subjects recruited. In FACTS N-CRM users can specify a cap on the overall number of subjects to be recruited in the trial (the ‘Overall Cap’) and specify stopping rules to define when the trial should stop before it reaches cap. |
+| Control | Is the treatment arm with which the novel treatment(s) are principally being compared. Control may be placebo, or some existing standard of care, or therapy, against which the novel treatment has to be benchmarked in order to determine its likely usefulness. |
+| Core | FACTS Core: A mode of FACTS for designing trials where multiple treatments, (possibly different doses of a novel treatment) are tested against a control and optionally an active comparator. |
+| CRM | Continual Reassessment Method – a dose escalation design where the dose-toxicity is estimated using a simple Bayesian model, and the resulting estimates used to control the dose escalation and estimate the Maximum Tolerated Dose (MTD). |
+| DE | Dose Escalation: a mode of FACTS where subjects are treated in cohorts and dose escalation is determined by the number of toxicities observed. |
+| ED | Enrichment Designs: a mode of FACTS for designing trials where the same treatment is testing in different settings for example different sub-populations or different but related indications. |
+| FACTS | Fixed and Adaptive Clinical Trial Simulator. |
+| Final Endpoint | The final value, or state, of a subject’s endpoint. |
+| GUI | Graphical User Interface, the part of the FACTS application that the user interacts with. |
+| Method | In the FACTS documentation we try to reserve the term ‘method’ for the algorithms used in the simulation (as opposed to the analysis) part of the program. In the analysis part we use the term ‘Model’, see below. |
+| Model | In the FACTS documentation we try to reserve the term ‘model’ for the statistical models used in the analysis of the trial data (in the ‘design’ section of the FACTS user interface). Where mathematical algorithms are used for other purposes in FACTS (for instance in the generation of the simulated data) we try to use the term ‘method’. We have found that initially it is very easy for users to be confused between these two parts of FACTS and we feel that using distinct terminology may help to reduce this. |
+| MTD | The dose most likely to be the Maximum Tolerated Dose (MTD) – the dose with the highest Pr(MTD). |
+| MTD+ | The dose most likely to be the MTD+ – the dose with the highest Pr(MTD+). |
+| Pr(MTD) | A dose’s probability of being MTD is the probability that it is the dose with the highest probability of having a toxicity rate in the acceptable toxicity band, and (if a threshold has been specified) does not have a probability of excess or unacceptable toxicity above the threshold. This estimate of MTD is constrained to select one of the available doses. |
+| Pr(MTD+) | A dose's probability of being the MTD+ is the probability that it is the dose with the highest probability of having a toxicity rate in the acceptable band, and (if a threshold has been specified) does not have a probability of excess or unacceptable toxicity above the threshold. Unlike Pr(MTD), Pr(MTD+) includes estimating whether a dose below or a dose above the range of those being tested is more likely to have a toxicity in the acceptable band than any of the doses in the range. |
+| Profile | A profile is a specification of one aspect of a scenario. A scenario is made up of one profile of each of the required types for the type of trial being simulated. FACTS allows the user to specify multiple profiles of each type and then presents all the possible combinations of profiles as scenarios that can be used to drive simulations. |
+| Response | The change in a subject’s endpoint compared to their baseline state. |
+| Scenario | A scenario is the complete specification of the unknown external factors that determine the data observed on the trial and its timing. The exact factors depend on the type of trial being simulated but typically include: <br/> -) the distribution of the final change from base line, or probability of response or rate of events in the different treatment groups <br/> -) the properties of subjects’ early responses and the correlation with their final outcome <br/> -) the rate at which subjects are recruited into the trial <br/> -) the rate at which subjects drop out of the trial. |
+| SPEC | The Design Engine Specification, describes the system algorithms, and meaning of parameters. |
+| Response | The change in a subject’s endpoint compared to their baseline state. |
+| Subject | Someone recruited onto a clinical trial for the purposes of learning about the properties of a treatment. Depending on the type of trial they might be patients or they might be healthy volunteers. |
+| Treatment Arm | Subjects on entering the study are randomized to different ‘treatment arms’. Subjects randomized to the same arm receive the same treatment and the responses of the subjects in the arm analyzed to determine the expected response to that treatment, allowing the expected responses to the different treatments to be compared. |
+| UG | The User Guide; describes how to use the system. |
+
+: List of terms used in the CRM user guide {#tbl-crmterms .striped .hover tbl-colwidths="\[15,85\]"}
+
+# FACTS Overview
+
+This user guide assumes some limited general familiarity with FACTS and concentrates on describing the interface for designs using the N-CRM approach. See the FACTS Dose Escalation user guide for a general introduction to the FACTS Dose Escalation user interface.
+
+The N-CRM is based on the method described in the paper [@neuenschwander2008critical]. It is designed for use in oncology phase 1 trials, and we understand generally in use at Novartis for the majority of their trials of this type:
+
+-   Dosing starts at a (very) low dose, strongly believed to be safe.
+-   Usually after a cohort of subjects have completed their current dose, the dose to be used for the next cohort is selected. The selection of this dose is dictated by a combination of dose escalation rules, the estimate of the toxicity rate on the different doses and the target maximum tolerated toxicity, or toxicity band.
+-   The endpoint per subject is binary: toxicity observed or not.
+-   There is either a predefined set of doses to explore, or a dose range.
+-   There is limited sample size.
+
+## FACTS 7.1 Changes to N-CRM
+
+In FACTS 7.1 there were new features added to N-CRM:
+
+-   It is now possible to backfill to the current escalation dose (also known as “frontfilling”).
+-   It is now possible to specify a third queue concept – maximum number of patients in their DLT period on the current MTD estimate.
+-   It is now possible to define the concept of “near” target/MTD as part of stopping rules, for both fine-grained and regular dosing.
+
+## FACTS 7.0 Changes to N-CRM
+
+In FACTS 7.0 the only change was on the Analysis tab, when entering subject data manually, the FACTS GUI now ensures that a cohort number is entered for every subject.
+
+## FACTS 6.5 Changes to N-CRM
+
+In FACTS 6.5 there was a new feature added to N-CRM:
+
+-   It is now possible to generate a design report – a Word document describing design - once the design has been simulated. In FACTS 6.5 there was two small changes to the functionality:
+-   When deriving toxicity/efficacy priors from quantiles at the lowest and highest doses, the “middle” probability option now refers to the median dose rather than the reference dose and is now optional. When pre-6.5 FACTS files are loaded in FACTS 6.5, the “middle” probability option will be ignored and replaced by 0.5.
+-   When deriving toxicity/efficacy priors from specific quantiles the specification of at least two dose levels is now required whereas previously the specification of at least three dose levels was required.
+
+In FACTS 6.5 there were some improvements in the simulated behavior:
+
+-   Designs which include efficacy, the “Maximum cohorts used to determine MTD” parameter on the Allocation Rule tab is now observed, in FACTS 6.4 and earlier it was ignored.
+-   In N-CRM designs using open enrollment without accrual pausing, FACTS will now output entries in the cohort file for subjects that have been lost following stopping rules being met.
+-   In N-CRM designs using open enrollment, FACTS will no longer prematurely apply stopping conditions when there are still subjects whose outcomes have been observed, but not yet processed.
+-   In N-CRM designs using open enrollment, FACTS will now report the selected MTD/MED/OSD and associated state to be the dose where the stopping conditions were first met, unless the MTD has subsequently decreased post stopping rules being met. This is to prevent a dose above the one selected when the stopping conditions were met being reported as the MTD when it is very likely that there is insufficient data on this higher dose to justify its selection. If rather than reporting the MTD at the point when the stopping rules where met, you would like the trial to resume if the dose selected as MTD has changed (and this the stopping rules possibly no longer met), ensure that the ”Pause accrual and wait for completers” option is selected on the “Stopping Criteria” tab. This allows the trial to resume if the recruitment cap has not been met.
+-   FACTS Command Line mode and FLFLL (FACTS Linux File Loader Lite) now correctly handle the processing of N-CRM designs whose prior was derived using the “Legacy Prior” option.
+
+## FACTS 6.4 Changes to N-CRM
+
+In FACTS 6.4 there were no changes to the Dose Escalation simulators.
+
+## FACTS 6.3 Changes to N-CRM
+
+In FACTS 6.3 a number of changes were made to improve facilities in N-CRM, or improve the way existing facilities were implemented. These were:
+
+1.  New run-in options: the existing run-in scheme is available as “simple run-in”, “custom run-in” allows a specific sequence of doses and number of subjects to test at each dose to be specified, “small cohort pre-escalation” allows a run that uses a smaller cohort size but follows the dose escalation rules and over dose control.
+2.  New “backfill” options in open enrolment. Backfill allows subjects that become available at a time when they can’t be allocated to the current dose (because the maximum number of subjects without final results have already been allocated to the current dose).
+3.  Improved handling of “maximum subjects without final results” in open enrolment. In earlier versions of FACTS this was a “global” maximum, which led to a suboptimal allocation pattern and overly cautious rejection of subjects that became available. The new model applies a maximum “per dose” so that once the trial has escalated to a new dose strength, any subjects without final results on lower doses do not block allocation to the new dose, in addition it is possible to specify two different maximums – one for when a dose has just been escalated to but has not been “cleared” (typically smaller and more cautious), and one when a dose has been cleared but we continue to allocate to it because it is the target dose (typically larger and more confident). This method is such an improvement that we recommend moving any design using open enrolment to this new version of FACTS.
+4.  Improved Ordinal Toxicity model – the way the likelihood is calculated has been improved – reducing the uncertainty in the model fit. Any design using an ordinal model will need to re-calibrate the prior if you move the design to FACTS 6.3. If you have a design already complete, or in execution we recommend you remain using the earlier version of FACTS for that trial.
+
+## FACTS 6.2 Changes to N-CRM
+
+In FACTS 6.2 features available separately in the other FACTS CRM engines (CRM (Toxicity), bCRM & CRM Ordinal) were all incorporated into N-CRM. This allowed these features to be used in conjunction with N-CRM’s target toxicity band methodology, overdose control and open enrollment features, as well as in conjunction with each other for the first time.
+
+The new features are:
+
+1.  From CRM (Toxicity) the option to specify that the data is coming from ‘two groups’ and for the toxicity experienced in the two groups to be modelled with a joint model \[CRM 2 Sample\]. This allows a trial where there are two patient populations (such as adults and children) or where there are two versions of the treatment to be simulated.
+2.  From bCRM the option to model a second binary efficacy endpoint \[bCRM\] and the for dose allocation to proceed in two stages – the first to establish an MTD and the second to establish an MED.
+3.  From CRM Ordinal the option for the toxicity endpoint to be modelled not as binary endpoint, but one with different categories of toxicity, and with a joint model applied to the different categories \[CRM Ordinal\]. The endpoint can be to model either 3 or 4 categories of toxicity:
+    a.  category 1 is “no toxicity”,
+    b.  category 2 is “mild toxicity”,
+    c.  category 3 is “toxicity”
+    d.  category 4 (if included) is “severe toxicity”
+
+All decision making is made in terms of the probability of observing a category 3 (or worse) toxicity.
+
+## FACTS 6.1 Changes to N-CRM
+
+In FACTS 6.1 N-CRM has the new feature of ‘design variants’ that allow the user to easily simulate and evaluate an N-CRM design at different sample sizes. This change includes 4 elements:
+
+1.  Under the ‘Study’ tab the user can now specify the number of design variants, and for each variant the maximum study size in Cohorts.
+2.  On the simulation tab FACTS will display a copy of each simulation scenario for each variant.
+3.  The simulation results now include the Ppn of trials that stopped for each stopping reason: stopping because all doses are too toxic (the toxicity estimates exceed the overdose criteria), because a stopping rule was met or because the study cap was reached.
+4.  There are now a set of cross variant graphs that show trellis plots of the key summary graphs by design variant and scenario.
+
+# N-CRM Dose Escalation Design Concepts
+
+In an N-CRM dose escalation trial, subjects are exposed to the novel treatment at increasing dose strengths, not progressing to the next dose strength until lower doses have been shown to be sufficiently safe, and not progressing beyond the dose which appears to display the maximum tolerated rate of toxicity, or the target rate of toxicity, the “Maximum Tolerated Dose” (MTD). To limit the risk of exposing subjects to a new, higher dose strength, subjects are allocated in “cohorts’ of a given size and no further subjects are recruited until all the subjects in the cohort complete treatment and follow-up. To enroll subjects quicker and introduce further options to manage the risk of exposure at new doses, FACTS allows “Open Enrolment” of new subjects, which is a form of design that dispenses with cohorts and is described in [this section](#sec-concepts-oe).
+
+Once all the subjects in a cohort have completed, FACTS updates its analysis of the dose toxicity, re-evaluates the dose-escalation rules and selects the dose the next cohort will be allocated to. As well as the final results of each simulated trial, each time a cohort completes FACTS outputs the data available and the results of the analysis. These are referred to as “cohorts files”, and when you run the simulations, you can specify for how many of them you want these additional files written out.
+
+The design’s default behavior is to allocate the next cohort to the model estimated MTD, but this is typically modified by several user specified rules. Note that if all the rules are met, the allocation is to the model estimated MTD, it will never allocate above it.
+
+The rules that are available to modify this behavior, to achieve “not progressing to the next dose strength until lower doses have been shown to be sufficiently safe” are:
+
+-   Starting dose: the dose strength to be allocated to the first cohort. (Specified on the Design \> Allocation Rule tab)
+-   Overdose control: a limit can be specified on the probability that a dose’s toxicity rate is above a certain level, and any dose for which this is true is excluded from allocation. (Specified on the Study \> Toxicity tab)
+-   Dose escalation rules: The size of the increase in dose strength from one cohort to the next can be specified (Specified on the Design \> Allocation Rule tab).
+-   Single patient / small cohort run-in: a fixed dose allocation scheme can be specified, using a different (typically smaller) cohort size. That is applied without reference to any other rules or to the results of the analysis as long as no toxicities have been observed. If the trial includes what is thought to be a number of weak doses that are likely to have toxicity below the target rate, but are still required to be tested, using a run-in can make testing these doses cheaper and quicker.
+
+In the sections to follow, we describe overdose control, dose escalation rules and run-in features in the conventional context of cohort enrolment and a limited number of possible doses. We also describe the options FACTS allows to model the subjects in the trial as belonging to 2 different groups and the options to simultaneously model an efficacy endpoint. We subsequently describe how these are modified if:
+
+-   there are many potential dose strengths in a certain range that could be, but don’t have to be, administered in the trial (“fine grain dosing”).
+-   we choose not to limit enrolment to cohorts but enroll subjects continuously (“open enrolment”).
+
+## Overdose Control
+
+Overdose control can be specified on the Study \> Toxicity tab. Overdose control specifies a limit on the probability that a dose has a toxicity rate above a certain level. After fitting the Bayesian logistic regression model, all doses for which the posterior probability that their toxicity rate lies above the specified level exceeds the specified limit are ineligible for allocation. Because the Bayesian Logistic regression is monotonic, this means that after every analysis either all doses are permitted for allocation or there will be a dose level above which no dose is permitted for allocation.
+
+![Setting the overdose control limit](images/clipboard-1701999235.png){#fig-sec-concepts-tox1}
+
+The overdose control is specified in terms of the “toxicity bands” (concept of allowing ranges for the target toxicity, excess toxicity, unacceptable toxicity and under-dosing explained in more detail in [this section](#sec-study-tox-interval)) and can either be in terms of the “excess and unacceptable toxicity bands” or just the “unacceptable toxicity band”. The “excess and unacceptable toxicity band” is every toxicity rate above the upper bound of the target band. Care should be taken when setting the permitted threshold for this joint band. If set below 0.5, it will likely exclude doses whose mean expected toxicity rate is within the target band with the risk that this makes the escalation decision in the design too cautious. Initially it might be recommended to just use the “unacceptable band” for specifying the overdose control. This allows an overdose control that is more strict – for example: “exclude any dose where the probability that the toxicity rate is above 0.6, is greater than 20%“. The lower bound for the unacceptable band can be set wherever desired, its only role is in defining this band for overdose control. It is also possible to specify that the limit changes over the course of the trial, allowing the overdose control to become stricter as more information becomes available. For example, one could reduce the permitted probability of a dose having a toxicity rate in the unacceptable band from 50% to 25% in steps of 2.5% after every cohort.
+
+## Dose Escalation Rules
+
+The dose escalation could be solely controlled by the overdose control (as originally proposed in [@neuenschwander2008critical]), however this means that the escalation behavior is very dependent on the interplay between the prior and the observed data. Usually, teams prefer to have a fixed set of rules in place ensuring the escalation behavior is sufficiently cautious. FACTS has an option to just use overdose control or to use a combination of overdose control and a set of fixed escalation rules. In the latter case, the following rules can be set in the Design \> Allocation Rule \> Allocation tab:
+
+![Dose escalation rules](images/clipboard-182351268.png){#fig-sec-concepts-esc1}
+
+We introduce the notion of whether a dose has been “cleared”. A dose is cleared once we have sufficient data on it (usually, but not necessarily, the results of one cohort, but if the cohort size is small, for example 2 subjects, perhaps more than one cohort will be required). This can be supplemented by a rule that if the observed raw toxicity rate at the dose exceeds a certain limit, then the dose is not counted as cleared (this rule is usually unnecessary if overdose control limits have been set). Once a dose has been cleared, it stays cleared, meaning there is “maximum cleared dose”. The number of dose increments or the factor of dose strength above the current cleared dose that can be allocated to is then specified. For example, with doses of 12.5, 25, 50, 100, 150, 200, 250, we might allow escalation at two dose increments a time. In the figure below, you see the combination of settings used to achieve this behaviour alongside the “Fastest Possible Dose Escalation” plot on the right:
+
+![Escalation by number of dose increments](images/clipboard-813055109.png){#fig-sec-concepts-esc2}
+
+Alternatively, we can specify the permitted escalation as a ratio, for example we might allow the dose strength to be at most tripled at each escalation, which, with the example dose strengths, makes the initial escalation more cautious:
+
+![Escalation by dose strength factor](images/clipboard-3260327219.png){#fig-sec-concepts-esc3}
+
+The escalation rules can be adjusted so that instead of a single increment rule, there are different increments depending on the dose, or depending on the number of observed toxicities. To modify our earlier example, we can allow escalation by 2 dose levels while no toxicities have been observed, but limit it to only one dose level once one or more toxicities have been observed:
+
+![Escalation increment varying by number of toxicities](images/clipboard-3972244063.png){#fig-sec-concepts-esc4}
+
+Lastly escalation can be relative to the highest cleared dose, or relative to the last dose allocated.
+
+To summarize the allocation procedure:
+
+-   The current maximum cleared dose is identified.
+-   The current data is analyzed using the Bayesian Logistic Regression model.
+-   The overdose rules are evaluated and all doses exceeding the overdose control limit are excluded from this escalation selection.
+-   From the remaining doses, the dose best meeting the target MTD or target toxicity interval objective based on the model is selected as the “target dose” (TD).
+-   If the TD is at or below the current maximum cleared dose, the next cohort is allocated to the TD.
+-   If the TD is within the escalation rules of the current maximum cleared dose, the next cohort is allocated to the TD.
+-   Otherwise, the next cohort is allocated to the highest dose above the current maximum cleared dose as allowed by the escalation rules.
+
+## Initial Run-in
+
+The purpose of defining a run-in is to define a fixed allocation behavior to be followed up to the first toxicity being observed. The specified number of subjects to allocate to each dose in the run-in and which doses to test are specified. This scheme is followed until a toxicity is observed or we reach the end of this fixed scheme.
+
+Three forms of run-in specification are available:
+
+-   Simple: allocates a small cohort to every defined dose in ascending order (unless fine grain doses - see section 3.6 – have been specified, in which case the escalation rules are followed).
+-   Custom: allocates a defined number of subjects (possibly varying by dose) to selected doses in ascending order.
+-   Small cohort pre-escalation: allocates a small cohort, but follows the escalation rules assuming just a single small cohort is required to clear a dose.
+
+All run-in schemes can be modified in a number of ways:
+
+-   Specifying a maximum dose at which the run-in stops if no toxicities are observed until that dose.
+-   If ordinal toxicities are being simulated, the run-in may should at the first observed category 2 toxicity (rather than a category 3 toxicity)
+-   Whether the subjects used in the run-in should be counted towards the trial sample size or not.
+-   When a toxicity is observed the standard behavior is to allocate to the minimum of: the last dose tested in the run-in, the current TD or the highest dose that can be allocated to by the overdose rules. This can be replaced by expanding the allocation on the current dose to make it a full cohort as specified in Study \> Study Info tab (this option is particularly useful in conjunction with stopping for a category 2 toxicity).
+
+## Two Groups
+
+FACTS has the option to model the subjects in the trial as belonging to two different groups, these can be either:
+
+-   Two groups distinguished by a baseline property of the subjects, for example adults and paediatrics.
+-   Two groups separated by a difference in treatment (and selected randomly), for example the study drug alone or in combination with an additional drug.
+
+There are options for when group 2 starts enrolling:
+
+-   They can be recruited sequentially – group 1 then group 2.
+-   They can be recruited in parallel
+-   The second group can be started when the allocation to the first group reaches a particular dose
+-   The second group can be started when the number of subjects allocated to group 1 reaches a particular threshold.
+
+A joint model is fitted to the two groups.
+
+The first group is modeled:
+
+$$
+logit(p_{1j}) = \alpha + \beta \hat{x}_j
+$$
+
+The second group is modeled:
+
+$$
+logit(p_{2j}) = (\alpha + a) + (\beta + b) \hat{x}_j
+$$ With separate priors and some optional constraints on $a$ and $b$. Dose escalation and stopping are judged independently for the two groups.
+
+## Efficacy {#sec-concepts-efficacy}
+
+FACTS has the option to additionally model an efficacy endpoint. There are currently two limitations in simulation:
+
+1.  Only a binary efficacy endpoint can be simulated
+2.  The efficacy endpoint is assumed to be available at the same time as the toxicity endpoint.
+
+The efficacy and toxicity endpoints are modelled separately. There are options to specify early stopping rules for finding the MTD, and to specify a cap on the sample size that can be spent finding the MTD. Once these rules are met, then allocation is towards the Minimum Efficacious Dose (MED) – if this is below the MTD. If the estimated MED lies at or above the estimated MTD, the allocation is at the estimated MTD.
+
+If while allocating to the estimated MED further toxicity results change the estimate of the MTD, and if there is now insufficient information on the MTD as specified by the early stopping rules for finding the MTD, allocation switches back to allocating to the estimated MTD, if the sample size cap for finding the MTD allows.
+
+## Fine Grain Dosing
+
+In some settings, e.g. when the drug is delivered in solution by IV or when manufacturing allows any dose in a range from say 100mg to 400mg in steps of 10mg, dose strengths need not be restricted to just a small number of pre-defined levels. FACTS has a feature that allows this to be simulated, not with a continuous range of doses, but with “fine grain” dosing.
+
+FACTS supports the specification of a range of doses from a minimum to a maximum with doses either equally spaced or spaced with equal ratio. Using dose ratio makes most sense it you want to use the dose strength whilst believing the effect will be roughly log-dose. Using dose ratios, it’s necessary to accept FACTS reporting dose strengths only close to those desired. As an example, if the main doses followed a dose doubling scheme: 12.5, 25, 50, etc., one might use fine grain dosing with dose space ratios of approximately the 4th root of 2 (1.1892). The resulting doses are 12.5, 14.865, 17.677, 21.022, 24.999, 29.729, 35.354, 42.043, 49.998, etc., which means there are three dose levels between each of the original doses.
+
+There are two alternatives:
+
+-   Use nominal dose strengths 1, 2, 3, 4, … (i.e. assuming the dose spacing is linear in expected effect) and label the doses according to their actual strength.
+-   Use a fixed dose interval (e.g. 12.5 resulting in doses of 12.5, 25, 37.5, 50, 62.5, etc.) so the lower doses (of the original scheme) have fewer (or no) intermediate doses and the higher doses have many more. The dose escalation rules can be specified in terms of dose strength ratio to achieve the required escalation, for example allowing dose escalation with a dose strength ratio of 2 will result in the initial escalation using doses 12.5, 25, 50, 100, etc.
+
+As well as possibly adjusting the dose escalation step size to accommodate the new dose levels on the Design \> Allocation Rule tab, there are two other rules that may need modification:
+
+-   To count a dose as “cleared”, we might now count cohorts on nearby doses to count towards the required clearing total. This is specified as the “Max ratio of dose strengths considered as near” (if dose allocation rules apply to ratio of dose strength) or “Delta in dose strength considered as near” (if dose allocation rules apply to dose strength) on the Design \> Allocation Rule tab.
+
+    -   For example, if we have doses at roughly 4th root of 2 intervals, we might count any dose within a ratio of 1.2 as “near” so that any cohorts allocated to immediate neighbor doses count towards clearing a dose.
+    -   Alternatively, if we have doses every 12.5mg from 12.5 to 400, counting any dose within a ratio of 1.1 will mean that from dose 125 and above, immediate neighbor doses (within 12.5) count towards clearing a dose, and from dose 250 and above, doses within 25mg (two immediate neighbor doses) count towards clearing a dose.
+
+-   The concept of “near doses” in fine grained dosing allows us to skip certain doses in the escalation phase, which might make sense if there is reason to believe that doses of similar dose strengths behave similarly and don’t provide enough additional information to justify assigning more cohorts to.
+
+    ![Doses from 12.5 to 400mg, with fixed spacing of 12.5. Showing dose escalation by dose doubling.](images/clipboard-2992696665.png){#fig-sec-concepts-fgd1}
+
+-   When requiring a certain number of cohorts to have been allocated to the estimated MTD before the trial can stop / to allow the trial to stop, we might now count cohorts on doses near the estimated MTD as counting towards that total. This is set on the Design \> Stopping Criteria tab. In considering which doses are near, the same logic as on the Design \> Allocation Rule tab regarding Dose Strength or Ratio of Dose Strength will be used.
+
+    -   If Dose Strength is used, then on the Design \> Stopping Criteria tab, we can include cohorts on nearby doses to count towards the required number of cohorts on the estimated MTD by specifying “nearby” in terms of dose strength. For example, by +/- 12.5 mg:
+
+        ![](images/clipboard-3547827418.png){#fig-sec-concepts-fgd2}
+
+    -   If ratio of Dose Strength is used then on the Design \> Stopping Criteria tab, we can include cohorts on nearby doses to count towards the required number of cohorts on the estimated MTD by specifying “nearby” in terms of dose strength ratio. For example, by +/- 10%:
+
+        ![](images/clipboard-271758767.png){#fig-sec-concepts-fgd3}
+
+Note that with Fine Grain dosing, if a band is specified for a dose to count as cleared, then the maximum cleared dose will be the maximum dose within that band, and if incrementing relative to the Maximum cleared dose, then the maximum permitted increment will be relative to the maximum dose within the cleared band.
+
+## Open Enrollment {#sec-concepts-oe}
+
+Open enrollment [@broglio2015bayesian] can be used instead of cohort enrollment. Cohort enrolment enrolls a fixed number of subjects to a given dose, then waits until their treatment and follow up is complete (so their final status – whether they suffered a DLT (Dose Limiting Toxicity) or not – is known) before deciding on the next dose to allocate to and then recruiting the next cohort. This likely means that subjects become available for inclusion in the trial, but have to be turned away as the trial waits for the current cohort to complete. Open enrollment attempts to address this by allowing subjects to be enrolled whilst the current “cohort” is completing. However, this may come with some risk – more than a cohort’s worth of subjects may now be exposed to a new dose before we have any estimate of its DLT rate. To allow this risk to be managed, open enrollment introduces two new concepts:
+
+1. When allocating to an uncleared dose, a cap can be set on the number of subjects that can be allocated to that dose who have not yet got their final results (“OE cap 1”). For example, if this number is set to 3 (to be the same as a common cohort size), after 3 subjects have been recruited and allocated to the current dose, no more subjects will be allocated to this dose until at least one of these subjects has completed. Until then, potential subjects that become available will be turned away unless backfilling is enabled (see next point below). But unlike cohort enrolment, as soon as the first of the subjects on the dose completes, a subject that comes available could now be allocated to the dose, depending on further rules explained below (frontfilling) – unless of course that subject’s result has changed the estimated MTD. Note that the trial won’t escalate beyond the current dose until the required number of subjects to clear the dose have completed. By default, the trial won’t allocate more than the number of subjects required to clear the dose until the dose is cleared, meaning if 3 subjects are required to clear a dose and 3 subjects have been allocated to this dose, even when 1 or 2 of these subjects have their final results and a new subjects is enrolled, they won’t be allocated to this dose. If this is regarded as over cautious, it can be modified by enabling frontfilling, allowing 3 subjects without final results simultaneously. In the above example, this would mean we could place a fourth subject on the dose when the result of the first subject has come in and a fifth subject as soon as the result of the second subject has come in.
+2. When the cap on the number of subjects without final results on an uncleared dose has been reached (“OE cap 1”) new potential subjects will be turned away, unless backfilling is enabled. Enabling backfilling allows these subjects to instead be included, allocating them to a lower dose that has already been cleared. Whilst such an allocation may not contribute as much to identifying the MTD as allocating to the current dose would, it can still contribute by:
+    a. Increasing the information on the next lower dose can inform the estimate of toxicity on the current dose through the Bayesian logistic model.
+    b. Providing additional information on a dose that it may be necessary to de-escalate too if the current dose turns out to be too toxic.
+    
+    It can also contribute information on other endpoints (such as efficacy). Once backfilling has been enabled, it is also possible to enable frontfilling. For more information on backfilling and frontfilling, see [this section](#sec-concepts-bf).
+
+Assume at a given point in time we want to allocate a subject to a specific dose, denoted by “candidate dose”. FACTS allows 3 different caps to be specified on how many subjects who have not yet got their final results (i.e. are not yet complete) can be allocated to this candidate dose:
+
+![](images/clipboard-1725771221.png){#fig-sec-concepts-oe1}
+
+1. *Maximum subjects without final results if dose is uncleared:* As described early in this section, we encounter this cap during escalation when the candidate dose is not yet cleared. This cap takes into account subjects not yet complete on the candidate dose and any higher dose (“OE cap 1”).
+2. *Max subjects without final results if dose is cleared and below MTD*: We encounter this cap when the candidate dose is cleared and below the estimated MTD (which can happen if the estimated MTD is beyond the range of available doses, when backfilling, or when allocating during the efficacy phase of a toxicity plus efficacy trial). This cap takes into account subject not yet complete on the candidate dose and any lower doses (“OE cap 2”).
+3. *Max subjects without final results if dose is cleared and at MTD:* We encounter this cap when the candidate dose is cleared and the current model estimated MTD (which can happen when after clearing a dose we decide not to escalate, or after de-escalating) (“OE cap 3”).
+
+## Backfilling and Frontfilling {#sec-concepts-bf}
+
+As described in the preceding section, Backfilling is the allocation of subjects to a lower dose when, due to restrictions, it is not possible to allocate a subject who comes available to the current dose [@dehbi2021controlled]. FACTS provides a number of options to configure how backfilling behaves. Backfilling can be enabled in the Study \> Study Info tab. The total sample size can be divided between the subjects allocated as part of conventional dose escalation and those allocated using backfill. When backfill is enabled, it is important to increase the total sample size and then limit the number that can be allocated using backfill, as subjects allocated using backfilling will not contribute to the escalation and the confirmation of the MTD and it’s usually important to retain sufficient sample size to achieve this aim.
+
+![](images/clipboard-1147748051.png){#fig-sec-concepts-bf1}
+
+When enabling backfilling, several options can be specified in the Design \> Backfill Allocation tab.
+
+![](images/clipboard-2552514450.png){#fig-sec-concepts-bf2}
+
+-   Two maximum caps can be specified on the number of subjects that are assigned in the process of backfilling to a given dose:
+    -   an overall cap on subjects per dose that cannot be exceeded by backfill, counting also subjects that were assigned to that dose through regular allocation
+    -   a cap on the number of subjects per dose that were allocated by backfill, counting only subjects that were assigned to that dose using backfilling.
+-   How many dose levels below the current dose can be allocated to when backfilling. Backfilling will always be to the highest dose possible (which might be the current dose if frontfilling is enabled, otherwise it will be below the current dose). Allocation to the next highest dose might be limited either by an open enrolment cap if there are already subjects allocated to that dose who have not yet completed, or it might be limited by the backfill caps described above. If allocation to the dose below the current dose is not possible, backfilling will by default look at the dose below that (two levels below the current dose) and so on. Using this option can ensure no backfilling happens to doses that are too far below the current dose.
+-   The lowest dose that can be allocated to when backfilling. This option is particularly useful when there is reason to believe doses below a certain level will not be effective.
+-   Whether frontfilling is allowed – frontfilling allows allocating more subjects to uncleared doses than the number required to clear that dose (see [this section](#sec-concepts-oe)).
+
+## Open Enrollment, Backfilling and Fine Grain Dosing
+
+When using open enrolment and fine grain dosing, the interval defined on the Design \> Allocation Rule tab “Delta in dose strength considered as near +/-“, or “Max ratio of dose strengths considered as near” is crucial: it is used to define the range of doses where subjects allocated to any of them count towards clearing a dose.
+
+-   If dose allocation rules are selected to apply to “Dose strength”, the interval is defined “Delta in dose strength considered as near +/-“. Thus, for example, if this is set to 2, then subjects complete on doses with strength in the range 4-8 will contribute to the dose of strength 6 being cleared. At the same time, clearing the dose of strength 6 will automatically clear the dose of strength 8.
+-   If dose allocation rules are selected to apply to “Ratio of strength”, the interval is defined “Max ratio of dose strengths considered as near“. Thus, for example if this is set to 1.5, then subjects complete on doses with strength in the range 4-9 will contribute to the dose of strength 6 being cleared. At the same time, clearing the dose of strength 6 will automatically clear the dose of strength 9. These ranges also apply when assessing “OE cap 1-3”, and how many subjects have been allocated overall, or via backfilling. In backfilling, FACTS checks each dose strength and the doses in its “near” interval range, at (if frontfilling) or below the current dose, until the first dose strength is found where backfilling can take place.
+
+# Starting FACTS
+
+FACTS is usually first started using the FACTS icon installed on the Windows desktop or from the Windows Start \> Programs menu.
+
+When the application opens, you are presented with the main introduction screen of FACTS ([@fig-intro]). From here you can start designing an N-CRM trial, by double clicking N-CRM in the list of available designs, or by selecting the N-CRM design option from the File \> New \> Dose Escalation menu.
+
+FACTS will also be associated the parameter files it writes out with a ‘.facts’ file extension. Clicking on any one of these files will automatically start FACTS with that file opened.
+
+Note: Depending on your license, some design options may not be available.
+
+![FACTS introduction screen](images/clipboard-4175651506.png){#fig-intro width="80%" fig-align="center"}
+
+From this screen a new design can be started by selecting the design type in the list and double clicking it, or clicking on the ‘create new’ button at the bottom of the list.
+
+In the ‘Recent Work’ panel, the use can select from the list of most recently opened FACTS files, or from the list of directories where those files were located, opening the folder and selecting a FACTS file from there.
+
+Once a FACTS design has been created, the appropriate FACTS design module can be launched by double clicking on the “.facts” file in Windows Explorer.
+
+Once a specific type of FACTS design has been selected or an existing FACTS file opened, the FACTS GUI displays the tabs and parameters appropriate to that type of trial design.
+
+# The FACTS N-CRM GUI
+
+The FACTS N-CRM GUI conforms to the standard FACTS GUI layout, with information and displays divided across various standard tabs ([@fig-tablayout]).
+
+-   The Study Tab has sub-tabs for entering Study Information and specifying the Treatment Arms (doses) available in the study. This is where the user specifies the ‘given’ requirements, or constraints, of the trial to be designed.
+-   The Virtual Subject Response tab has sub-tabs for specifying Explicitly Defined response scenarios to simulate and loading External data files of simulated subject responses. This is where a set of different toxicity rates per dose are specified that should represent the expected ‘space’ of the expected dose-toxicity profiles for the compound being tested.
+-   The Design has sub-tabs for specifying the Allocation Rules, Stopping rule and Toxicity Response model. These are the design choices open to the trial biostatistician. The expected consequences of these design choices are estimated by running simulations of the trials using the various virtual subject response profiles defined.
+-   On the Simulation Tab, the user controls and runs simulations and can view the simulation results.
+-   On the Analysis tab, the user can use the design to analyze a specific data set and report the result of fitting the specified toxicity response model and the recommended dose for the next cohort.
+
+![Tab layout of FACTS](images/clipboard-3201765865.png){#fig-tablayout width="50%" fig-align="center"}
+
+Also on the menu bar, on the right hand side of the FACTS Window, is a button labeled “Notes”; clicking this button reveals a simple “notepad” window in which the user can maintain some simple notes that will be stored within the “.facts” file (see [@fig-notes] and [@fig-designnotes])
+
+![The 'Notes' button](images/clipboard-2023108780.png){#fig-notes width="50%" fig-align="center"}
+
+![Example design notes](images/clipboard-2814137677.png){#fig-designnotes width="70%" fig-align="center"}
+
+The notepad window comes with two further buttons: one to change the window to a free floating one that can be moved away from the FACTCS window; and the other to close it.
+
+The Notes field can be used for any text the user wishes to store with the file. Suggested uses are: to record the changes made in a particular version of a design and why; and to comment on the simulation results. This will help when coming back to work that has been set aside, to recall what gave rise to the different version of a design.
+
+# The Standard FACTS Menus
+
+## The "File" Menu
+
+FACTS has a File menu with commands similar to those found in most Windows applications, but also some unique to FACTS. The commands can be found in [@tbl-filecommands].
+
+| Command | Definition |
+|:-----------------------------------|:-----------------------------------|
+| New | Allows the user to select a trial design type and start a new design; if there are unsaved changes in the current design the user is prompted to save them first. |
+| Open | Allows the user to select an existing FACTS file and open it; if there are unsaved changes in the current design the user is prompted to save them first. |
+| Save | Saves the current changes in the design to the currently open FACTS file. |
+| Save As | Allows the current version of the design to be saved to a new FATCS file; this file is then the “currently open” FACTS file going forward. |
+| Export Project | Creates a “Zip” archive containing the current FACTS file and all the simulation results, so these can be easily archived, emailed, saved, etc. |
+| Recent Projects | Contains entries for the last ten FACTS files opened: selecting one re-opens it. |
+| Recent Folders | Contains entries for the folders that contain the last ten FACTS files opened: selecting one opens a file browser window on that folder allowing a ‘.facts’ file in that folder to be selected (or allowing the user to navigate to some different folder and select a ‘.facts’ file there). |
+| Examples | Contains example projects for the different design engines: selecting one opens it. |
+| Close | Closes the current FACTS file, returning the user to the FACTS introduction screen. |
+| Exit | Closes FACTS altogether. |
+
+: List of commands in the CRM file menu {#tbl-filecommands .striped .hover tbl-colwidths="\[15,85\]"}
+
+## FACTS Settings Menu
+
+The "Settings" command menu allows the user to do 2 things:
+
+-   Set various FACTS options to local settings -- see below for details.
+-   Reset the options based on the stored configuration file. This file, "config.xml", will initially be installed during the FACTS installation process and is stored in the Windows "Program Files" folder, in the sub-folder where FACTS get installed.
+-   Change the stored configuration file. This command allows you to select a new configuration file and have FACTS copy it to the sub-folder within the Windows "Program Files" folder, where FACTS get installed so it becomes the new stored configuration file. This allows IT support to easily disseminate configuration changes.
+-   Enter a new or changed license key.
+
+### Set Options
+
+The FACTS Options dialog allows the user to:
+
+-   Set and Test the connection parameters to access a compute grid for running simulations.
+-   Configure the version and location of R or R Studio that can be launched from within FACTS
+-   Select how gamma distributions are parameterized.
+
+#### Grid Configuration
+
+A grid compute facility for running simulations will only be available if your local IT services have set one up. If they have done so, they
+
+-   May have already set the appropriate parameters In the FACTS configuration file included with the FACTS installation files.
+-   Inform you of the parameters to be set manually via this dialog
+-   Send a new configuration file that can be installed using the "Load Options" menu command.
+
+If modifying the grid options manually, select the "Options" menu command and enter the values on the "Grid Configuration" tab of the displayed dialog window.
+
+![Webservice Configuration](images/clipboard-1963956967.png){#fig-webservice width="60%" fig-align="center"}
+
+First select the type of interface to the grid to be used, this is either:
+
+-   Via a network shared drive (with a “sweeper script” running on a client machine to transfer jobs to the grid management system and return results from it).
+-   Via a web service system using a webserver and database to communicate to a grid management system. The IT group supporting the grid should be able to tell you which interface they have implemented, if any. If access to the grid is via a Network Share it is necessary to specify:
+-   The location of the network share folder, usually in the form \\\<server name\>\\\<folder name\\\>.
+-   Whether the grid client is running Windows or Linux (so end-of-line characters can be corrected)
+-   The listener delay – this is the interval between “looks” when FACTS is waiting for simulation results to be complete
+
+Once specified it is possible to use the “Test” button to check that the Network Shared folder is accessible and writeable.
+
+If access to the grid is via a web service:
+
+-   The location of the web service endpoint.
+
+Clicking on “Test Configuration” and will cause FACTS will attempt to connect to the FACTS grid controller. The control will show which components of the connection are working.
+
+See the FACTS Installation Guide and FACTS Simple Grid Interface Guide for more details of setting up a grid.
+
+#### R Configuration
+
+In FACTS on the Simulation tab there are two controls that launch R – “Open in R” and “ Design Report” (in FACTS 6.2.0 the latter only available for FACTS Core designs).
+
+To enable these to work the user must specify where the R or RStudio executable is installed and (if there is more than one version of R installed) which version of R to use.
+
+![The R Configuration Dialog](images/clipboard-1268844426.png){#fig-rconfig width="60%" fig-align="center"}
+
+The dialog allows the user to Add, Edit, Test and Remove links to versions of R.
+
+![Adding a link to R](images/clipboard-272657384.png){#fig-rlink width="60%" fig-align="center"}
+
+Clicking on “Add” opens a normal Windows directory browser window, the user must navigate to the location of an R installation (for example “C:\\Program Files\\R\\R-2.15.2\\bin”, select the file R.exe, and click “Open”. This adds a new entry on the R configuration dialog.
+
+Clicking on “Edit” operates similarly to “Add” above, except the selected location replaces that currently selected entry on the R configuration dialog rather than adding a new one.
+
+Clicking on “Test” checks whether the currently selected entry on the R configuration dialog is available, if it is not an error dialog is displayed:
+
+![Example of R Configuration error](images/clipboard-2537319102.png){#fig-rconfigerror width="60%" fig-align="center"}
+
+Clicking on “Remove” removes the currently selected location on the R configuration dialog.
+
+The version of R to use by default is selected by clicking on the ‘Active’ check box of the version to use.
+
+#### Gamma Distribution Parameters
+
+In FACTS a number of parameters require inverse gamma distributions to be specified as priors for the parameter value. There are two different parameterization of the inverse gamma provided so that the user can select the form they find the most intuitive.
+
+![The parameterisation of Inverse Gamma Distributions](images/clipboard-718655442.png){#fig-gammaparam width="60%" fig-align="center"}
+
+The first form uses parameters that are the mean of the distribution and the equivalent weight in terms of the equivalent number of observations. The second form uses an ‘Alpha’ and ‘Beta’ parameterization that some statisticians are familiar with and will find natural to use.
+
+### Enter a license key
+
+If a new license key is required, this command can be used to enter one. There are two ways of entering a new license:
+
+![Enter FACTS License Key](images/clipboard-1671179033.png){#fig-licensekey width="60%" fig-align="center"}
+
+The key can be entered directly, along with the associated Organization name, or by selecting a supplied license file.
+
+## The Help Menu
+
+FACTS has a Help menu with commands to assist you with the use of FACTS, providing links to users guides, tutorial and training videos. The commands are:
+
+| Command | Definition |
+|:-----------------------------------|:-----------------------------------|
+| User Guides | Provides access to documents such as this one, with (mainly) one user guide to each design type within FACTS. Exceptions to this simple structure are: <br> 1. Core Design User Guide: A guide to the options under the ‘Design” tab for FACTS Core for all endpoints. <br> 2. Staged Design User Guide: As the staged design allows the design of one FACTS Core stage followed by a second, most of the interface is common to the basic FACTS Core. This guide describes the differences and additional aspects for all endpoints. <br> 3. Dose Escalation User Guide: This covers all the Dose Escalation engines except for N-CRM and 2D-CRM that have their own. It thus covers the 3+3, mTPI, CRM(Toxicity), CRM(Ordinal), CRM(Efficacy) and bCRM engines. |
+| Tutorials | Provides access to all the tutorial documents, which describes detailed examples of use of all the engines in FACTS and many of their options. The examples under the File \> Examples menu option largely correspond to the different tutorials described here. |
+| Design Specifications | These are technical documents that describe the mathematical models implemented in FACTS in detail. |
+| Execution Guides | The FACTS GUI can be run in command line mode so simulations can be run/re-run from scripts. With the simulation command line flag, and passed a directory rather than a file, FACTS will run simulations for every “.facts” file in that directory – and recurse into any sub-directories and simulate any “.facts” files there too. A full guide to command line mode can be found here. The FACTS simulation engines are also available in “command line executable” form. There are guides here that document their command line parameters and how to use them to analyse a data set – e.g. to perform an interim analysis whilst executing a trial designed with FACTS. |
+| FACTS file XML Specs | These guides describe the parameters in the “.facts” files, which are text files in XML format. For expert users understanding this format allows them to use scripts to generate versions of an initial “.facts” file with slight variations in the parameters such as stopping thresholds or priors. Modification of “.facts” files outside of FACTS needs to be done with care, errors may render the file unusable by FACTS. |
+| Videos | Provides access to links to the introductory, training and webinar videos that Berry Consultants has recorded and makes available over the internet to FACTS users. |
+| View log… | If an error has occurred in FACTS, often the FACTS log file can shed light on what is going wrong. The log file is hidden away in some unfashionable and hard to locate Windows folder; this command option provides easy access to it. Allowing you to email facts support with a description of what occurred, attaching a copy of this log file having saved it somewhere convenient such as your desktop. |
+| Support | Launch a simple editor for sending an email to our support account: facts\@berryconsultants.net |
+| About | Displays a simple “about box” that includes the detailed version number of FACTS. |
+
+: List of commands in the CRM help menu {#tbl-helpcommands .striped .hover tbl-colwidths="\[15,85\]"}
+
+# The Study tab
+
+## Study Info
+
+## Toxicity
+
+### Targeting a Toxicity Interval {#sec-study-tox-interval}

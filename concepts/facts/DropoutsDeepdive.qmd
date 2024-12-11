@@ -1,0 +1,223 @@
+---
+title: "Dropout Rate Explanation"
+description: "Deep dive into dropout rate specification."
+execute:
+  echo: false
+filters:
+  - shinylive
+---
+
+# How to specify dropouts in FACTS
+
+For the continuous and dichotomous engines, and the multiple endpoint engine, the default dropout scenario is that no subjects drop out of the study before observing their final endpoint data. If dropouts are expected, the user can specify either the “Dropouts per Dose,” or “Dropouts per Dose per Visit.”
+
+## Dropouts Per Dose
+
+If “Dropouts per Dose” is selected, then each subject has a probability of not having an observable final endpoint value equal to the dropout rate of the dose that subject is randomized to. If each subject has multiple visits and “Dropouts per Dose” is selected, then the conditional probability of dropping out before each visit given that the subject had not dropped out up to the visit before rates are all equal. In other words, if the total dropout rate is π_D, the probability of dropping out between visits i and i+1 given that the subject had not dropped out at visit $i$ is $$
+1-\left(1-\pi_D\right)^{(\frac{1}{V})}\text{ where } V \text{ is the total number of visits.}
+$$
+The following interactive widget takes in the desired dropout rate for a single dose and the number of visits a subject will have during their follow-up, and returns information about the dropout rate that FACTS will simulate by visit for that dose.
+
+The columns in the dynamic output table are:
+
+Visit number
+
+:   The index of the visit that a subject would observe.
+
+Conditional Visit Dropout Rate
+
+:   The probability that a subject drops out before row specified visit given that they have not dropped out after the previous visit.
+
+Marginal Visit Dropout Rate
+
+:   The probability that a subject that has not yet been enrolled in the study will dropout before row specified visit and after the previous row's visit.
+
+Cumulative Dropout Prob.
+
+:   The probability that a subject will drop out at the row specified visit or before. At the last visit row this value will equal the Desired Dropout Rate.
+
+### Dropout Per Dose Guide
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 450
+
+library(shiny)
+
+ui <- fluidPage(
+  
+  titlePanel("Dropout Per Dose"),
+  sidebarLayout(
+    sidebarPanel(
+      numericInput("dropoutRate", "Desired Dropout Rate:", value = 0.1, min = 0.0, max = 1.0, step = 0.05),
+      sliderInput("numVisits", "Number of visits:", 
+                  min = 1, max = 20, value = 5)
+    ),
+    mainPanel(
+      tableOutput("visitsGuide")
+    )
+  )
+)
+
+server <- function(input, output) {
+  
+  output$visitsGuide <- renderTable({
+    
+    if(is.na(input$dropoutRate)) {stop(safeError("Please enter a dropout rate."))}
+    else if(input$dropoutRate < 0 | input$dropoutRate > 1) {stop(safeError("Dropout rate must be between 0 and 1."))}
+    else {
+      df = data.frame(Visits = 1:input$numVisits,
+                                                     ConditionalDropoutRate = 1-(1-input$dropoutRate)^(1/input$numVisits))
+      df$TotalDropoutRate = 1-cumprod(1-df$ConditionalDropoutRate)
+      df$MarginalDropoutRate = c(df$TotalDropoutRate[1], df$TotalDropoutRate[-1] - df$TotalDropoutRate[-nrow(df)])
+  
+      df = df[,c("Visits", "ConditionalDropoutRate", "MarginalDropoutRate", "TotalDropoutRate")]
+      colnames(df) = c("Visit number",
+                "Conditional Visit Dropout Rate",
+                "Marginal Visit Dropout Rate",
+                "Cumulative Dropout Prob.")
+    df}
+  }, digits = 4)
+}
+
+shinyApp(ui = ui, server = server)
+```
+
+## Dropouts Per Dose Per Visit
+
+If “Dropouts per Dose per Visit” is selected, then each subject has a user specified probability of dropping out before a visit v that is specified as the conditional probability of dropping out before visit v given that that they had not dropped out by visit v-1. This leads to a total dropout rate π_D for a participant that is equal to:
+
+$$
+\pi_D = 1-\Pi_{v=0}^V(1-\pi_v)
+$$
+When specifying Dropouts Per Dose Per Visit in FACTS, the user inputs the conditional visit dropout rate for each visit. This can make it not completely intuitive to get the exact desired cumulative dropout rate. The below application allows the user to enter either the conditional visit dropout rates or the marginal visit dropout rates for a single dose, and provides the implied dropout profile from those inputs. Again, the columns of the table represent:
+
+Visit number
+
+:   The index of the visit that a subject would observe.
+
+Conditional Visit Dropout Rate
+
+:   The probability that a subject drops out before row specified visit given that they have not dropped out after the previous visit.
+
+Marginal Visit Dropout Rate
+
+:   The probability that a subject that has not yet been enrolled in the study will dropout before row specified visit and after the previous row's visit.
+
+Cumulative Dropout Prob.
+
+:   The probability that a subject will drop out at the row specified visit or before. At the last visit row this value will equal the Desired Dropout Rate.
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+
+library(shiny)
+library(DT)
+library(htmltools)
+
+alignCenter <- function(el) {
+  htmltools::tagAppendAttributes(el,
+                                 style="margin-left:auto;margin-right:auto;"
+  )
+}
+
+ui <- fluidPage(
+  tags$head(
+    # Note the wrapping of the string in HTML()
+    tags$style(HTML("
+      .my_col_class {
+         align-content: center;
+      }")
+    )
+  ),
+  
+  fluidRow(
+    titlePanel(h1("Dropout Per Dose Per Visit", align = "center")),
+    alignCenter(sliderInput("numVisits", "Number of visits:", 
+            min = 1, max = 20, value = 5)),
+    DTOutput("dataInputTable")
+  )
+)
+
+server <- function(input, output) {
+  
+  df = data.frame(Visits = 1:5,
+                       ConditionalDropoutRate = 0.05)
+  df$TotalDropoutRate = 1-cumprod(1-df$ConditionalDropoutRate)
+  df$MarginalDropoutRate = c(df$TotalDropoutRate[1], df$TotalDropoutRate[-1] - df$TotalDropoutRate[-nrow(df)])
+  df = df[,c("Visits", "ConditionalDropoutRate", "MarginalDropoutRate", "TotalDropoutRate")]
+  colnames(df) = c("Visit number",
+                   "Conditional Visit Dropout Rate",
+                   "Marginal Visit Dropout Rate",
+                   "Cumulative Dropout Prob.")
+  
+  ## Render DF to actually change
+  output$dataInputTable = renderDT(datatable(df, options = list(
+    digits = 4,
+    dom = "t",
+    autoWidth = TRUE,
+    columnDefs = list(list(width = '150px', targets = 1:4))), selection = 'none', editable = "cell") |> formatRound(2:4, digits = 4))
+  
+  ## Update from Conditional
+  
+  proxy = dataTableProxy('dataInputTable')
+  
+  observeEvent(input$dataInputTable_cell_edit, {
+    info = input$dataInputTable_cell_edit
+    str(info)
+    i = info$row
+    j = info$col
+    v = info$value
+    df <<- editData(df, info)
+    if(j == 2) {
+      ## Update other columns from Conditional
+      df[,4] <<- 1-cumprod(1-df[,2])
+      df[,3] <<- c(df[1,4], df[-1,4] - df[-nrow(df),4])
+    } else if(j == 3) {
+      ## Update other columns from Marginal
+      df[,4] <<- cumsum(df[,3])
+      df[,2] <<- c(df[1,3],
+                   df[-1,3]/(1-df[-nrow(df),4]))
+    } else if(j == 4) {
+      ## Update other columns from Cumulative
+      
+      df[info$row, 3] <<- df[info$row, 4] - ifelse(info$row == 1, 0, df[info$row-1, 4])
+      df[info$row, 2] <<- ifelse(info$row == 1, df[info$row,3], df[info$row,3]/(1-df[info$row-1,4]))
+      df[,4] <<- 1-cumprod(1-df[,2])
+      df[,3] <<- c(df[1,4], df[-1,4] - df[-nrow(df),4])
+    }
+    replaceData(proxy, df) 
+  })
+  
+  observe({
+    input$numVisits
+    nv = input$numVisits
+    if(nv > nrow(df)) {
+      if(nrow(df) == 0) {
+        df <<- data.frame(Visits = 1,
+                   ConditionalDropoutRate = 1-(1-.1)^(1))
+        df$TotalDropoutRate = 1-cumprod(1-df$ConditionalDropoutRate)
+        df$MarginalDropoutRate = c(df$TotalDropoutRate[1], df$TotalDropoutRate[-1] - df$TotalDropoutRate[-nrow(df)])
+        df = df[,c("Visits", "ConditionalDropoutRate", "MarginalDropoutRate", "TotalDropoutRate")]
+        colnames(df) = c("Visit number",
+                         "Conditional Visit Dropout Rate",
+                         "Marginal Visit Dropout Rate",
+                         "Cumulative Dropout Prob.")
+      } else {
+        for(i in 1:(nv-nrow(df))) {
+          df <<- rbind(df, setNames(data.frame(matrix(c(1+nrow(df), 0.05, 0, 0), nrow = 1)), names(df)))
+        }
+        df[,4] <<- 1-cumprod(1-df[,2])
+        df[,3] <<- c(df[1,4], df[-1,4] - df[-nrow(df),4])
+      }
+    } else if(nv < nrow(df)) {
+      df <<- df[1:nv,]
+    }
+    replaceData(proxy, df) 
+  })
+}
+
+shinyApp(ui = ui, server = server)
+```
+**In order to simulate dropouts from the below profile in FACTS, enter the Conditional Visit Dropout Rate into the FACTS Dropout Rate tab.**
