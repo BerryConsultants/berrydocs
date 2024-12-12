@@ -312,20 +312,22 @@ Note that with Fine Grain dosing, if a band is specified for a dose to count as 
 
 Open enrollment [@broglio2015bayesian] can be used instead of cohort enrollment. Cohort enrolment enrolls a fixed number of subjects to a given dose, then waits until their treatment and follow up is complete (so their final status – whether they suffered a DLT (Dose Limiting Toxicity) or not – is known) before deciding on the next dose to allocate to and then recruiting the next cohort. This likely means that subjects become available for inclusion in the trial, but have to be turned away as the trial waits for the current cohort to complete. Open enrollment attempts to address this by allowing subjects to be enrolled whilst the current “cohort” is completing. However, this may come with some risk – more than a cohort’s worth of subjects may now be exposed to a new dose before we have any estimate of its DLT rate. To allow this risk to be managed, open enrollment introduces two new concepts:
 
-1. When allocating to an uncleared dose, a cap can be set on the number of subjects that can be allocated to that dose who have not yet got their final results (“OE cap 1”). For example, if this number is set to 3 (to be the same as a common cohort size), after 3 subjects have been recruited and allocated to the current dose, no more subjects will be allocated to this dose until at least one of these subjects has completed. Until then, potential subjects that become available will be turned away unless backfilling is enabled (see next point below). But unlike cohort enrolment, as soon as the first of the subjects on the dose completes, a subject that comes available could now be allocated to the dose, depending on further rules explained below (frontfilling) – unless of course that subject’s result has changed the estimated MTD. Note that the trial won’t escalate beyond the current dose until the required number of subjects to clear the dose have completed. By default, the trial won’t allocate more than the number of subjects required to clear the dose until the dose is cleared, meaning if 3 subjects are required to clear a dose and 3 subjects have been allocated to this dose, even when 1 or 2 of these subjects have their final results and a new subjects is enrolled, they won’t be allocated to this dose. If this is regarded as over cautious, it can be modified by enabling frontfilling, allowing 3 subjects without final results simultaneously. In the above example, this would mean we could place a fourth subject on the dose when the result of the first subject has come in and a fifth subject as soon as the result of the second subject has come in.
-2. When the cap on the number of subjects without final results on an uncleared dose has been reached (“OE cap 1”) new potential subjects will be turned away, unless backfilling is enabled. Enabling backfilling allows these subjects to instead be included, allocating them to a lower dose that has already been cleared. Whilst such an allocation may not contribute as much to identifying the MTD as allocating to the current dose would, it can still contribute by:
-    a. Increasing the information on the next lower dose can inform the estimate of toxicity on the current dose through the Bayesian logistic model.
-    b. Providing additional information on a dose that it may be necessary to de-escalate too if the current dose turns out to be too toxic.
-    
+1.  When allocating to an uncleared dose, a cap can be set on the number of subjects that can be allocated to that dose who have not yet got their final results (“OE cap 1”). For example, if this number is set to 3 (to be the same as a common cohort size), after 3 subjects have been recruited and allocated to the current dose, no more subjects will be allocated to this dose until at least one of these subjects has completed. Until then, potential subjects that become available will be turned away unless backfilling is enabled (see next point below). But unlike cohort enrolment, as soon as the first of the subjects on the dose completes, a subject that comes available could now be allocated to the dose, depending on further rules explained below (frontfilling) – unless of course that subject’s result has changed the estimated MTD. Note that the trial won’t escalate beyond the current dose until the required number of subjects to clear the dose have completed. By default, the trial won’t allocate more than the number of subjects required to clear the dose until the dose is cleared, meaning if 3 subjects are required to clear a dose and 3 subjects have been allocated to this dose, even when 1 or 2 of these subjects have their final results and a new subjects is enrolled, they won’t be allocated to this dose. If this is regarded as over cautious, it can be modified by enabling frontfilling, allowing 3 subjects without final results simultaneously. In the above example, this would mean we could place a fourth subject on the dose when the result of the first subject has come in and a fifth subject as soon as the result of the second subject has come in.
+
+2.  When the cap on the number of subjects without final results on an uncleared dose has been reached (“OE cap 1”) new potential subjects will be turned away, unless backfilling is enabled. Enabling backfilling allows these subjects to instead be included, allocating them to a lower dose that has already been cleared. Whilst such an allocation may not contribute as much to identifying the MTD as allocating to the current dose would, it can still contribute by:
+
+    a.  Increasing the information on the next lower dose can inform the estimate of toxicity on the current dose through the Bayesian logistic model.
+    b.  Providing additional information on a dose that it may be necessary to de-escalate too if the current dose turns out to be too toxic.
+
     It can also contribute information on other endpoints (such as efficacy). Once backfilling has been enabled, it is also possible to enable frontfilling. For more information on backfilling and frontfilling, see [this section](#sec-concepts-bf).
 
 Assume at a given point in time we want to allocate a subject to a specific dose, denoted by “candidate dose”. FACTS allows 3 different caps to be specified on how many subjects who have not yet got their final results (i.e. are not yet complete) can be allocated to this candidate dose:
 
 ![](images/clipboard-1725771221.png){#fig-sec-concepts-oe1}
 
-1. *Maximum subjects without final results if dose is uncleared:* As described early in this section, we encounter this cap during escalation when the candidate dose is not yet cleared. This cap takes into account subjects not yet complete on the candidate dose and any higher dose (“OE cap 1”).
-2. *Max subjects without final results if dose is cleared and below MTD*: We encounter this cap when the candidate dose is cleared and below the estimated MTD (which can happen if the estimated MTD is beyond the range of available doses, when backfilling, or when allocating during the efficacy phase of a toxicity plus efficacy trial). This cap takes into account subject not yet complete on the candidate dose and any lower doses (“OE cap 2”).
-3. *Max subjects without final results if dose is cleared and at MTD:* We encounter this cap when the candidate dose is cleared and the current model estimated MTD (which can happen when after clearing a dose we decide not to escalate, or after de-escalating) (“OE cap 3”).
+1.  *Maximum subjects without final results if dose is uncleared:* As described early in this section, we encounter this cap during escalation when the candidate dose is not yet cleared. This cap takes into account subjects not yet complete on the candidate dose and any higher dose (“OE cap 1”).
+2.  *Max subjects without final results if dose is cleared and below MTD*: We encounter this cap when the candidate dose is cleared and below the estimated MTD (which can happen if the estimated MTD is beyond the range of available doses, when backfilling, or when allocating during the efficacy phase of a toxicity plus efficacy trial). This cap takes into account subject not yet complete on the candidate dose and any lower doses (“OE cap 2”).
+3.  *Max subjects without final results if dose is cleared and at MTD:* We encounter this cap when the candidate dose is cleared and the current model estimated MTD (which can happen when after clearing a dose we decide not to escalate, or after de-escalating) (“OE cap 3”).
 
 ## Backfilling and Frontfilling {#sec-concepts-bf}
 
@@ -522,6 +524,63 @@ FACTS has a Help menu with commands to assist you with the use of FACTS, providi
 # The Study tab
 
 ## Study Info
+
+The Study Info sub-tab provides parameters for specifying:
+
+-   Whether the trial has an Efficacy endpoint as well as a Toxicity one.
+-   Whether recruitment is in Cohorts or uses Open Enrolment,
+-   Whether the trial data is being analyzed as a single population (single group) or two groups (which could be 2 different patient types, or 2 different treatment types).
+-   The option to specify that the trial should include an expansion cohort once the MTD has been identified.
+-   The option (if using open enrolment) to specify the use of backfill.
+
+Including an efficacy endpoint – this allows the trial to include a binary efficacy outcome that is observed at the same time as the toxicity endpoint. Once the MTD has been sufficiently determined further cohorts are allocated to determine the MED (Minimum Effective Dose) as long as that is below the MTD, until the maximum sample size or MED stopping rules have been reached.
+
+Cohort versus Open enrolment: cohort enrolment is the standard way of running a phase 1 trial, a cohort of subjects of pre-determined size are treated at the current dose and the trial pauses until all the subjects in the cohort are complete, then the dose for the next cohort is determined. A phase 1 trial using Open Enrolment recruits ‘all comers’ with a cap on the number of subjects who can be treated but have not yet had a final result. Subjects that arrive whilst this cap has been reached are deemed to be ‘lost’ to the study.
+
+If Open Enrolment and Efficacy Endpoint options are being used together, then subjects who arrive who cannot be allocated to the MTD (because the cap number of subjects awaiting a final result has been reached), can be allocated to the MED (as long as that is below the MTD).
+
+If the trial is analyzing 2 Groups then a joint statistical model is used with options to constrain the group 2 difference in the intercept term to be +ve or -ve, and options as to whether a common or separate estimates of the slope term are used.
+
+If an expansion cohort is included, the this is a single cohort (or one per group, if 2 groups is being used) typically much larger than used during the dose escalation, that is assigned at the end of the study to the target dose. FACTS simulates the results that arise from this cohort and a final analysis.
+
+If open enrolment is being used, the further option to use backfill becomes available. The parameters on this tab for backfill, are to specify the maximum number of subjects that can be allocated for escalation, and the maximum that can be allocated in backfill. These two maximums should not total less than the overall “Max subjects” that can be enrolled. If adding backfill to a trial, usually the previous “Max subjects” becomes the “Max study allocation for escalation”, and an additional sample is allowed for backfill and added to the overall Max subjects.
+
+If the trial has two groups the backfill maximums are the sum of the subjects in the two groups.
+
+For Cohort enrolment, the parameters are:
+
+-   Maximum Study Size, in cohorts: the maximum number of cohorts the trial can use, though designs can include conditions that cause them to stop earlier.
+-   If the trial has two groups, the maximum number of cohorts of the second group.
+-   Cohort size: The number of subjects in each cohort. The maximum sample size for the trial is simply: Max Trial Size (cohorts) \* Cohort Size.
+-   Cohort information delay: Normally left at zero, this allows for the trial to be simulated with cohorts recruited more quickly than if waiting for the last cohort to complete before treating the next cohort. This allows the trial to complete in shorter time, but is likely to lead to a larger incidence of toxicities. If the delay is set to 1, the second cohort will be recruited before the results for the first cohort are available, the third cohort will be recruited after the results of the first cohort are available but before the results for the second cohort are available, and so on.
+-   Execution rate: the time taken to recruit, treat and complete the observation of each cohort (in weeks). The value of this parameter does not affect the behavior of the simulations, but it allows a nominal “duration” of each simulation to be calculated. Unlike other FACTS simulations, this duration is not simulated stochastically, it is simply the number of cohorts \* this duration. Its purpose is to give a figure to compare with open enrolment designs of the same trial.
+
+![Study Info - Cohort Enrolment](images/clipboard-3827602838.png){#fig-sec-study-study1}
+
+![](images/clipboard-3749685477.png){#fig-sec-study-study2}
+
+If rather than Cohorts, subjects are recruited using open enrolment, the parameters are:
+
+-   Max subjects: the maximum number of subjects who can be recruited into the study.
+-   Time unit – this is a text string that will change the “units” label for time on graphs. This allows data to be more easily entered when the natural time unit is not “weeks”, but “days” or “months”.
+-   Mean recruitment rate: for simulation purposes this is the average number of subjects who will be expected to be available for recruitment during each time period. Recruitment is simulated using a standard Poisson process.
+-   Time until final result: the time for each subject for their final result to become available. This is simulated as a fixed length of time that is the same for all subjects.
+-   Maximum subjects without a final result: the cap on the number of subjects on the current dose or a backfill dose (if backfill is enabled) who can be recruited but not yet completed. This is also known as the ‘maximum queue length’. Subjects arriving and available for recruitment while the number of subjects on this dose who have been treated but have not yet completed is at this maximum, are dropped and assumed no longer available for recruitment. Once the current subjects complete the study has to await further new subjects to become available. There are three caps:
+    -   Maximum subjects without final results if the dose is uncleared. This allows the design to be cautious when a new dose is used for the first time.
+    -   Maximum subjects without final results if dose is cleared and below MTD. This allows a larger number of subjects without final results to be recruited at backfill doses or at the current escalation dose if backfill to the current escalation dose (“frontfilling”) is enabled, or at the MED in the efficacy phase of a trial that includes an efficacy endpoint.
+    -   Maximum subjects without final results if dose is cleared and at MTD. This allows us to be more cautious if the model thinks all doses are toxic or if we are allocating at the model MTD and don’t want to expose too many subjects.
+-   Backfill – this can be enabled. Backfilling is the allocation of subjects to a dose below the current target dose, if the number of subjects allocated to the current target dose without final results has reached the maximum. Further parameters for backfill are set on the “Backfill” tab under the “Design” tab. On this tab, if backfill is enabled, two sub-maximums can optionally be specified:
+    -   the maximum number of subjects who can be allocated as part of usual allocation for escalation and MTD determination (and MED if efficacy is included in the trial),
+    -   and the maximum number of subjects who can be allocated as part of “backfill”.
+
+![Study Info - Open Enrolment](images/clipboard-3260467921.png){#fig-sec-study-study3}
+
+Groups: a trial can be analyzed as a “single group” or as “two groups”. If analyzed as a single group, then all subjects are assumed to be the same and treated the same (except for the difference in the dose strength). If analyzed as two groups this allows either:
+
+-   The subjects can be simulated as coming from two similar but distinct groups such as: adults and children, first line or recurrent, having some concomitant treatment or not. The separation into the two groups is based on some property of the subject.
+-   Or the subjects can be simulated as having been allocated (possibly randomized) to one of two versions of the treatment, with the same rang of dose strengths and differing in some other way such as dosing schedule, treatment duration or combination with an additional treatment. The separation of the subjects into the two groups is under the control of the protocol.
+
+In either case the same analysis options are available (hence we use the generic term “groups” to describe this feature).
 
 ## Toxicity
 
