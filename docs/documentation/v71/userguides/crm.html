@@ -401,6 +401,7 @@ window.Quarto = {
   <li><a href="#toxicity" id="toc-toxicity" class="nav-link" data-scroll-target="#toxicity"><span class="header-section-number">7.2</span> Toxicity</a>
   <ul class="collapse">
   <li><a href="#sec-study-tox-interval" id="toc-sec-study-tox-interval" class="nav-link" data-scroll-target="#sec-study-tox-interval"><span class="header-section-number">7.2.1</span> Targeting a Toxicity Interval</a></li>
+  <li><a href="#sec-study-tox-single" id="toc-sec-study-tox-single" class="nav-link" data-scroll-target="#sec-study-tox-single"><span class="header-section-number">7.2.2</span> Targeting a single dose</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -1407,8 +1408,74 @@ Figure&nbsp;27: Study tab with “Include efficacy” checked
 </section>
 <section id="toxicity" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="toxicity"><span class="header-section-number">7.2</span> Toxicity</h2>
+<p>The Toxicity sub-tab provides parameters for specifying:</p>
+<ul>
+<li>Whether toxicity should be simulated as dichotomous or ordinal. If simulated as Ordinal, toxicity can be simulated as a 1-3 scale or 1-4 scale. In both cases ‘1’ is “no-toxicity”, 2 is “mild toxicity” and 3 is the toxicity of interest (from the point of view of defining the MTD, target toxicity band and Overdose Control. If a four category scale is selected, 4 is “sever toxicity” or death. Choosing whether to model the ordinal response is a separate option and is present on the Design &gt; Toxicity Response tab.</li>
+<li>Type of target: this allows the user to specify whether the dose selection targets “the dose who’s estimated toxicity rate is closest to a specified target rate” or “the dose with the highest posterior probability of having a toxicity rate in a target band”. The former is the target rule used in the original CRM papers (<span class="citation" data-cites="o1999two">(<a href="#ref-o1999two" role="doc-biblioref">O’Quigley, Shen, and Gamst 1999</a>)</span>, <span class="citation" data-cites="de1996incorporating">(<a href="#ref-de1996incorporating" role="doc-biblioref">deMoor et al. 1996</a>)</span>, and the latter rule was introduced in <span class="citation" data-cites="neuenschwander2008critical">(<a href="#ref-neuenschwander2008critical" role="doc-biblioref">Neuenschwander, Branson, and Gsponer 2008</a>)</span>.</li>
+<li>Toxicity target (only displayed if the type of target is “a single dose”): this allows the target toxicity rate to be specified and whether the target dose is the one nearest, the one nearest but with a lower rate or the one nearest but with a higher rate.</li>
+<li>Target: this panel allows the target toxicity bands to be specified along with overdose control limits. The panel is displayed and enabled even if the target type is “a single dose” to allow overdose control limits to be specified.</li>
+<li>Type of Target: controls the selection of the dose for the next cohort – this can be to target a single dose (to replicate the original CRM behavior, see <a href="#sec-study-tox-single">this section</a>) or to target the dose with the highest probability that its toxicity rate lies in a target band.</li>
+</ul>
+<div id="fig-sec-study-tox1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sec-study-tox1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/clipboard-1584639963.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sec-study-tox1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;28: Toxicity tab targeting a toxicity band
+</figcaption>
+</figure>
+</div>
 <section id="sec-study-tox-interval" class="level3" data-number="7.2.1">
-
+<h3 data-number="7.2.1" class="anchored" data-anchor-id="sec-study-tox-interval"><span class="header-section-number">7.2.1</span> Targeting a Toxicity Interval</h3>
+<p>Targeting a toxicity band or interval is an innovation introduced with the N-CRM design, unlike other CRM designs that select the dose that is expected to have a toxicity response closest to the desired tolerated limit, the N-CRM selects the dose that has the highest posterior probability of having a toxicity rate in a target toxicity band. This has the advantage of a) having a clearer probability statement and b) having in addition probability statements about the probability of under and overdosing (the toxicity rate being below or above the target toxicity band).</p>
+<ul>
+<li>The uncertainty in the estimate of toxicity at each dose is expressed by calculating the posterior distribution of the estimate of the rate of toxicity at each dose and calculating the proportion of that distribution that falls in to each of 4 bands of toxicity: ‘Under-dosing’ (toxicity so low that it is likely that a higher dose could be used), ‘Target’ toxicity (we want to select doses whose toxicity rate is most likely to be in this band), ‘Excess’ toxicity (toxicity higher than desired) and ‘Unacceptable’ toxicity.
+<ul>
+<li>Under-dosing: this band always starts at 0.0; the user specifies the upper bound.</li>
+<li>Target band: this band always starts at the upper-bound of the under-dosing band; the user specifies the upper bound.</li>
+<li>Excess toxicity: this band always starts at the upper-bound of the target band; the user specifies the upper bound.</li>
+<li>Unacceptable toxicity: this band always starts at the upper-bound of the target band, with an upper bound of 1.0. The graph shows the width of the different bands using a simple, fixed, example posterior probability distribution of a toxicity rate.</li>
+</ul></li>
+<li>Intervals are relative to control: if a control arm is included in the study, then toxicity bands can be defined as the difference in toxicity rate relative to control. Negative differences (a lower toxicity rate than control) are always treated as under-dosing. To enable this option it is necessary to first go to the Study &gt; Treatment Arms tab and select Include Control.</li>
+<li>Limit max excess/unacceptable toxicity: the ‘overdose control’ in terms of a maximum allowed posterior probability that a dose’s toxicity rate lies in either the ‘Excess’ or the ‘Unacceptable’ toxicity bands. Any dose with a posterior probability of having a toxicity rate in either of these two bands that is higher than the specified limit, cannot be selected for allocation to the next cohort, nor selected as MTD at the end of the study (this gives rise to slightly different results compared to those in <span class="citation" data-cites="neuenschwander2008critical">(<a href="#ref-neuenschwander2008critical" role="doc-biblioref">Neuenschwander, Branson, and Gsponer 2008</a>)</span> where the overdose control was not applied to final selection).<br>
+</li>
+<li>It is possible to have the overdose control limit vary with the number of cohorts allocated. In particular this can be used to reduce the overdose limit as the number of cohorts (and the amount of information) grows. For example for a particular prior and final level of overdose control, it may be that initial escalation is excessively constrained, one way to allow early escalation in this setting is to use these parameters to allow an higher initial overdose control limit and gradually reduce it over time to the final desired limit. Tuning the parameters will require some iteration and simulation. A varying limit is specified by the specifying amount to change the limit by per cohort and the final limit. The amount to change by is always entered as a number in the range (0,1), whether this is an increment or decrement depends on whether the target limit is greater or less than the initial limit. Leaving the change in limit at its default of 0 means the limit does not vary.</li>
+<li>Limit max unacceptable toxicity: as for the previous parameter, but here the overdose control is only in terms of the posterior probability that a dose’s toxicity rate lies in the ‘Unacceptable’ toxicity band.</li>
+<li>As or the limit on excess/unacceptable toxicity it is possible to have the overdose control limit vary with the number of cohorts, see the description above.</li>
+</ul>
+</section>
+<section id="sec-study-tox-single" class="level3" data-number="7.2.2">
+<h3 data-number="7.2.2" class="anchored" data-anchor-id="sec-study-tox-single"><span class="header-section-number">7.2.2</span> Targeting a single dose</h3>
+<p>It is possible to use the N-CRM design engine with a conventional CRM allocation strategy - to “allocate to the nearest / highest dose below the maximum tolerated toxicity”; this allows conventional CRM design to be simulated with some of the additional features of N-CRM:</p>
+<ul>
+<li>Overdose control</li>
+<li>Estimate both parameters of the 2 parameter logistic</li>
+<li>The “Recommender” to analyze a specific data set.</li>
+</ul>
+<p>The target is calculated by:</p>
+<ul>
+<li>In the MCMC sampling loop finding the dose that meets the target criteria, a doses probability of being the target is then the proportion of times that dose meets the target criteria across the MCMC sampling.</li>
+<li>Rather than selecting the dose with the highest probability, the dose at the 50% quantile is used. The cumulative probability of being the target is calculated over the doses in ascending dose strength, and the dose when the cumulative probability passes 50% is selected. This addresses some problems that can arise when very little data is available: that the dose with the highest probability is at one end of the dose range, but that probability is not that high, or that doses are not evenly spaced and a dose close to both its immediate neighbors may never have greater probability than both of them.</li>
+</ul>
+<p>Setting the Type of Target option to Target a single dose, modifies the tab thus:</p>
+<div id="fig-sec-study-tox-single1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sec-study-tox-single1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/clipboard-3531590179.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sec-study-tox-single1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;29: N-CRM, targeting a single dose, not a toxicity band
+</figcaption>
+</figure>
+</div>
+<p>When targeting a single dose FACTS allows the user to specify:</p>
+<ul>
+<li>The target toxicity rate</li>
+<li>Whether to allocate to the dose with the mean estimate of its toxicity rate nearest the target, highest dose with a mean estimate of its toxicity rate below the target or lowest dose with a mean estimate of its toxicity rate above the target.</li>
+<li>An option to use the toxicity rate relative to control, rather than the default of the absolute toxicity rate. To enable this option it is necessary to first go to the Study &gt; Treatment Arms tab and select Include Control.</li>
+</ul>
+<p>The definition of the boundaries of the toxicity bands is still included in order to allow the specification of overdose control limits. These are calculated and applied in exactly the same way as when targeting a toxicity interval.</p>
 
 
 
@@ -1416,15 +1483,21 @@ Figure&nbsp;27: Study tab with “Include efficacy” checked
 </section>
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">7.2.1 Targeting a Toxicity Interval</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-broglio2015bayesian" class="csl-entry" role="listitem">
 Broglio, Kristine R, Larissa Sandalic, Tina Albertson, and Scott M Berry. 2015. <span>“Bayesian Dose Escalation in Oncology with Sharing of Information Between Patient Populations.”</span> <em>Contemporary Clinical Trials</em> 44: 56–63.
 </div>
 <div id="ref-dehbi2021controlled" class="csl-entry" role="listitem">
 Dehbi, Hakim-Moulay, John O’Quigley, and Alexia Iasonos. 2021. <span>“Controlled Backfill in Oncology Dose-Finding Trials.”</span> <em>Contemporary Clinical Trials</em> 111: 106605.
 </div>
+<div id="ref-de1996incorporating" class="csl-entry" role="listitem">
+deMoor, CA, DM Higdon, SG Hilsenbeck, GM Clark, and DD von Ho. 1996. <span>“Incorporating Toxicity Grade Information in the Continual Reassessment Method.”</span>
+</div>
 <div id="ref-neuenschwander2008critical" class="csl-entry" role="listitem">
 Neuenschwander, Beat, Michael Branson, and Thomas Gsponer. 2008. <span>“Critical Aspects of the Bayesian Approach to Phase i Cancer Trials.”</span> <em>Statistics in Medicine</em> 27 (13): 2420–39.
+</div>
+<div id="ref-o1999two" class="csl-entry" role="listitem">
+O’Quigley, John, Larry Z Shen, and Anthony Gamst. 1999. <span>“Two-Sample Continual Reassessment Method.”</span> <em>Journal of Biopharmaceutical Statistics</em> 9 (1): 17–44.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
