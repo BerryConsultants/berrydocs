@@ -441,7 +441,8 @@ ui &lt;- fluidPage(
                                       value = 3, step = 1)),
     column(6, fluidRow(
       column(6, offset = 2, checkboxInput("fixAlpha", "Fix alpha at its mean?", value = FALSE, width = "100%")),
-      column(6, offset = 2, checkboxInput("fixBeta", "Fix beta at its mean?", value = FALSE, width = "100%"))
+      column(6, offset = 2, checkboxInput("fixBeta", "Fix beta at its mean?", value = FALSE, width = "100%")),
+      column(6, offset = 2, checkboxInput("removePredictive", "Remove endpoint prior predictive?", value = FALSE, width = "100%"))
     ))
   ),
   plotOutput("priorPredictive")
@@ -454,7 +455,7 @@ getLowerMedianUpper = function(earlyVisitVal, alpha = c(0,1), beta = c(0,1), lam
   deviates = rnorm(10000)
   deviates = (deviates - mean(deviates))/(sd(deviates))
 
-  samps = (deviates*distMeanFinal[2] + distMeanFinal[1]) + 1/rgamma(10000, lambda[2]/2, lambda[1]^2*lambda[2]/2)
+  samps = (deviates*distMeanFinal[2] + distMeanFinal[1]) + rnorm(10000, 0, sd = sqrt(1/rgamma(10000, lambda[2]/2, lambda[1]^2*lambda[2]/2)))
   
   distValueFinal = c(mean(samps), sd(samps))
   
@@ -470,13 +471,13 @@ getLowerMedianUpper = function(earlyVisitVal, alpha = c(0,1), beta = c(0,1), lam
 
 server &lt;- function(input, output, session) {
   
-  df = data.frame(VisitResponse = rep(0, 5),
+  df = data.frame(VisitResponse = 1:5,
                   alphaPriorMean = 0,
-                  alphaPriorSD = 10,
-                  betaPriorMean = 0,
-                  betaPriorSD = 10,
-                  lambdaPriorCenter = 10, 
-                  lambdaPriorWeight = 1)
+                  alphaPriorSD = 2,
+                  betaPriorMean = 1,
+                  betaPriorSD = 2,
+                  lambdaPriorCenter = 5, 
+                  lambdaPriorWeight = 3)
   
   row.names(df) = paste("Visit", 1:5)
   
@@ -526,10 +527,12 @@ server &lt;- function(input, output, session) {
     }
     replaceData(proxy, df) 
     
-    updateSliderInput(session, "lastVisitWithData", max = nv, value = min(nv, input$lastVisitWithData))
+    updateSliderInput(session, "lastVisitWithData", min = 1, max = nv, value = min(nv, input$lastVisitWithData), step = 1)
   })
   
   output$priorPredictive = renderPlot({
+    input$dataInputTable_cell_edit
+    
     lvIndex = input$lastVisitWithData
     finalVisitIndex = input$numVisits
     tempDF = df
@@ -541,34 +544,51 @@ server &lt;- function(input, output, session) {
     tempDF$RowVisitIndex = 1:nrow(tempDF)
     tempDF$visitKnown = "included"
     tempDF$visitKnown[tempDF$RowVisitIndex &gt; lvIndex] = "excluded"
+
+    tempDF = rbind(setNames(data.frame(c(tempDF[1,])), names(tempDF)), tempDF)
+    tempDF[1,1] = 0
+    tempDF$RowVisitIndex[1] = 0
+    rownames(tempDF)[1] = "Baseline"
+   # lvIndex = lvIndex + 1
+   # finalVisitIndex = finalVisitIndex + 1
+    
+    print(tempDF)
     
     p1 = ggplot() + 
       geom_point(dat = tempDF, aes(x = RowVisitIndex, y = VisitResponse, color = visitKnown)) + 
       scale_color_manual(breaks = c("included", "excluded"), values = c("black", "gray70"), guide = "none") +
-      coord_cartesian(xlim = c(1, finalVisitIndex)) + 
+      coord_cartesian(xlim = c(0, finalVisitIndex)) + 
+      scale_x_continuous(breaks = 0:finalVisitIndex, labels = c("Baseline", 1:finalVisitIndex)) +
       xlab("Visit Index") + ylab("Response") +
       theme_bw() + 
-      theme(text = element_text(size = 18))
+      theme(text = element_text(size = 18), legend.position = "bottom")
     
     if(lvIndex &lt; finalVisitIndex) {
-      p1 = p1 + 
-        geom_segment(data = dataToPlot[[2]], aes(x = finalVisitIndex, y = lower, yend = upper), color = "darkgreen", linewidth = 2.5) +
-        annotate(geom = "point", x = finalVisitIndex, y = dataToPlot[[2]]$median, color = "darkgreen", size = 3, shape = 18) +
-        annotate(geom = "ribbon", x = c(lvIndex, finalVisitIndex),
-                 ymin = c(tempDF$VisitResponse[lvIndex], dataToPlot[[2]]$lower),
-                 ymax = c(tempDF$VisitResponse[lvIndex], dataToPlot[[2]]$upper),
-                 fill = "darkgreen", color = NA, alpha = .15) +
+      if(!input$removePredictive) {
+        p1 = p1 + 
+          geom_segment(data = dataToPlot[[2]], aes(x = finalVisitIndex, y = lower, yend = upper), color = "darkgreen", linewidth = 2.5) +
+          annotate(geom = "point", x = finalVisitIndex, y = dataToPlot[[2]]$median, color = "darkgreen", size = 3, shape = 18) +
+          annotate(geom = "ribbon", x = c(lvIndex, finalVisitIndex),
+                   ymin = c(tempDF$VisitResponse[lvIndex + 1], dataToPlot[[2]]$lower),
+                   ymax = c(tempDF$VisitResponse[lvIndex + 1], dataToPlot[[2]]$upper),
+                   fill = "darkgreen", color = NA, alpha = .15) 
+      }
+      p1 = p1 +
         geom_segment(data = dataToPlot[[1]], aes(x = finalVisitIndex, y = lower, yend = upper), color = "darkblue", linewidth = 1.5) +
         annotate(geom = "point", x = finalVisitIndex, y = dataToPlot[[1]]$median, color = "darkblue", size = 3, shape = 18) +
+        annotate(geom = "segment", x = lvIndex, xend = finalVisitIndex, y = tempDF$VisitResponse[lvIndex + 1], yend = dataToPlot[[1]]$median, linetype = "dashed", color = "darkblue")+
         annotate(geom = "ribbon", x = c(lvIndex, finalVisitIndex),
-                 ymin = c(tempDF$VisitResponse[lvIndex], dataToPlot[[1]]$lower),
-                 ymax = c(tempDF$VisitResponse[lvIndex], dataToPlot[[1]]$upper),
+                 ymin = c(tempDF$VisitResponse[lvIndex + 1], dataToPlot[[1]]$lower),
+                 ymax = c(tempDF$VisitResponse[lvIndex + 1], dataToPlot[[1]]$upper),
                  fill = "darkblue", color = NA, alpha = .4)
     } else {
       p1 = p1 + annotate(geom="text", label = "Final Visit Value Known",
                          alpha = .5, size = 10, x = (finalVisitIndex+1)/2, y = Inf, vjust = 1.3)
     }
     
+    p1 = p1 + scale_fill_manual(labels = c("Prior distribution for mean of imputed value.", "Prior predictive distribution for final endpoint of subject.")) +
+      guides(fill = guide_legend(override.aes = list(labels = c("Prior distribution for mean of imputed value.", "Prior predictive distribution for final endpoint of subject.")))) 
+
     p1
   })
 }
