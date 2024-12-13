@@ -94,27 +94,18 @@ $$\alpha_{ti} \sim \text{N}\left(\alpha_{\mu_{ti}}, \alpha_{\sigma_{ti}}^2\right
 $$\beta_{ti} \sim \text{N}\left(\beta_{\mu_{ti}}, \beta_{\sigma_{ti}}^2\right)$$
 $$\lambda_{ti}^2 \sim \text{IG}\left(\frac{\lambda_{n_{ti}}}{2}, \frac{\lambda_{\mu_{ti}}^2 \lambda_{n_{ti}}}{2}\right)$$
 
-## Choosing Values for Prior Parameters
-
-A potential starting place for non-informative prior values would be:
-
-$\mathbf \alpha$
-:   mean of 0
-:   standard deviation $\ge$ the largest expected response
-
-$\beta$
-:   mean of either 0 or $\frac{\text{final visit time}}{\text{early visit time}}$
-:   standard deviation $\ge$ the largest expected ratio of final visit to first visit response
-
-$\lambda$
-:   mean of the expected final visit endpoint standard deviation ($\sigma$)
-:   weight of 1. The variability of the prediction from the longitudinal model (based on an
-observed intermediate response) should be less than the variability based solely on
-the treatment allocation, thus this is a weakly pessimistic prior on the
-effectiveness of the longitudinal model that should be quickly
-overwhelmed by the data.
-
 ## Prior Specification Widget {#sec-priorSpecWidget}
+
+### Interpretation of parameters
+
+$\alpha_{t}$
+:   The expected response on the final endpoint when the early visit $t$ has a response of 0
+
+$\beta_{t}$
+:   If $\alpha=0$, then $\beta$ is how many times larger the final endpoint response is than the early endpoint at visit $t$. If $\beta=0$, then no matter what the early visit response is, the expectation for the final visit is $\alpha$. If $\beta=1$, then for any early response the expectation of the final response is the early response $+ \alpha$. A $\beta \lt 1$ generally implies that the final endpoint is expected to regress towards 0 (when $\alpha=0$), and a $\beta \gt 1$ implies that the final response is expected to keep growing relative to the early visit response.
+
+$\lambda_{t}$
+:   The standard deviation around the expectation of the final visit response. This dictates how close the imputed final endpoint responses are to the mean response for a subject given $\alpha$ and $\beta$. Lower $\lambda_t$ implies higher correlation between the early visit resoonse and final visit response.
 
 ```{shinylive-r}
 #| standalone: true
