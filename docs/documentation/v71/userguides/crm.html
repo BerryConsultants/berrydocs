@@ -119,19 +119,12 @@ div.csl-indent {
   }
 }</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 
-
-
 <!-- Roboto Serif -->
-
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
 
-
-
 <!-- Roboto Sans -->
-
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
@@ -185,12 +178,8 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../../index.html"> 
-<span class="menu-text">Home</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../../../gettingStarted/index.html"> 
-<span class="menu-text">Getting Started</span></a>
+    <a class="nav-link" href="../../../introduction/index.html"> 
+<span class="menu-text">Introduction</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="../../../documentation/index.html" aria-current="page"> 
@@ -409,6 +398,10 @@ window.Quarto = {
   <li><a href="#finely-spaced-doses" id="toc-finely-spaced-doses" class="nav-link" data-scroll-target="#finely-spaced-doses"><span class="header-section-number">7.4.1</span> Finely Spaced Doses</a></li>
   </ul></li>
   <li><a href="#variants" id="toc-variants" class="nav-link" data-scroll-target="#variants"><span class="header-section-number">7.5</span> Variants</a></li>
+  </ul></li>
+  <li><a href="#virtual-subject-response" id="toc-virtual-subject-response" class="nav-link" data-scroll-target="#virtual-subject-response"><span class="header-section-number">8</span> Virtual Subject Response</a>
+  <ul>
+  <li><a href="#explicitly-defined" id="toc-explicitly-defined" class="nav-link" data-scroll-target="#explicitly-defined"><span class="header-section-number">8.1</span> Explicitly Defined</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -1562,6 +1555,58 @@ Figure&nbsp;32: The Treatment Arms tab, specifying a finely spaced dose range
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sec-study-var1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;33: The Variants tab, specifying 5 variants
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="virtual-subject-response" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Virtual Subject Response</h1>
+<p>The Virtual Subject Response tab allows the user to explicitly define virtual subject response profiles. When simulations are executed, they will be executed for each specified profile.</p>
+<p>Profiles can be specified in 3 different ways:</p>
+<ul>
+<li>Explicitly: by specifying the toxicity rate to simulate at each dose. This option is only available if the available dose strengths have been specified explicitly, it is not available if a finely spaced dose range defined.</li>
+<li>Parametrically: by selecting one of the four models and specifying the parameter values for the model, allowing the toxicity rate to simulate at each dose to be calculated.</li>
+<li>Externally: by specifying a file of simulated subject responses at each dose strength, which will be sampled from with replacement when simulating subject responses. As in N-CRM there is a simple, single binary toxicity response per subject and there is no response profile that cannot be specified by the other methods. The mechanism is provided here more for consistency with the other FACTS interfaces.</li>
+</ul>
+<section id="explicitly-defined" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="explicitly-defined"><span class="header-section-number">8.1</span> Explicitly Defined</h2>
+<p>Toxicity profiles may be added, deleted, and renamed using the table and corresponding buttons on the left hand side of the screen in <a href="#fig-sec-vsr-ex2" class="quarto-xref">Figure&nbsp;35</a>. The user enters the toxicity rate to simulate at each dose into the Probability of Toxicity column of the table, and the graphical representation of these toxicity values updates accordingly.</p>
+<p>This form of toxicity profile is not available if the dose range is “finely spaced” – typically this means there are too many doses for it to be practicable to enter toxicity rates for all of them. When using “finely spaced” doses the toxicity rates to be simulated have to be specified using parametric models (see the next section).</p>
+<div id="fig-sec-vsr-ex1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sec-vsr-ex1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/clipboard-4185184244.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sec-vsr-ex1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;34: Explicitly defined toxicity - binary endpoint
+</figcaption>
+</figure>
+</div>
+<p>If the design is using ordinal toxicity, the toxicity response rates can be specified either:</p>
+<ul>
+<li>On the “Toxicity” tab by specifying the category 3 or greater toxicity rate at each dose and then two offsets – one for the category 2 or greater rate and one for the category 4 rate.</li>
+<li>On the “Ordinal Toxicity” tab by separately specifying the toxicity rates for each category of toxicity at each dose.</li>
+</ul>
+<p>Specifying offsets: to ensure that the specified category 3 rate plus the category 2 offset doesn’t sum to more than 1, or the category 3 rate plus the -ve category 4 offset sum to less than 0, the offsets are applied to the logit of the category 3 toxicity rate.</p>
+<p>Thus for the category 2+ rate:</p>
+<p><span class="math display">\[
+ln(\frac{p_{2+}}{1-p_{2+}}) = ln(\frac{p_{3}}{1-p_{3}} + \Delta_2)
+\]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(p_{2+}\)</span> is the probability of observing a category 2 or greater toxicity at a dose</li>
+<li><span class="math inline">\(p_3\)</span> is the probability of observing a category 3 or greater toxicity at a dose</li>
+<li><span class="math inline">\(\Delta_2\)</span> is the difference in the log odds between the two probabilities</li>
+</ul>
+<p>The offset is defined at the lowest dose and highest dose and then varied linearly with dose strength at the intermediate doses. The plot of the curve can either use Pr(Tox) or Log-odds(Tox) as the y-axis and dose strength or log(dose strength) as the x-axis. A graph is displayed of the toxicity rates that have been entered, and the category 2+ and category 4 toxicity rates if applicable. This graph, as with all graphs in the application, may be copied to the clipboard or to a file using the “right-click” menu.</p>
+<div id="fig-sec-vsr-ex2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sec-vsr-ex2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/clipboard-3668848689.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sec-vsr-ex2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;35: Virtual Subject Response – Explicitly-Defined – ordinal endpoint
 </figcaption>
 </figure>
 </div>

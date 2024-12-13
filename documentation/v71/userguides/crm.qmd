@@ -678,7 +678,7 @@ When targeting a single dose FACTS allows the user to specify:
 
 -   The target toxicity rate
 -   Whether to allocate to the dose with the mean estimate of its toxicity rate nearest the target, highest dose with a mean estimate of its toxicity rate below the target or lowest dose with a mean estimate of its toxicity rate above the target.
--   An option to use the toxicity rate relative to control, rather than the default of the absolute toxicity rate. To enable this option it is necessary to first go to the Study > Treatment Arms tab and select Include Control.
+-   An option to use the toxicity rate relative to control, rather than the default of the absolute toxicity rate. To enable this option it is necessary to first go to the Study \> Treatment Arms tab and select Include Control.
 
 The definition of the boundaries of the toxicity bands is still included in order to allow the specification of overdose control limits. These are calculated and applied in exactly the same way as when targeting a toxicity interval.
 
@@ -702,7 +702,7 @@ On this tab the number of treatment arms (doses) available to the study is speci
 
 Selecting Explicit Doses allows the user to specify the specific doses that can be used on the trial:
 
--   A single new dose or multiple doses can be added either by clicking “Add” or “Generate”. Initially each dose is defined by a simple integer name and level. The dose levels and dose names can then be edited on by clicking on them and entering the desired value. The dose level can also be set later on in the Design > Toxicity Response tab.
+-   A single new dose or multiple doses can be added either by clicking “Add” or “Generate”. Initially each dose is defined by a simple integer name and level. The dose levels and dose names can then be edited on by clicking on them and entering the desired value. The dose level can also be set later on in the Design \> Toxicity Response tab.
 -   There is also the option to include a control arm. Including a control arm allows the toxicity rate to be relative to the control arm.
 
 ![The Treatment Arms tab specifying explicit doses](images/clipboard-1708615787.png){#fig-sec-study-ta1}
@@ -713,7 +713,7 @@ Selecting Finely Spaced Doses allows the user to specify the dose range that can
 
 -   The minimum and maximum dose strength to be used
 -   The ‘granularity’ of the actual dose used, either as a fixed delta (Fixed spacing) or a dose ratio (the ratio specified must be greater than 1) (Ratio spacing).
--   The number of ‘bins’ or ‘doses for which to report’ – this is because FACTS will still produce summary statistics in columns, many with a “column per dose” – it is possible to use more doses than it is practical to report on (and a limit in MS Windows of 32K pixels for the width of a table means that the GUI can only display simulation results for a maximum of ~40 doses). However this limitation is only for reporting summary statistics; the dose strengths modeled and allocated in the simulations are unaffected.
+-   The number of ‘bins’ or ‘doses for which to report’ – this is because FACTS will still produce summary statistics in columns, many with a “column per dose” – it is possible to use more doses than it is practical to report on (and a limit in MS Windows of 32K pixels for the width of a table means that the GUI can only display simulation results for a maximum of \~40 doses). However this limitation is only for reporting summary statistics; the dose strengths modeled and allocated in the simulations are unaffected.
 
 Selecting ‘Finely Spaced Doses’ will also affect how some of the other parameters are specified in the FACTS GUI.
 
@@ -729,8 +729,52 @@ The user enters the number of variants they wish to create. Then in the resultin
 
 These will then appear on the simulations tab.
 
-If open enrolment is being used, then the enrolment cap is specified by the number of subjects. 
+If open enrolment is being used, then the enrolment cap is specified by the number of subjects.
 
 If there are two groups then separate caps are specified for each group.
 
 ![The Variants tab, specifying 5 variants](images/clipboard-3721505559.png){#fig-sec-study-var1}
+
+# Virtual Subject Response
+
+The Virtual Subject Response tab allows the user to explicitly define virtual subject response profiles. When simulations are executed, they will be executed for each specified profile.
+
+Profiles can be specified in 3 different ways: 
+
+- Explicitly: by specifying the toxicity rate to simulate at each dose. This option is only available if the available dose strengths have been specified explicitly, it is not available if a finely spaced dose range defined. 
+- Parametrically: by selecting one of the four models and specifying the parameter values for the model, allowing the toxicity rate to simulate at each dose to be calculated. 
+- Externally: by specifying a file of simulated subject responses at each dose strength, which will be sampled from with replacement when simulating subject responses. As in N-CRM there is a simple, single binary toxicity response per subject and there is no response profile that cannot be specified by the other methods. The mechanism is provided here more for consistency with the other FACTS interfaces.
+
+## Explicitly Defined
+
+Toxicity profiles may be added, deleted, and renamed using the table and corresponding buttons on the left hand side of the screen in @fig-sec-vsr-ex2. The user enters the toxicity rate to simulate at each dose into the Probability of Toxicity column of the table, and the graphical representation of these toxicity values updates accordingly.
+
+This form of toxicity profile is not available if the dose range is “finely spaced” – typically this means there are too many doses for it to be practicable to enter toxicity rates for all of them. When using “finely spaced” doses the toxicity rates to be simulated have to be specified using parametric models (see the next section).
+
+![Explicitly defined toxicity - binary endpoint](images/clipboard-4185184244.png){#fig-sec-vsr-ex1}
+
+If the design is using ordinal toxicity, the toxicity response rates can be specified either:
+
+-	On the “Toxicity” tab by specifying the category 3 or greater toxicity rate at each dose and then two offsets – one for the category 2 or greater rate and one for the category 4 rate.
+-	On the “Ordinal Toxicity” tab by separately specifying the toxicity rates for each category of toxicity at each dose.
+
+Specifying offsets: to ensure that the specified category 3 rate plus the category 2 offset doesn’t sum to more than 1, or the category 3 rate plus the -ve category 4 offset sum to less than 0, the offsets are applied to the logit of the category 3 toxicity rate.
+
+Thus for the category 2+ rate:
+
+$$
+ln(\frac{p_{2+}}{1-p_{2+}}) = ln(\frac{p_{3}}{1-p_{3}} + \Delta_2)
+$$
+
+where:
+
+-	$p_{2+}$ is the probability of observing a category 2 or greater toxicity at a dose
+-	$p_3$ is the probability of observing a category 3 or greater toxicity at a dose
+-	$\Delta_2$ is the difference in the log odds between the two probabilities
+
+The offset is defined at the lowest dose and highest dose and then varied linearly with dose strength at the intermediate doses.
+The plot of the curve can either use Pr(Tox) or Log-odds(Tox) as the y-axis and dose strength or log(dose strength) as the x-axis.
+A graph is displayed of the toxicity rates that have been entered, and the category 2+ and category 4 toxicity rates if applicable. This graph, as with all graphs in the application, may be copied to the clipboard or to a file using the “right-click” menu.
+
+![Virtual Subject Response – Explicitly-Defined – ordinal endpoint](images/clipboard-3668848689.png){#fig-sec-vsr-ex2}
+
