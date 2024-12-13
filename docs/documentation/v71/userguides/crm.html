@@ -403,6 +403,12 @@ window.Quarto = {
   <li><a href="#sec-study-tox-interval" id="toc-sec-study-tox-interval" class="nav-link" data-scroll-target="#sec-study-tox-interval"><span class="header-section-number">7.2.1</span> Targeting a Toxicity Interval</a></li>
   <li><a href="#sec-study-tox-single" id="toc-sec-study-tox-single" class="nav-link" data-scroll-target="#sec-study-tox-single"><span class="header-section-number">7.2.2</span> Targeting a single dose</a></li>
   </ul></li>
+  <li><a href="#efficacy" id="toc-efficacy" class="nav-link" data-scroll-target="#efficacy"><span class="header-section-number">7.3</span> Efficacy</a></li>
+  <li><a href="#treatment-arms" id="toc-treatment-arms" class="nav-link" data-scroll-target="#treatment-arms"><span class="header-section-number">7.4</span> Treatment Arms</a>
+  <ul class="collapse">
+  <li><a href="#finely-spaced-doses" id="toc-finely-spaced-doses" class="nav-link" data-scroll-target="#finely-spaced-doses"><span class="header-section-number">7.4.1</span> Finely Spaced Doses</a></li>
+  </ul></li>
+  <li><a href="#variants" id="toc-variants" class="nav-link" data-scroll-target="#variants"><span class="header-section-number">7.5</span> Variants</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -1476,10 +1482,92 @@ Figure&nbsp;29: N-CRM, targeting a single dose, not a toxicity band
 <li>An option to use the toxicity rate relative to control, rather than the default of the absolute toxicity rate. To enable this option it is necessary to first go to the Study &gt; Treatment Arms tab and select Include Control.</li>
 </ul>
 <p>The definition of the boundaries of the toxicity bands is still included in order to allow the specification of overdose control limits. These are calculated and applied in exactly the same way as when targeting a toxicity interval.</p>
-
-
-
 </section>
+</section>
+<section id="efficacy" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="efficacy"><span class="header-section-number">7.3</span> Efficacy</h2>
+<p>If include efficacy has been checked on the Study Info tab, a simple additional input page is included:</p>
+<div id="fig-sec-study-eff1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sec-study-eff1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/clipboard-2054926457.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sec-study-eff1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;30: The Efficacy tab
+</figcaption>
+</figure>
+</div>
+<p>If simulating and modelling an efficacy endpoint is included there are two items to be specified on this tab:</p>
+<ul>
+<li>Whether a subject experiencing a toxicity can also count towards efficacy or not. If unchecked patients outcomes are simply sampled separately and a patient can both have a toxicity and an efficacy response. If checked, a patient’s toxicity outcome is sampled first, and only if there is no toxicity is an efficacy outcome sampled.</li>
+<li>The efficacy target – this consists of:
+<ul>
+<li>The target efficacy rate required for the Minimum Efficacy Dose (MED).</li>
+<li>Whether the target dose is the nearest dose to the MED rate, the lowest dose above the MED rate or the highest dose below the MED rate.</li>
+<li>If a control arm has been included, whether the target rate is absolute or relative to the observed rate on the control arm.</li>
+</ul></li>
+</ul>
+</section>
+<section id="treatment-arms" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="treatment-arms"><span class="header-section-number">7.4</span> Treatment Arms</h2>
+<p>On this tab the number of treatment arms (doses) available to the study is specified. The user can either define a set of specific doses that can be used or a continuous dose range with some granularity.</p>
+<p>Selecting Explicit Doses allows the user to specify the specific doses that can be used on the trial:</p>
+<ul>
+<li>A single new dose or multiple doses can be added either by clicking “Add” or “Generate”. Initially each dose is defined by a simple integer name and level. The dose levels and dose names can then be edited on by clicking on them and entering the desired value. The dose level can also be set later on in the Design &gt; Toxicity Response tab.</li>
+<li>There is also the option to include a control arm. Including a control arm allows the toxicity rate to be relative to the control arm.</li>
+</ul>
+<div id="fig-sec-study-ta1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sec-study-ta1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/clipboard-1708615787.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sec-study-ta1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;31: The Treatment Arms tab specifying explicit doses
+</figcaption>
+</figure>
+</div>
+<section id="finely-spaced-doses" class="level3" data-number="7.4.1">
+<h3 data-number="7.4.1" class="anchored" data-anchor-id="finely-spaced-doses"><span class="header-section-number">7.4.1</span> Finely Spaced Doses</h3>
+<p>Selecting Finely Spaced Doses allows the user to specify the dose range that can be used on the trial:</p>
+<ul>
+<li>The minimum and maximum dose strength to be used</li>
+<li>The ‘granularity’ of the actual dose used, either as a fixed delta (Fixed spacing) or a dose ratio (the ratio specified must be greater than 1) (Ratio spacing).</li>
+<li>The number of ‘bins’ or ‘doses for which to report’ – this is because FACTS will still produce summary statistics in columns, many with a “column per dose” – it is possible to use more doses than it is practical to report on (and a limit in MS Windows of 32K pixels for the width of a table means that the GUI can only display simulation results for a maximum of ~40 doses). However this limitation is only for reporting summary statistics; the dose strengths modeled and allocated in the simulations are unaffected.</li>
+</ul>
+<p>Selecting ‘Finely Spaced Doses’ will also affect how some of the other parameters are specified in the FACTS GUI.</p>
+<div id="fig-sec-study-ta-fgd1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sec-study-ta-fgd1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/clipboard-1521668862.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sec-study-ta-fgd1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;32: The Treatment Arms tab, specifying a finely spaced dose range
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="variants" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="variants"><span class="header-section-number">7.5</span> Variants</h2>
+<p>On this tab the user can specify that a number of design variants should be created. Currently the only design feature that can be changed is the sample size (maximum number of cohorts).</p>
+<p>If “multiple variants” is checked then the user can specify that simulations setups should be created for each simulation scenario with versions of the design with different maximum numbers of cohorts.</p>
+<p>The user enters the number of variants they wish to create. Then in the resulting table, enter different “Max Cohorts” for each variant.</p>
+<p>These will then appear on the simulations tab.</p>
+<p>If open enrolment is being used, then the enrolment cap is specified by the number of subjects.</p>
+<p>If there are two groups then separate caps are specified for each group.</p>
+<div id="fig-sec-study-var1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sec-study-var1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/clipboard-3721505559.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sec-study-var1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;33: The Variants tab, specifying 5 variants
+</figcaption>
+</figure>
+</div>
+
+
+
 </section>
 </section>
 
