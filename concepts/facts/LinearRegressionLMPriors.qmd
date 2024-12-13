@@ -109,7 +109,7 @@ $\lambda_{t}$
 
 ```{shinylive-r}
 #| standalone: true
-#| viewerHeight: 800
+#| viewerHeight: 1000
 
 library(shiny)
 library(DT)
@@ -157,14 +157,12 @@ ui <- fluidPage(
   alignCenter(sliderInput("numVisits", "Number of visits:", 
                           min = 2, max = 20, value = 5, step = 1)),
   DTOutput("dataInputTable"),
+  "",
   br(),
   titlePanel(h2("Plot a subject's prior predictive", align = "center")),
   fluidRow(
     #column(5, offset = 1, uiOutput("slider")),
-    column(5, offset = 1, sliderInput(inputId = "lastVisitWithData", 
-                                      label = "Last complete visit:", 
-                                      min = 1, max = 5,
-                                      value = 3, step = 1)),
+    column(5, offset = 1, uiOutput("slider")),
     column(6, fluidRow(
       column(6, offset = 2, checkboxInput("fixAlpha", "Fix alpha at its mean?", value = FALSE, width = "100%")),
       column(6, offset = 2, checkboxInput("fixBeta", "Fix beta at its mean?", value = FALSE, width = "100%")),
@@ -184,7 +182,7 @@ getLowerMedianUpper = function(earlyVisitVal, alpha = c(0,1), beta = c(0,1), lam
   
   deviates = rnorm(10000)
   deviates = (deviates - mean(deviates))/(sd(deviates))
-
+  
   if(any(is.na(lambda))) {
     samps = (deviates*distMeanFinal[2] + distMeanFinal[1])
   } else {
@@ -230,7 +228,7 @@ server <- function(input, output, session) {
                                              selection = 'none',
                                              editable = list(target = "cell")
   ) |> formatStyle(c(1,3,5,7), `border-right` = "solid 1px") |>
-       formatRound(1, digits = 4) |> formatRound(2:7, digits = 2)
+    formatRound(1, digits = 4) |> formatRound(2:7, digits = 2)
   )
   
   ## Update from Conditional
@@ -238,7 +236,6 @@ server <- function(input, output, session) {
   
   observeEvent(input$dataInputTable_cell_edit, {
     info = input$dataInputTable_cell_edit
-  #  str(info)
     i = info$row
     j = info$col
     v = info$value
@@ -263,23 +260,26 @@ server <- function(input, output, session) {
       df <<- tempd
     } else if(nv < nrow(df)) {
       df <<- df[1:nv,]
+      df[nv,-1] <<- NA
     }
     replaceData(proxy, df) 
   })
-  
-  output$slider = renderUI({
-    nv = input$numVisits
-    val = min(input$lastVisitWithData, nv)
 
-    sliderInput(inputId = "lastVisitWithData", 
-                label = "Last complete visit:", 
-                min = 1, max = nv,
-                value = val, step = 1)
+  sliderParams <- reactiveValues(max = 5, value = 3)
+  output$slider <- renderUI({
+    sliderInput("lastVisitWithData", "Last complete visit:", min = 1, max = sliderParams$max, value = sliderParams$value, step = 1)
   })
-  #   updateSliderInput(session, "lastVisitWithData", min = 1, max = nv, value = min(nv, input$lastVisitWithData), step = 1)
-  # })
+  observeEvent(input$numVisits, {
+    sliderParams$max = input$numVisits
+    if(!is.null(input$lastVisitWithData)) {
+      sliderParams$value <- min(input$lastVisitWithData, input$numVisits)
+    } else {
+      sliderParams$value = 3
+    }
+  })
   
   output$priorPredictive = renderPlot({
+    req(input$lastVisitWithData)
     input$dataInputTable_cell_edit
     
     lvIndex = input$lastVisitWithData
@@ -293,18 +293,18 @@ server <- function(input, output, session) {
     tempDF$RowVisitIndex = 1:nrow(tempDF)
     tempDF$visitKnown = "included"
     tempDF$visitKnown[tempDF$RowVisitIndex > lvIndex] = "excluded"
-
-    tempDF = rbind(setNames(data.frame(c(tempDF[1,])), names(tempDF)), tempDF)
-    tempDF[1,1] = 0
-    tempDF$RowVisitIndex[1] = 0
-    rownames(tempDF)[1] = "Baseline"
-
+    
+   # tempDF = rbind(setNames(data.frame(c(tempDF[1,])), names(tempDF)), tempDF)
+   # tempDF[1,1] = 0
+   # tempDF$RowVisitIndex[1] = 0
+   # rownames(tempDF)[1] = "Baseline"
+    
     p1 = ggplot() + 
       geom_point(dat = tempDF, aes(x = RowVisitIndex, y = VisitResponse, color = visitKnown), size = 3) + 
       scale_color_manual(breaks = c("included", "excluded"), values = c("black", "gray70"), guide = "none") +
       coord_cartesian(xlim = c(0, finalVisitIndex)) + 
       scale_x_continuous(breaks = 0:finalVisitIndex, labels = c("Baseline", 1:finalVisitIndex)) +
-      xlab("Visit Index") + ylab("Response") + ggtitle("Predicting Final Endpoint of a Subject") +
+      xlab("Visit") + ylab("Response") + ggtitle("Predicting Final Endpoint of a Subject") +
       theme_bw() + 
       theme(plot.title = element_text(size = 20), text = element_text(size = 16), legend.justification = "left", legend.position = "bottom", legend.direction = "vertical")
     
@@ -314,18 +314,18 @@ server <- function(input, output, session) {
           geom_segment(data = dataToPlot[[2]], aes(x = finalVisitIndex, y = lower, yend = upper), color = "darkgreen", linewidth = 2.5) +
           annotate(geom = "point", x = finalVisitIndex, y = dataToPlot[[2]]$median, color = "darkgreen", size = 3, shape = 18) +
           geom_ribbon(data = NULL, aes(x = c(lvIndex, finalVisitIndex),
-                                       ymin = c(tempDF$VisitResponse[lvIndex + 1], dataToPlot[[2]]$lower),
-                                       ymax = c(tempDF$VisitResponse[lvIndex + 1], dataToPlot[[2]]$upper),
-                                       fill = "preds"),  color = NA, alpha = .4)
+                                       ymin = c(tempDF$VisitResponse[lvIndex], dataToPlot[[2]]$lower),
+                                       ymax = c(tempDF$VisitResponse[lvIndex], dataToPlot[[2]]$upper),
+                                       fill = "preds"),  color = NA, alpha = .2)
       }
       p1 = p1 +
         geom_segment(data = dataToPlot[[1]], aes(x = finalVisitIndex, y = lower, yend = upper), color = "darkblue", linewidth = 1.5) +
         annotate(geom = "point", x = finalVisitIndex, y = dataToPlot[[1]]$median, color = "darkblue", size = 3, shape = 18) +
-        annotate(geom = "segment", x = lvIndex, xend = finalVisitIndex, y = tempDF$VisitResponse[lvIndex + 1], yend = dataToPlot[[1]]$median, linetype = "dashed", color = "darkblue")+
+        annotate(geom = "segment", x = lvIndex, xend = finalVisitIndex, y = tempDF$VisitResponse[lvIndex], yend = dataToPlot[[1]]$median, linetype = "dashed", color = "darkblue")+
         geom_ribbon(data = NULL, aes(x = c(lvIndex, finalVisitIndex),
-                 ymin = c(tempDF$VisitResponse[lvIndex + 1], dataToPlot[[1]]$lower),
-                 ymax = c(tempDF$VisitResponse[lvIndex + 1], dataToPlot[[1]]$upper),
-                 fill = "means"),  color = NA, alpha = .4)
+                                     ymin = c(tempDF$VisitResponse[lvIndex], dataToPlot[[1]]$lower),
+                                     ymax = c(tempDF$VisitResponse[lvIndex], dataToPlot[[1]]$upper)),
+                                     fill = "darkblue",  color = NA, alpha = .4)
     } else {
       p1 = p1 + annotate(geom="text", label = "Final Visit Value Known",
                          alpha = .5, size = 10, x = (finalVisitIndex)/2, y = Inf, vjust = 1.3)
@@ -333,12 +333,13 @@ server <- function(input, output, session) {
     
     p1 = p1 + scale_fill_manual(NULL, breaks = c("preds"), limits = c("preds"), values = c("darkgreen"), labels = c("Prior predictive distribution for final endpoint of subject."))
     #  guides(fill = guide_legend(override.aes = list(limits = c("darkgreen", "darkblue"), labels = c("Prior distribution for mean of imputed value.", "Prior predictive distribution for final endpoint of subject.")))) 
-
+    
     p1
   })
   
   output$visitToFinalPlot = renderPlot({
     input$dataInputTable_cell_edit
+    req(input$lastVisitWithData)
     
     lvIndex = input$lastVisitWithData
     finalVisitIndex = input$numVisits
@@ -368,7 +369,7 @@ server <- function(input, output, session) {
     
     if(lvIndex < finalVisitIndex) {
       if(!input$removePredictive) {
-        numSamps = 10000
+        numSamps = 2500
         
         deviates = rnorm(numSamps)
         deviates = (deviates - mean(deviates))/(sd(deviates))
@@ -382,12 +383,12 @@ server <- function(input, output, session) {
         plotDF$lowerPred = distVals[,1]
         plotDF$upperPred = distVals[,2]
       }
-    
+      
       p2 = ggplot(data = plotDF) + geom_abline(aes(slope = tempDF$betaPriorMean[lvIndex], intercept = tempDF$alphaPriorMean[lvIndex]), color = "darkblue", linewidth = 1.5) + 
         geom_ribbon(aes(x = s, ymin = lower, ymax = upper, fill = "means"), color = NA, alpha = 0.4)
       
       if(!input$removePredictive) {
-        p2 = p2 + geom_ribbon(aes(x = s, ymin = lowerPred, ymax = upperPred, fill = "preds"), color = NA, alpha = 0.4) 
+        p2 = p2 + geom_ribbon(aes(x = s, ymin = lowerPred, ymax = upperPred), fill = "darkgreen", color = NA, alpha = 0.2) 
       }
       p2 = p2 +
         coord_cartesian(xlim = c(min_s, max_s)) +
