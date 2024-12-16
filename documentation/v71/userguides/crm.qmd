@@ -856,19 +856,115 @@ Subject response data may be simulated from a PK-PD model in place of, or in add
 
 The supplied data should be in the following format: an ascii file with data in comma separated value format with the following columns:
 
-1. Patient id
-2. Dose index (1, 2, 3,… if a Control is to be included it should be index 0) this is **not** the user settable dose name or dose level
-3. Toxicity (0,1)
-4. Efficacy (0. 1) even if efficacy not being simulated this value must be present
-5. Group (\*1, 2) only required if groups are being simulated
+1.  Patient id
+2.  Dose index (1, 2, 3,… if a Control is to be included it should be index 0) this is **not** the user settable dose name or dose level
+3.  Toxicity (0,1)
+4.  Efficacy (0. 1) even if efficacy not being simulated this value must be present
+5.  Group (\*1, 2) only required if groups are being simulated
 
 The GUI requires that the file name has a “.dat” suffix.
 
-
-
 Simulated subjects will be drawn from this supplied list, with replacement, to provide the simulated response values.
-
 
 To import an external file, the user must first add a scenario to the table. After adding a scenario, the user must click “Browse” to locate the externally simulated data via a standard file browser dialog.
 
 ![External Data](images/clipboard-3075146140.png){#fig-sec-vsr-ext1}
+
+# Design {#sec-design}
+
+The Design Tabs allows the user to specify the toxicity response model, efficacy response model if an efficacy endpoint is present, any prior / pseudo patient data, allocation rules, and stopping criteria.
+
+In the N-CRM the toxicity (and efficacy if using) analysis uses the two parameter Bayesian Logistic Regression Model (BLRM). The log odds of the probability of toxicity at dose $j$ is modeled as a simple linear equation using the adjusted dose strength $\hat{x_j}$ of dose $d_j$.
+
+$$
+ln(\frac{p_j}{1-p_j}) = \alpha + \beta \hat{x}_j
+$$
+
+$$
+\text{Re-arranging:}\ p_j = \frac{e^{\alpha + \beta \hat{x}_j}}{1 + e^{\alpha + \beta \hat{x}_j}}
+$$
+
+Where: $\hat{x}_j = d_j - d^{\ast}$ or $\hat{x}_j = ln(\frac{d_j}{d^{\ast}})$ and $d^{\ast}$ is the **reference dose**, due to this notational convention $\hat{x}̂$, these transformed dose strengths are referred to as the “X-Hats”.
+
+Note that in either transformation, when $d_j = d^{\ast}$, then $p_j = \frac{e^{\alpha}}{1 + e^{\alpha}}$.
+
+The prior distribution is a bivariate Normal distribution of $\alpha$ and $ln(\beta)$:
+
+$$
+\begin{bmatrix}
+\alpha \\
+ln(\beta)
+\end{bmatrix}
+\sim N
+\left(
+\begin{bmatrix}
+\mu_{\alpha} \\
+\mu_{ln(\beta)}
+\end{bmatrix},
+\begin{bmatrix}
+\sigma_{\alpha}^2 & \rho \sigma_{\alpha} \sigma_{ln(\beta)} \\
+\rho \sigma_{\alpha} \sigma_{ln(\beta)} & \sigma_{ln(\beta)}^2
+\end{bmatrix}
+\right)
+$$
+
+With the user supplying the mean and standard deviation of $\alpha \ (\mu_{\alpha}, \sigma_{\alpha})$, and $ln(\beta) \ (\mu_{ln(\beta)}, \sigma_{ln(\beta)})$ and the correlation coefficient $\rho$.
+
+The efficacy model is the same.
+
+Extensions:
+
+-   If there are two groups the toxicity or efficacy response of the second is modeled: $$
+    ln(\frac{p_j}{1-p_j}) = \alpha + a + \beta b \hat{x}_j
+    $$
+    -   Where $a$ and $ln(b)$ have their own bi-variate normal prior. Note that as the response of the second group is modelled as an offset from the first an informative prior can be used to limit how large the offset is.
+    -   Optionally $b$ can be fixed at 1, so the two groups are modelled with a common estimate of the slope ($\beta$)
+    -   Optionally a may be constrained to be +ve or -ve so that (if there is a common estimate of the slope) the estimate of the toxicity rate for the second group can be constrained being higher or lower than that of the first group.
+
+To allow N-CRM to be used to simulate old CRM designs, an option to fix the value of Alpha is included (for both toxicity and efficacy), this option is not recommended for new designs. Fixing the alpha means that the response model has a fixed rate of response at the reference dose – in the old CRM designs in effect the reference dose was above the highest dose.
+
+If the toxicity model is of an ordinal toxicity rate, the toxicity response model is:
+
+$$
+logit(Pr(Y \geq j | \hat{x})) = \alpha_j + \beta\hat{x} 
+$$
+
+for ordinal response $j=2,3$ or $j = 2,3,4$. The $\alpha_2$ and $\alpha_4$ have independent Normal priors and are constrained to be $\alpha_2 > \alpha_3 > \alpha_4$. The $\alpha_3$ is fitted with the BLRM and bivariate Normal prior as for dichotomous toxicity, or it may be given a fixed value.
+
+Lastly both the toxicity and efficacy models can the adjusted to be asymptotic at limits inside the interval $[0,1]$. For example if the toxicity being observed has a ‘natural’ background rate then the minimum asymptote could be adjusted to this rate.
+
+If the rate given by the BLRM is $p’_j$ then the actual estimated rate is $p_j$ adjusted to lie between $p^{max}$ and $p^{min}$ where:
+
+$$
+p_j = p’_j(p^{max} - p^{min}) + p^{min}
+$$
+
+## X-Hats
+
+On this tab the user specifies the reference dose $d^*$ for use in calculating the adjusted dose value (the “x-hat” values). The default value to use is **Median dose is reference**, this uses the median of the dose range for the reference dose, minimizing the correlation in the sampled values of $\alpha$ and $\beta$. Note though that when allocation is restricted to explicit doses it is also recommended that the value of the reference dose is not the same as an actual dose that can be used (at this dose $\hat{x}$ will be 0 and the data on this dose can have undue weight on the estimate of $\alpha$).
+
+Different reference doses can easily be used however – between the two doses thought most likely to be MTD, just below the lowest dose, just above the highest dose. The bi-variate Normal prior for $(\alpha, ln(\beta))$ will need to be recalibrated to take the change into account.
+
+**X-Hats are log(dose strength)** allows the user to select between:
+
+1.  linear effective dose $\hat{x}_j = d_j - d^*$
+2.  $log(\hat{x}_j) = ln(\frac{d_j}{d^*})$
+
+If you have entered linear dose strengths for the doses (1, 2, 3, 4, … or 100, 150, 200, 250, …) then use the linear effective dose. If however the dose strengths that have been entered are non-linear (12.5, 25, 50, 100, …) but expected to be roughly linear in effect, then use the log of the dose ratio.
+
+![Specifying the dose transformation - the "x-hats".](images/clipboard-2199440383.png){#fig-sec-des-xh1}
+
+### The Pro’s & Con’s of using the median dose as the reference dose
+
+The reason the median dose is recommended as the reference is that this minimizes the correlation in the fit of $\alpha$ and $ln(\beta)$, the parameters of the BLRM, and it maximises the flexibility of the fit of the model over the dose range.
+
+However care needs to be taken that the prior on $\alpha$ is not more restrictive than that on $ln(\beta)$ in order to avoid a phenomena observed when preparing tutorials: observing “no toxicities” below the reference dose resulted in a model with increased probability of toxicity above the reference dose compared to observing a toxicity below the reference dose. For a given value of $\alpha$, higher values of $ln(\beta)$ correspond to lower toxicity below the reference dose – as the $\hat{x}$̂ values are -ve below the reference dose. The fitted curve thus “pivots” about the value of $\alpha$ at the reference dose.
+
+There are two solutions to this:
+
+1. move the reference dose, which involves a choice between two options
+    a. moving it to the first dose or below (normally allowing a relatively constrained prior around a low value for $\alpha$), 
+    b. or to the highest dose or above (with a relatively uninformative prior). 
+    
+    We have seen both solutions perform well against the chosen scenarios – but the choice needs checking and refining with a full range of scenarios that represent the full uncertainty in the true response.
+2. or modify the priors on $\alpha$ and $ln(\beta)$ making the prior on $\alpha$ less informative (in particular increase the probability of low values) and make the prior on $ln(\beta)$ more informative (in particular lower the probability of high values less). Because the prior distribution on $\beta$, is on $ln(\beta)$, it is easy to make large values of $\beta$ more probable than intended.
