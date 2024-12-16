@@ -739,11 +739,11 @@ If there are two groups then separate caps are specified for each group.
 
 The Virtual Subject Response tab allows the user to explicitly define virtual subject response profiles. When simulations are executed, they will be executed for each specified profile.
 
-Profiles can be specified in 3 different ways: 
+Profiles can be specified in 3 different ways:
 
-- Explicitly: by specifying the toxicity rate to simulate at each dose. This option is only available if the available dose strengths have been specified explicitly, it is not available if a finely spaced dose range defined. 
-- Parametrically: by selecting one of the four models and specifying the parameter values for the model, allowing the toxicity rate to simulate at each dose to be calculated. 
-- Externally: by specifying a file of simulated subject responses at each dose strength, which will be sampled from with replacement when simulating subject responses. As in N-CRM there is a simple, single binary toxicity response per subject and there is no response profile that cannot be specified by the other methods. The mechanism is provided here more for consistency with the other FACTS interfaces.
+-   Explicitly: by specifying the toxicity rate to simulate at each dose. This option is only available if the available dose strengths have been specified explicitly, it is not available if a finely spaced dose range defined.
+-   Parametrically: by selecting one of the four models and specifying the parameter values for the model, allowing the toxicity rate to simulate at each dose to be calculated.
+-   Externally: by specifying a file of simulated subject responses at each dose strength, which will be sampled from with replacement when simulating subject responses. As in N-CRM there is a simple, single binary toxicity response per subject and there is no response profile that cannot be specified by the other methods. The mechanism is provided here more for consistency with the other FACTS interfaces.
 
 ## Explicitly Defined
 
@@ -755,8 +755,8 @@ This form of toxicity profile is not available if the dose range is “finely sp
 
 If the design is using ordinal toxicity, the toxicity response rates can be specified either:
 
--	On the “Toxicity” tab by specifying the category 3 or greater toxicity rate at each dose and then two offsets – one for the category 2 or greater rate and one for the category 4 rate.
--	On the “Ordinal Toxicity” tab by separately specifying the toxicity rates for each category of toxicity at each dose.
+-   On the “Toxicity” tab by specifying the category 3 or greater toxicity rate at each dose and then two offsets – one for the category 2 or greater rate and one for the category 4 rate.
+-   On the “Ordinal Toxicity” tab by separately specifying the toxicity rates for each category of toxicity at each dose.
 
 Specifying offsets: to ensure that the specified category 3 rate plus the category 2 offset doesn’t sum to more than 1, or the category 3 rate plus the -ve category 4 offset sum to less than 0, the offsets are applied to the logit of the category 3 toxicity rate.
 
@@ -768,13 +768,107 @@ $$
 
 where:
 
--	$p_{2+}$ is the probability of observing a category 2 or greater toxicity at a dose
--	$p_3$ is the probability of observing a category 3 or greater toxicity at a dose
--	$\Delta_2$ is the difference in the log odds between the two probabilities
+-   $p_{2+}$ is the probability of observing a category 2 or greater toxicity at a dose
+-   $p_3$ is the probability of observing a category 3 or greater toxicity at a dose
+-   $\Delta_2$ is the difference in the log odds between the two probabilities
 
-The offset is defined at the lowest dose and highest dose and then varied linearly with dose strength at the intermediate doses.
-The plot of the curve can either use Pr(Tox) or Log-odds(Tox) as the y-axis and dose strength or log(dose strength) as the x-axis.
-A graph is displayed of the toxicity rates that have been entered, and the category 2+ and category 4 toxicity rates if applicable. This graph, as with all graphs in the application, may be copied to the clipboard or to a file using the “right-click” menu.
+The offset is defined at the lowest dose and highest dose and then varied linearly with dose strength at the intermediate doses. The plot of the curve can either use Pr(Tox) or Log-odds(Tox) as the y-axis and dose strength or log(dose strength) as the x-axis. A graph is displayed of the toxicity rates that have been entered, and the category 2+ and category 4 toxicity rates if applicable. This graph, as with all graphs in the application, may be copied to the clipboard or to a file using the “right-click” menu.
 
 ![Virtual Subject Response – Explicitly-Defined – ordinal endpoint](images/clipboard-3668848689.png){#fig-sec-vsr-ex2}
 
+### Explicitly defined – Ordinal Toxicity
+
+If simulating ordinal toxicity an alternative option is to explicitly specify the rate at each toxicity level at each dose. This can be done under the Virtual Subject Response \> Explicitly Defined \> Ordinal Toxicity tab.
+
+![Virtual Subject Response – Explicitly-Defined: Ordinal Toxicity tab](images/clipboard-4019572525.png){#fig-sec-vsr-ex-ord1}
+
+### Explicitly defined toxicity – when simulating 2 groups
+
+If simulating toxicity as a binary outcome, when simulating 2 groups, the tab displays two Pr(Tox) columns, one for each group, and the user enters the toxicity rate to be simulated at each dose for each group.
+
+![Explicitly defined toxicity - 2 groups](images/clipboard-27213182.png){#fig-sec-vsr-ex-ex2g1}
+
+If simulating 2 groups and ordinal toxicity, then on the explicitly defined tab once again the tab displays two Pr(Tox) columns, one for each group, and the user enters the toxicity rate to be simulated at each dose for each group. As for a single group the Category 2 toxicity and Category 4 (if using) toxicity rates are defined by defining log odds offsets at the lowest and highest dose. Specification is limited to a single set of offsets that are applied to both groups.
+
+![Explicitly defined toxicity - 2 groups and ordinal offsets](images/clipboard-2521844099.png){#fig-sec-vsr-ex-ex2g2}
+
+As in the single group case in addition to the Category 3 toxicity rates that are editable, columns showing the Pr(Tox 2+) and Pr(Tox 4) are shown, but these are not editable and derived from the Pr(Tox) rates and the offsets that have been specified. The ordinal toxicity rates are only shown for group 1.
+
+### Explicitly defined – Ordinal Toxicity with 2 groups
+
+If simulating ordinal toxicity an alternative option is to explicitly specify the rate at each toxicity level at each dose. This can be done under the Virtual Subject Response \> Explicitly Defined \> Ordinal Toxicity tab.
+
+![Explicitly Defined, Ordinal Toxicity with 2 Groups](images/clipboard-4265246160.png){#fig-sec-vsr-ex-ord2g1}
+
+### Efficacy response profiles
+
+Entering efficacy response profiles is very similar to entering toxicity profiles. FACTS will construct scenarios to simulate of every combination of toxicity and efficacy response profiles.
+
+### Explicitly Defined – Efficacy
+
+Efficacy profiles may be added, deleted, and renamed just like toxicity profiles. The user enters the efficacy rate to simulate at each dose into the Probability of Efficacy column of the table, and the graphical representation of these efficacy values updates accordingly.
+
+As with toxicity this form of efficacy profile is not available if the dose range is “finely spaced” – typically this means there are too many doses for it to be practicable to enter efficacy rates for all of them. When using “finely spaced” doses the efficacy rates to be simulated have to be specified using parametric models (see the next section).
+
+![Efficacy virtual subject response, explicitly defined](images/clipboard-1657858868.png){#fig-sec-vsr-ex-exeff1}
+
+### Explicitly Defined – Efficacy with two groups
+
+If the design included 2 groups, when explicitly defining an efficacy response profile, there is simply a second column of efficacy response rates to enter:
+
+![Explicity defined efficacy response profile with 2 groups](images/clipboard-1755902621.png){#fig-sec-vsr-ex-eff2g1}
+
+## Parametric {#sec-parametric}
+
+Toxicity scenarios may be added, deleted, and renamed using the table and corresponding buttons on the left hand side of the screen. The user selects the model to use to determine the toxicity rate to simulate at each dose, and specifies the values of the model’s parameters. The graphical representation of these toxicity values updates accordingly.
+
+The graph may be copied using the context menu functionality described in the previous section.
+
+Four models are available:
+
+-   Logistic: the probability of toxicity at dose *x* is given by: $P_x=\frac{1}{1+e^{-s(x-x_{50})}}$ with user specified parameters, $s$ (slope) and $x_{50}$ (the ED50 dose). Note this can be fitted exactly by the two parameter logistic with linear effective doses $\hat{x}=x-x_{ref}$ when $\beta=s$ and $\alpha=\beta*(x_{ref}-x_{50})$
+
+-   Emax: the probability of toxicity at dose $x$ is given by: $P_x=\frac{x}{x+x_{50}}$ with user specified parameter $x_{50}$.
+
+-   Log Logistic: the probability of toxicity at dose $x$ is given by: $P_x=\frac{1}{1+e^{-s(ln(x)-ln(x_{50}))}}$ with user specified parameters, $s$ (slope) and $x_{50}$ (the ED50 dose). Note this can be fitted exactly by the two parameter logistic with log effective doses $\hat{x}=ln(\frac{x}{x_{ref}})$ when $\beta=s$ and $\alpha=\beta*ln(\frac{x_{ref}}{x_{50}})$
+
+-   Piecewise linear: with the probability of toxicity specified at a series of knots, with the probability linearly interpolated between knots.
+
+![Virtual Subject Response - Parametric Toxicity tab](images/clipboard-4187069952.png){#fig-sec-vsr-par1}
+
+If Ordinal toxicity is being simulated then the category 2 and greater toxicity rates and category 4 toxicity rates are specified using the logit offset methods as on the Explicitly-Defined \> Toxicity tab.
+
+![Virtual Subject Response - Parametric Toxicity tab with Ordinal toxicity](images/clipboard-705500554.png){#fig-sec-vsr-par2}
+
+If Ordinal Toxicity and 2 groups are being simulated then both the Cat 2+ and Cat 4 toxicities and the Group 2 toxicities are defined using the logit offset methods.
+
+![Parametric definition of ordinal toxicity response with 2 groups](images/clipboard-2750595441.png){#fig-sec-vsr-par3}
+
+### Parametric efficacy response
+
+Parametric efficacy response profiles function exactly like toxicity profiles, with the same parametric models to choose from and if 2 groups are present the response of the second group is again defined by 2 log-odds offsets, one at the lowest dose and one at the highest.
+
+![Parametric efficacy response profile](images/clipboard-2515320149.png){#fig-sec-vsr-par-eff1}
+
+## External
+
+Subject response data may be simulated from a PK-PD model in place of, or in addition to, choosing a response model from FACTS. The importing of subject response data (which must be in the form specified in the System Requirements Document) may be done from the External Files sub-tab depicted below (@fig-sec-vsr-ext1).
+
+The supplied data should be in the following format: an ascii file with data in comma separated value format with the following columns:
+
+1. Patient id
+2. Dose index (1, 2, 3,… if a Control is to be included it should be index 0) this is **not** the user settable dose name or dose level
+3. Toxicity (0,1)
+4. Efficacy (0. 1) even if efficacy not being simulated this value must be present
+5. Group (\*1, 2) only required if groups are being simulated
+
+The GUI requires that the file name has a “.dat” suffix.
+
+
+
+Simulated subjects will be drawn from this supplied list, with replacement, to provide the simulated response values.
+
+
+To import an external file, the user must first add a scenario to the table. After adding a scenario, the user must click “Browse” to locate the externally simulated data via a standard file browser dialog.
+
+![External Data](images/clipboard-3075146140.png){#fig-sec-vsr-ext1}
