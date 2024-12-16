@@ -51,6 +51,12 @@ take the early visit value, multiply it by $\beta_t$, add $\alpha_t$,
 and then jitter a normal deviation with variance $\lambda_t^2$ around
 that value.
 
+::: {.callout-warning collapse="true"}
+## About the name, "Linear Regression"
+
+A common misconception is that the linear regression, as the model is called, happens through regressing the time of the visit against the early visit responses. This is not the case - only 1 visit is ever used at a time in the imputation model, and the regression is the final endpoint response being modeled as a function of the early endpoint response. To view the eponymous linear regression, see the plot on the bottom left hand side of the interactive application at the bottom of this page.
+:::
+
 ## Prior Specification for the Linear Regression Multiple Imputation Model
 
 The default setting of “Same priors across all model instances and
@@ -102,7 +108,7 @@ $\alpha_{t}$
 :   The expected response on the final endpoint when the early visit $t$ has a response of 0
 
 $\beta_{t}$
-:   If $\alpha=0$, then $\beta$ is how many times larger the final endpoint response is than the early endpoint at visit $t$. If $\beta=0$, then no matter what the early visit response is, the expectation for the final visit is $\alpha$. If $\beta=1$, then for any early response the expectation of the final response is the early response $+ \alpha$. A $\beta \lt 1$ generally implies that the final endpoint is expected to regress towards 0 (when $\alpha=0$), and a $\beta \gt 1$ implies that the final response is expected to keep growing relative to the early visit response.
+:   If $\alpha=0$, then $\beta$ is how many times larger the final endpoint response is than the early endpoint at visit $t$. If $\beta=0$, then no matter what the early visit response is, the expectation for the final visit is $\alpha$. If $\beta=1$, then for any early response the expectation of the final response is the $\text{early response} + \alpha$. A $\beta \lt 1$ generally implies that the final endpoint is expected to regress towards 0 (when $\alpha=0$), and a $\beta \gt 1$ implies that the final response is expected to keep growing relative to the early visit response.
 
 $\lambda_{t}$
 :   The standard deviation around the expectation of the final visit response. This dictates how close the imputed final endpoint responses are to the mean response for a subject given $\alpha$ and $\beta$. Lower $\lambda_t$ implies higher correlation between the early visit response and final visit response.
@@ -194,9 +200,9 @@ getLowerMedianUpper = function(earlyVisitVal, alpha = c(0,1), beta = c(0,1), lam
   return(list("meanFinal" = data.frame(lower = distMeanFinal[1] + qnorm(.025)*distMeanFinal[2],
                                        median = distMeanFinal[1],
                                        upper = distMeanFinal[1] + qnorm(0.975)*distMeanFinal[2]),
-              "predictionFinal" = data.frame(lower = distValueFinal[1] + qnorm(.025)*distValueFinal[2],
-                                             median = distValueFinal[1],
-                                             upper = distValueFinal[1] + qnorm(0.975)*distValueFinal[2])))
+              "predictionFinal" = data.frame(lower = quantile(samps,.025),
+                                             median = median(samps),
+                                             upper = quantile(samps,.975))))
 }
 
 
@@ -228,7 +234,12 @@ server <- function(input, output, session) {
                                              selection = 'none',
                                              editable = list(target = "cell")
   ) |> formatStyle(c(1,3,5,7), `border-right` = "solid 1px") |>
-    formatRound(1, digits = 4) |> formatRound(2:7, digits = 2)
+    formatRound(1, digits = 4) |> formatRound(2:7, digits = 2) |>
+    formatStyle(0,
+                target = "row",
+                backgroundColor = styleEqual(paste("Visit",input$lastVisitWithData), 
+                                             "lightblue", 
+                                             'white'))
   )
   
   ## Update from Conditional
@@ -264,7 +275,7 @@ server <- function(input, output, session) {
     }
     replaceData(proxy, df) 
   })
-
+  
   sliderParams <- reactiveValues(max = 5, value = 3)
   output$slider <- renderUI({
     sliderInput("lastVisitWithData", "Last complete visit:", min = 1, max = sliderParams$max, value = sliderParams$value, step = 1)
@@ -294,10 +305,10 @@ server <- function(input, output, session) {
     tempDF$visitKnown = "included"
     tempDF$visitKnown[tempDF$RowVisitIndex > lvIndex] = "excluded"
     
-   # tempDF = rbind(setNames(data.frame(c(tempDF[1,])), names(tempDF)), tempDF)
-   # tempDF[1,1] = 0
-   # tempDF$RowVisitIndex[1] = 0
-   # rownames(tempDF)[1] = "Baseline"
+    # tempDF = rbind(setNames(data.frame(c(tempDF[1,])), names(tempDF)), tempDF)
+    # tempDF[1,1] = 0
+    # tempDF$RowVisitIndex[1] = 0
+    # rownames(tempDF)[1] = "Baseline"
     
     p1 = ggplot() + 
       geom_point(dat = tempDF, aes(x = RowVisitIndex, y = VisitResponse, color = visitKnown), size = 3) + 
@@ -325,7 +336,7 @@ server <- function(input, output, session) {
         geom_ribbon(data = NULL, aes(x = c(lvIndex, finalVisitIndex),
                                      ymin = c(tempDF$VisitResponse[lvIndex], dataToPlot[[1]]$lower),
                                      ymax = c(tempDF$VisitResponse[lvIndex], dataToPlot[[1]]$upper)),
-                                     fill = "darkblue",  color = NA, alpha = .4)
+                    fill = "darkblue",  color = NA, alpha = .4)
     } else {
       p1 = p1 + annotate(geom="text", label = "Final Visit Value Known",
                          alpha = .5, size = 10, x = (finalVisitIndex)/2, y = Inf, vjust = 1.3)
@@ -409,5 +420,4 @@ server <- function(input, output, session) {
   })
 }
 
-shinyApp(ui = ui, server = server)
-```
+shinyApp(ui = ui, server = server)```
