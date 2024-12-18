@@ -224,7 +224,7 @@ The purpose of defining a run-in is to define a fixed allocation behavior to be 
 
 Three forms of run-in specification are available:
 
--   Simple: allocates a small cohort to every defined dose in ascending order (unless fine grain doses - see section 3.6 – have been specified, in which case the escalation rules are followed).
+-   Simple: allocates a small cohort to every defined dose in ascending order (unless fine grain doses - see [this section](#sec-concepts-fgd) – have been specified, in which case the escalation rules are followed).
 -   Custom: allocates a defined number of subjects (possibly varying by dose) to selected doses in ascending order.
 -   Small cohort pre-escalation: allocates a small cohort, but follows the escalation rules assuming just a single small cohort is required to clear a dose.
 
@@ -274,7 +274,7 @@ The efficacy and toxicity endpoints are modelled separately. There are options t
 
 If while allocating to the estimated MED further toxicity results change the estimate of the MTD, and if there is now insufficient information on the MTD as specified by the early stopping rules for finding the MTD, allocation switches back to allocating to the estimated MTD, if the sample size cap for finding the MTD allows.
 
-## Fine Grain Dosing
+## Fine Grain Dosing {#sec-concepts-fgd}
 
 In some settings, e.g. when the drug is delivered in solution by IV or when manufacturing allows any dose in a range from say 100mg to 400mg in steps of 10mg, dose strengths need not be restricted to just a small number of pre-defined levels. FACTS has a feature that allows this to be simulated, not with a continuous range of doses, but with “fine grain” dosing.
 
@@ -962,9 +962,95 @@ However care needs to be taken that the prior on $\alpha$ is not more restrictiv
 
 There are two solutions to this:
 
-1. move the reference dose, which involves a choice between two options
-    a. moving it to the first dose or below (normally allowing a relatively constrained prior around a low value for $\alpha$), 
-    b. or to the highest dose or above (with a relatively uninformative prior). 
-    
+1.  move the reference dose, which involves a choice between two options
+
+    a.  moving it to the first dose or below (normally allowing a relatively constrained prior around a low value for $\alpha$),
+    b.  or to the highest dose or above (with a relatively uninformative prior).
+
     We have seen both solutions perform well against the chosen scenarios – but the choice needs checking and refining with a full range of scenarios that represent the full uncertainty in the true response.
-2. or modify the priors on $\alpha$ and $ln(\beta)$ making the prior on $\alpha$ less informative (in particular increase the probability of low values) and make the prior on $ln(\beta)$ more informative (in particular lower the probability of high values less). Because the prior distribution on $\beta$, is on $ln(\beta)$, it is easy to make large values of $\beta$ more probable than intended.
+
+2.  or modify the priors on $\alpha$ and $ln(\beta)$ making the prior on $\alpha$ less informative (in particular increase the probability of low values) and make the prior on $ln(\beta)$ more informative (in particular lower the probability of high values less). Because the prior distribution on $\beta$, is on $ln(\beta)$, it is easy to make large values of $\beta$ more probable than intended.
+
+## Toxicity Response
+
+The parameters that can be specified on this page are:
+
+-   The parameters of the bivariate Normal distribution for $\alpha$ and $ln(\beta)$. Specifying the mean and standard deviation of $\alpha$ $(\mu_{\alpha}, \sigma_{\alpha})$, and $ln(\beta)$ $(\mu_{ln(\beta)},\sigma_{ln(\beta)})$ and the correlation coefficient $\rho$.
+
+    -   If ordinal toxicity is being simulated, it is possible to model the ordinal toxicity, specifying the mean and standard deviation of $\alpha_2$ and $\alpha_4$. These priors are separate from the $\alpha_3$ and $ln(\beta)$ prior, there is no correlation term in the prior. There is the constraint in the model that $\alpha_2 > \alpha_3 > \alpha_4$.
+
+    -   **Use fixed Alpha**: the value of Alpha can be fixed to allow the N-CRM model to behave like the traditional CRM models. \[Where $\alpha$ was set to 3 and the reference dose is set above the top of the available dose range\]
+
+**Rather than entering the priors directly, they can be derived based on indirect prior information or beliefs, see ‘Deriving the Prior’ below**.
+
+-   The **Minimum** and **Maximum** rates that the model is to be fitted too. The model fits the range $(0,1)$, asymptotically approaching each limit as the adjusted dose value tends to $-\infty$ or $+\infty$. By specifying an alternative minimum and maximum, inside the range $(0,1)$, the user can have the model scaled to fit data to fit event rates where the asymptotic rates are not $0$ or $1$. For instance if the event being observed has a non-zero background rate (probability of being observed in placebo treated subjects), then the model may fit better if the minimum is set to the lower limit of this expected rate. Similarly if, even at the most toxic dose the event being observed is only expected to effect a proportion of subjects, the model may fit better if the maximum is set to the upper limit of this expected rate.
+
+-   If a control arm is present, the user can specify to have this modelled separately, and if so the user specifies the parameters for a prior Beta distribution – in terms of numbers of prior observations on control of subjects with and without a toxicity.
+
+-   Group 2 priors: if a second ‘Group’ is being simulated – whether this is a subset of subjects, or a modified treatment that subjects can be randomized to, then the BLRM is jointly fitted to the responses for both groups, with group 2 having offsets $a$ and $b$ from the first group’s $\alpha$ and $\beta$. The priors for $a$ and $b$ can be full bivariate Normal or can use constraints such as $b = 1$, or $a > 0$ or $a < 0$.
+
+![](images/clipboard-3225862155.png){#fig-sec-des-tox1}
+
+### Deriving the prior
+
+The priors of $\alpha$ and $ln(\beta)$, can be specified directly or derived in one of four ways. When entered explicitly, the user specifies the parameters of the prior bivariate-normal distribution for $\alpha$ and $ln(\beta)$: the means, standard deviations and the correlation term $\rho$.
+
+Alternatively, the user may click the ‘derive prior’ button and select from:
+
+1.  **Quantiles at the lowest and highest dose**: (based on the “uninformative prior” given in the paper [@neuenschwander2008critical], for details see [this section](#sec-des-tox-quant)) - the user specifies the probability of an unacceptable toxicity at the lowest dose, and the probability of under-dosing at the highest dose (0.1 for both is the default, and 0.05 for both is the value used in the paper). Optionally the probability that toxicity is less than the mid-point of the target toxicity band at the median dose can be specified. (Prior to FACTS 6.5 this third data point was not optional and constrained to be at the reference dose, but this had problems if the reference dose was not the media dose – it might also be the lowest dose for example).
+
+    Note this method does not work so well if the reference dose is outside the dose range.
+
+    ![](images/clipboard-1575534157.png){#fig-sec-des-tox-prior1}
+
+2.  **Scenarios**: the model is fitted to each of the toxicity response scenarios (MLE), the parameters of the bivariate normal are then calculated from resulting set of pairs of values for $\alpha$ and $ln(\beta)$.
+
+    ![](images/clipboard-811643692.png){#fig-sec-des-tox-prior2}
+
+3.  **Specific quantiles**: The user selects which doses and toxicity rates to provide an expectation – a prior probability that the toxicity rate on the dose will be the specified rate or less. At least 3 such expectations using at least 2 different doses strengths must be supplied. If a large number of specific quantiles are specified (e.g. reproducing the all quantiles method) the large number of different beta distributions sampled from, with the monotonicity constraint applied, results in losing too much variability. So this should only be used quantiles specified at 2-4 doses.
+
+![](images/clipboard-3315013972.png){#fig-sec-des-tox-prior3}
+
+4.  **All quantiles**: the user specifies the prior expected toxicity rate at the 2.5%, 50% and 97% quantiles for each dose. (Only available when using explicitly defined doses, not a continuous dose range). Note that using **Create Prior** with this option will require the facts file to be saved and for there to be at least one virtual subject response profile.
+
+![](images/clipboard-913374781.png){#fig-sec-des-tox-prior4}
+
+In all cases once prior values have been derived they are displayed along with a graph of 100 sampled curves from the prior. The user can accept the values, change derivation method, or cancel the derivation.
+
+The plot of the samples can either be viewed as Pr(Tox) or Log-odds(Tox) vs relative dose (“x-hat”).
+
+### Derivation of the Prior from Quantiles {#sec-des-tox-quant}
+
+Derivation of the parameters of the bivariate Normal prior for $\alpha$ and
+$ln(\beta)$) in the **Quantiles at lowest and highest dose**, **Specific
+quantiles** and **All quantiles** cases:
+
+- Minimally informative unimodal Beta distributions are fitted for each
+  of the doses where a prior expectation of a toxicity has been
+  specified. For doses where no prior expectation has been specified,
+  the median expected toxicity rate are derived by assuming that the
+  median expected toxicity is linear in log dose on the logit scale, and
+  again a minimally informative unimodal Beta distribution is fitted
+  with the same median.
+
+- Previously and following [@neuenschwander2008critical], the parameters of the
+  bivariate Normal distribution were found using a stochastic fit to the
+  prior expectations of toxicity, minimizing the error in the prior
+  toxicity rates at the 2.5%, 50% and 97.5% quantiles. This is still
+  used in the **All quantiles** and **Legacy prior** cases. However
+  experience with this method with the standard priors (previously
+  called “uninformative”) showed that it yielded priors with too little
+  uncertainty in the $ln(\beta)$) and too high a value for the correlation
+  parameter for many cases and certainly for the prior to be called
+  “uninformative”.
+
+- Consequently, in the **Quantiles at lowest and highest dose** and
+  **Specific quantiles** cases, the prior is now derived by sampling
+  from the minimally informative unimodal Beta distributions, and
+  fitting the model to each set of sampled toxicity rates. The
+  parameters of the bivariate normal are then calculated from resulting
+  set of pairs of values for $\alpha$ and $ln(\beta)$.
+
+If a control arm has been included, it may be included in the model, or
+modelled separately using a beta-binomial model, the user specifies the
+prior values for the Beta distribution.

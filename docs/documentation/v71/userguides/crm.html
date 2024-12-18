@@ -369,7 +369,7 @@ window.Quarto = {
   <li><a href="#initial-run-in" id="toc-initial-run-in" class="nav-link" data-scroll-target="#initial-run-in"><span class="header-section-number">3.3</span> Initial Run-in</a></li>
   <li><a href="#two-groups" id="toc-two-groups" class="nav-link" data-scroll-target="#two-groups"><span class="header-section-number">3.4</span> Two Groups</a></li>
   <li><a href="#sec-concepts-efficacy" id="toc-sec-concepts-efficacy" class="nav-link" data-scroll-target="#sec-concepts-efficacy"><span class="header-section-number">3.5</span> Efficacy</a></li>
-  <li><a href="#fine-grain-dosing" id="toc-fine-grain-dosing" class="nav-link" data-scroll-target="#fine-grain-dosing"><span class="header-section-number">3.6</span> Fine Grain Dosing</a></li>
+  <li><a href="#sec-concepts-fgd" id="toc-sec-concepts-fgd" class="nav-link" data-scroll-target="#sec-concepts-fgd"><span class="header-section-number">3.6</span> Fine Grain Dosing</a></li>
   <li><a href="#sec-concepts-oe" id="toc-sec-concepts-oe" class="nav-link" data-scroll-target="#sec-concepts-oe"><span class="header-section-number">3.7</span> Open Enrollment</a></li>
   <li><a href="#sec-concepts-bf" id="toc-sec-concepts-bf" class="nav-link" data-scroll-target="#sec-concepts-bf"><span class="header-section-number">3.8</span> Backfilling and Frontfilling</a></li>
   <li><a href="#open-enrollment-backfilling-and-fine-grain-dosing" id="toc-open-enrollment-backfilling-and-fine-grain-dosing" class="nav-link" data-scroll-target="#open-enrollment-backfilling-and-fine-grain-dosing"><span class="header-section-number">3.9</span> Open Enrollment, Backfilling and Fine Grain Dosing</a></li>
@@ -428,6 +428,11 @@ window.Quarto = {
   <li><a href="#x-hats" id="toc-x-hats" class="nav-link" data-scroll-target="#x-hats"><span class="header-section-number">9.1</span> X-Hats</a>
   <ul class="collapse">
   <li><a href="#the-pros-cons-of-using-the-median-dose-as-the-reference-dose" id="toc-the-pros-cons-of-using-the-median-dose-as-the-reference-dose" class="nav-link" data-scroll-target="#the-pros-cons-of-using-the-median-dose-as-the-reference-dose"><span class="header-section-number">9.1.1</span> The Pro’s &amp; Con’s of using the median dose as the reference dose</a></li>
+  </ul></li>
+  <li><a href="#toxicity-response" id="toc-toxicity-response" class="nav-link" data-scroll-target="#toxicity-response"><span class="header-section-number">9.2</span> Toxicity Response</a>
+  <ul class="collapse">
+  <li><a href="#deriving-the-prior" id="toc-deriving-the-prior" class="nav-link" data-scroll-target="#deriving-the-prior"><span class="header-section-number">9.2.1</span> Deriving the prior</a></li>
+  <li><a href="#sec-des-tox-quant" id="toc-sec-des-tox-quant" class="nav-link" data-scroll-target="#sec-des-tox-quant"><span class="header-section-number">9.2.2</span> Derivation of the Prior from Quantiles</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -787,7 +792,7 @@ Figure&nbsp;5: Escalation increment varying by number of toxicities
 <p>The purpose of defining a run-in is to define a fixed allocation behavior to be followed up to the first toxicity being observed. The specified number of subjects to allocate to each dose in the run-in and which doses to test are specified. This scheme is followed until a toxicity is observed or we reach the end of this fixed scheme.</p>
 <p>Three forms of run-in specification are available:</p>
 <ul>
-<li>Simple: allocates a small cohort to every defined dose in ascending order (unless fine grain doses - see section 3.6 – have been specified, in which case the escalation rules are followed).</li>
+<li>Simple: allocates a small cohort to every defined dose in ascending order (unless fine grain doses - see <a href="#sec-concepts-fgd">this section</a> – have been specified, in which case the escalation rules are followed).</li>
 <li>Custom: allocates a defined number of subjects (possibly varying by dose) to selected doses in ascending order.</li>
 <li>Small cohort pre-escalation: allocates a small cohort, but follows the escalation rules assuming just a single small cohort is required to clear a dose.</li>
 </ul>
@@ -833,8 +838,8 @@ logit(p_{2j}) = (\alpha + a) + (\beta + b) \hat{x}_j
 <p>The efficacy and toxicity endpoints are modelled separately. There are options to specify early stopping rules for finding the MTD, and to specify a cap on the sample size that can be spent finding the MTD. Once these rules are met, then allocation is towards the Minimum Efficacious Dose (MED) – if this is below the MTD. If the estimated MED lies at or above the estimated MTD, the allocation is at the estimated MTD.</p>
 <p>If while allocating to the estimated MED further toxicity results change the estimate of the MTD, and if there is now insufficient information on the MTD as specified by the early stopping rules for finding the MTD, allocation switches back to allocating to the estimated MTD, if the sample size cap for finding the MTD allows.</p>
 </section>
-<section id="fine-grain-dosing" class="level2" data-number="3.6">
-<h2 data-number="3.6" class="anchored" data-anchor-id="fine-grain-dosing"><span class="header-section-number">3.6</span> Fine Grain Dosing</h2>
+<section id="sec-concepts-fgd" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="sec-concepts-fgd"><span class="header-section-number">3.6</span> Fine Grain Dosing</h2>
 <p>In some settings, e.g.&nbsp;when the drug is delivered in solution by IV or when manufacturing allows any dose in a range from say 100mg to 400mg in steps of 10mg, dose strengths need not be restricted to just a small number of pre-defined levels. FACTS has a feature that allows this to be simulated, not with a continuous range of doses, but with “fine grain” dosing.</p>
 <p>FACTS supports the specification of a range of doses from a minimum to a maximum with doses either equally spaced or spaced with equal ratio. Using dose ratio makes most sense it you want to use the dose strength whilst believing the effect will be roughly log-dose. Using dose ratios, it’s necessary to accept FACTS reporting dose strengths only close to those desired. As an example, if the main doses followed a dose doubling scheme: 12.5, 25, 50, etc., one might use fine grain dosing with dose space ratios of approximately the 4th root of 2 (1.1892). The resulting doses are 12.5, 14.865, 17.677, 21.022, 24.999, 29.729, 35.354, 42.043, 49.998, etc., which means there are three dose levels between each of the original doses.</p>
 <p>There are two alternatives:</p>
@@ -1889,14 +1894,107 @@ Figure&nbsp;47: Specifying the dose transformation - the “x-hats”.
 <p>However care needs to be taken that the prior on <span class="math inline">\(\alpha\)</span> is not more restrictive than that on <span class="math inline">\(ln(\beta)\)</span> in order to avoid a phenomena observed when preparing tutorials: observing “no toxicities” below the reference dose resulted in a model with increased probability of toxicity above the reference dose compared to observing a toxicity below the reference dose. For a given value of <span class="math inline">\(\alpha\)</span>, higher values of <span class="math inline">\(ln(\beta)\)</span> correspond to lower toxicity below the reference dose – as the <span class="math inline">\(\hat{x}\)</span>̂ values are -ve below the reference dose. The fitted curve thus “pivots” about the value of <span class="math inline">\(\alpha\)</span> at the reference dose.</p>
 <p>There are two solutions to this:</p>
 <ol type="1">
-<li>move the reference dose, which involves a choice between two options
+<li><p>move the reference dose, which involves a choice between two options</p>
 <ol type="a">
 <li>moving it to the first dose or below (normally allowing a relatively constrained prior around a low value for <span class="math inline">\(\alpha\)</span>),</li>
 <li>or to the highest dose or above (with a relatively uninformative prior).</li>
 </ol>
-We have seen both solutions perform well against the chosen scenarios – but the choice needs checking and refining with a full range of scenarios that represent the full uncertainty in the true response.</li>
-<li>or modify the priors on <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(ln(\beta)\)</span> making the prior on <span class="math inline">\(\alpha\)</span> less informative (in particular increase the probability of low values) and make the prior on <span class="math inline">\(ln(\beta)\)</span> more informative (in particular lower the probability of high values less). Because the prior distribution on <span class="math inline">\(\beta\)</span>, is on <span class="math inline">\(ln(\beta)\)</span>, it is easy to make large values of <span class="math inline">\(\beta\)</span> more probable than intended.</li>
+<p>We have seen both solutions perform well against the chosen scenarios – but the choice needs checking and refining with a full range of scenarios that represent the full uncertainty in the true response.</p></li>
+<li><p>or modify the priors on <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(ln(\beta)\)</span> making the prior on <span class="math inline">\(\alpha\)</span> less informative (in particular increase the probability of low values) and make the prior on <span class="math inline">\(ln(\beta)\)</span> more informative (in particular lower the probability of high values less). Because the prior distribution on <span class="math inline">\(\beta\)</span>, is on <span class="math inline">\(ln(\beta)\)</span>, it is easy to make large values of <span class="math inline">\(\beta\)</span> more probable than intended.</p></li>
 </ol>
+</section>
+</section>
+<section id="toxicity-response" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="toxicity-response"><span class="header-section-number">9.2</span> Toxicity Response</h2>
+<p>The parameters that can be specified on this page are:</p>
+<ul>
+<li><p>The parameters of the bivariate Normal distribution for <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(ln(\beta)\)</span>. Specifying the mean and standard deviation of <span class="math inline">\(\alpha\)</span> <span class="math inline">\((\mu_{\alpha}, \sigma_{\alpha})\)</span>, and <span class="math inline">\(ln(\beta)\)</span> <span class="math inline">\((\mu_{ln(\beta)},\sigma_{ln(\beta)})\)</span> and the correlation coefficient <span class="math inline">\(\rho\)</span>.</p>
+<ul>
+<li><p>If ordinal toxicity is being simulated, it is possible to model the ordinal toxicity, specifying the mean and standard deviation of <span class="math inline">\(\alpha_2\)</span> and <span class="math inline">\(\alpha_4\)</span>. These priors are separate from the <span class="math inline">\(\alpha_3\)</span> and <span class="math inline">\(ln(\beta)\)</span> prior, there is no correlation term in the prior. There is the constraint in the model that <span class="math inline">\(\alpha_2 &gt; \alpha_3 &gt; \alpha_4\)</span>.</p></li>
+<li><p><strong>Use fixed Alpha</strong>: the value of Alpha can be fixed to allow the N-CRM model to behave like the traditional CRM models. [Where <span class="math inline">\(\alpha\)</span> was set to 3 and the reference dose is set above the top of the available dose range]</p></li>
+</ul></li>
+</ul>
+<p><strong>Rather than entering the priors directly, they can be derived based on indirect prior information or beliefs, see ‘Deriving the Prior’ below</strong>.</p>
+<ul>
+<li><p>The <strong>Minimum</strong> and <strong>Maximum</strong> rates that the model is to be fitted too. The model fits the range <span class="math inline">\((0,1)\)</span>, asymptotically approaching each limit as the adjusted dose value tends to <span class="math inline">\(-\infty\)</span> or <span class="math inline">\(+\infty\)</span>. By specifying an alternative minimum and maximum, inside the range <span class="math inline">\((0,1)\)</span>, the user can have the model scaled to fit data to fit event rates where the asymptotic rates are not <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>. For instance if the event being observed has a non-zero background rate (probability of being observed in placebo treated subjects), then the model may fit better if the minimum is set to the lower limit of this expected rate. Similarly if, even at the most toxic dose the event being observed is only expected to effect a proportion of subjects, the model may fit better if the maximum is set to the upper limit of this expected rate.</p></li>
+<li><p>If a control arm is present, the user can specify to have this modelled separately, and if so the user specifies the parameters for a prior Beta distribution – in terms of numbers of prior observations on control of subjects with and without a toxicity.</p></li>
+<li><p>Group 2 priors: if a second ‘Group’ is being simulated – whether this is a subset of subjects, or a modified treatment that subjects can be randomized to, then the BLRM is jointly fitted to the responses for both groups, with group 2 having offsets <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> from the first group’s <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>. The priors for <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> can be full bivariate Normal or can use constraints such as <span class="math inline">\(b = 1\)</span>, or <span class="math inline">\(a &gt; 0\)</span> or <span class="math inline">\(a &lt; 0\)</span>.</p></li>
+</ul>
+<div id="fig-sec-des-tox1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sec-des-tox1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/clipboard-3225862155.png" id="fig-sec-des-tox1" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-sec-des-tox1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;48
+</figcaption>
+</figure>
+</div>
+<section id="deriving-the-prior" class="level3" data-number="9.2.1">
+<h3 data-number="9.2.1" class="anchored" data-anchor-id="deriving-the-prior"><span class="header-section-number">9.2.1</span> Deriving the prior</h3>
+<p>The priors of <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(ln(\beta)\)</span>, can be specified directly or derived in one of four ways. When entered explicitly, the user specifies the parameters of the prior bivariate-normal distribution for <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(ln(\beta)\)</span>: the means, standard deviations and the correlation term <span class="math inline">\(\rho\)</span>.</p>
+<p>Alternatively, the user may click the ‘derive prior’ button and select from:</p>
+<ol type="1">
+<li><p><strong>Quantiles at the lowest and highest dose</strong>: (based on the “uninformative prior” given in the paper <span class="citation" data-cites="neuenschwander2008critical">(<a href="#ref-neuenschwander2008critical" role="doc-biblioref">Neuenschwander, Branson, and Gsponer 2008</a>)</span>, for details see <a href="#sec-des-tox-quant">this section</a>) - the user specifies the probability of an unacceptable toxicity at the lowest dose, and the probability of under-dosing at the highest dose (0.1 for both is the default, and 0.05 for both is the value used in the paper). Optionally the probability that toxicity is less than the mid-point of the target toxicity band at the median dose can be specified. (Prior to FACTS 6.5 this third data point was not optional and constrained to be at the reference dose, but this had problems if the reference dose was not the media dose – it might also be the lowest dose for example).</p>
+<p>Note this method does not work so well if the reference dose is outside the dose range.</p>
+<div id="fig-sec-des-tox-prior1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sec-des-tox-prior1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/clipboard-1575534157.png" id="fig-sec-des-tox-prior1" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-sec-des-tox-prior1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;49
+</figcaption>
+</figure>
+</div></li>
+<li><p><strong>Scenarios</strong>: the model is fitted to each of the toxicity response scenarios (MLE), the parameters of the bivariate normal are then calculated from resulting set of pairs of values for <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(ln(\beta)\)</span>.</p>
+<div id="fig-sec-des-tox-prior2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sec-des-tox-prior2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/clipboard-811643692.png" id="fig-sec-des-tox-prior2" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-sec-des-tox-prior2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;50
+</figcaption>
+</figure>
+</div></li>
+<li><p><strong>Specific quantiles</strong>: The user selects which doses and toxicity rates to provide an expectation – a prior probability that the toxicity rate on the dose will be the specified rate or less. At least 3 such expectations using at least 2 different doses strengths must be supplied. If a large number of specific quantiles are specified (e.g.&nbsp;reproducing the all quantiles method) the large number of different beta distributions sampled from, with the monotonicity constraint applied, results in losing too much variability. So this should only be used quantiles specified at 2-4 doses.</p></li>
+</ol>
+<div id="fig-sec-des-tox-prior3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sec-des-tox-prior3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/clipboard-3315013972.png" id="fig-sec-des-tox-prior3" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-sec-des-tox-prior3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;51
+</figcaption>
+</figure>
+</div>
+<ol start="4" type="1">
+<li><strong>All quantiles</strong>: the user specifies the prior expected toxicity rate at the 2.5%, 50% and 97% quantiles for each dose. (Only available when using explicitly defined doses, not a continuous dose range). Note that using <strong>Create Prior</strong> with this option will require the facts file to be saved and for there to be at least one virtual subject response profile.</li>
+</ol>
+<div id="fig-sec-des-tox-prior4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sec-des-tox-prior4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/clipboard-913374781.png" id="fig-sec-des-tox-prior4" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-sec-des-tox-prior4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;52
+</figcaption>
+</figure>
+</div>
+<p>In all cases once prior values have been derived they are displayed along with a graph of 100 sampled curves from the prior. The user can accept the values, change derivation method, or cancel the derivation.</p>
+<p>The plot of the samples can either be viewed as Pr(Tox) or Log-odds(Tox) vs relative dose (“x-hat”).</p>
+</section>
+<section id="sec-des-tox-quant" class="level3" data-number="9.2.2">
+<h3 data-number="9.2.2" class="anchored" data-anchor-id="sec-des-tox-quant"><span class="header-section-number">9.2.2</span> Derivation of the Prior from Quantiles</h3>
+<p>Derivation of the parameters of the bivariate Normal prior for <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(ln(\beta)\)</span>) in the <strong>Quantiles at lowest and highest dose</strong>, <strong>Specific quantiles</strong> and <strong>All quantiles</strong> cases:</p>
+<ul>
+<li><p>Minimally informative unimodal Beta distributions are fitted for each of the doses where a prior expectation of a toxicity has been specified. For doses where no prior expectation has been specified, the median expected toxicity rate are derived by assuming that the median expected toxicity is linear in log dose on the logit scale, and again a minimally informative unimodal Beta distribution is fitted with the same median.</p></li>
+<li><p>Previously and following <span class="citation" data-cites="neuenschwander2008critical">(<a href="#ref-neuenschwander2008critical" role="doc-biblioref">Neuenschwander, Branson, and Gsponer 2008</a>)</span>, the parameters of the bivariate Normal distribution were found using a stochastic fit to the prior expectations of toxicity, minimizing the error in the prior toxicity rates at the 2.5%, 50% and 97.5% quantiles. This is still used in the <strong>All quantiles</strong> and <strong>Legacy prior</strong> cases. However experience with this method with the standard priors (previously called “uninformative”) showed that it yielded priors with too little uncertainty in the <span class="math inline">\(ln(\beta)\)</span>) and too high a value for the correlation parameter for many cases and certainly for the prior to be called “uninformative”.</p></li>
+<li><p>Consequently, in the <strong>Quantiles at lowest and highest dose</strong> and <strong>Specific quantiles</strong> cases, the prior is now derived by sampling from the minimally informative unimodal Beta distributions, and fitting the model to each set of sampled toxicity rates. The parameters of the bivariate normal are then calculated from resulting set of pairs of values for <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(ln(\beta)\)</span>.</p></li>
+</ul>
+<p>If a control arm has been included, it may be included in the model, or modelled separately using a beta-binomial model, the user specifies the prior values for the Beta distribution.</p>
 
 
 
