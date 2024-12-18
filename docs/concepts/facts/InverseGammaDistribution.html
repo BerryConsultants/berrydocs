@@ -317,29 +317,21 @@ window.Quarto = {
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
 #| standalone: true
-#| viewerHeight: 1000
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    https://shiny.posit.co/
-#
+#| viewerHeight: 800
 
 library(shiny)
 library(bslib)
 library(ggplot2)
 
 qinvgamma = function (p, shape, rate = 1, scale = 1/rate, lower.tail = TRUE, 
-          log.p = FALSE) 
+                      log.p = FALSE) 
 {
   if (missing(rate) &amp;&amp; !missing(scale)) 
     rate &lt;- 1/scale
   qgamma(1 - p, shape, rate, lower.tail = lower.tail, log.p = log.p)^(-1)
 }
 pinvgamma = function (q, shape, rate = 1, scale = 1/rate, lower.tail = TRUE, 
-          log.p = FALSE) 
+                      log.p = FALSE) 
 {
   if (missing(rate) &amp;&amp; !missing(scale)) 
     rate &lt;- 1/scale
@@ -376,59 +368,59 @@ ui &lt;- fluidPage(
   h5('$$\\sigma^2 \\sim \\text{IG}\\left(\\alpha=\\frac{\\text{weight}}{2}, \\beta=\\frac{\\text{center}^2\\;*\\;\\text{weight}}{2}\\right)$$'),
   sidebarLayout(
     sidebarPanel(width = 3,
-                      style = "border: 1px solid #000000",
-                      titlePanel(h4("Center/Weight Parameterization")),
-                      fluidRow(
-                        column(width = 10, offset = 1, numericInput(inputId = "center", label = "Center of SD:", value = 5, min = 0, max = Inf, step = 1)),
-                        column(width = 10, offset = 1, numericInput(inputId = "weight", label = "Weight:", value = 2, min = 0.001, max = Inf, step = 1)),
-                      ),
-                      titlePanel(h4("Alpha/Beta Parameterization")),
-                      fluidRow(
-                        column(width = 10, offset = 1, numericInput(inputId = "alpha", label = "Alpha:", value = 1, min = 0.0005, max = Inf, step = 1)),
-                        column(width = 10, offset = 1, numericInput(inputId = "beta", label = "Beta:", value = 25, min = 0, max = Inf, step = 1))
-                      )
-                    ),
+                 style = "border: 1px solid #000000",
+                 titlePanel(h4("Center/Weight Parameterization")),
+                 fluidRow(
+                   column(width = 10, offset = 1, numericInput(inputId = "center", label = "Center of SD:", value = 5, min = 0, max = Inf, step = "any")),
+                   column(width = 10, offset = 1, numericInput(inputId = "weight", label = "Weight:", value = 2, min = 0.001, max = Inf, step = "any")),
+                 ),
+                 titlePanel(h4("Alpha/Beta Parameterization")),
+                 fluidRow(
+                   column(width = 10, offset = 1, numericInput(inputId = "alpha", label = "Alpha:", value = 1, min = 0.0005, max = Inf, step = "any")),
+                   column(width = 10, offset = 1, numericInput(inputId = "beta", label = "Beta:", value = 25, min = 0, max = Inf, step = "any"))
+                 )
+    ),
     mainPanel(width = 9,
-      wellPanel(style = "background: white; border: 1px solid #000000",
-        fluidRow(
-          column(12,
-            div(
-              radioButtons("whichParam", 
-                           "Which parameter should be summarized?", 
-                           choiceNames = c("Variance \\((\\sigma^2)\\)", "Std. Dev. \\((\\sigma)\\)"), 
-                           choiceValues = c("sigma2", "sigma"), 
-                           selected = "sigma2", 
-                           inline = TRUE),
-            id = "radioButtonDiv")
-          )
-        ),
-        uiOutput("sectionTitle"),
-        fluidRow(
-          column(width = 4, value_box("Mean", value= uiOutput("mean"), theme = value_box_theme(bg = "#06402b"))),
-          column(width = 4, value_box("Median", value= uiOutput("median"), theme = value_box_theme(bg = "#ba5a31"))),
-          column(width = 4, value_box("Mode", value= uiOutput("mode"), theme = value_box_theme(bg = "#0b2545")))    
-        ),
-        br(),
-        plotOutput("igDistributionPlot")
-      )
+              wellPanel(style = "background: white; border: 1px solid #000000",
+                        fluidRow(
+                          column(12,
+                                 div(
+                                   radioButtons("whichParam", 
+                                                "Which parameter should be summarized?", 
+                                                choiceNames = c("Variance \\((\\sigma^2)\\)", "Std. Dev. \\((\\sigma)\\)"), 
+                                                choiceValues = c("sigma2", "sigma"), 
+                                                selected = "sigma2", 
+                                                inline = TRUE),
+                                   id = "radioButtonDiv")
+                          )
+                        ),
+                        uiOutput("sectionTitle"),
+                        fluidRow(
+                          column(width = 4, value_box("Mean", value= uiOutput("mean"), theme = value_box_theme(bg = "#06402b"))),
+                          column(width = 4, value_box("Median", value= uiOutput("median"), theme = value_box_theme(bg = "#ba5a31"))),
+                          column(width = 4, value_box("Mode", value= uiOutput("mode"), theme = value_box_theme(bg = "#0b2545")))    
+                        ),
+                        br(),
+                        plotOutput("igDistributionPlot")
+              )
     )
   )
 )
 
 # Define server logic required to draw a histogram
 server &lt;- function(input, output, session) {
-
+  
   update &lt;- reactiveVal(TRUE)
   
   observeEvent(input$center | input$weight, {
     cat("CenterWeightChanged\n")
     ctr = input$center
     wgt = input$weight
-
+    
     if(update() &amp; !is.null(ctr) &amp; !is.null(wgt) &amp; !is.na(ctr) &amp; !is.na(wgt) &amp; ctr &gt; 0 &amp; wgt &gt; 0) {
       a = wgt/2
       b = ctr^2*wgt/2
-
+      
       updateNumericInput(session, "alpha", value = a)
       updateNumericInput(session, "beta", value = b)
       
@@ -441,11 +433,11 @@ server &lt;- function(input, output, session) {
     cat("AlphaBetaChanged\n")
     a = input$alpha
     b = input$beta
-
+    
     if(update() &amp; !is.null(a) &amp; !is.null(b) &amp; !is.na(a) &amp; !is.na(b) &amp; a &gt; 0 &amp; b &gt; 0) {
       wgt = 2*a
       ctr = sqrt(b/a)
-
+      
       updateNumericInput(session, "center", value = ctr)
       updateNumericInput(session, "weight", value = wgt)
       
@@ -461,7 +453,7 @@ server &lt;- function(input, output, session) {
     cat("CalcMean\n")
     a = input$alpha
     b = input$beta
-
+    
     if(a &gt; 1) {
       if(input$whichParam == "sigma2") {
         meanHolder(b/(a-1))
@@ -501,7 +493,7 @@ server &lt;- function(input, output, session) {
       smode = seq(lmode, hmode, length.out = 100001)
       dmode = dinvgamma(smode, a, b)*(1/(2*sqrt(smode)))
       calcMode = sqrt(smode[which.max(dmode)])
-
+      
       return(round(calcMode, 2))
     }
   })
@@ -530,7 +522,7 @@ server &lt;- function(input, output, session) {
           
           sq0to1 = seq(1e-10, 1-(1e-10), length.out = 1000)
           sq = qinvgamma(sq0to1, a, b)
-        #  sq = seq(1e-10,upperbound, length.out = 1001)
+          #  sq = seq(1e-10,upperbound, length.out = 1001)
           
           df = data.frame(sq = sq,
                           density = dinvgamma(sq, a, b))
@@ -543,7 +535,7 @@ server &lt;- function(input, output, session) {
             maxPlot = sq[min(which(df$density &lt; modeDensity*.01 &amp; sq &gt; sq[which.max(df$density)]))]
           }
           maxPlot = max(maxPlot, 2*(b/(a+1)))
-
+          
           sq0to1 = seq(1e-10, pinvgamma(maxPlot*1.1, a, b), length.out = 1001)
           sq = qinvgamma(sq0to1, a, b)
           
@@ -627,7 +619,7 @@ server &lt;- function(input, output, session) {
             meantmp = meanHolder()
             p1 = p1 + geom_vline(xintercept = meantmp, color = "#06402b") + annotate(geom="label", color = "white", fill = "#06402b", x = meantmp, y = modeDensity*1.15, label = "mean", angle=90, size = 4.5)
           }
-
+          
           p1 = p1 + geom_vline(xintercept = calcMode, color = "#0b2545") + annotate(geom="label", color = "white", fill = "#0b2545", x = calcMode, y = modeDensity*1.15, label = "mode", angle=90, size = 4.5)
           if(is.finite(sqrt(qinvgamma(.5, a, b)))) {
             p1 = p1 + geom_vline(xintercept = sqrt(qinvgamma(.5, a, b)), color = "#ba5a31") + annotate(geom="label", color = "white", fill = "#ba5a31", x = sqrt(qinvgamma(.5, a, b)), y = modeDensity*1.15, label = "median", angle=90, size = 4.5)
@@ -641,7 +633,6 @@ server &lt;- function(input, output, session) {
   })
 }
 
-# Run the application 
 shinyApp(ui = ui, server = server)</code></pre>
 
 
