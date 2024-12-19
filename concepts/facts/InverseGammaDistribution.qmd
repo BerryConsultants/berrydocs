@@ -92,9 +92,9 @@ ui <- fluidPage(
                         ),
                         uiOutput("sectionTitle"),
                         fluidRow(
-                          column(width = 4, value_box("Mean", value= uiOutput("mean"), theme = value_box_theme(bg = "#06402b"))),
+                          column(width = 4, value_box("Mode", value= uiOutput("mode"), theme = value_box_theme(bg = "#0b2545"))),
                           column(width = 4, value_box("Median", value= uiOutput("median"), theme = value_box_theme(bg = "#ba5a31"))),
-                          column(width = 4, value_box("Mode", value= uiOutput("mode"), theme = value_box_theme(bg = "#0b2545")))    
+                          column(width = 4, value_box("Mean", value= uiOutput("mean"), theme = value_box_theme(bg = "#06402b")))
                         ),
                         br(),
                         plotOutput("igDistributionPlot")
@@ -232,7 +232,7 @@ server <- function(input, output, session) {
           }
           maxPlot = max(maxPlot, 2*(b/(a+1)))
           
-          sq0to1 = seq(1e-10, pinvgamma(maxPlot*1.1, a, b), length.out = 1001)
+          sq0to1 = c(10^seq(-17, -2, length.out = 51), seq(.0101, pinvgamma(maxPlot*1.1, a, b), length.out = 1001))
           sq = qinvgamma(sq0to1, a, b)
           
           df = data.frame(sq = sq,
@@ -271,25 +271,25 @@ server <- function(input, output, session) {
           sq0to1 = seq(1e-10, 1-(1e-10), length.out = 1000)
           sq = qinvgamma(sq0to1, a, b)
           df = data.frame(sq = sq,
-                          density = dinvgamma(sq, a, b)*(1/(2*sqrt(sq))))
+                          density = dinvgamma(sq, a, b)*(2*sqrt(sq)))#(1/(2*sqrt(sq))))
           
           lmode = 0
-          hmode = max(b/(a+1), 2)
+          hmode = max(b/(a), 2)
           smode = seq(lmode, hmode, length.out = 1001)
-          dmode = dinvgamma(smode, a, b)*(1/(2*sqrt(smode)))
+          dmode = dinvgamma(smode, a, b)*(2*sqrt(smode))#(1/(2*sqrt(smode)))
           wchMax = which.max(dmode)
           if(wchMax > 1) {
             smode2 = seq(smode[wchMax-1], smode[wchMax + 1], length.out = 1001)
-            dmode2 = dinvgamma(smode2, a, b)*(1/(2*sqrt(smode2)))
+            dmode2 = dinvgamma(smode2, a, b)*(2*sqrt(smode2))#(1/(2*sqrt(smode2)))
             wchMax = which.max(dmode2)
           } else {
             smode2 = seq(0, smode[2], length.out = 1000)
-            dmode2 = dinvgamma(smode2, a, b)*(1/(2*sqrt(smode2)))
+            dmode2 = dinvgamma(smode2, a, b)*(2*sqrt(smode2))#(1/(2*sqrt(smode2)))
             wchMax = which.max(dmode2)
           }
           calcMode = sqrt(smode2[wchMax])
           
-          modeDensity = dinvgamma(calcMode^2, a, b)*(1/(2*calcMode))
+          modeDensity = dinvgamma(calcMode^2, a, b)*(2*calcMode)#(1/(2*calcMode))
           
           if(df$density[sum(is.finite(df$density))] > modeDensity*.01) {
             maxPlot = sq[length(sq)]
@@ -298,10 +298,10 @@ server <- function(input, output, session) {
           }
           maxPlot = max(maxPlot, 2*smode2[wchMax])
           
-          sq = seq(1e-10,maxPlot*1.1, length.out = 1001)
+          sq = (seq(1e-10,sqrt(maxPlot*1.1), length.out = 1001))^2
           
           df = data.frame(sq = sq,
-                          density = dinvgamma(sq, a, b)*(1/(2*sqrt(sq))))
+                          density = dinvgamma(sq, a, b)*(2*sqrt(sq)))#(1/(2*sqrt(sq))))
           
           p1 = ggplot(data = df) + geom_line(aes(x = sqrt(sq), y = density)) + geom_area(aes(x = sqrt(sq), y = density), fill = "gray80") +
             theme_bw() +
@@ -330,5 +330,6 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui = ui, server = server)
+
 ```
 
