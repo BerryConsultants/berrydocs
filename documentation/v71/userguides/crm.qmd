@@ -523,7 +523,7 @@ FACTS has a Help menu with commands to assist you with the use of FACTS, providi
 
 # The Study tab
 
-## Study Info
+## Study Info {#sec-studyinfo}
 
 The Study Info sub-tab provides parameters for specifying:
 
@@ -1021,36 +1021,289 @@ The plot of the samples can either be viewed as Pr(Tox) or Log-odds(Tox) vs rela
 
 ### Derivation of the Prior from Quantiles {#sec-des-tox-quant}
 
-Derivation of the parameters of the bivariate Normal prior for $\alpha$ and
-$ln(\beta)$) in the **Quantiles at lowest and highest dose**, **Specific
-quantiles** and **All quantiles** cases:
+Derivation of the parameters of the bivariate Normal prior for $\alpha$ and $ln(\beta)$) in the **Quantiles at lowest and highest dose**, **Specific quantiles** and **All quantiles** cases:
 
-- Minimally informative unimodal Beta distributions are fitted for each
-  of the doses where a prior expectation of a toxicity has been
-  specified. For doses where no prior expectation has been specified,
-  the median expected toxicity rate are derived by assuming that the
-  median expected toxicity is linear in log dose on the logit scale, and
-  again a minimally informative unimodal Beta distribution is fitted
-  with the same median.
+-   Minimally informative unimodal Beta distributions are fitted for each of the doses where a prior expectation of a toxicity has been specified. For doses where no prior expectation has been specified, the median expected toxicity rate are derived by assuming that the median expected toxicity is linear in log dose on the logit scale, and again a minimally informative unimodal Beta distribution is fitted with the same median.
 
-- Previously and following [@neuenschwander2008critical], the parameters of the
-  bivariate Normal distribution were found using a stochastic fit to the
-  prior expectations of toxicity, minimizing the error in the prior
-  toxicity rates at the 2.5%, 50% and 97.5% quantiles. This is still
-  used in the **All quantiles** and **Legacy prior** cases. However
-  experience with this method with the standard priors (previously
-  called “uninformative”) showed that it yielded priors with too little
-  uncertainty in the $ln(\beta)$) and too high a value for the correlation
-  parameter for many cases and certainly for the prior to be called
-  “uninformative”.
+-   Previously and following [@neuenschwander2008critical], the parameters of the bivariate Normal distribution were found using a stochastic fit to the prior expectations of toxicity, minimizing the error in the prior toxicity rates at the 2.5%, 50% and 97.5% quantiles. This is still used in the **All quantiles** and **Legacy prior** cases. However experience with this method with the standard priors (previously called “uninformative”) showed that it yielded priors with too little uncertainty in the $ln(\beta)$) and too high a value for the correlation parameter for many cases and certainly for the prior to be called “uninformative”.
 
-- Consequently, in the **Quantiles at lowest and highest dose** and
-  **Specific quantiles** cases, the prior is now derived by sampling
-  from the minimally informative unimodal Beta distributions, and
-  fitting the model to each set of sampled toxicity rates. The
-  parameters of the bivariate normal are then calculated from resulting
-  set of pairs of values for $\alpha$ and $ln(\beta)$.
+-   Consequently, in the **Quantiles at lowest and highest dose** and **Specific quantiles** cases, the prior is now derived by sampling from the minimally informative unimodal Beta distributions, and fitting the model to each set of sampled toxicity rates. The parameters of the bivariate normal are then calculated from resulting set of pairs of values for $\alpha$ and $ln(\beta)$.
 
-If a control arm has been included, it may be included in the model, or
-modelled separately using a beta-binomial model, the user specifies the
-prior values for the Beta distribution.
+If a control arm has been included, it may be included in the model, or modelled separately using a beta-binomial model, the user specifies the prior values for the Beta distribution.
+
+### Derivation of the prior from the scenarios
+
+In this screenshot, priors have been derived from the scenarios:
+
+![Design - Toxicity Response sub-tab (after prior derivation)](images/clipboard-924511466.png){#fig-sec-des-tox-prior5}
+
+Clearly in this example the scenarios have a very high correlation between the toxicity at the reference dose ($\alpha$) and the log gradient ($ln(\beta)$) giving a high value for the correlation in the prior ($\rho$). As there are very few scenarios, and they didn’t include extreme cases, the SDs of the priors of parameters will be underestimated.
+
+So In this instance we might round the prior means to 2 decimal places, double the SD of $\alpha$, slightly increase the SD of $ln(\beta)$ and reduce the correlation to 0.5.
+
+However, it is much better to use Drive from Scenarios after entering a large number of varied and credible scenarios. Indeed is such a collection of scenarios exists, deriving the prior from the scenarios is the simplest approach and often very effective. Only if the performance in the simulations in some scenarios does the prior need re-visiting (usually to slightly increase the $ln(\beta)$ SD and/or reduce the correlation).
+
+We strongly recommend checking the performance of the prior across a wide range of scenarios, and of entering the reported derived values of the fitted prior as an explicit prior and then manually modifying them in the light of the model’s performance on the various scenarios.
+
+## Legacy prior methods {#sec-legacy-prior-methods}
+
+In old versions N-CRM (pre-FACTS 4.0) , the design could be left at the stage where the method of deriving the prior had been specified but the derivation postponed to the simulation stage. We now require that the derivation be performed first, this
+
+-   Enables the actual prior that results from the derivation to be inspected
+-   Makes simulation and recommendation faster, as the derivation is not repeated every time the design engine starts.
+
+When opening a FACTS N-CRM file created using a pre-FACTS 4.0 version of FACTS, to continue to use the original prior, select “Derive prior”, and the derive prior window will display the old prior and allow an explicit prior to be derived from it using the now deprecated methods in the older versions of FACTS N-CRM.
+
+![Derivation from a legacy prior](images/clipboard-1528418031.png){#fig-sec-des-tox-prior-leg1}
+
+## Efficacy Response {#sec-efficacy-response}
+
+The Efficacy Response tab is displayed if an efficacy endpoint is included in the trial.
+
+The Efficacy Response is specified separately from the Toxicity Response. The Toxicity and Efficacy models are completely separate except for the x-hat values for the transformed dose strengths, where a common set of values is used for both models. Note that the use of a common set of x-hats for both endpoints is a difference from FACTS bCRM, that means it may not be possible to exactly replicate a bCRM design in FACTS N-CRM, however we think that the additional features and options in FACTS N-CRM will make it possible to create an overall superior design in FACTS N-CRM.
+
+The features available for specifying the Efficacy Response model are the same as the Toxicity Response model (see above) – with the exception that the Toxicity Response includes an option for modeling ordinal toxicity, there is no corresponding ordinal efficacy option.
+
+![](images/clipboard-3052137711.png){#fig-sec-des-tox-prior-eff1}
+
+The same options for deriving the prior are available as for the Toxicity Response Model.
+
+## Prior Pseudo-subjects {#sec-prior-pseudo-subjects}
+
+This option allows “prior data” or “pseudo data” to be specified that will be included in every analysis. This is equivalent to the model being fitted with the parameter prior to this pseudo data and the resulting posterior being the new prior, but it is easier and quicker to include the pseudo subject with the real data and do one analysis.
+
+The user selects which dose levels at which to include the data and specifies the number of pseudo/prior subjects/observations and the number of toxicities. These are allowed to be fractional, and observations can be at dose levels not being tested in the trial. In each analysis the observed data is augmented with this specified data and the parameters of the toxicity response estimated.
+
+If there is an efficacy endpoint as well as toxicity endpoint, pseudo subject data is specified separately for the two endpoints (not surprisingly!). If the data is to be analyzed as “2 groups” pseudo subject data is also specified separately for the two groups.
+
+The effect of this data on the prior can be visualized by the “Update Plot” function that estimates the parameters of the toxicity response and plots the curves of 100 samples drawn from the posterior estimates of the parameters of the model.
+
+The plot of the samples can either be viewed as Pr(Tox) vs Dose Strength or Log-odds(Tox) vs relative dose (“x-hat”).
+
+![Specifying prior pseudo subjects](images/clipboard-486692236.png){#fig-sec-des-tox-prior-ps1}
+
+| Example of effect of pseudo subjects on prior |   |
+|------------------------------------|:-----------------------------------|
+| Prior Only | ![](images/clipboard-20543065.png) |
+| Prior plus 0.5/0 subjects toxicities on dose 1 and 1/0.5 on dose 8. | ![](images/clipboard-1742941756.png) |
+| Prior plus 3/0 subjects / toxicities on dose 1 and 3/1.5 on dose 8. | ![](images/clipboard-516836495.png) |
+
+## Allocation Rules {#allocation-rules}
+
+The Allocation Rule sub-tab is depicted below ([@fig-sec-des-tox-prior-alloc1]); it allows the user to select and set the parameters for the allocation rules.
+
+There is an option to mimic the original Neuenschwander paper and rely on just the toxicity model and the overdose control to guide allocation – i.e. allocate to as close to the estimate of the MTD as we can limited only by the overdose control limits. This is “Use only overdose control”. Normally however we think the clinical will want to impose additional allocation rules.
+
+The next dose allocated is a combination of the current target dose, and 2 possible maximum allocatable doses:
+
+1)  The target dose is the dose with the highest probability of being the target: the dose with the greatest estimated probability that its toxicity rate lies in the target toxicity band, or the dose nearest or highest below the MTD depending on the options selected on the Study \> Toxicity tab.
+
+2)  The highest dose that meets the overdose criteria (if any): the highest dose that does not have a posterior probability that its toxicity rate lies in the excess & unacceptable toxicity bands or unacceptable toxicity bands above the threshold specified on the Study \> Toxicity tab.
+
+3)  The current cleared dose and how far above that dose can be allocated to as defined by the specified allocation rules (if any).
+
+The next dose to be allocated to is the lowest of these 3 doses.
+
+It is possible to specify a “run-in” phase before this dose escalation phase applies. A run-in phase has a fixed sequence of doses and cohort sizes (typically smaller than the cohort size used in the escalation phase) and lasts up to the first observed toxicity or the end of the sequence of doses.
+
+![](images/clipboard-4098696863.png){#fig-sec-des-tox-prior-alloc1}
+
+If the user selects to use an “Initial run-in” then there are 3 run-in types that can be selected from:
+
+-   “Simple run” (the only type available before FACTS 6.3): cohorts are of a single size and the dose sequence up to the “Run-in cannot go beyond” dose (if specifed) is either:
+
+    -   at every dose starting at the specified “initial dose” if explicit doses have been defined on the the Study \> Treatment Arms tab,
+
+    -   at the dose increment intervals defined in the allocation rules if finely spaced doses have been defined on the Study \> Treatment Arm tab.
+
+-   “Custom run-in” where the user specifies which doses are selected (leaving the “number of subjects” at a dose at 0 mans it is not selected) and at each dose how many subjects are allocated in the cohort at that dose.
+
+-   Small cohort pre-escalation, cohorts are of a single size and the dose sequence follows the dose increment intervals defined in the allocation rules up to the “Run-in cannot go beyond” dose (if specifed).
+
+“Simple run-in” and “Small cohort pre-escalation” the user specifies the “small cohort size” and there is an option to specify a top dose that the “Run-in cannot go beyond”.
+
+For all run-in schemes there are options:
+
+-   End run-in on 1st category 2 toxicity: The default for the simulation is to stop the run-in when the first full toxicity is observed, there is an option to instead stop when a lower grade toxicity is observed – a category 2 toxicity. If this option is selected, the simluation of virtual subjects is extended to include the simulation of category 2 tocxicity as well as category 3.
+
+-   Include run-in subjects in overall maximum
+
+-   When run-in ends expand last cohort to full size
+
+    -   If this ***is not*** set then N-CRM model is applied and the next cohort is allocated as close to the target as possibly, restricted by the overdose restrictions and not allocating any higher than the dose reached in the run-in.
+
+    -   If this option ***is*** set then last allocated small cohort is treated as the start of a full cohort and the remaining subjects are allocated at the same dose. The N-CRM model is then applied and the next cohort allocated according to the overdose restrictions and allocation rules. \[Note it is possible that after observing no toxicities in the run-in or in the expanded cohort, that the overdose control will force a de-escalation in dose, depending on the priors for the model parameters and the overdose control limits\]
+
+If simulating 2 groups, and a run-in is specified, group 2 will only use a run-in if on the Study tab the option “Recruit Group 1 and Group 2 together” has been selected. Otherwise only group 1 will use the specified run-in, once group 2 starts it starts with the full cohort (or if open enrollment is being used, the full number of subjects to clear the dose). If using a run-in and recruiting groups 1 and 2 together then both use the same run-in rules, and both will stop on the first toxicity regardless of which group the toxicity occurs in.
+
+If used, the Allocation rules have the effect of setting a Highest Allocatable Dose that specifies the highest dose level that can be allocated to by the allocation rules.
+
+-   At the start the Highest Allocatable Dose is the user specified **Starting dose level.**
+
+-   A dose is not ‘cleared’ until ‘**The minimum cohorts on/near a dose before cleared’** have been allocated to it. If this is set to greater than one, then the specified number of cohorts must have been allocated to the current dose before it is ‘cleared’. Typically this parameter would be set \> 1 when small cohort sizes are being used (such as 1 or 2 subjects per cohort) and/or when cohorts are assigned before a previous cohort’s results are available.
+
+    If using Open enrolment, this parameter is ‘**The minimum subjects on a dose before cleared’** and refers to the number of *complete* subjects.
+
+-   The user can specify that **Dose not cleared if proportion toxic on dose \>** and a maximum level of toxicity that can be tolerated for the current dose to be ‘cleatred’. This is of course somewhat of a ‘belt and braces’ approach – it being likely that the model would not want to increment if the proportion of toxicity is high, and indeed if an undesired behavior is observed in simulations, the behavior of the model and the effect of the prior should be investigated.
+
+-   The user specifies whether the dose increment rules are to be specified in terms of the number of dose levels that can be incremented or in terms of the ratio by which the dose strength can be increased. If using “dose strength” it is up to the user to ensure that the specified ratio is sufficient to allow all doses to be reached. For example if in the dose range there is a dose of strength 100 and the next dose is of strength 200, then if any dose increment rule is specified that doesn’t allow the dose strength to at least double (using “ratio of dose strength” of less than 2) then the rule will prevent escalation from the 100 dose to the 200 dose.
+
+-   The maximum amount the dose can be incremented can be specified in 3 ways:
+
+    -   **Single value**: For all doses, once a dose has been cleared the next ‘highest allocatable dose’ is the dose above the cleared dose by the specified increment – either a number of dose levels or by a proportion of the dose strength.
+
+    -   **By total number of toxicities:** With this rule the maximum dose increase allowed depends on the total number of toxicities that have been observed in the trial so far. The user specifies the maximum increment (in terms of the number of dose levels or the maximum proportional increase in dose strength) when no toxicities, one toxicity, or more than one toxicity has been observed.
+
+**Figure 9-5 Maximum dose increment varying by number of toxicities observed**
+
+![Maximum dose increment varying by number of toxicities observed](images/clipboard-2553981648.png){#fig-sec-des-tox-prior-alloc2}
+
+-   **By dose levels:** the maximal permitted increment is defined in terms of the number of dose levels or the proportional increase in dose strength that the dose can be increased, in up to 3 bands of dose strength. The user defines the upper and lower doses of the middle increment range, the lower range is then from the lowest up to this band and the upper band is from the top of the middle band to the highest dose. The user then specifies the maximum number of dose levels or the maximum proportional dose strength that can be incremented if the current dose is within each of these bands.
+
+![Maximum dose increment varying by dose level](images/clipboard-1610266189.png){#fig-sec-des-tox-prior-alloc3}
+
+-   If toxicities are observed that causes the N-CRM to allocate a dose below the current cleared dose, then there are two options for what happens to the current cleared dose:
+
+    -   it is left unchanged and further increments are applied relative to the **Highest cleared dose.**
+
+    -   it is reduced to the dose level selected by N-CRM, and further increments are applied relative to the **Most recently** **allocated dose**.
+
+-   If a Control arm has been included, the user must specify the number of subjects per cohort to be allocated to Control. (The Control arm will never be the MTD and thus whole cohorts will never be assigned to it, so it must have a fixed number of subjects assigned from each cohort).
+
+The “Fastest Possible Dose Escalation” graph shows the dose allocation permitted by the rules if no toxicities are observed. Or the graph can be changed to show the allocation if a toxicity occurs at a specific dose during the run-in.
+
+If there are 2 groups and recruitment to the second group is delayed (either until the first group is complete, has reached a specific dose, or tested a specified number of subjects). Then starting dose for the second dose can be specified as
+
+![Design - Allocation Rule Initial Dose Second Group](images/clipboard-2316708456.png){#fig-sec-des-tox-prior-alloc4}
+
+### Allocation rules when using a fine grained dose range
+
+When a fine grained dose range is being used, the specification of the allocation rules change to accommodate the fact that the trial is no longer stepping up a few pre-defined dose levels. As with the explicit doses, the allocation rules work with the notion of a Currently Permitted Maximum Dose (CPMD).
+
+-   At the start the highest allocatable dose is the user specified **Starting dose strength.**
+
+-   A **Run-in** phase can be specified, this will always begin at the start dose and allocate ‘small cohorts’ following the maximum increment rules (this is different from when there are explicit doses – with explicit doses, the simple run-in simply allocates successive small cohorts to successive doses, ignoring the maximum permitted increment) for a simple run-in or small cohort pre-escalation, or the specified allocation pattern for a custom run-in, until the first toxicity is observed.
+
+-   The degree of increment and specification of what counts as a ‘close’ dose, can be done either in **Dose Strength** or **Ratio of dose strength.**
+
+-   A dose is not cleared until ‘**The minimum cohorts on a dose before incrementing’** have been allocated to it. Typically this parameter would be set \> 1 when small cohort sizes are being used (such as 1 or 2 subjects per cohort) and/or when cohorts are assigned before a previous cohort’s results are available.
+
+-   The user can specify that **Dose not cleared if ppn toxic on/near dose \>** and a maximum level of toxicity that can be tolerated before the dose is cleared. This is of course somewhat of a ‘belt and braces’ approach – it being likely that the model would not want to increment if the proportion of toxicity is high, and indeed if an undesired behavior is observed in simulations, the behavior of the model and the effect of the prior should be investigated.
+
+-   The **Max ratio of dose strengths considered as near** or **Delta in dose strength considered as near** defines a margin such that when evaluating whether a dose that has been allocated to counts as “cleared”, then cohorts allocated within that margin all count as being “on” the dose to allow incrementing.
+
+-   The **Maximum increment selected by** option allows the user to specify varying maximum increments either dependent on the current cleared dose (**Dose strength**), or on the **Total number of toxicities** that have been observed, as follows:
+
+    -   **Single value**: the amount by which the highest allocatable dose can be above the current cleared doses is constant throughout the trial. (This simple rule can work well when combined with overdose control. The two more complex rules are essentially trying to achieve the same thing as overdose control but are more simplistic and it may be confusing as to whether the allocation rule or overdose control is preventing escalation at any given moment).
+
+    -   **Total number of toxicities:** the amount by which the highest allocatable dose is above the current cleared dose is specified separately for whether zero, one or two or more toxicities have been observed in the entire study.
+
+    -   **Dose strength**: The user specifies:
+
+        -   the increment at low doses;
+
+        -   the increment at medium doses, along with the upper and lower dose strengths that define the bounds of what constitutes a ‘medium dose’; and
+
+        -   the increment at high doses.
+
+-   If toxicities are observed that causes the N-CRM to allocate a dose below the current cleared dose, then there are two options for what happens to the current cleared dose:
+
+    -   it is left unchanged and further increments are applied relative to the **Highest cleared dose.**
+
+    -   it is reduced to the dose level selected by N-CRM, and further increments are applied relative to the **Most recently** **cleared dose**.
+
+-   If a Control arm has been included, the user must specify the number of subjects per cohort to be allocated to Control. (The Control arm will never be the MTD and thus whole cohorts will never be assigned to it, so it must have a fixed number of subjects assigned from each cohort).
+
+![Allocation rules with a finely spaced doses](images/clipboard-2435202614.png){#fig-sec-des-tox-prior-alloc-fgd1}
+
+## Backfill Allocation {#backfill-allocation}
+
+If the trial is using open enrolment then “Backfill” allocation is an option. Backfilling is enabled on the Study \> Study Info tab, where the maximum number of subjects that can be allocated when backfilling is specified.
+
+Backfilling is the allocation of subjects to a dose below the current dose when the maximum number of subjects on the current dose without final results has been reached.
+
+The Backfill Allocation tab allows detailed control of when backfilling can be used. The user specifies:
+
+-   The maximum overall number of subjects that can be on a dose for backfilling to be allowed to that dose.
+
+-   The maximum number of subjects that can be allocated to a dose by backfill.
+
+-   The maximum number of dose levels below the current dose that can be used for backfilling (the highest that can be backfilled to will be used)
+
+-   The lowest dose strength that can be backfilled to.
+
+-   Whether or not the current escalation dose is a candidate for backfilling as long as the maximum number of subjects in their DLT period (set in the Study \> Study Info tab) is not exceeded (also known as “frontfilling”).
+
+-   If frontfilling is enabled, whether these subjects should count towards the backfill allocation cap or the regular study allocation cap (specified in the “Study/Study Info” tab).
+
+![Backfill Allocation](images/clipboard-3668815882.png){#fig-sec-des-tox-prior-bf1}
+
+## Stopping Criteria {#stopping-criteria}
+
+The simulation will always stop when the maximum number of cohorts or subjects has been allocated.
+
+The user may also specify that the study may stop early in terms of the amount of information that has been gathered about the target dose. In the N-CRM, the target dose can either be the Maximum Tolerated Dose or the “the allowed dose that has the highest posterior probability of having a toxicity rate in the Target Toxicity Band”; we use the label MTD (Maximum Target toxicity Dose) for this target dose too, for brevity and familiarity from previous CRM methods.
+
+Note: if overdose limits have been set (see [this section](#sec-studyinfo)), then doses with posterior probabilities of having a toxicity rate in the Excess Toxicity or Unacceptable Toxicity bands that are greater than the specified thresholds, are disallowed for **both** dose allocation **and** selection as MTD.
+
+To enable early stopping, the user must select “Rules for stopping trial early” there are then 2 rules which if selected are always “AND”ed together, and a further block of rules, the result of which (if specified) are “AND”ed with the first two rules. If more than one rule is selected within the block these may be either logically “AND”ed together or “OR”ed together to give the result of the rules in the block.
+
+The two first standalone rules are:
+
+1.  If a “Required number of cohorts/subjects near MTD” rule is set then the trial will only stop early if at least this number of cohorts or subject has been allocated to the MTD dose or nearby doses. In the box above the “Count as MYD doses differing from MTD by less than or equal” allows how far away a dose can be and for cohorts/subjects on those doses to count towards this total. This can be set to 0 to count only cohorts/subjects on the MTD. It is provided for when fine grain dosing or a large number of explicit doses have been specified. If specified this rule this must always be met along with any other rules set for the trial to stop early.
+
+2.  If a “Minimum number of cohorts/subjects accrued” has been set then this specifies a lower limit on the sample size before early stopping is allowed. It is provided to allow a higher number of subjects on the MTD if one of the first doses appears to be the MTD. If specified this rule this must always be met along with any other rules set for the trial to stop early.
+
+![Design - Stopping Criteria sub tab](images/clipboard-3965543388.png){#fig-sec-des-tox-prior-sc1}
+
+The available stopping rules are:
+
+-   **Required number of cohorts/subjects on/near MTD**: Once the specified number of cohorts has been allocated to the dose currently determined to be the MTD, the trial may stop.
+
+    -   This limit is defined in subjects if open enrollment rather than cohort enrolment is being used.
+
+    -   The required number of cohorts/subjects can be “near” (rather than “on”) the MTD if a “Count as MTD” interval is defined. This interval is either defined by an interval of “dose strength” using the dose strengths defined on the Study \> Treatment Arms tab, or by an interval of “dose strength ratios”. Which is used will correspond to the Selection for “Dose allocation rules apply to” on the Allocation Rules tab. A difference of 0, or factor of 1 can be used to only count cohorts/subjects actually on the selected MTD dose.
+
+    -   If open enrolment is being used, there is an option to only pause accrual not stop it when the stopping rules have been met, in case the final results of any subjects that were not complete at the time the stopping rules were met cause the rules to be no longer met (for example by having results that change the dose estimated to be the MTD). If this option is selected then the stopping rules are re-assessed when all the current subjects are complete and the trial resumed if the rules are no longer met.
+
+        Note this option is not required for cohort enrolment as stopping rules are only evaluated between cohorts
+
+-   **Minimum cohorts/subjects accrued**: this rule ensures that a minimum overall number of cohorts have been tested before the trial is allowed to stop. It makes no sense to use this rule on its own (it would effectively just lower the overall study cap) it should only be used in conjunction with other stopping rules.
+
+    -   This limit is defined in subjects if open enrollment rather than cohort enrolment is being used.
+
+-   **The Additional Stopping Rules**:
+
+    -   **Range/Ratio of dose strengths within the credible interval is less than or equal to**: This is only enabled if on the Study \> Study Info tab, the Type of Target has been set to “Target a single dose”. In this case the credible interval of the dose range that might contain the MTD is calculated, and this option allows the user to specify the width of the credible interval in “dose strength” to consider. How this works is a little counter intuitive: in each MCMC sample the engine determines which dose is the MTD and each doses’ Pr(MTD) is the proportion of the samples it was the MTD. The engine then calculates the minimum range of dose strengths required so that the sum of Pr(MTD) of the doses in the range exceeds 1 – Alpha. (So if a single dose has Pr(MTD) \> 1-Alpha, the CI has zero width). If the xhats are log(dose strength) then the minimum range of log(dose strength) is found and exp() of this range returned.
+
+        -   The stopping rule is met if the width of the CI returned is less than that specified by the user.
+
+        -   If fine grain dosing is being used then the width of the target credible interval is defined as a dose strength ratio rather than a number of doses.
+
+    -   **Stop if adding another DLT free cohort does not alter the MTD**: this rule is evaluated by analyzing the existing data supplemented by an additional cohort of a specified size where all the responses are no-toxicity; if this results in no change in selection of MTD then this stopping rule is met. If the study is using Open Enrolment, the user additionally specifies the size of the ‘virtual’ cohort to use.
+
+    -   **Probability of dose being in the target band greater than**: in order to stop, the MTD’s posterior probability that its toxicity rate lies in the Target Toxicity band must be at or above the required threshold.
+
+    -   **Maximum Cohorts/Subjects near MTD**: this option is supplied for use if the additional stopping rules are being OR’d together. (When they are AND’d together it simply functions the same way as the “Required Cohorts on MTD and stopping will not occur until the higher of the two targets is met).
+
+    -   **Join condition:** if more than one additional stopping rule is selected, whether only any one of them needs to be met for the trial to be able to stop (Join condition = “OR”), of if all of the selected rules need to be met for the trial to be able to stop (Join condition = “AND”).
+
+The study will also be stopped if there are no allowed doses by the overdose rules. However this *can* occur early in the study if a toxicity is observed in the first or second cohort. It is likely that in practice the clinical team would override the design stopping the study. Whilst it is difficult to fully represent the team’s decision making, a simple rule is included that is intended to approximate it:
+
+-   **Minimum toxicities required before stopping**: This allows a requirement to be specified to observe a ‘minimum number of toxicities’ before the trial stops. If no doses are allowed by the overdosing rules, cohorts are assigned to the lowest dose until the minimum number of toxicities are observed, the stopping rules are met, or doses become allowable again after the model is updated after seeing no toxicities.
+
+![Stopping Criteria tab with open enrolment and finely spaced doses](images/clipboard-3642157716.png){#fig-sec-des-tox-prior-sc2}
+
+If an additional efficacy endpoint is used, the MTD stopping criteria refer to when the trial jumps from assigning subjects with the aim of finding the MTD (“MTD phase”) to assigning subjects with the aim of finding the MED (“MED phase”). In the MED phase, it is possible that because of new data being observed, the MTD stopping rules are no longer met and the trial switches back to the MTD phase. A new stopping rule for the MTD phase is added, “**Maximum subjects used to determine the MTD**”. After this number of subjects has been enrolled, the trial switches from MTD to MED phase and there is no going back.
+
+In the MED phase, there are several rules for stopping early (i.e. before the maximum sample size of the trial):
+
+-   **Maximum cohorts/subjects on MED**. This behaves analogous to **Required number of cohorts/subjects on/near MTD** in the MTD stopping rules, with the exception of not using a concept of “near” doses.
+
+-   **Number of doses within the credible interval is less than or equal to** with the sub-option **Alpha for width of credible interval.** This behaves analogous to **Range/Ratio of dose strengths within the credible interval is less than or equal to** in the MTD stopping rules.
+
+-   **Probability of dose being MED greater than.** This behaves analogous to **Probability of dose being in the target band greater than** in the MTD stopping rules**.**
+
+A special case arises when the MED estimate is larger than the MTD estimate. If that is the case, subjects are allocated to MTD or the highest cleared dose (whatever is smaller) even in the MED phase. The option “**If MED \> MTD: Continue until subjects near MTD reach**” specifies how many subjects should be assigned to MTD in the MED phase before stopping the trial (and therefore giving up hope that the MED is a safe dose).
+
+![Stopping Criteria tab with open enrolment and both a toxicity and efficacy endpoint](images/clipboard-1886135383.png){#fig-sec-des-tox-prior-sc3}
