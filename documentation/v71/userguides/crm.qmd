@@ -719,7 +719,7 @@ Selecting ‘Finely Spaced Doses’ will also affect how some of the other param
 
 ![The Treatment Arms tab, specifying a finely spaced dose range](images/clipboard-1521668862.png){#fig-sec-study-ta-fgd1}
 
-## Variants
+## Variants {#sec-variants}
 
 On this tab the user can specify that a number of design variants should be created. Currently the only design feature that can be changed is the sample size (maximum number of cohorts).
 
@@ -1193,30 +1193,23 @@ When a fine grained dose range is being used, the specification of the allocatio
 -   The **Max ratio of dose strengths considered as near** or **Delta in dose strength considered as near** defines a margin such that when evaluating whether a dose that has been allocated to counts as “cleared”, then cohorts allocated within that margin all count as being “on” the dose to allow incrementing.
 
 -   The **Maximum increment selected by** option allows the user to specify varying maximum increments either dependent on the current cleared dose (**Dose strength**), or on the **Total number of toxicities** that have been observed, as follows:
-
     -   **Single value**: the amount by which the highest allocatable dose can be above the current cleared doses is constant throughout the trial. (This simple rule can work well when combined with overdose control. The two more complex rules are essentially trying to achieve the same thing as overdose control but are more simplistic and it may be confusing as to whether the allocation rule or overdose control is preventing escalation at any given moment).
-
     -   **Total number of toxicities:** the amount by which the highest allocatable dose is above the current cleared dose is specified separately for whether zero, one or two or more toxicities have been observed in the entire study.
-
     -   **Dose strength**: The user specifies:
-
         -   the increment at low doses;
-
         -   the increment at medium doses, along with the upper and lower dose strengths that define the bounds of what constitutes a ‘medium dose’; and
-
         -   the increment at high doses.
 
 -   If toxicities are observed that causes the N-CRM to allocate a dose below the current cleared dose, then there are two options for what happens to the current cleared dose:
 
     -   it is left unchanged and further increments are applied relative to the **Highest cleared dose.**
-
     -   it is reduced to the dose level selected by N-CRM, and further increments are applied relative to the **Most recently** **cleared dose**.
 
 -   If a Control arm has been included, the user must specify the number of subjects per cohort to be allocated to Control. (The Control arm will never be the MTD and thus whole cohorts will never be assigned to it, so it must have a fixed number of subjects assigned from each cohort).
 
 ![Allocation rules with a finely spaced doses](images/clipboard-2435202614.png){#fig-sec-des-tox-prior-alloc-fgd1}
 
-## Backfill Allocation {#backfill-allocation}
+## Backfill Allocation {#sec-backfill-allocation}
 
 If the trial is using open enrolment then “Backfill” allocation is an option. Backfilling is enabled on the Study \> Study Info tab, where the maximum number of subjects that can be allocated when backfilling is specified.
 
@@ -1225,20 +1218,15 @@ Backfilling is the allocation of subjects to a dose below the current dose when 
 The Backfill Allocation tab allows detailed control of when backfilling can be used. The user specifies:
 
 -   The maximum overall number of subjects that can be on a dose for backfilling to be allowed to that dose.
-
 -   The maximum number of subjects that can be allocated to a dose by backfill.
-
 -   The maximum number of dose levels below the current dose that can be used for backfilling (the highest that can be backfilled to will be used)
-
 -   The lowest dose strength that can be backfilled to.
-
 -   Whether or not the current escalation dose is a candidate for backfilling as long as the maximum number of subjects in their DLT period (set in the Study \> Study Info tab) is not exceeded (also known as “frontfilling”).
-
 -   If frontfilling is enabled, whether these subjects should count towards the backfill allocation cap or the regular study allocation cap (specified in the “Study/Study Info” tab).
 
 ![Backfill Allocation](images/clipboard-3668815882.png){#fig-sec-des-tox-prior-bf1}
 
-## Stopping Criteria {#stopping-criteria}
+## Stopping Criteria {#sec-stopping-criteria}
 
 The simulation will always stop when the maximum number of cohorts or subjects has been allocated.
 
@@ -1259,17 +1247,11 @@ The two first standalone rules are:
 The available stopping rules are:
 
 -   **Required number of cohorts/subjects on/near MTD**: Once the specified number of cohorts has been allocated to the dose currently determined to be the MTD, the trial may stop.
-
     -   This limit is defined in subjects if open enrollment rather than cohort enrolment is being used.
-
     -   The required number of cohorts/subjects can be “near” (rather than “on”) the MTD if a “Count as MTD” interval is defined. This interval is either defined by an interval of “dose strength” using the dose strengths defined on the Study \> Treatment Arms tab, or by an interval of “dose strength ratios”. Which is used will correspond to the Selection for “Dose allocation rules apply to” on the Allocation Rules tab. A difference of 0, or factor of 1 can be used to only count cohorts/subjects actually on the selected MTD dose.
-
-    -   If open enrolment is being used, there is an option to only pause accrual not stop it when the stopping rules have been met, in case the final results of any subjects that were not complete at the time the stopping rules were met cause the rules to be no longer met (for example by having results that change the dose estimated to be the MTD). If this option is selected then the stopping rules are re-assessed when all the current subjects are complete and the trial resumed if the rules are no longer met.
-
-        Note this option is not required for cohort enrolment as stopping rules are only evaluated between cohorts
+    -   If open enrolment is being used, there is an option to only pause accrual not stop it when the stopping rules have been met, in case the final results of any subjects that were not complete at the time the stopping rules were met cause the rules to be no longer met (for example by having results that change the dose estimated to be the MTD). If this option is selected then the stopping rules are re-assessed when all the current subjects are complete and the trial resumed if the rules are no longer met. Note this option is not required for cohort enrolment as stopping rules are only evaluated between cohorts.
 
 -   **Minimum cohorts/subjects accrued**: this rule ensures that a minimum overall number of cohorts have been tested before the trial is allowed to stop. It makes no sense to use this rule on its own (it would effectively just lower the overall study cap) it should only be used in conjunction with other stopping rules.
-
     -   This limit is defined in subjects if open enrollment rather than cohort enrolment is being used.
 
 -   **The Additional Stopping Rules**:
@@ -1307,3 +1289,147 @@ In the MED phase, there are several rules for stopping early (i.e. before the ma
 A special case arises when the MED estimate is larger than the MTD estimate. If that is the case, subjects are allocated to MTD or the highest cleared dose (whatever is smaller) even in the MED phase. The option “**If MED \> MTD: Continue until subjects near MTD reach**” specifies how many subjects should be assigned to MTD in the MED phase before stopping the trial (and therefore giving up hope that the MED is a safe dose).
 
 ![Stopping Criteria tab with open enrolment and both a toxicity and efficacy endpoint](images/clipboard-1886135383.png){#fig-sec-des-tox-prior-sc3}
+
+# Simulation {#sec-simulation}
+
+The Simulation tab allows the user to execute simulations for each of the scenarios specified for the study. The user may choose the number of simulations, whether to execute locally or on the Grid, and modify the random number seeds, [@fig-sec-sim1].
+
+If completed results are available, the *actual* number of simulations run for each scenario is reported in one of the first columns of the results table. The value displayed in the “Number of Simulations” control is the number of simulations that *will be* run if the user clicks on the ‘Simulate’ button.
+
+![Simulation](images/clipboard-3509335704.png){#fig-sec-sim1}
+
+N.B. FACTS uses Markov Chain Monte Carlo methods in the generation of simulated patient response data and trial results. In order to exactly reproduce a statistical set of results, it is necessary to start the Markov Chain from an identical “Random Seed”. The initial random seed for FACTS simulations is set from the simulation tab, the first thing that FACTS does is to draw the random number seeds to use at the start of each simulation. It is possible to re-run a specific simulation, for example to have more detailed output files generated, by specifying ‘start at simulation’.
+
+Say the 999th simulation out of a set displayed some unusual behavior, in order to understand why, one might want to see the individual interim analyses for that simulation (the “weeks” file), the sampled subject results for that simulation (the “Subjects” files) and possibly even the MCMC samples from the analyses in that simulation. You can save the .facts file with a slightly different name (to preserve the existing simulation results), then run 1 simulation of the specific scenario, specifying that the simulations start at simulation 999 and that at least 1 weeks file, 1 subjects file and the MCMC samples file (see the “MCMC settings” dialog) are output.
+
+Even a small change in the random seed will produce different simulation results.
+
+By default he same random number seed is used at the start of the simulation of each scenario. If two identical scenarios are specified then identical simulation results will be obtained. The same may happen if scenarios or designs only differ in ways that have no impact on the trials being simulated, for instance designs that have no adaptation, or scenarios that don’t trigger any adaptation (e.g. none of the simulations stop early). To avoid this possible artificial correlation in results across scenarios, select the “Different seed” option.
+
+The user can specify:
+
+-   the number of simulations for which ‘Cohorts’ files are written. ‘Cohorts’ files record the data, analysis and recommendation at each interim (after each cohort).
+-   The parallelization packet size, this allows simulation jobs to be split into runs of no-more than the specified number of trials to simulate. If more simulations of a scenario are requested than can be done in one packet, the simulations are started as the requisite number of packets and the results combined and summarized when they are all complete – so the final results files look just as though all the simulations were run as one job or packet. When running simulations on the local machine FACTS enterprise version will process as many packets in parallel as there are execution threads on the local machine. The overhead of packetization is quite low so a packet size of 10 to 100 can help speed up the overall simulation process – threads used to simulate scenarios that finish quicker can pick up packets for scenarios that take longer, if the number of scenarios is no directly divisible by the number of threads packetization uses all threads until the last few packets have to be run and finally the “Simulations complete” figure can be updated at the end of each packet, so the smaller the packet the better FACTS can report the overall progress.
+
+## Simulation with Variants {#sec-simulation-with-variants}
+
+The only difference that specifying design variants (see [this section](#sec-variants)) introduces is to create additional scenarios – one for each Virtual Subject Response (VSR) profile for each variant. For example if there were 5 VSR profiles and then 4 variants (different numbers of maximum cohorts) specified then would now be 20 scenarios in total. The scenario names have “\_Var1”, “\_Var2”, … appended to them. Once simulations have been run and the .facts file has been saved and re-opened the scenarios are listed in alphabetical order.
+
+![Simulation tab showing variants](images/clipboard-1839823179.png){#fig-sec-sim2}
+
+## To run simulations {#sec-to-run-simulations}
+
+Click in the check box in each of the rows corresponding the to the scenarios to be run. FACTS displays a row for each possible combination of the ‘profiles’ that have been specified: - baseline response, dose response, longitudinal response, accrual rate and dropout rate. Or simply click on “Select All”.
+
+Then click on the “Simulate” button.
+
+During simulation, the user may not modify any parameters on any other tab of the application. This safeguard ensures that the simulation results reflect the parameters specified in the user interface.
+
+When simulations are started, FACTS saves all the study parameters, and when the simulations are complete all the simulation results are saved in results files in a “\_results” folder in the same directory as the “.facts” file. Within the “\_results” folder there will be a sub-folder that holds the results for each scenario.
+
+## How many simulations to run? {#sec-how-many-simulations-to-run}
+
+-   After first entering a design it is worth running just a small number of simulations such as 10 to check that the scenarios and design have been entered correctly. If all 10 simulations of a ‘null’ scenario are successful, or all 10 simulations of what was intended to be an effective drug scenario are futile, it is likely there has been a mistake or misunderstanding in the specification of the scenarios or the final evaluation or early stopping criteria.
+-   Once the design and scenarios look broadly correct, it is usually worth quickly collecting rough estimates of the operating characteristics using around 100 simulations for each scenario. 100 simulations is enough to spot designs having very poor operating characteristics such as very high type-1 error, very poor power, a strong tendency to stop early for the wrong reason, or poor probability of selecting the correct target. 100 simulations is also usually sufficient to spot problems with the data analysis such as poor model fits and significant bias in the posterior estimates.
+-   Typically 1,000 simulations of each scenario of interest is required to get estimates of the operating characteristics precise enough to compare designs and tune the parameters. (Very roughly rates of 5% (such as type-1 error) can be estimated to about +/-1.5% and rates of around 80% (such as power) estimated +/- 2.5%)
+-   Finally around 10,000 simulations of the scenarios of interest is required to give confidence in operating characteristics of a design and possibly to select between the final shortlisted designs (Approximately rates of 5% can be estimated to about +/-0.5% and rates of around 80% estimated +/- 1%). This degree of accuracy usually unnecessary for dose escalation designs.
+
+There may be many operating characteristics need to be compared over a number of scenarios, such as expected sample size, type-1 error, power, probability of selecting a good dose as the target and quality of estimation of the dose-response.
+
+However frequently these will be compared over a range of scenarios, it may not be necessary to run very large number of simulations for each scenario if a design shows a consistent advantage on the key operating characteristics over the majority of the scenarios.
+
+## Simulation results {#sec-simulation-results}
+
+In the main screen the summary results that are usually of principal interest are displayed, the results summarised by scenario.
+
+-   **Show other columns**: Allows the user to open additional windows on the simulation results, the windows available are:
+    -   **Open Results Folder:** Opens the windows “File Explorer” tool in the results folder of the currently selected scenario. This makes it very easy to locate and open results files.
+    -   **Copy to Clipboard:** will copy the values displayed in the summary to the clipboard as “CSV” data, enabling it to be pasted straight into a spreadsheet.
+    -   **All**: A window containing all the summary results columns
+    -   **Highlights**: a separate window with the results shown on the main tab
+    -   **Allocation, Observed**: summary results of the number of subjects allocated, the number allocated to each dose, the number of toxicities observed and the number of toxicities observed per dose
+    -   **Fitted toxicity**: summary results of the estimates of the model parameters and the dose-toxicity.
+    -   **Pr(MTD) etc**: summary results of the posterior probabilities of the properties of interest
+    -   **Simulation Results**: a window displaying the individual simulation results for each simulation of the currently selected scenario
+-   **Explore Results**: offers three options:
+    -   “Show Per Scenario Highlighted Scenario Graphs” that shows the graph of the simulation results for a specific scenario (see Section 12 below for a description of these graphs)
+    -   “Show Across Scenario Graphs” that displays a trellis plot of summary graphs for each variant and each scenario (see Section 13 below for a description of these graphs).
+    -   “Compare Scenarios in AIRSHIP” to open the simulation results in R with the AIRSHIP R-shiny graphing app. See the [AIRSHIP User Guide](https://el-meyer.github.io/airship/articles/IntegrationFACTS.html) for details.
+-   **Aggregate**: opens a control that allows the user create aggregated results files from all the scenarios. The user can select which scenarios to include, and whether the results should be pivoted by dose. The resulting files are stored in the simulation results folder.
+-   **Open in R**: If aggregated files have been created then clicking this button on the simulations tab will open control that allows the user to select which aggregations to load into data frames as R is opened. Otherwise it will offer to open R using the files in the currently selected scenario.
+-   **Design Report**: it uses an R script and R libraries to generate a MS Word document describing the design. See the FACTS Design Report User Guide for details of what R packages need installing, how FACTS needs configuring to use the correct R instance, how the generate_report() function is run, and where the resulting report can be found.
+
+***Right Click Menu***: right clicking the mouse on a row of results in the simulation tab brings up a ‘local’ menu of options corresponding to the above options that can be reached from the buttons, in what is sometimes a more ergonomic manner.
+
+### MCMC Settings
+
+![](images/clipboard-1013451560.png){#fig-sec-sim-mcmc1}
+
+The first two values specify two standard MCMC parameters –
+
+-   The length of burn-in is the number of the initial iterations whose results are discarded, to allow the sampled values to settle down.
+-   The number of samples is the number of subsequent iterations whose results are recorded in order to give posterior estimates of the values of interest (in this case α and β).
+
+The **Number of samples per imputation** value only applies to analyses using imputed data from a longitudinal model and is irrelevant for N-CRM, hence it is greyed out.
+
+If the **Number of MCMC files to output** value is set to N, where N \> 0, then all the sampled values at each interim in the first N simulations are output, allowing the user to check convergence.
+
+**The MCMC output thinning parameter** can be used to reduce the amount of data output to the MCMC file. It does not reduce the amount of MCMC samples used within the model fitting.
+
+To obtain the MCMC sampled values for a particular simulation, keep the same Random number seed and use **Start at simulation** to specify the simulation in question and run just 1 simulation.
+
+## FACTS Grid Simulation Settings {#sec-facts-grid-simulation-settings}
+
+If you have access to a computational grid, you may choose to have your simulations run on the grid instead of running them locally. This frees your computer from the computationally intensive task of simulating so you can continue other work or even shutdown your PC or laptop. In order to run simulations on the grid, it must first be configured, this is normally done via a configuration file supplied with the FACTS installation by the IT group responsible for the FACTS installation.
+
+## Detailed Simulation Results {#sec-detailed-simulation-results}
+
+After simulation has completed and simulation results have been loaded, the user may examine detailed results for any scenario with simulation data in the table by double-clicking on the row. A separate window (as in [@fig-sec-sim-res1]) will reveal more detailed results about the simulation.
+
+![Detailed Simulation Results for a particular scenario](images/clipboard-1034836642.png){#fig-sec-sim-res1}
+
+Right-clicking on a row displays a context menu from which the user can view other columns (the default are the “highlihgts” columns) and also view the corresponding cohort results:
+
+![Cohort Results for a particular simulation](images/clipboard-645498849.png){#fig-sec-sim-res2}
+
+Right clicking on the cohort results, displays a context menu from which the user can view other columns (the default are the “highlights” columns).
+
+## Aggregation {#sec-sim-aggregation}
+
+Aggregation combines the csv output from multiple scenarios into fewer csv files. The Aggregate… button displays a dialog which allows the user to select what to aggregate.
+
+![](images/clipboard-4250106689.png){#fig-sec-sim-agg1}
+
+The default location for the aggregated files is the results directory for the study, but this can be changed.
+
+Aggregation may be performed with or without pivoting on group, or both.
+
+-   Unpivoted files will have one row for each row in the original files.
+-   In pivoted files each original row will be split into one row per dose, plus two extra rows for ‘below lowest’ and ‘above highest’.
+    -   Where there is a group of columns for each dose, they will be turned into a single column with each value on a new row.
+    -   If there is no value for the below lowest or above highest rows, they will be left blank.
+    -   Values in columns that are independent of group will be repeated on each row.
+
+The default is to aggregate all scenarios, but any combination may be selected.
+
+Pressing “Aggregate” generates the aggregated files.
+
+Each type of csv file is aggregated into a separate csv file whose name begins `agg_` or `agg_pivot_`, so `agg_summary.csv` will contain the rows from each of the `summary.csv` files, unpivoted. `cohortsNNN.csv` files are aggregated into a single `agg_[pivot_]cohorts.csv` file. `Doses.csv` is identical for all scenarios and so is not aggregated.
+
+Each aggregated file begins with the following extra columns, followed by the columns from the original csv file:
+
+| Column Name | Comments |
+|:-----------------------------------|:-----------------------------------|
+| Scenario ID | Index of the scenario |
+| Toxicity Profile | A series of columns containing the names of the various profiles used to construct the scenario. Columns that are never used are omitted (e.g External Subjects Profile if there are no external scenarios) |
+| External Subjects Profile |  |
+| Agg Timestamp | Date and time when aggregation was performed |
+| Sim | Simulation number. Only present in the cohorts file. |
+| Dose | Only present if pivoted |
+
+## Design Report {#sec-design-report}
+
+This button becomes enabled once there are simulation results, it uses an R script and R libraries to generate a MS Word document describing the design.
+
+See the FACTS Design Report User Guide for details of what R packages need installing, how FACTS needs configuring to use the correct R instance, how the `generate_report()` function is run, and where the resulting report can be found.
+
