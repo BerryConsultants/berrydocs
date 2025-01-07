@@ -348,16 +348,16 @@ When enabling backfilling, several options can be specified in the Design \> Bac
 
 ## Open Enrollment, Backfilling and Fine Grain Dosing
 
-When using open enrolment and fine grain dosing, the interval defined on the Design \> Allocation Rule tab “Delta in dose strength considered as near +/-“, or “Max ratio of dose strengths considered as near” is crucial: it is used to define the range of doses where subjects allocated to any of them count towards clearing a dose.
+When using open enrolment and fine grain dosing, the interval defined on the Design > Allocation Rule tab “Delta in dose strength considered as near +/-“, or “Max ratio of dose strengths considered as near” is crucial: it is used to define the range of doses where subjects allocated to any of them count towards clearing a dose.
 
 -   If dose allocation rules are selected to apply to “Dose strength”, the interval is defined “Delta in dose strength considered as near +/-“. Thus, for example, if this is set to 2, then subjects complete on doses with strength in the range 4-8 will contribute to the dose of strength 6 being cleared. At the same time, clearing the dose of strength 6 will automatically clear the dose of strength 8.
 -   If dose allocation rules are selected to apply to “Ratio of strength”, the interval is defined “Max ratio of dose strengths considered as near“. Thus, for example if this is set to 1.5, then subjects complete on doses with strength in the range 4-9 will contribute to the dose of strength 6 being cleared. At the same time, clearing the dose of strength 6 will automatically clear the dose of strength 9. These ranges also apply when assessing “OE cap 1-3”, and how many subjects have been allocated overall, or via backfilling. In backfilling, FACTS checks each dose strength and the doses in its “near” interval range, at (if frontfilling) or below the current dose, until the first dose strength is found where backfilling can take place.
 
 # Starting FACTS
 
-FACTS is usually first started using the FACTS icon installed on the Windows desktop or from the Windows Start \> Programs menu.
+FACTS is usually first started using the FACTS icon installed on the Windows desktop or from the Windows Start > Programs menu.
 
-When the application opens, you are presented with the main introduction screen of FACTS ([@fig-intro]). From here you can start designing an N-CRM trial, by double clicking N-CRM in the list of available designs, or by selecting the N-CRM design option from the File \> New \> Dose Escalation menu.
+When the application opens, you are presented with the main introduction screen of FACTS ([@fig-intro]). From here you can start designing an N-CRM trial, by double clicking N-CRM in the list of available designs, or by selecting the N-CRM design option from the File > New > Dose Escalation menu.
 
 FACTS will also be associated the parameter files it writes out with a ‘.facts’ file extension. Clicking on any one of these files will automatically start FACTS with that file opened.
 
@@ -1419,7 +1419,7 @@ Each type of csv file is aggregated into a separate csv file whose name begins `
 Each aggregated file begins with the following extra columns, followed by the columns from the original csv file:
 
 | Column Name | Comments |
-|:-----------------------------------|:-----------------------------------|
+|:---------|:-----------------------------------|
 | Scenario ID | Index of the scenario |
 | Toxicity Profile | A series of columns containing the names of the various profiles used to construct the scenario. Columns that are never used are omitted (e.g External Subjects Profile if there are no external scenarios) |
 | External Subjects Profile | A series of columns containing the names of the various profiles used to construct the scenario. Columns that are never used are omitted (e.g External Subjects Profile if there are no external scenarios) |
@@ -1432,4 +1432,170 @@ Each aggregated file begins with the following extra columns, followed by the co
 This button becomes enabled once there are simulation results, it uses an R script and R libraries to generate a MS Word document describing the design.
 
 See the FACTS Design Report User Guide for details of what R packages need installing, how FACTS needs configuring to use the correct R instance, how the `generate_report()` function is run, and where the resulting report can be found.
+
+# The Summary Results Columns {#sec-the-summary-results-columns}
+
+## Results when 2 groups have been simulated {#sec-results-when-2-groups-have-been-simulated}
+
+When 2 groups have been simulated, the results displayed on the Simulation tab and all the directly viewable summary tables under the “Show other columns” button are from Group 1.
+
+To see the results from Group 2 you need to first display the Group 2 highlights – either by selecting “Group 2” on the “Show other columns” menu or after right clocking on a row of results.
+
+Once the Group 2 “highlights” results are being displayed, the other sets of summary results can be viewed by right clicking on a row of results in the Group 2 “hightlights” window.
+
+## Highlights {#sec-highlights}
+
+These are the columns displayed on the simulations tab after simulations are completed, the can also be displayed in the separate “Highlights” results window.
+
+| Column Title | Number of columns | Description |
+| --- | -- | ------- |
+| Select | 1 | Not an output column, this column contains check box to allow the user to select which scenario to simulate. The ‘Select All’ button causes them all to be checked. |
+| Settings | 1 | Displays an icon showing the status of the simulation results. |
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This is the name of the scenario simulated. If only toxicity has been simulated this is simply the name of the Toxicity response profile to be simulated, if both efficacy and toxicity have been simulated, it is formed from the concatenation of the toxicity response profile name and the efficacy response profile name. |
+| Num Sims | 1 | The number of simulations that were run to produce the displayed results. |
+| Random Number Seed | 1 | Base random number seed used to perform the simulations. |
+| Mean Subj. | 1 | This is the mean (over the simulations) of the number of subjects recruited in this scenario. |
+| Ppn. Toxic | 1 | This is the average proportion of the subjects recruited that experienced a toxicity in this scenario. |
+| Ppn. Eff | 1 | Included if efficacy is being simulated. This is the average proportion of the subjects recruited that experienced efficacy in this scenario. |
+| SD Ppn. Toxic | 1 | This is the standard deviation of the proportion of toxicity across the simulations. |
+| SD Ppn Eff | 1 | Included if efficacy is being simulated. This is the standard deviation of the proportion of efficacy across the simulations |
+| True Ppn. Toxicity | 1 | This is the average true probability of toxicity over the simulations. The ‘true probability of toxicity’ in a simulated trial is the average of the probabilities of toxicity all the subjects are exposed to, given the toxicity response profile that we are simulating from. |
+| True Ppn. Eff | 1 | Included if efficacy is being simulated. This is the average true probability of efficacy over the simulations. |
+| MTD Selection: \<dose\> | One per dose | For each dose, this is proportion of the simulations where it was selected as the “MTD” at the end of the study. In CRM this is the minimum of: 1) the dose with the highest posterior probability of having a toxicity rate in the ‘Acceptable’ band and 2) the highest cleared dose.  If limits on “excess” or “unacceptable” toxicity have been specified, then doses with posterior probabilities above these limits are excluded from being chosen as MTD. (Note this is different from the calculation of MTD used in @neuenschwander2008critical where doses with posterior probabilities above these limits were not excluded from being selected as MTD.) |
+| MED Selection: \<dose\> | One per dose | Included if efficacy is being simulated. For each dose, this is proportion of the simulations where it was selected as the “MED” at the end of the study. This is the dose with the highest posterior probability of being the dose that is the ‘highest dose below’ / ‘nearest’ / ‘lowest dose above’ (as specified on the Study > Effiacy tab) to the target efficacy rate.   |
+| Mean Duration | 1 | The mean (over the simulations) of the duration in weeks of the simulated trials. |
+| SD Duration | 1 | The standard deviation over the simulations of the duration in weeks of the simulated trials. |
+| Mean Lost | 1 | If the trial uses open enrollment, this is the number of subjects that could not be allocated a dose because the number of subjects treated but not yet complete had reached the specified “Maximum subjects without final result” limit. Otherwise the value is 0. |
+| SD Lost | 1 | The standard deviation over the simulations of the number of subjects lost. |
+| Ppn(All Tox) | 1 | The proportion of the simulations that stopped because all doses were too toxic. |
+| Ppn(early Success) | 1 | The proportion of the simulations that stopped because sufficient stopping rules were met before the maximum number of cohorts had been treated. |
+| Ppn(Cap) | 1 | The proportion of the simulations that stopped because the maximum number of cohorts had been treated. |
+| Ppn MTD Under | 1 | The proportion of the simulations where true toxicity rate of the selected MTD dose lay in the “Underdosing” toxicity range. |
+| Ppn MTD Target | 1 | The proportion of the simulations where true toxicity rate of the selected MTD dose lay in the “Target” toxicity range. |
+| Ppn MTD Excess | 1 | The proportion of the simulations where true toxicity rate of the selected MTD dose lay in the “Excess” toxicity range. |
+| Ppn MTD Unacc | 1 | The proportion of the simulations where true toxicity rate of the selected MTD dose lay in the “Unacceptable” toxicity range. |
+| Ppn Correct Under | 1 | The proportion of the doses across all the simulations that were correctly identified as being in the “Underdosing” range. This will be 0 if none of the doses in that scenario had a true toxicity that fell in that range. |
+| Ppn Correct Target | 1 | The proportion of the doses across all the simulations that were correctly identified as being in the “Target” range. This will be 0 if none of the doses in that scenario had a true toxicity that fell in that range. |
+| Ppn Correct Excess+Unacc | 1 | The proportion of the doses across all the simulations that were correctly identified as being in the “Excess” or “Unacceptable” ranges. This will be 0 if none of the doses in that scenario had a true toxicity that fell in those ranges. |
+| Ppn MED Under | 1 | Included if efficacy is being simulated. This is the proportion of the times the selected Minimum Efficacious Dose’s true efficacy rate was the target rate or less. (Note if the scenario contains a dose whose simulated true efficacy rate is exactly the minimum target rate selections of this dose will count as both MED Under AND Med Over)) |
+| Ppn MED Over | 1 | Included if efficacy is being simulated. This is the proportion of the times the selected Minimum Efficacious Dose’s true efficacy rate was the target rate or more. (Note if the scenario contains a dose whose simulated true efficacy rate is exactly the minimum target rate selections of this dose will count as both MED Under AND Med Over) |
+
+## Allocations, Observed {#sec-allocations-observed}
+
+| Column Title | Number of columns | Description |
+| --- | -- | ------- |
+| Scenario | 1 | This is the name of the scenario simulated. If only toxicity has been simulated this is simply the name of the Toxicity response profile to be simulated, if both efficacy and toxicity have been simulated, it is formed from the concatenation of the toxicity response profile name and the efficacy response profile name. | 
+| Mean Subj. | 1 | This is the mean (over the simulations) of the number of subjects recruited in this scenario. | 
+| Ppn. Toxic | 1 | This is the average proportion of the subjects recruited that experienced a toxicity in this scenario. |  
+| Ppn. Eff | 1 | Included if efficacy is being simulated. This is the average proportion of the subjects recruited that experienced efficacy in this scenario. | 
+| SD Ppn. Toxic | 1 | This is the standard deviation of the proportion of toxicity across the simulations, | 
+| SD Ppn Eff | 1 | Included if efficacy is being simulated. This is the standard deviation of the proportion of efficacy across the simulations | 
+| True Ppn. Toxicity | 1 | This is the average true probability of toxicity over the simulations. The ‘true probability of toxicity’ in a simulated trial is the average of the probabilities of toxicity all the subjects are exposed to, given the toxicity response profile that we are simulating from. | 
+| True Ppn. Eff | 1 | Included if efficacy is being simulated. This is the average true probability of efficacy over the simulations. | 
+| Num Phase 1 | 1 | Included if efficacy is being simulated. This is the mean (over the simulations) of the number of subjects recruited in the first phase (up to the MTD stopping criteria being met) in this scenario. | 
+| Subj. Per Dose: \<dose\> | One per dose | This is the mean (over the simulations) of the number of subjects assigned to each dose. |
+| SD Subjects: \<dose\> | One per dose | This is the standard deviation of the number of subjects assigned to each dose across the simulations. | 
+| Cat 2 Tox per Dose: \<dose\> | One per dose | Only included if an Ordinal toxicity outcome is being simulated. This is the mean (over the simulations) of the number of category 2 toxicities observed at each dose. | 
+| SD Cat 2 Tox per Dose: \<dose\> | One per dose | Only included if an Ordinal toxicity outcome is being simulated. This is the standard deviation of the number of category 2 toxicities observed at each dose across the simulations. | 
+| Tox. Per Dose: \<dose\> | One per dose | This is the mean (over the simulations) of the number of toxicities observed at each dose. |
+| SD Tox. Per Dose: \<dose\> | One per dose | This is the standard deviation of the number of toxicities observed at each dose across the simulations. |
+| Cat 4 Tox per Dose: \<dose\> | One per dose | Only included if a 4 point Ordinal toxicity outcome is being simulated. This is the mean (over the simulations) of the number of category 2 toxicities observed at each dose. | 
+| SD Cat 4 Tox per Dose: \<dose\> | One per dose | Only included if a 4 point Ordinal toxicity outcome is being simulated. This is the standard deviation of the number of category 2 toxicities observed at each dose across the simulations. |
+| 80% Num. Subj. | 1 | The 80th percentile of the distribution of the number of subjects recruited in the simulations | 
+
+## Fitted Toxicity {#sec-fitted-toxicity}
+
+| Column Title | Number of columns | Description |
+| --- | -- | ------- |
+| Scenario | 1 | This is the name of the scenario simulated. If only toxicity has been simulated this is simply the name of the Toxicity response profile to be simulated, if both efficacy and toxicity have been simulated, it is formed from the concatenation of the toxicity response profile name and the efficacy response profile name. |
+| Beta Tox | 1 | This is the mean (over the simulations) of the mean of the posterior distribution of the estimate of the Beta parameter of the logistic model. |
+| SD Beta Tox | 1 | This is the mean (over the simulations) of the standard deviation of the posterior distribution of the estimate of the Beta parameter of the logistic model. |
+| Mean Alpha Tox | 1 | This is the mean (over the simulations) of the mean of the posterior distribution of the estimate of the Alpha parameter of the logistic model. |
+| SD Mean Alpha Tox | 1 | This is the mean (over the simulations) of the standard deviation of the posterior distribution of the estimate of the Alpha parameter of the logistic model. |
+| Alpha\[234\] Tox | 2-3 | If Ordinal toxicity is being simulated, instead of Mean Alpha and SD Mean Alpha columns, there are pairs of columns Mean Alpha2, SD Mean Alpha2, … for Alpha2 & Alpha3 if a 3 point ordinal scale is being used and Alpha2, Alpha3 & Alpha4 if a 4 point ordinal scale is being used. These are the means (over the simulations) of the mean and standard deviation of the various Alpha coefficients in the BLRM model when fitting to the ordinal outcome. |
+| SD Alpha\[234\] Tox | 2-3 | see row above |
+| Mean Fitted Toxicity: \<dose\> | One per dose | This is the mean (over the simulations) of the mean estimate of toxicity from the fitted toxicity response model for each dose. |
+| SD Fitted Toxicity: \<dose\> | One per dose | This is the standard deviation of the mean estimates across the simulations for each dose. Note it is not based on the standard deviation estimated **in** the simulations, it is the SD observed **across** the simulation results. |
+| True Toxicity: \<Dose\> | One per dose | This is the true simulated toxicity rate for each dose in the scenario |
+| Mean Fit Tox Lower: \<Dose\> | One per dose | This is the lower bound of the 95-percentile of the mean estimate of the toxicity rate across the simulations at each dose. |
+| Mean Fit Upper: \<Dose\> | One per dose | This is the upper bound of the 95-percentile of the mean estimate of the toxicity rate across the simulations at each dose. |
+
+## Pr(MTD) Etc. {#sec-prmtd-etc}
+
+| Column Title | Number of columns | Description |
+| --- | -- | ------- |
+| Scenario | 1 | This is the name of the scenario simulated. If only toxicity has been simulated this is simply the name of the Toxicity response profile to be simulated, if both efficacy and toxicity have been simulated, it is formed from the concatenation of the toxicity response profile name and the efficacy response profile name. |
+| MTD Selection: \<dose\> | One per dose | For each dose, this is proportion of the simulations where it was selected as the MTD at the end of the study. The dose chosen as MTD is the minimum of: 1\) the dose with the highest posterior probability of having a toxicity rate in the ‘Acceptable’ band and 2\) the highest cleared dose. If limits on excess or unacceptable toxicity have been specified, then doses with posterior probabilities above the specified limit, of having a toxicity rate in those bands are excluded from being chosen as MTD. |
+| OSD Selection: \<dose\> | One per dose | Only included if efficacy is being simulated. For each dose, this is proportion of the simulations where it was selected as the OSD at the end of the study. The dose chosen as OSD is the dose with the highest posterior probability of being either the Minimum Effective Dose, or if that dose is above the MTD, of being the MTD. |
+| Num \[Tox\] Stop Rule 1 | 1 | Number of times the minimum cohorts / subjects on MTD was rule was met at the end of a simulation. If efficacy is being simulated the column heading is “Num Tox Stop Rule”, and is the number of times this rule was met at the end of the “target the MTD” phase of the trial. The number of times this rule is met at the end of the MED phase is listed in the Pr(MED) results under the heading “Num Eff Stop Rule 1” (see below). |
+| Num \[Tox\] Stop Rule 2 | 1 | Number of times the range of dose strengths within the credible interval of the estimate of the dose strength of the MTD is less than the specified number. \[This stopping rule only evaluated if targeting an MTD rather than a toxicity band\]  If efficacy is being simulated the column heading is “Num Tox Stop Rule”, and is the number of times this rule was met at the end of the “target the MTD” phase of the trial. The number of times this rule is met at the end of the MED phase is listed in the Pr(MED) results under the heading “Num Eff Stop Rule 2” (see below). |
+| Num \[Tox\] Stop Rule 3 | 1 | Number of times the Pr(MTD) – that the probability that the dose was MTD or dose’s toxicity rate lies in the target toxicity rate band \- met the stopping rule threshold at the end of a simulation. If efficacy is being simulated the column heading is “Num Tox Stop Rule”, and is the number of times this rule was met at the end of the “target the MTD” phase of the trial. The number of times this rule is met at the end of the MED phase is listed in the Pr(MED) results under the heading “Num Eff Stop Rule 3” (see below). |
+| Num Stop Rule 4 | 1 | Number of times that observing another cohort with no toxicities would not change the selected MTD stopping rule was met at the end of a simulation. This stopping rule does not have a “end of MED phase” counterpart hence does not acquire a the word “Tox” in the heading if efficacy is being simulated. |
+| Num Stop Rule 5 | 1 | Number of times that the maximum cohorts /subjects on MTD was met at the end of a simulation. This stopping rule does not have a “end of MED phase” counterpart hence does not acquire a the word “Tox” in the heading if efficacy is being simulated. |
+| MTD+ Selection: minus | 1 | The proportion of simulations where a dose below the tested range of doses was selected as the maximum tolerated dose.  |
+| MTD+ Selection: \<dose\> | One per dose | As MTD selection, but with two extra columns for the case of the target being below the lowest (non-control) dose and above the highest dose. |
+| MTD+ Selection: plus | 1 | The proportion of simulations where a dose above the tested range of doses was selected as the maximum tolerated dose. |
+| OSD+ Selection: minus | 1 | Only included if efficacy is being simulated. The proportion of simulations where a dose below the tested range of doses was selected as the optimum selected dose.  |
+| OSD+ Selection: \<dose\> | One per dose | Only included if efficacy is being simulated. As OSD selection, but with two extra columns for the case of the target being below the lowest (non-control) dose and above the highest dose. |
+| OSD+ Selection: plus | 1 | Only included if efficacy is being simulated. The proportion of simulations where a dose above the tested range of doses was selected as the optimum selected dose. |
+| Ppn. Best: \<dose\> | One per dose | Only included if efficacy is being simulated. For each dose, this is proportion of the simulations where it was selected as the ‘Best’ dose at the end of the study. The dose chosen as ‘Best’ is the dose with the highest posterior probability that subjects treated with that dose experience efficacy and do not experience toxicity. |
+| Pr(Under): \<dose\> | One per dose | This is the mean (over the simulations) of the posterior probabilities of having a toxicity in the ‘Under-dosing’ toxicity band for each dose. |
+| Pr(Target): \<dose\> | One per dose | This is the mean (over the simulations) of the posterior probabilities of having a toxicity in the ‘Acceptable’ toxicity band for each dose. |
+| Pr(Excess): \<dose\> | One per dose | This is the mean (over the simulations) of the posterior probabilities of having a toxicity in the ‘Excess’ toxicity band for each dose. |
+| Pr(Unacc): \<dose\> | One per dose | This is the mean (over the simulations) of the posterior probabilities of having a toxicity in the ‘Unacceptable’ toxicity band for each dose. |
+| Post CE MTD+: minus | 1 | The proportion of simulations, after the results of the Cohort Expansion, that a dose below the tested range of doses was the maximum tolerated dose.  |
+| Post CE MTD+: \<dose\> | One per dose | The proportion of simulations, after the results of the Cohort Expansion, that each dose was the maximum tolerated dose allowing for a probability that the MTD is at a dose below or above the range of tested doses. |
+| Post CE MTD+: plus | 1 | The posterior probability, after the results of the Cohort Expansion, that a dose above the tested range of doses was the maximum tolerated dose. |
+| Post CE OSD+: minus | 1 | Only included if efficacy is being simulated. The proportion of simulations where, after the results of the Cohort Expansion, a dose below the tested range of doses was selected as the optimum selected dose. |
+| Post CE OSD+: \<dose\> | One per dose | Only included if efficacy is being simulated. The proportion of simulations where, after the results of the Cohort Expansion, a dose was selected as the optimum selected dose allowing for a probability that the OSD is at a dose below or above the range of tested doses. |
+| Post CE OSD+: plus | 1 | Only included if efficacy is being simulated. The proportion of simulations where, after the results of the Cohort Expansion, a dose above the tested range of doses was selected as the optimum selected dose. |
+
+## Fitted Efficacy {#sec-fitted-efficacy}
+
+This summary table of results is only available if efficacy has been simulated.
+
+| Column Title | Number of columns | Description |
+| --- | -- | ------- |
+| Scenario | 1 | This gives the name of the scenario, which is formed from the concatenation of the toxicity response profile name and the efficacy response profile name. |
+| Beta Eff | 1 | This is the mean (over the simulations) of the mean of the posterior distribution of the estimate of the Beta parameter of the logistic model of the efficacy response rate. |
+| SD Beta Eff | 1 | This is the mean (over the simulations) of the standard deviation of the posterior distribution of the estimate of the Beta parameter of the logistic model of the efficacy response rate. |
+| Alpha Eff | 1 | This is the mean (over the simulations) of the mean of the posterior distribution of the estimate of the Alpha parameter of the logistic model of the efficacy response rate. |
+| SD Alpha Eff | 1 | This is the mean (over the simulations) of the standard deviation of the posterior distribution of the estimate of the Alpha parameter of the logistic model of the efficacy response rate. |
+| Mean Fitted Efficacy: \<dose\> | One per dose | This is the mean (over the simulations) of the mean estimate of efficacy from the fitted efficacy response model for each dose. |
+| SD Fitted Efficacy: \<dose\> | One per dose | This is the standard deviation of the mean estimates of the efficacy rate across the simulations for each dose. Note it is not based on the standard deviation estimated **in** the simulations, it is the SD observed **across** the simulation results. |
+| True Efficacy: \<Dose\> | One per dose | This is the true simulated efficacy rate for each dose in the scenario |
+| Mean Fit Eff Lower: \<Dose\> | One per dose | This is the lower bound of the 95-percentile of the mean estimate of the efficacy rate across the simulations at each dose. |
+| Mean Fit Eff Upper: \<Dose\> | One per dose | This is the upper bound of the 95-percentile of the mean estimate of the efficacy rate across the simulations at each dose. |
+
+## Pr(MED) Etc. {#sec-prmed-etc}
+
+This summary table of results is only available if efficacy has been simulated.
+
+| Column Title | Number of columns | Description |
+| --- | -- | ------- |
+| Scenario | 1 | This gives the name of the scenario, which is formed from the concatenation of the toxicity response profile name and the efficacy response profile name. |
+| MED Selection: \<dose\> | One per dose | For each dose, this is proportion of the simulations where it was selected as the MED at the end of the study. The dose chosen as MED is the dose with the highest posterior probability of having a efficacy rate nearest the target rate / is the highest dose with a rate below the target rate / is the lowest dose with a rate above the target rate – as specified on the Study \> Efficacy tab.  |
+| OSD Selection: \<dose\> | One per dose | For each dose, this is proportion of the simulations where it was selected as the OSD at the end of the study. The dose chosen as OSD is the dose with the highest posterior probability of being either the Minimum Effective Dose, or if that dose is above the MTD, of being the MTD. |
+| Num Eff Stop Rule 1 | 1 | Number of times the minimum cohorts / subjects on MED was rule was met at the end of a simulation. |
+| Num Eff Stop Rule 2 | 1 | Number of times the range of dose strengths within the credible interval of the estimate of the dose strength of the MED is less than the specified number.  |
+| Num Eff Stop Rule 3 | 1 | Number of times that the probability that the dose was MED the stopping rule threshold was met at the end of a simulation. |
+| Mean Eff CI | 1 | The mean (over the simulations) of the number of doses in the credible interval defined for efficacy stopping rule 2\. |
+| Sd Eff CI | 1 | The standard deviation (over the simulations) of the number of doses in the credible interval defined for efficacy stopping rule 2\. |
+| Pr(MED) \<dose\> |  | The mean (over the simulations) of the posterior probability that each dose is the MED. |
+| MED+ Selection: minus | 1 | The proportion of simulations where a dose below the tested range of doses was selected as the minimum efficacious dose.  |
+| MED+ Selection: \<dose\> | One per dose | As MED Selection, but with two extra columns for the case of the target being below the lowest (non-control) dose and above the highest dose. |
+| MED+ Selection: plus | 1 | The proportion of simulations where a dose above the tested range of doses was selected as the minimum efficacious dose. |
+| Ppn. Best: \<dose\> | One per dose | For each dose, this is proportion of the simulations where it was selected as the ‘Best’ dose at the end of the study. The dose chosen as ‘Best’ is the dose with the highest posterior probability that subjects treated with that dose experience efficacy and do not experience toxicity. |
+| Pr(MED+): minus | 1 | This is the mean (over the simulations) of the posterior probabilities that a dose below the tested range of doses was the MED. |
+| Pr(MED+): \<dose\> | One per dose | This is the mean (over the simulations) of the posterior probabilities that each dose was the MED. As Pr(MED) but with two extra columns for the case of the target being below the lowest (non-control) dose and above the highest dose. |
+| Pr(MED+): plus | 1 | This is the mean (over the simulations) of the posterior probabilities that a dose above the tested dose range is the MED. |
+| Post CE MED+: minus | 1 | The proportion of simulations, after the results of the Cohort Expansion, that a dose below the tested range of doses was the minimum efficacious dose.  |
+| Post CE MED+: \<dose\> | One per dose | The proportion of simulations, after the results of the Cohort Expansion, that each dose was selected as the minimum efficacious dose allowing for the possibility that the MED is at a dose below or above the range of tested doses. |
+| Post CE MED+: plus | 1 | The proportion of simulations, after the results of the Cohort Expansion, that a dose above the tested range of doses was selected as the minimum efficacious dose. |
+| Post CE OSD+: minus | 1 | The proportion of simulations where, after the results of the Cohort Expansion, that a dose below the tested range of doses was selected as the optimum selected dose. |
+| Post CE OSD+: \<dose\> | One per dose | The proportion of simulations where, after the results of the Cohort Expansion, that each dose was selected as the optimum selected dose allowing for the possibility that the OSD is at a dose below or above the range of tested doses. |
+| Post CE OSD+: plus | 1 | The proportion of simulations where, after the results of the Cohort Expansion, that a dose above the tested range of doses was selected as the optimum selected dose. |
+
+
 
