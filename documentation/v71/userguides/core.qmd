@@ -264,7 +264,7 @@ posterior probabilities and frequentist p-values to be calculated and
 reported in the simulation results and available for use in early
 stopping decisions, trial adaptations and final evaluation.
 
-There are 3 classes of QOI
+There are 3 classes of QOI:
 
 1.  A probability calculated independently **for each dose**, there are
     3 types of comparison:
@@ -509,9 +509,9 @@ There are two types of predictive probabilities –
 
 1.  Bayesian predictive probabilities, which are Bayesian predictions of
     frequentist outcomes and take into account the uncertainty around a
-    set of parameters,
+    set of parameters, and
 
-2.  and conditional power, which aims to calculate the frequentist
+2.  Conditional Power, which aims to calculate the frequentist
     probability of success assuming a set of parameters to be true.
 
 The primary difference between the Bayesian predictive probabilities and
@@ -583,15 +583,15 @@ the same as the user specified prior distribution.
 #### Current Trial Bayesian Predictive Probabilities – Time-to-Event
 
 Unlike the Continuous and Dichotomous endpoints, to predict the
-probability of success at full enrolment with a Time-to-Event endpoint,
+probability of success at full enrollment with a Time-to-Event endpoint,
 it is also necessary to simulate the accrual rate (and hence how many
 events might be observed).
 
 <img src="coreUGattachments/CoreUserGuide/media/image10.png"
 style="width:2.94043in;height:2.92636in" />
 
-For TTE, for a Predictive Probability of Success at Full Enrolment,
-there are new parameters to determine how accrual is modelled. There are
+For TTE, for a Predictive Probability of Success at Full Enrollment,
+there are new parameters to determine how accrual is modeled. There are
 3 models for accrual
 
 -   Fixed Rate, the parameters for this are:
@@ -663,7 +663,7 @@ specified:
     The default p-value delta is **not** used for this QOI it is
     specified as part of the QOI and can be different from the default.
 
-As with all QOIs the QIO will be given an alternative shorter name that
+As with all QOIs, the future trial predictive probability QOI will be given an alternative shorter name that
 can be used when accessing the output files from other software such as
 R.
 
@@ -720,24 +720,24 @@ style="width:2.61858in;height:2.61544in" />
 
 Missingness handling for a continuous endpoint can be specified as:
 
--   Ignore: subjects that are known dropouts are not included in the
+-   **Ignore:** subjects that are known dropouts are not included in the
     current or final sample size, and are not used to estimate the
     treatment effect.
 
--   Last Observation Carried Forward (LOCF): subjects that are known
+-   **Last Observation Carried Forward (LOCF):** subjects that are known
     dropouts have their last observed endpoint value assumed to be their
     final endpoint. Subjects with no early observed data are ignored.
     Subjects that have data to carry forward are considered complete,
     and are used to estimate the current treatment effect.
 
--   Baseline Observation Carried Forward (BOCF): subjects that are known
+-   **Baseline Observation Carried Forward (BOCF):** subjects that are known
     dropouts have their baseline value assumed to be their final
     endpoint. They are included in the current information as complete
     subjects and are used to estimate the current treatment effect. BOCF
     is only available for the continuous endpoint and when simulating
     baseline for subjects.
 
--   Failure: subjects that are known dropouts are assumed to have a
+-   **Failure:** subjects that are known dropouts are assumed to have a
     negative outcome at their final visit. If responses are good, the
     subject is a non-response, and if responses are bad, the subject is
     a responder. Failure is only available for dichotomous endpoints.
@@ -791,9 +791,7 @@ Conditional power for the current trial is calculated
 
 -   Ignoring the possibility of the trial stopping or dropping an arm at
     a future interim
-
-<!-- -->
-
+    
 -   Ignoring the possibility of future subject drop-outs.
 
 #### Future Trial Conditional Power
@@ -845,69 +843,65 @@ power of the future trial is calculated using a pooled standard
 deviation from all arms. For dichotomous conditional power calculations,
 each arm has its own standard deviation based on the MLE estimate of its
 proportion. These decision result in the conditional power tests
-matching how simple p-values are calculated for continuous and
+matching how standard p-value QOIs are calculated for continuous and
 dichotomous endpoints.
 
 The following sections will provide formulae to calculate the
 conditional power in the case where there is a control arm.
 Simplifications for when the arm is being compared to a fixed value
-rather than a control arm are simple: information fractions are only a
+rather than a control arm are trivial: information fractions are only a
 function of the active arm standard deviation and the test statistic
 does not have a second sample mean subtracted from the active arm.
 
-The value of *δ*, which can be a non-inferiority margin or a super
+The value of $\delta$, which can be a non-inferiority margin or a super
 superiority margin, is always positive coming out of FACTS. To make the
-math more concise we can define a couple of coefficients for the *δ*
+math more concise we can define a couple of coefficients for the $\delta$
 term that allow it to be used without re-writing formulas for different
-hypothesis test setups. If high values of the endpoint are good, then
-*s*<sub>1</sub> = 1, and if low values of the endpoint are good, then
-*s*<sub>1</sub> = −1. If the specified *δ* is a non-inferiority margin,
-then *s*<sub>2</sub> = 1, and if it’s a super superiority margin then
-*s*<sub>2</sub> = −1.
+hypothesis test setups. If high values of the endpoint are good, then $s_1 = 1$, and if low values of the endpoint are good, then
+$s_1=−1$. If the specified $\delta$ is a non-inferiority margin,
+then $s_2 = 1$, and if it’s a super superiority margin then
+$s_2=-1$.
 
 ##### Continuous Conditional Power for the Current Trial
 
 Let t be the interim index that the conditional power is being computed
 at, and T be the time of the analysis that the conditional power is
-being computed for. Then *Z*<sub>*k*</sub> is the test statistic of the
-data collected up to the current interim analysis in the study,
-*I*<sub>*k*</sub> is the information level at the time of the interim
-analysis, and *I*<sub>*K*</sub> is the information level at the end of
+being computed for. Then $Z_k$ is the test statistic of the
+data collected up to the current interim analysis in the study, $I_k$ is the information level at the time of the interim
+analysis, and $I_K$ is the information level at the end of
 the study that the conditional power is being calculated for.
 
-Let arm 1 be the control and arm 2 be the active arm,
- $\overline{x\_{it}}$ be the sample mean of arm *i* at time
-t, $\widehat{\sigma\_{i}^{2}}$ be the sample variance of arm *i* at time
-*t*, *n*<sub>*i**t*</sub> be the number of subjects with complete known
-final data on arm *i* at interim analysis t, and *n*<sub>*i**T*</sub> be
-the number of subjects with complete known final data on arm *i* at the
+Let arm 1 be the control and arm 2 be the active arm, $\bar{x_{it}}$ be the sample mean of arm $i$ at time $t$, $\widehat{\sigma_{i}^{2}}$ be the sample variance of arm $i$ at time
+$t$, $n_{it}$ be the number of subjects with complete known
+final data on arm $i$ at interim analysis $t$, and $n_{iT}$ be
+the number of subjects with complete known final data on arm $i$ at the
 time that conditional power is being calculated for. The pooled variance
 estimate is
-$\widehat{\sigma^{2}} = \sum\_{d = 1}^{D}\widehat{\frac{\sigma\_{d}^{2}}{n\_{dt}}}$
+$\widehat{\sigma^{2}} = \sum_{d = 1}^{D}\widehat{\frac{\sigma_{d}^{2}}{n_{dt}}}$
 where D is the total number of arms in the study.
 
 Then,
 
-$$I\_{t} = \left( \frac{\widehat{\sigma^{2}}}{n\_{1t}} + \widehat{\frac{\sigma^{2}}{n\_{2t}}} \right)^{- 1}$$
+$$I_{t} = \left( \frac{\widehat{\sigma^{2}}}{n_{1t}} + \widehat{\frac{\sigma^{2}}{n_{2t}}} \right)^{-1}$$
 
-$$I\_{T} = \left( \frac{\widehat{\sigma^{2}}}{n\_{1T}} + \widehat{\frac{\sigma^{2}}{n\_{2T}}} \right)^{- 1}$$
+$$I_{T} = \left( \frac{\widehat{\sigma^{2}}}{n_{1T}} + \widehat{\frac{\sigma^{2}}{n_{2T}}} \right)^{-1}$$
 
-$$Z\_{t} = \left( {\overline{x}}\_{2t} - {\overline{x}}\_{1t} + s\_{1}s\_{2}\delta \right)\sqrt{I\_{t}}$$
+$$Z_{t} = \left( {\overline{x}}_{2t} - {\overline{x}}_{1t} + s_{1}s_{2}\delta \right)\sqrt{I_{t}}$$
 
-where *δ* is the non-inferiority or super superiority margin.
+where $\delta$ is the non-inferiority or super superiority margin.
 
-Then for a one-sided alpha level of *α*, let *z*<sub>1 − *α*</sub> be
-the critical value corresponding to *α*.
+Then for a one-sided alpha level of $\alpha$, let $Z_{1-\alpha}$ be
+the critical value corresponding to $\alpha$.
 
 If **high values of the endpoint are good,** the conditional power of
 the **current** trial is:
 
-$$CP\_{T} = \Phi\left( \frac{Z\_{t}\sqrt{I\_{t}} - z\_{1 - \alpha}\sqrt{I\_{T}} + ({\overline{x}}\_{2t} - {\overline{x}}\_{1t} + s\_{2}\delta)\left( I\_{T} - I\_{t} \right)}{\sqrt{I\_{T} - I\_{t}}} \right)$$
+$$CP_{T} = \Phi\left( \frac{Z_{t}\sqrt{I_{t}} - z_{1 - \alpha}\sqrt{I_{T}} + ({\overline{x}}_{2t} - {\overline{x}}_{1t} + s_{2}\delta)\left( I_{T} - I_{t} \right)}{\sqrt{I_{T} - I_{t}}} \right)$$
 
 If **low values of the endpoint are good**, the conditional power of the
 **current** trial is:
 
-$$CP\_{T} = \Phi\left( \frac{{- Z}\_{t}\sqrt{I\_{t}} - z\_{1 - \alpha}\sqrt{I\_{T}} - ({\overline{x}}\_{2t} - {\overline{x}}\_{1t} - s\_{2}\delta)\left( I\_{T} - I\_{t} \right)}{\sqrt{I\_{T} - I\_{t}}} \right)$$
+$$CP_{T} = \Phi\left( \frac{{- Z}_{t}\sqrt{I_{t}} - z_{1 - \alpha}\sqrt{I_{T}} - ({\overline{x}}_{2t} - {\overline{x}}_{1t} - s_{2}\delta)\left( I_{T} - I_{t} \right)}{\sqrt{I_{T} - I_{t}}} \right)$$
 
 ##### Calculation of Continuous Conditional Power for a Future Trial
 
@@ -915,94 +909,94 @@ Most of the future trial conditional power calculation is the same as
 the above current trial conditional power. There are some
 simplifications.
 
-${\overline{x}}\_{it}$ and $\widehat{\sigma\_{i}^{2}}$ are the same as
-in the current conditional power calculation. *I*<sub>*t*</sub>, the
-weight of the current trial Z-score, is set to 0. *I*<sub>*K*</sub> is
+${\overline{x}}_{it}$ and $\widehat{\sigma_{i}^{2}}$ are the same as
+in the current conditional power calculation. $I_t$, the
+weight of the current trial Z-score, is set to 0. $I_T$ is
 now the information at the end of the future trial, and is calculated
 as:
 
-$$I\_{T} = \left( \frac{\widehat{\sigma^{2}}}{n\_{T}} + \widehat{\frac{\sigma^{2}}{n\_{T}}} \right)^{- 1}$$
+$$I_{T} = \left( \frac{\widehat{\sigma^{2}}}{n_{T}} + \widehat{\frac{\sigma^{2}}{n_{T}}} \right)^{- 1}$$
 
-where *n*<sub>*T*</sub> is the sample size per arm in the future trial
-and again *σ̂*<sup>2</sup> is the pooled variance.
+where $n_T$ is the sample size per arm in the future trial
+and again $\widehat{\sigma^{2}}$ is the pooled variance.
 
 If **high values of the endpoint are good,** the conditional power of a
 **future** trial is:
 
-$$CP\_{T} = \Phi\left( \frac{- z\_{1 - \alpha}\sqrt{I\_{T}} + ({\overline{x}}\_{2t} - {\overline{x}}\_{1t} + s\_{2}\delta)\left( I\_{T} \right)}{\sqrt{I\_{T}}} \right)$$
+$$CP_{T} = \Phi\left( \frac{- z_{1 - \alpha}\sqrt{I_{T}} + ({\overline{x}}_{2t} - {\overline{x}}_{1t} + s_{2}\delta)\left( I_{T} \right)}{\sqrt{I_{T}}} \right)$$
 
 If **low values of the endpoint are good**, the conditional power of a
 **future** trial is:
 
-$$CP\_{T} = \Phi\left( \frac{- z\_{1 - \alpha}\sqrt{I\_{T}} - ({\overline{x}}\_{2t} - {\overline{x}}\_{1t} - s\_{2}\delta)\left( I\_{T} \right)}{\sqrt{I\_{T}}} \right)$$
+$$CP_{T} = \Phi\left( \frac{- z_{1 - \alpha}\sqrt{I_{T}} - ({\overline{x}}_{2t} - {\overline{x}}_{1t} - s_{2}\delta)\left( I_{T} \right)}{\sqrt{I_{T}}} \right)$$
 
 ##### Calculation of Dichotomous Conditional Power for the Current Trial
 
 The dichotomous conditional power calculations are similar in spirit to
 the continuous conditional power calculations. One substantial
 difference is in how the dichotomous conditional power tests handle a
-non-inferiority or super superiority margin, *δ*. The method of
+non-inferiority or super superiority margin, $\delta$. The method of
 calculating an appropriate test statistic for a frequentist hypothesis
-test is not obvious when the null scenario has a non-zero *δ*.
+test is not obvious when the null scenario has a non-zero $\delta$.
 
 When there is no margin, the estimate for each treatment is simply based
-on the observed response proportion $\widehat{p\_{i}}$ for arm *i*, and
-the test statistic for a comparison of the control arm, *c*, with dose
-*d* is the usual Wald test
+on the observed response proportion $\widehat{p_{i}}$ for arm $i$, and
+the test statistic for a comparison of the control arm, $c$, with dose
+$d$ is the usual Wald test
 
-$$Z\_{d} = \frac{\widehat{p\_{d}} - \widehat{p\_{c}}}{\sqrt{\frac{\widehat{p\_{d}}(1 - \widehat{p\_{d}})}{n\_{d}} + \frac{\widehat{p\_{c}}(1 - \widehat{p\_{c}})}{n\_{c}}}}$$
+$$Z_{d} = \frac{\widehat{p_{d}} - \widehat{p_{c}}}{\sqrt{\frac{\widehat{p_{d}}(1 - \widehat{p_{d}})}{n_{d}} + \frac{\widehat{p_{c}}(1 - \widehat{p_{c}})}{n_{c}}}}$$
 
 When there is a margin, FACTS uses the Farrington-Manning Likelihood
-Score test statistic to estimate quantities $\widetilde{p\_{d}}$ and
-$\widetilde{p\_{c}}$ based on the MLEs of the arm proportions governed
+Score test statistic to estimate quantities $\widetilde{p_{d}}$ and
+$\widetilde{p_{c}}$ based on the MLEs of the arm proportions governed
 by the constraint that
-$\widetilde{p\_{d}} - \widetilde{p\_{c}} = - s\_{1}s\_{2}\delta$. These
+$\widetilde{p_{d}} - \widetilde{p_{c}} = - s_{1}s_{2}\delta$. These
 constrained MLE estimates are used in the standard error of the test
 statistic. The FM test statistic is then,
 
-$$Z\_{FM,d} = \frac{\widehat{p\_{d}} - \widehat{p\_{c}} + s\_{1}s\_{2}\delta}{\sqrt{\frac{\widetilde{p\_{d}}(1 - \widetilde{p\_{d}})}{n\_{d}} + \frac{\widetilde{p\_{c}}(1 - \widetilde{p\_{c}})}{n\_{c}}}}$$
+$$Z_{FM,d} = \frac{\widehat{p_{d}} - \widehat{p_{c}} + s_{1}s_{2}\delta}{\sqrt{\frac{\widetilde{p_{d}}(1 - \widetilde{p_{d}})}{n_{d}} + \frac{\widetilde{p_{c}}(1 - \widetilde{p_{c}})}{n_{c}}}}$$
 
 See the [PASS documentation](#pass "NCSS, LLC. Assurance for Non-Inferiority Tests for the Difference Between Two Proportions. In PASS Sample Size Software Documentation (pp. 289-1-289–31).") or [SAS documentation](#sas "SAS Institute Inc. 2016. Base SAS® 9.4 Procedures Guide: Statistical Procedures, Sixth Edition. Cary, NC: SAS Institute Inc.") for a complete
 description of the calculations that go into the FM test. In the SAS
 documentation, note that the FM test is the same as the
-Miettinen-Nurminen*** ***test without including the $\frac{n}{n - 1}$
+Miettinen-Nurminen test without including the $\frac{n}{n - 1}$
 variance correction. The FM test was used rather than the MN test
-because as *δ* → 0, the FM test converges to the simple Wald test.
+because as $\delta \rightarrow 0$, the FM test converges to the simple Wald test.
 
 Once the test statistic has been resolved, the dichotomous conditional
 power for the current trial is calculated as follows. For calculating
 the conditional power for arm 2 compared to the control arm, called arm
-1 without loss of generality, let *I*<sub>*t*</sub> be the current
-information amount and *I*<sub>*T*</sub> be the amount of information
+1 without loss of generality, let $I_t$ be the current
+information amount and $I_T$ be the amount of information
 that the conditional power is being calculated for. Then,
 
-$$I\_{t} = \left( \frac{\widetilde{p\_{1}}\left( 1 - \widetilde{p\_{1}} \right)}{n\_{1t}} + \frac{\widetilde{p\_{2}}\left( 1 - \widetilde{p\_{2}} \right)}{n\_{2t}} \right)^{- 1}$$
+$$I_{t} = \left( \frac{\widetilde{p_{1}}\left( 1 - \widetilde{p_{1}} \right)}{n_{1t}} + \frac{\widetilde{p_{2}}\left( 1 - \widetilde{p_{2}} \right)}{n_{2t}} \right)^{- 1}$$
 
-$$I\_{T} = \left( \frac{\widetilde{p\_{1}}\left( 1 - \widetilde{p\_{1}} \right)}{n\_{1T}} + \frac{\widetilde{p\_{2}}\left( 1 - \widetilde{p\_{2}} \right)}{n\_{2T}} \right)^{- 1}$$
+$$I_{T} = \left( \frac{\widetilde{p_{1}}\left( 1 - \widetilde{p_{1}} \right)}{n_{1T}} + \frac{\widetilde{p_{2}}\left( 1 - \widetilde{p_{2}} \right)}{n_{2T}} \right)^{- 1}$$
 
-$$Z\_{t} = \left( \widehat{p\_{2}} - \widehat{p\_{1}} + s\_{1}s\_{2}\delta \right)\*\sqrt{I\_{t}}$$
+$$Z_{t} = \left( \widehat{p_{2}} - \widehat{p_{1}} + s_{1}s_{2}\delta \right)*\sqrt{I_{t}}$$
 
-where *δ* is the super superiority or non-inferiority margin, and
-*n*<sub>1*t*</sub> and *n*<sub>2*t*</sub> are current number of
-completers on the control and active arm, and *n*<sub>1*T*</sub> and
-*n*<sub>2*T*</sub> are the number of completers that will be on the
+where $\delta$ is the super superiority or non-inferiority margin, and
+$n_{1t}$ and $n_{2t}$ are current number of
+completers on the control and active arm, and $n_{1T}$ and
+$n_{2T}$ are the number of completers that will be on the
 control and active arm at time that the conditional power is being
 calculated for. Additionally, if there is no non-inferiority or super
-superiority margin *δ*, then all $\widetilde{p\_{\*}}$ values are equal
-to their corresponding $\widehat{p\_{\*}}$ values.
+superiority margin $\delta$, then all $\widetilde{p_{*}}$ values are equal
+to their corresponding $\widehat{p_{*}}$ values.
 
-For a one-sided alpha level of *α*, let *z*<sub>1 − *α*</sub> be the
-critical value corresponding to *α*.
+For a one-sided alpha level of $\alpha$, let $z_{1-\alpha}$ be the
+critical value corresponding to $\alpha$.
 
 If **high values of the endpoint are good,** the conditional power of
 the **current** trial is:
 
-$$CP\_{T} = \Phi\left( \frac{Z\_{t}\sqrt{I\_{t}} - z\_{1 - \alpha}\sqrt{I\_{T}} + (\widehat{p\_{2}} - \widehat{p\_{1}} + s\_{2}\delta)\left( I\_{T} - I\_{t} \right)}{\sqrt{I\_{T} - I\_{t}}} \right)$$
+$$CP_{T} = \Phi\left( \frac{Z_{t}\sqrt{I_{t}} - z_{1 - \alpha}\sqrt{I_{T}} + (\widehat{p_{2}} - \widehat{p_{1}} + s_{2}\delta)\left( I_{T} - I_{t} \right)}{\sqrt{I_{T} - I_{t}}} \right)$$
 
 If **low values of the endpoint are good**, the conditional power of the
 **current** trial is:
 
-$$CP\_{T} = \Phi\left( \frac{{- Z}\_{t}\sqrt{I\_{t}} - z\_{1 - \alpha}\sqrt{I\_{T}} - (\widehat{p\_{2}} - \widehat{p\_{1}} - s\_{2}\delta)\left( I\_{T} - I\_{t} \right)}{\sqrt{I\_{T} - I\_{t}}} \right)$$
+$$CP_{T} = \Phi\left( \frac{{- Z}_{t}\sqrt{I_{t}} - z_{1 - \alpha}\sqrt{I_{T}} - (\widehat{p_{2}} - \widehat{p_{1}} - s_{2}\delta)\left( I_{T} - I_{t} \right)}{\sqrt{I_{T} - I_{t}}} \right)$$
 
 ##### Calculation of Dichotomous Conditional Power for a Future Trial
 
@@ -1010,41 +1004,38 @@ Most of the calculation quantities for the future trial conditional
 power are the same as the current trial conditional power. The only
 difference is that for the future trial conditional power we discard the
 influence of the current trial test statistic on the final analysis, so
-*I*<sub>*t*</sub> = 0. Then the conditional power calculations become:
+$I_t=0$. Then the conditional power calculations become:
 
 If **high values of the endpoint are good,** the conditional power of
-the **current** trial is:
+a **future** trial is:
 
-$$CP\_{T} = \Phi\left( \frac{- z\_{1 - \alpha}\sqrt{I\_{T}} + (\widehat{p\_{2}} - \widehat{p\_{1}} + s\_{2}\delta)\left( I\_{T} \right)}{\sqrt{I\_{T}}} \right)$$
+$$CP_{T} = \Phi\left( \frac{- z_{1 - \alpha}\sqrt{I_{T}} + (\widehat{p_{2}} - \widehat{p_{1}} + s_{2}\delta)\left( I_{T} \right)}{\sqrt{I_{T}}} \right)$$
 
-If **low values of the endpoint are good**, the conditional power of the
-**current** trial is:
+If **low values of the endpoint are good**, the conditional power of a
+**future** trial is:
 
-$$CP\_{T} = \Phi\left( \frac{- z\_{1 - \alpha}\sqrt{I\_{T}} - (\widehat{p\_{2}} - \widehat{p\_{1}} - s\_{2}\delta)\left( I\_{T} \right)}{\sqrt{I\_{T}}} \right)$$
+$$CP_{T} = \Phi\left( \frac{- z_{1 - \alpha}\sqrt{I_{T}} - (\widehat{p_{2}} - \widehat{p_{1}} - s_{2}\delta)\left( I_{T} \right)}{\sqrt{I_{T}}} \right)$$
 
 ## P-values
 
 A p-value QOI simply allows the user to specify which test type to be
 used (unadjusted, Bonferroni, [Dunnett's](#dunnett "Dunnett CW. A multiple comparison procedure for comparing several treatments with a control. Journal of the American Statistical Association. 1955; 50: 1096-1121."), or Trend Test), and how missing
-data is to be handled (ignored, LOCF or BOCF – if baseline is being
-simulated). If a control arm is present, P-values are comparisons
-against the control arm, if there is no control arm present, p-value
+data is to be handled (ignored, LOCF, [BOCF](## "Only if continuous endpoint and baseline is being simulated."), and [missing is failure](## "Dichotomous endpoint only.")). If a control arm is present, p-values are comparisons
+against the control arm. If there is no control arm present, p-value
 QOIs are comparisons against a fixed response or fixed rate that is
 specified at the bottom of the QOI tab (it cannot be set differently for
 separate QOIs).
 
 Note that for dichotomous endpoints p-value are calculated using the
 Test of Proportions, this test statistic asymptotically approaches a
-normal distribution and at least 5 success and 5 failures should be
+normal distribution, and at least [5 success and 5 failures](## "Sometimes this is said to be 10 and 10, or 15 and 15. Your rule of thumb can be based on your comfort level for allowing CLT to kick in.") should be
 observed for this to be reasonable.
 
 The p-values are calculated including the default frequentist delta that
-has been specified at the bottom of the screen. They cannot be modified
-as part of QOI, the value of the delta and nature of the test is the
-same for all the p-value QOIs.
+has been specified at the bottom of the screen. The delta margin cannot be modified as part of the QOI, the value of the delta and nature of the test is the same for all the p-value QOIs.
 
-In a TTE design with a predictor the p-values are only calculated for
-the final event endpoint, not the predictor.
+In a TTE design with a predictor, the p-values are only calculated for
+the final event endpoint, not the predictors.
 
 <img src="coreUGattachments/CoreUserGuide/media/image14.png"
 style="width:3.08054in;height:1.89707in"
@@ -1073,7 +1064,7 @@ alt="Graphical user interface, text, application Description automatically gener
 
 ### Fisher-Exact Test
 
-On the bottom of the QOI tab, we can specify what statistical test to
+When specifying the QOIs for a dichotomous endpoint in a trial with a control arm, the bottom of the QOI tab allows the user to specify what statistical test to
 use when calculating p-values. Options are “Normal approximation”
 (default) and “Fisher exact test”. “Normal approximation” uses a t-test
 and should yield similar results to a Chi-Square test without continuity
@@ -1107,38 +1098,19 @@ There are 3 types of target specifiable
 -   MED – a Minimum Effective Dose, the lowest dose that has a response
     better than an absolute or relative target.
 
--   ED – an effective dose, the dose that achieves a specified
-    proportion (quantile) of the maximum improvement in response
+-   EDq – an effective dose, the dose that achieves a specified
+    proportion (quantile $q$) of the maximum improvement in response
     relative to an absolute value or the performance of a specific
     treatment arm.
 
 <img src="coreUGattachments/CoreUserGuide/media/image17.png"
 style="width:3.00783in;height:2.07488in" />
 
-A Target dose posterior probability is specified as:
-
--   MED or EDq.
-
--   Relative to an absolute value or relative to the response on a
-    Control or the Active Comparator.
-
--   The delta the MED must be better than, or the quantile of the
-    effective dose.
-
--   If the endpoint is TTE and the design includes a predictor, then the
-    definition of the QOI includes selecting which endpoint the QOI
-    refers to.
-
-The QOI will be given a name derived from these details, and alternative
-simpler name that can be used when accessing the output files from other
-software such as R.
-
 ## Decision Quantities
 
-The QOI’s so far have defined values to be calculated across all the
-doses. For a Success / Futility decision to be taken, as well as the
-quantity to be tested, it is necessary to specify the treatment arm
-whose value is to be used. This selection can be by specifying a
+The QOIs described so far have defined values to be calculated across all
+doses. For a Success/Futility decision to be made it is necessary to specify the treatment arm
+whose QOI value is to be used in comparison to the success and/or futility criteria. This selection can be done by specifying a
 specific arm, but normally it is specified by using a “Probability of
 being Target” selection criteria. A simple and common example is “The
 probability of the response being better than that of the Control of the
@@ -1151,19 +1123,9 @@ style="width:2.98863in;height:1.43143in" />
 style="width:3.71051in;height:1.77718in" />
 
 A decision QOI consists of (1) a QOI that has been calculated for each
-dose, and (2) at Target Dose QOI. The dose with the highest probability
-of being the target dose is selected and the value of the “per dose” QOI
-for that dose is the value used in the decision.
+dose, and (2) a method of choosing a dose to use the QOI value of. Choosing the dose can be done either by using a target Dose QOI like [Pr(Max)]{.fake-code-block}, [Pr(EDq...)]{.fake-code-block}, etc, by choosing the dose with the highest or lowest value of a QOI, or by explicitly choosing a dose level in advance.
 
-For example, evaluating a decision QOI that is the combination of
-
-1.  The probability of being better than Control by 2 points
-    (Pr(θ<sub>d</sub> – θ<sub>0</sub> &gt; 2))
-
-2.  with the target dose EDq relative to control; Quantile 0.9
-
-is the probability that the response of the ED90 is better than control
-by 2 points.
+As an example using a target QOI, you can imagine evaluating a decision QOI that is specified to choose the probability of being better than Control by 2 units [Pr($\theta_d - \theta_0 > 2$)]{.fake-code-block} based on the arm with the highest ED90 [EDq relative to control; Quantile 0.9]{.fake-code-block}.
 
 Instead of a Target Dose QOI, it is also possible to specify a specific
 dose, or to use the terms “Max probability over all doses” and “Min
@@ -1177,11 +1139,11 @@ maximum value of the per dose QOI is used. This enables:
     decisions on the posterior probability that the highest dose is
     better than the lowest dose.
 
--   A Decision QOI using “Max …” allows a decision to be based on
+-   A Decision QOI using “Max probability over all doses” allows a decision to be based on
     whether a probability or p-value is greater than a threshold at any
     dose, or less than a threshold at all doses.
 
--   A Decision QOI using “Min …” allows a decision to be based on
+-   A Decision QOI using “Min probability over all doses” allows a decision to be based on
     whether a probability or p-value is less than a threshold for any
     dose or greater than a threshold at all doses.
 
@@ -1200,6 +1162,7 @@ specified outside the normal QOI dialog boxes.
 
 these are used in both the default “Pr(CSD)” and the “MED relative to
 Control” QOIs.
+
 <img src="coreUGattachments/CoreUserGuide/media/image20.png"
 style="width:6.925in;height:0.49375in" />
 
@@ -1208,26 +1171,16 @@ positive value, as in earlier versions of FACTS. Its sign is
 automatically adjusted if “lower score means subject improvement” or if
 the trial is a non-inferiority trial.
 
-These adjustments are **not** made for other user entered QOI, the
+These adjustments are **not** made for other user entered QOIs. The
 directions of comparison both for the definition of the probability to
 be calculated and the comparison of the resulting probability with a
-threshold are under the user’s control as are whether delta’s are –ve or
-+ve. This allows the user to define QOI’s in whatever fashion is natural
-to them and the team.
-
-When there is no custom and practice as to how an endpoint and
-associated probability are expressed and used, it is recommended that
-the usual practice should be to create probabilities that are large when
-they are ‘good’ and low when they are ‘bad’. So tests for success are
-usually “&gt; threshold” and for futility are “&lt; threshold”. Using
-this convention whenever it is does not feel unnatural will reduce
-confusion and the opportunity for mistakes.
+threshold are under the user’s control, as are whether delta’s are negative or positive. This allows the user to define QOIs in whatever fashion is natural to them and their team.
 
 ### The direction of comparison for default QOIs
 
 Note that as a result of being able to specify whether a higher or lower
 response represents improvement, and whether the aim is superiority or
-non-inferiority, the CSD or the NIM will almost always be a positive
+non-inferiority, the CSD or the NIM must always be a positive
 value. FACTS will automatically determine which direction is appropriate
 (e.g. if ***lower*** values are subject improvement, the engine will
 realize a CSD will need to be ***subtracted*** from the control score
@@ -1288,7 +1241,7 @@ The Bayesian model fitted to the data at each update contains a dose
 response model and usually a longitudinal model. In the absence of a
 longitudinal model, the posterior is calculated as:
 
-$$p(\omega|Y) \propto \prod\_{i = 1}^{n}{p(y\_{i}|\phi)p(\phi)}$$
+$$p(\omega|Y) \propto \prod_{i = 1}^{n}{p(y_{i}|\phi)p(\phi)}$$
 
 where *ϕ* is the set of parameters of the selected response model,
 *p*(*ϕ*) is the prior for those parameters, *y*<sub>*i*</sub> is the
@@ -1296,7 +1249,7 @@ final response for each subject and n is the number of subjects.
 
 With a longitudinal model, this becomes:
 
-$$p(\omega|Y) \propto \prod\_{i = 1}^{n}{p(y\_{i}|\phi)p(\phi)\prod\_{i = 1}^{n}{\prod\_{j = 1}^{L}{p(y\_{ij}|\psi)p(\psi)}}}$$
+$$p(\omega|Y) \propto \prod_{i = 1}^{n}{p(y_{i}|\phi)p(\phi)\prod_{i = 1}^{n}{\prod_{j = 1}^{L}{p(y_{ij}|\psi)p(\psi)}}}$$
 
 where *ψ* is the set of parameters of the selected longitudinal model,
 *p*(*ψ*) is the prior for those parameters, *y*<sub>*i**j*</sub> is the
@@ -1354,9 +1307,9 @@ any endpoint, the estimate of dose response model is called
     where *P*<sub>*d*<sub>*i*</sub></sub> is the probability of response
     for a subject on dose *d*<sub>*i*</sub>. The probability
     *P*<sub>*d*</sub> is modelled on the logit scale, so
-    $P\_{d} = \frac{e^{\theta\_{d}}}{1 + e^{\theta\_{d}}}$, and thus
+    $P_{d} = \frac{e^{\theta_{d}}}{1 + e^{\theta_{d}}}$, and thus
     *θ*<sub>*d*</sub> is the log-odds ratio:
-    $\theta\_{d} = ln\left( \frac{P\_{d}}{1 - P\_{d}} \right)$,
+    $\theta_{d} = ln\left( \frac{P_{d}}{1 - P_{d}} \right)$,
 
 -   In the time-to-event case the time to a subject’s response,
     *Y*<sub>*i*</sub> is modeled as piece-wise exponentially distributed
@@ -1366,7 +1319,7 @@ any endpoint, the estimate of dose response model is called
     *Y*<sub>*i*</sub> ∼ *P**W**E**x**p*({*λ*<sub>1</sub>*e*<sup>*θ*<sub>*d*</sub></sup>, …, *λ*<sub>*S*</sub>*e*<sup>*θ*<sub>*d*</sub></sup>})
     for non-control doses. Then, *θ*<sub>*d*</sub> is the log-hazard
     ratio
-    $\left( \ln\left( \frac{\lambda\_{s}e^{\theta\_{d}}}{\lambda\_{s}} \right) = \ln\left( e^{\theta\_{d}} \right) = \theta\_{d} \right)$
+    $\left( \ln\left( \frac{\lambda_{s}e^{\theta_{d}}}{\lambda_{s}} \right) = \ln\left( e^{\theta_{d}} \right) = \theta_{d} \right)$
     averaged over the observation time segments. This formulation
     implies a proportional treatment effect across the pieces of the
     piece-wise exponential.
@@ -1676,8 +1629,8 @@ the dose and the two doses below them. Let:
 $$\theta\_{d} = \theta\_{d - 1} + \Delta\_{d}\zeta\_{d} + \frac{\Delta\_{d}}{\Delta\_{d - 1}}\left( \theta\_{d - 1} - \theta\_{d - 2} \right)$$
 
 for doses *d* = *d*<sup>′</sup> + 2, …, *D*, where
-*Δ*<sub>*d*</sub> = *ν*<sub>*d*</sub> − *ν*<sub>*d* − 1</sub> and
-*Δ*<sub>*d* − 1</sub> = *ν*<sub>*d* − 1</sub> − *ν*<sub>*d* − 2</sub>.
+$\delta$<sub>*d*</sub> = *ν*<sub>*d*</sub> − *ν*<sub>*d* − 1</sub> and
+$\delta$<sub>*d* − 1</sub> = *ν*<sub>*d* − 1</sub> − *ν*<sub>*d* − 2</sub>.
 The priors for the dose response smoothing terms *ζ*<sub>*d*</sub> are:
 
 *ζ*<sub>*d*</sub> ∼ *N*(0, *τ*<sub>2</sub><sup>2</sup>)
@@ -1919,7 +1872,7 @@ The caveats to using this model are:
     its probability mass in the available dose range. So similarly, if
     the range of the effective dose strengths is from 0 to
     *ν*<sub>*D*</sub> then a typical ‘weakly informative’ prior for
-    *α*<sub>3</sub> would be:
+    $\alpha$<sub>3</sub> would be:
 
 > $$a\_{3}\\\sim\\N^{+}\left( \frac{\nu\_{D}}{2},\left( \frac{\nu\_{D}}{2} \right)^{2} \right)$$
 
@@ -1946,7 +1899,7 @@ The next region is the plateau, where the dose-response curve is
 constant. For
 *p*<sub>min</sub> &lt; *ν*<sub>*d*</sub> &lt; *p*<sub>min</sub> + *p*<sub>*w**i**d**t**h*</sub>:
 
-*θ*<sub>*d*</sub> = *θ*<sub>0</sub> + *S* • *δ*
+*θ*<sub>*d*</sub> = *θ*<sub>0</sub> + *S* • $\delta$
 
 For the third region, the dose-response curve is decreasing
 (increasing).
@@ -1972,10 +1925,10 @@ The parameters of the model are described below:
 
 > *θ*<sub>0</sub> ∼ *N*(*μ*<sub>0</sub>, *σ*<sub>0</sub><sup>2</sup>)
 
-1.  *δ* represents the maximal change in response from the zero-strength
+1.  $\delta$ represents the maximal change in response from the zero-strength
     dose. It is restricted to be positive:
 
-> *δ* ∼ *N*<sup>+</sup>(*μ*<sub>*δ*</sub>, *σ*<sub>*δ*</sub><sup>2</sup>)
+> $\delta$ ∼ *N*<sup>+</sup>(*μ*<sub>$\delta$</sub>, *σ*<sub>$\delta$</sub><sup>2</sup>)
 
 1.  *p*<sub>min</sub> represents the lowest dose at which the maximal
     change in response from the zero-strength is achieved. It is
@@ -1995,15 +1948,15 @@ The parameters of the model are described below:
 
 > *w*<sub>*w**i**d**t**h*</sub> ∼ *N*<sup>+</sup>(*μ*<sub>*w*</sub>, *σ*<sub>*w*</sub><sup>2</sup>)
 
-1.  *α* determines the rate of change of the dose response curve for
+1.  $\alpha$ determines the rate of change of the dose response curve for
     doses below the plateau. Values less than 1 indicate a rapid initial
     change from baseline, with slower change as the plateau is reached.
     Values greater than 1 indicate a slow initial change from baseline,
     with more rapid change as the plateau is reached. To help avoid
-    identifiability issues, *α* is restricted to be between
+    identifiability issues, $\alpha$ is restricted to be between
     10<sup>-1</sup> and 10<sup>1</sup>.
 
-> *α* ∼ *L**N*<sup>\*</sup>(*μ*<sub>*α*</sub>, *σ*<sub>*α*</sub><sup>2</sup>)
+> $\alpha$ ∼ *L**N*<sup>\*</sup>(*μ*<sub>*α*</sub>, *σ*<sub>*α*</sub><sup>2</sup>)
 
 where *L**N*<sup>\*</sup> represents the lognormal distribution, with
 the truncation constraints at 10<sup>-1</sup> and 10<sup>1</sup>.
@@ -2021,7 +1974,7 @@ the truncation constraints at 10<sup>-1</sup> and 10<sup>1</sup>.
 The U-shaped model has seven free parameters, and thus it is inadvisable
 to use such a model for dose-finding trial designs that contain only a
 few dose levels. When a small number of doses are available, it may help
-to constrain the values of *α* and *β* by utilizing small standard
+to constrain the values of $\alpha$ and *β* by utilizing small standard
 deviations in the priors.
 
 <img src="coreUGattachments/CoreUserGuide/media/image25.emf"
@@ -2051,7 +2004,7 @@ is a logistic model for the dichotomous endpoint because
 *θ*<sub>*d*</sub> is the log odds ratio of the probability of the
 response, *P*<sub>*d*</sub> at dose *d*.
 
-The exponent parameter *α*<sub>3</sub> allows the change in slope at the
+The exponent parameter $\alpha$<sub>3</sub> allows the change in slope at the
 lower end of the curve to be asymmetric in comparison to the change in
 curve at the upper end of the curve.
 
@@ -2126,7 +2079,7 @@ scale for TTE models.) The model is
 
 *θ*<sub>*d*</sub> = *α* + *β**ν*<sub>*d*</sub>
 
-for all doses *d* in the model. Both *α* and *β* are given normal prior
+for all doses *d* in the model. Both $\alpha$ and *β* are given normal prior
 distributions:
 
 *α* ∼ *N*(*Λ*<sub>*α*</sub>, *λ*<sub>*α*</sub><sup>2</sup>)
@@ -2162,7 +2115,7 @@ linearity when appropriate. The arm parameters satisfy the relationship
 
 *θ*<sub>*d*</sub> = *α* + *β**ν*<sub>*d*</sub> + *ζ*<sub>*d*</sub>
 
-where the *α* and *β* parameters are as in the linear model, with prior
+where the $\alpha$ and *β* parameters are as in the linear model, with prior
 distributions
 
 *α* ∼ *N*(*Λ*<sub>*α*</sub>, *λ*<sub>*α*</sub><sup>2</sup>)
@@ -2254,14 +2207,14 @@ With priors
 
 *α*<sub>3</sub> ∼ *N*(*μ*<sub>3</sub>, *σ*<sub>3</sub><sup>2</sup>)
 
-Thus *α*<sub>0</sub> is the response at the control combination,
+Thus $\alpha$<sub>0</sub> is the response at the control combination,
 *α*<sub>1</sub> is the linear coefficient of the response to the column
-factor strengths *ζ*<sub>*c*</sub>, and *α*<sub>2</sub> is the linear
+factor strengths *ζ*<sub>*c*</sub>, and $\alpha$<sub>2</sub> is the linear
 coefficient of the response to the row factor strengths
 *η*<sub>*r*</sub>.
 
 The user has the option to simplify the model and exclude the
-interaction term *α*<sub>3</sub>, which is the coefficient of the
+interaction term $\alpha$<sub>3</sub>, which is the coefficient of the
 product of the two factor strengths.
 
 Note that despite being called “continuous” this dose response model
@@ -3241,7 +3194,7 @@ each visit with the final visit
 
 *Y*<sub>*i*</sub>|*y*<sub>*i**t*</sub> ∼ *α*<sub>*t*</sub> + *β*<sub>*t*</sub>*y*<sub>*i**t*</sub> + *N*(0, *λ*<sub>*t*</sub><sup>2</sup>)
 
-The parameter *α*<sub>*t*</sub> is the intercept of the model for visit
+The parameter $\alpha$<sub>*t*</sub> is the intercept of the model for visit
 t, and the parameter *β*<sub>*t*</sub> is a multiplicative modifier
 (slope) of the response observed longitudinal at visit *t* to adjust the
 prediction of the final endpoint.
@@ -3251,7 +3204,7 @@ regression longitudinal model is based on only the latest observed
 visit’s endpoint value.
 
 The default setting of “Same priors across all model instances and
-visits,” implies that each parameter *α*, *β*, and *λ* have the same
+visits,” implies that each parameter $\alpha$, *β*, and *λ* have the same
 prior for all *t*. Estimation of those parameters is still done
 independently for each model instance. The one prior across all model
 instance are formulated as:
@@ -3291,7 +3244,7 @@ $$\lambda\_{ti}^{2}\\\sim\\IG\left( \frac{\lambda\_{n\_{ti}}}{2},\frac{\lambda\_
 
 A potential starting place for non-informative prior values would be
 
-> *α* mean of 0, SD &gt;= largest expected response
+> $\alpha$ mean of 0, SD &gt;= largest expected response
 >
 > *β* mean of either 0 or (final visit time / early visit time), SD
 > &gt;= largest expected ratio of final visit to first visit
@@ -3319,45 +3272,45 @@ The response at the *t*<sup>*t**h*</sup> visit for the
 *i*<sup>*t**h*</sup> subject, having been randomized to the
 *d*<sup>*t**h*</sup> dose is modeled as:
 
-*y*<sub>*i**t*</sub> ∼ *e*<sup>*α*<sub>*t*</sub></sup>(*θ*<sub>*d*</sub> + *δ*<sub>*i*</sub>) + *N*(0, *λ*<sub>*t*</sub><sup>2</sup>)
+*y*<sub>*i**t*</sub> ∼ *e*<sup>*α*<sub>*t*</sub></sup>(*θ*<sub>*d*</sub> + $\delta$<sub>*i*</sub>) + *N*(0, *λ*<sub>*t*</sub><sup>2</sup>)
 
 The imputed final response (visit *T*) for the *i*<sup>*t**h*</sup>
 subject, having been randomized to the *d*<sup>*t**h*</sup> dose is
 modeled as:
 
-*Y*<sub>*i**T*</sub> ∼ *θ*<sub>*d*</sub> + *δ*<sub>*i*</sub> + *N*(0, *λ*<sub>*T*</sub><sup>2</sup>)
+*Y*<sub>*i**T*</sub> ∼ *θ*<sub>*d*</sub> + $\delta$<sub>*i*</sub> + *N*(0, *λ*<sub>*T*</sub><sup>2</sup>)
 
-(i.e. *α*<sub>*T*</sub> is 0).
+(i.e. $\alpha$<sub>*T*</sub> is 0).
 
 The model parameters can be interpreted as follows:
 
 *θ*<sub>*d*</sub> is the estimated mean response at the final visit in
 dose *d* from the dose response model.
 
-> *δ*<sub>*i*</sub> is the estimated patient level random effect around
+> $\delta$<sub>*i*</sub> is the estimated patient level random effect around
 > the mean final response (*θ*<sub>*d*</sub>) for the dose *d* that
 > patient *i* is randomized to.
 >
-> *α*<sub>*t*</sub> is a scaling parameter that determines the
+> $\alpha$<sub>*t*</sub> is a scaling parameter that determines the
 > proportion of the final response that is observable at visit *t*. A
-> value of *α*<sub>*t*</sub> = 0 indicates that the expected value of
+> value of $\alpha$<sub>*t*</sub> = 0 indicates that the expected value of
 > early visit *t* is equal to the estimated final visit mean
-> *θ*<sub>*d*</sub>. A value of *α*<sub>*t*</sub> = −0.69315 indicates
+> *θ*<sub>*d*</sub>. A value of $\alpha$<sub>*t*</sub> = −0.69315 indicates
 > that the expected value of early visit *t* is 50% of the estimated
 > final visit mean *θ*<sub>*d*</sub>.
 >
 > *λ*<sub>*t*</sub><sup>2</sup> is the variance of the endpoint around
 > the estimated mean response at visit *t*.
 
-The prior for *α*<sub>*t*</sub> is a normal distribution with a user
+The prior for $\alpha$<sub>*t*</sub> is a normal distribution with a user
 specified the mean and standard deviation:
 
 *α*<sub>*t*</sub> ∼ *N*(*α*<sub>*μ*</sub>, *α*<sub>*σ*</sub><sup>2</sup>),
 
-The prior for the *δ*<sub>*i*</sub> terms is a normal distribution with
+The prior for the $\delta$<sub>*i*</sub> terms is a normal distribution with
 a mean of 0 and variance *τ*<sup>2</sup>.
 
-*δ*<sub>*i*</sub> ∼ *N*(0, *τ*<sup>2</sup>)
+$\delta$<sub>*i*</sub> ∼ *N*(0, *τ*<sup>2</sup>)
 
 *τ*<sup>2</sup> is estimated as part of the longitudinal model, and has
 an inverse gamma prior distribution with prior central value
@@ -3374,8 +3327,8 @@ $$\lambda\_{t}^{2}\\\sim\\IG\left( \frac{\lambda\_{n}}{2},\frac{\lambda\_{\mu}^{
 
 A reasonable starting place for prior values would be
 
-> *α*<sub>*t*</sub> mean of -2, SD of 2, … so the prior ~70% interval
-> for *α*<sub>*t*</sub> is between -4 and 0 (+/1 1 SD) and thus the
+> $\alpha$<sub>*t*</sub> mean of -2, SD of 2, … so the prior ~70% interval
+> for $\alpha$<sub>*t*</sub> is between -4 and 0 (+/1 1 SD) and thus the
 > prior 70% interval for *e*<sup>*α*<sub>*t*</sub></sup> to be between
 > 0.02 and 1.
 >
@@ -3566,7 +3519,7 @@ endpoint at time *t* is *y*<sub>*i**t*</sub>,
 *π*<sub>*t**y*<sub>*i**t*</sub></sub> = Pr (*Y*<sub>*i*</sub> = 1 | *y*<sub>*i**t*</sub>) ∼ *B**e**t**a*(*α*<sub>*t**y*<sub>*i**t*</sub></sub>, *β*<sub>*t**y*<sub>*i**t*</sub></sub>)
 
 We use the set cardinality operator |…| to obtain the posterior
-distributions of *α*<sub>*t*\*</sub> and *β*<sub>*t*\*</sub> as:
+distributions of $\alpha$<sub>*t*\*</sub> and *β*<sub>*t*\*</sub> as:
 
 *α*<sub>*t*0</sub> = *α*<sub>*μ*0</sub> + |*Y*<sub>*i*</sub> = 1, *y*<sub>*i**t*</sub> = 0|
 
@@ -3579,12 +3532,12 @@ distributions of *α*<sub>*t*\*</sub> and *β*<sub>*t*\*</sub> as:
 i.e. a prior value
 (*α*<sub>*μ*0</sub>, *α*<sub>*μ*1</sub>, *β*<sub>*μ*0</sub>, *β*<sub>*μ*1</sub>)
 plus the number of subjects for which the final response is known to be
-1 for *α*<sub>*t**x*</sub> (or 0 for *β*<sub>*t**x*</sub>) and the
+1 for $\alpha$<sub>*t**x*</sub> (or 0 for *β*<sub>*t**x*</sub>) and the
 response at time *t* is *x*.
 
-The *α*<sub>*t**x*</sub> and *β*<sub>*t**x*</sub> parameters are
+The $\alpha$<sub>*t**x*</sub> and *β*<sub>*t**x*</sub> parameters are
 independently estimated using only patients in their model instance, and
-may or not have identical priors *α*<sub>*μ*\*</sub> and
+may or not have identical priors $\alpha$<sub>*μ*\*</sub> and
 *β*<sub>*μ*\*</sub> depending on the Model Priors selection in FACTS. A
 common non-informative prior for the *π*<sub>*t*0</sub> and
 *π*<sub>*t*1</sub> parameters is Beta(1,1).
@@ -3652,7 +3605,7 @@ because we do not impute the first visit – a subject missing visit 1 and
 all visits after does not contribute to the longitudinal model or dose
 response model.
 
-The priors for the *α* parameters are specified in terms of the prior
+The priors for the $\alpha$ parameters are specified in terms of the prior
 number of transitions from Stable at *t* − 1 to each different state at
 time *t*. For example, if the prior value for the parameter
 *γ*<sub>13</sub> is 2, we are putting a priori information into the
