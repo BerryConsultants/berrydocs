@@ -1193,8 +1193,7 @@ adaptive clinical trials, especially focused on, but not limited to,
 Bayesian designs with multiple active arms. Trials designed in the core
 engines are comprised of a number of elements:
 
-1.  The dose response model: the user must specify how the data will be
-    analyzed, though there is a simple ‘no model’ option that estimates
+1.  The dose response model: the user must specify how the doses are related to eachother in the primary analysis, though there is a simple ‘no model’ option that estimates
     the mean treatment effect of each arm independently. A fixed trial
     uses the dose response model for the final Bayesian analysis of the
     data; an adaptive trial uses the same model both for the final
@@ -1203,12 +1202,11 @@ engines are comprised of a number of elements:
 2.  The longitudinal (predictor) model: whether the trial is adaptive or
     fixed, the user may select to whether to use a longitudinal model
     (similarly, a predictor model in time to event). In a fixed trial
-    the longitudinal model is used to impute final values for subjects
-    that have dropped out, in an adaptive trial it is also used at the
-    interim updates to impute final values for subjects who have been
+    the longitudinal model can be used to multiply impute final values for subjects that have dropped out. In an adaptive trial it is also used at the
+    interim updates to multiply impute final values for subjects who have been
     recruited but do not yet have final values. In a fixed trial with no
     subject dropouts using a longitudinal model would have no effect on
-    the outcome, analysis or conduct of the trial.
+    the outcome, analysis, or conduct of the trial.
 
 3.  Allocation rules: in a fixed trial the user just specifies the
     proportion of subjects to be recruited to each arm, and the same can
@@ -1220,44 +1218,41 @@ engines are comprised of a number of elements:
 4.  Early stopping rules: in an adaptive trial the user can select the
     criteria and specify the thresholds at which trial should be stopped
     at any interim where the conditions are satisfied. Early stopping is
-    optional and even in an adaptive design the user can opt to always
+    optional, and even in an adaptive design the user can opt to always
     recruit the maximum permitted number of subjects. In a fixed trial
-    there are no interims and hence no opportunity to stop early.
+    there are no interim analyses and hence no opportunity to stop early.
 
 5.  Final evaluation criteria: the same Bayesian evaluation criteria are
     available whether the trial is fixed or adaptive. The user selects
     which criteria to use and what thresholds will constitute success or
-    failure. These allow the user to leave a range of outcomes as
-    ‘inconclusive’, where they cannot not say, before the study starts,
-    whether the compound’s development would be continued or not.
+    failure. The success and failure criteria do not have to be complements of eachother, and any analysis that doesn't completely satisfy either the success or futility criteria is called, "inconclusive."
 
 6.  Frequentist analysis: frequentist p-values can be calculated
-    comparing each dose to the control arm. P-values can be used as
-    decision making quantities at interim updates or final analyses.
+    comparing each dose to the control arm (or a fixed value if there is no control). P-values can be used as decision making quantities at interim updates or final analyses. p-value cannot benefit from the dose reponse models or longitudinal models, which are specific to the Bayesian model in FACTS.
 
 ## Evaluation of Bayesian Posterior Estimates
 
-The Bayesian model fitted to the data at each update contains a dose
-response model and usually a longitudinal model. In the absence of a
+At every interim and final analysis there is a Bayesian model fit to the data observed up to that point in the trial. The Bayesian model contains a dose
+response model and, often, a longitudinal model. In the absence of a
 longitudinal model, the posterior is calculated as:
 
 $$p(\omega|Y) \propto \prod_{i = 1}^{n}{p(y_{i}|\phi)p(\phi)}$$
 
-where *ϕ* is the set of parameters of the selected response model,
-*p*(*ϕ*) is the prior for those parameters, *y*<sub>*i*</sub> is the
-final response for each subject and n is the number of subjects.
+where $\phi$ is the set of parameters of the selected response model,
+$p(\phi)$ is the prior for those parameters, $y_i$ is the
+final response for each subject and $n$ is the number of subjects with complete data.
 
 With a longitudinal model, this becomes:
 
 $$p(\omega|Y) \propto \prod_{i = 1}^{n}{p(y_{i}|\phi)p(\phi)\prod_{i = 1}^{n}{\prod_{j = 1}^{L}{p(y_{ij}|\psi)p(\psi)}}}$$
 
-where *ψ* is the set of parameters of the selected longitudinal model,
-*p*(*ψ*) is the prior for those parameters, *y*<sub>*i**j*</sub> is the
-response for each subject at each visit and L is the number of visits.
+where $\psi$ is the set of parameters of the selected longitudinal model,
+$p(\psi)$ is the prior for those parameters, $y_{ij}$ is the
+response for each subject $i$ at each visit $j$ and $L$ is the number of visits.
 
-The posterior is evaluated using MCMC with individual parameters updated
+The posterior is evaluated using [MCMC](## "Markov Chain Monte Carlo") with individual parameters updated
 by Metropolis Hastings (or Gibbs sampling where possible), using only
-the *y*<sub>*i*</sub> and *y*<sub>*i**j*</sub> data available at the
+the $y_i$ and $y_{ij}$ data available at the
 time of the update.
 
 # Dose Response
@@ -1265,7 +1260,7 @@ time of the update.
 Dose response models in FACTS may be more accurately called final
 endpoint models. They create and model a relationship across the doses
 specified in the Treatment Arms tab. Often, but not always, the dose
-strength, called “Effective Dose Strength” in the Study &gt; Treatment
+strength, called “Effective Dose Strength” in the Study > Treatment
 Arms tab of FACTS, is used in the dose response models to determine the
 order of doses, and which doses are more related to others.
 
@@ -1273,18 +1268,18 @@ The dose response models can be simple, and model the doses largely
 independently, as is done with the Independent Dose Model or the
 Independent Beta Binomial Model (dichotomous only). They can have
 logistic style models with interpretable parameters, like the
-3-parameter logistic or the *E*<sub>max</sub> model (called Sigmoidal in
+3-parameter logistic or the $E_{max}$ model (called Sigmoidal in
 FACTS). The dose response model can also be a model that creates a
 smooth, spline like, model over the doses using a normal dynamic linear
 model (NDLM), a monotonic NDLM, or a 2nd order NDLM.
 
 For all endpoints, we model the response at each dose, d, in terms of
-*θ*<sub>*d*</sub> on a continuous scale allowing a consistent and rich
+$\theta_d$ on a continuous scale, allowing a consistent and rich
 range of dose response models to be used for all endpoint types.
 Transformations (see below) of the dichotomous and time-to-event
 responses are used to achieve this.
 
-## Continuous, Dichotomous and Log-Odds
+## Continuous, Dichotomous, and Time-To-Event
 
 With the exception of two dose response models specific to a dichotomous
 endpoint, the same dose response modeling facilities are available for
@@ -1292,39 +1287,50 @@ all endpoints.
 
 Let there be D total doses including the control arm if it exists. For
 any endpoint, the estimate of dose response model is called
-*θ*<sub>*d*</sub> for a dose *d* ∈ {1, …, *D*}.
+$\theta_d$ for a dose $d \in \{1, \ldots , D\}$.
 
--   In the continuous case the individual response/change from baseline
-    (if it exists) *Y*<sub>*i*</sub> of the *i*<sup>*t**h*</sup> subject
-    allocated to dose *d*<sub>*i*</sub> is modeled:
-    *Y*<sub>*i*</sub> ∼ *N*(*θ*<sub>*d*<sub>*i*</sub></sub>, *σ*<sup>2</sup>).
-    The variance *σ*<sup>2</sup> has an inverse-gamma prior.
+::: {.panel-tabset}
+## Continuous
 
--   In the dichotomous case the final endpoint of the
-    *i*<sup>*t**h*</sup> subject who has been allocated to dose
-    *d*<sub>*i*</sub> is modeled:
-    *Y*<sub>*i*</sub> ∼ *B**e**r**n**o**u**l**l**i*(*P*<sub>*d*<sub>*i*</sub></sub>)
-    where *P*<sub>*d*<sub>*i*</sub></sub> is the probability of response
-    for a subject on dose *d*<sub>*i*</sub>. The probability
-    *P*<sub>*d*</sub> is modelled on the logit scale, so
-    $P_{d} = \frac{e^{\theta_{d}}}{1 + e^{\theta_{d}}}$, and thus
-    *θ*<sub>*d*</sub> is the log-odds ratio:
-    $\theta_{d} = ln\left( \frac{P_{d}}{1 - P_{d}} \right)$,
+In the continuous dose response models the individual response or change from baseline (if it is being used) $Y_i$ of the $i^{th}$ subject allocated to dose $d_i$ is modeled:
+$$
+Y_i \sim \text{N}(\theta_{d_i}, \sigma^2)
+$$
+The variance $\sigma^2$ has an inverse-gamma prior. For a description in how FACTS elicits parameterizations for the Inverse Gamma distribution, [see here](../../../concepts/facts/InverseGammaDistribution.qmd "Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.").
+    
+## Dichotomous
 
--   In the time-to-event case the time to a subject’s response,
-    *Y*<sub>*i*</sub> is modeled as piece-wise exponentially distributed
-    with hazard rates, *λ*<sub>*s*</sub> for pieces *s* ∈ {1, …*S*}. So,
-    *Y*<sub>*i*</sub> ∼ *P**W**E**x**p*({*λ*<sub>1</sub>, …, *λ*<sub>*S*</sub>})
-    for a subject on the control arm, and
-    *Y*<sub>*i*</sub> ∼ *P**W**E**x**p*({*λ*<sub>1</sub>*e*<sup>*θ*<sub>*d*</sub></sup>, …, *λ*<sub>*S*</sub>*e*<sup>*θ*<sub>*d*</sub></sup>})
-    for non-control doses. Then, *θ*<sub>*d*</sub> is the log-hazard
-    ratio
-    $\left( \ln\left( \frac{\lambda_{s}e^{\theta_{d}}}{\lambda_{s}} \right) = \ln\left( e^{\theta_{d}} \right) = \theta_{d} \right)$
-    averaged over the observation time segments. This formulation
-    implies a proportional treatment effect across the pieces of the
-    piece-wise exponential.
+In the dichotomous case the final endpoint of the $i^{th}$ subject who has been allocated to dose $d_i$ is modeled:
 
-Each dose response model is parameterized in terms of *θ*<sub>*d*</sub>,
+$$ Y_i \sim \text{Bernoulli}(P_{d_i}) $$
+where $P_{d_i}$ is the probability of response
+for a subject on dose $d_i$. The probability
+$P_d$ is modeled on the logit scale, so
+$$P_{d} = \frac{e^{\theta_{d}}}{1 + e^{\theta_{d}}},$$ and
+$\theta_d$ is the log-odds ratio:
+$$\theta_{d} = ln\left( \frac{P_{d}}{1 - P_{d}} \right)$$,
+
+## Time-To-Event
+
+In the time-to-event case, the time to a subject’s response,
+$Y_i$ is modeled as piece-wise exponentially distributed
+with hazard rates, $\lambda_s$, for pieces $s \in \{1,\ldots,S\}$. So,
+    
+$$ Y_i \sim \text{PWExp}(\{\lambda_1,\ldots,\lambda_S\})$$
+    
+for a subject on the control arm, and
+    
+$$ Y_i \sim \text{PWExp}(\{\lambda_1 e^{\theta_d},\ldots,\lambda_S e^{\theta_d}\})$$
+    
+for non-control doses. Then, $\theta_d$ is the log-hazard
+ratio
+$\left( \ln\left( \frac{\lambda_{s}e^{\theta_{d}}}{\lambda_{s}} \right) = \ln\left( e^{\theta_{d}} \right) = \theta_{d} \right)$
+averaged over the observation time segments. This formulation
+implies a proportional treatment effect across the pieces of the
+piece-wise exponential.
+:::
+
+Each dose response model is parameterized in terms of $\theta_d$,
 but each endpoint models this parameter on a different scale. The
 dichotomous dose response models are on the log-odds scale, and the
 time-to-event endpoint models are on the log hazard ratio. When
@@ -1337,9 +1343,9 @@ prior distribution on the probability scale that is heavily peaked at 0
 and 1. This can lead to undesirable model results and decisions being
 made in small sample size situations, and numerical instability in
 extreme cases. Similarly on the time-to-event scale, the prior put on
-the log-hazard ratio *θ*<sub>*d*</sub> is exponentiated before being
+the log-hazard ratio $\theta_d$ is exponentiated before being
 multiplied by the hazard rate, so diffuse priors on the log-hazard can
-have unexpected modelled results. Again, time-to-event *θ*<sub>*d*</sub>
+have unexpected modeled results. Again, time-to-event $\theta_d$
 priors that have standard deviations less than about 10 are generally
 acceptably diffuse for most situations while avoiding edge case
 curiosities.
@@ -1351,36 +1357,39 @@ style="width:2.07519in;height:2.68327in" />
 
 The Dose Response section of the Design tab allows the user to specify
 how to analyze the relationship between dose/treatment arm and the final
-response and hence estimate the values *θ*<sub>*d*</sub>. The
-interpretation of *θ*<sub>*d*</sub> depends on the nature of the
+response and hence estimate the values $\theta_d$. The
+interpretation of $\theta_d$ depends on the nature of the
 endpoint:
 
--   Where the response is continuous, *θ*<sub>*d*</sub> is the estimate
-    of the mean response/change from baseline on treatment arm *d*, and
-    the common inter-subject variance of the response *σ*<sup>2</sup>,
-    is also estimated.
+::: {.panel-tabset}
+## Continuous
 
--   Where the response is dichotomous, *θ*<sub>*d*</sub> is the estimate
-    of the log-odds of the probability of observing a response on the
-    treatment arm *d*.
+Where the response is continuous, $\theta_d$ is the estimate
+of the mean response/change from baseline on treatment arm $d$, and
+the common inter-subject variance of the response $\sigma^2$,
+is also estimated.
 
--   Where the response is time-to-event, *θ*<sub>*d*</sub> is the
-    estimate of the log hazard ratio compared to the control arm on the
-    treatment arm *d*.
+The response on the control arm, $\theta_0$, is estimated either in the dose response model or modeled separately.
 
-Except where the endpoint is time to event, the response on the control
-arm, θ<sub>0</sub>, is estimated and can be included in the dose
-response model or modeled separately. When the endpoint is
-time-to-event, the response rate on the control arm, λ is estimated and
-*θ*<sub>*d*</sub> for *d* ∈ {1, 2, …, *D*} is the log hazard of the
-response rate of each treatment arm compared to the control arm, so
-*θ*<sub>0</sub> ≡ 0.
+## Dichotomous
+Where the response is dichotomous, $\theta_d$ is the estimate
+of the log-odds of the probability of observing a response on the
+treatment arm $d$.
+    
+The response on the control arm, $\theta_0$, is estimated either in the dose response model or modeled separately.
+
+## Time-To-Event
+
+Where the response is time-to-event, $\theta_d$ is the
+estimate of the log hazard ratio compared to the control arm on the
+treatment arm $d$.
+
+When the primary endpoint is time-to-event, the response rate on the control arm, $\lambda$, is estimated and $\theta_d$ for $d\in \{1,2,\ldots,D\}$ is the log hazard of the response rate of each treatment arm compared to the control arm, so $\theta_0\equiv 0$.
+:::
 
 Some, but not all, of the dose response models use the effective dose
-strength, *ν*<sub>*d*</sub>, to model the dose response
-*θ*<sub>*d*</sub>. The effective dose strength is specified on the Study
-&gt; Treatment Arms tab. It is always fixed at 0 for the control arm
-(*ν*<sub>0</sub> = 0).
+strength, $\nu_d$, to model the dose response
+$\theta_d$. The effective dose strength is specified on the Study > Treatment Arms tab. It is always fixed at 0 for the control arm ($\nu_0\equiv 0$).
 
 ### Independent Dose Model
 
@@ -1389,52 +1398,45 @@ between the study drug arms and the control arm and/or the active
 comparator arm. The doses are modelled as independent and normally
 distributed with a prior of:
 
-*θ*<sub>*d*</sub> ∼ *N*(*μ*<sub>*d*</sub>, *ν*<sub>*d*</sub><sup>2</sup>)
+$$\theta_d \sim \text{N}(\mu_d, \nu_d^2)$$
 
-Where *μ*<sub>*d*</sub> and *v*<sub>*d*</sub><sup>2</sup> are specified
-in FACTS and can be the same or vary across arms.
+Where $\mu_d$ and $\nu_d^2$ are specified
+in FACTS and can either be the same or vary across arms.
 
 This model is useful:
 
 -   When there is only one or two experimental arms
 
--   When the study drug arms don’t differ by dose but in other ways, so
-    there is no ordered sequence of treatments – e.g. each arm is the
-    study drug in combination with a different additional drug.
+-   When the study drug arms don’t differ by dose but in other ways, so there is no ordered sequence of treatments – e.g. each arm is the study drug in combination with a different additional drug.
 
 -   For simulating simple trial designs
 
--   For simulating a ‘conventional’ or ‘strawman’ design to compare more
-    complex designs against
+-   For simulating a ‘conventional’ or ‘strawman’ design to compare more complex designs against
 
 Otherwise for trials with multiple related arms that differ by dose, it
 is usually more efficient to use a dose-response model.
 
 ### Independent Beta-Binomial Model (Dichotomous Only)
 
-This is a “no model” option similar to the above, but only available for
-the Dichotomous endpoint. Unlike any other dose response model, this
-model uses the beta distribution to model the probability of response
-directly rather than fitting a model to the log-odds of the probability.
+This is a “no model” option similar to the above, but only available for the Dichotomous endpoint. Unlike any other dose response model, this model uses the beta distribution to model the probability of response directly rather than fitting a model to the log-odds of the probability.
 
-The final endpoint response *Y*<sub>*i*</sub> is modeled as:
+The final endpoint response $Y_i$ is modeled as:
 
-*Y*<sub>*i*</sub> ∼ *B**e**r**n**o**u**l**l**i*(*P*<sub>*d*</sub>)
+$$Y_i \sim \text{Bernoulli}(P_d)$$
+where $P_d$ is the probability that a patient is a response
+at the final endpoint for subjects randomized to dose $d$. With posterior
 
-where *P*<sub>*d*</sub> is the probability that a patient is a response
-at the final endpoint for subjects randomized to dose d. With posterior
+$$P_d \sim \text{Beta}(\alpha_d + \text{responders}_d, \beta_d + \text{non_responders}_d)$$
 
-*P*<sub>*d*</sub> ∼ *B**e**t**a*(*α*<sub>*d*</sub> + *r**e**s**p**o**n**d**e**r**s*<sub>*d*</sub>,   *β*<sub>*d*</sub> + *n**o**n*\_*r**e**s**p**o**n**d**e**r**s*<sub>*d*</sub>)
-
-Where α<sub>d</sub>, β<sub>d</sub> are the priors for the arm d,
-*r**e**s**p**o**n**d**e**r**s*<sub>*d*</sub> is the number of responders
-on arm d and *n**o**n*\_*r**e**s**p**o**n**d**e**r**s*<sub>*d*</sub> is
-the number of non-responders on arm d.
+Where $\alpha_d$, $\beta_d$ are the priors for the arm $d$,
+$\text{responders}_d$ is the number of responders
+on arm $d$ and $\text{non_responders}_d$ is
+the number of non-responders on arm $d$.
 
 This model has the advantages of an easier to understand prior, and
-better estimation of *P*<sub>*d*</sub> when the number of responders and
-non-responders is small (either is &lt; 5) compared to the log-odds
-model. As it’s an independent model it is well suited to analyzing
+better estimation of $P_d$ when the number of responders and
+non-responders is small (either is  < 5) compared to the log-odds
+model. As it’s a independent dose model, it is well suited to analyzing
 single arm, two arm or three arm trials, or trials where the
 experimental arms are unrelated, and so there is no basis on which to
 borrow information between them. With trials with multiple arms of the
@@ -1450,45 +1452,43 @@ is that it is equal to its neighboring doses, tending to a constant dose
 response across doses in the absence of data. The model is defined as
 follows:
 
-Let doses *d* = *d*′, …, *D* be doses in the dose response model and
-*θ*<sub>*d*</sub> be the estimated dose response for dose *d*. The
-initial dose *d*<sup>′</sup> = 1 if there is no control or control is
-included in the dose response model, and *d*<sup>′</sup> = 2 if the
-control arm is modelled separately.
+Let doses $d=d', \ldots, D$ be doses in the dose response model and
+$\theta_d$ be the estimated dose response for dose $d$. The
+initial dose $d'=1$ if there is no control or control is
+included in the dose response model, and $d'=2$ if the
+control arm is modeled separately.
 
-The dose response of the first dose, *d*′, has a prior of:
+The dose response of the first dose, $d'$, has a prior of:
 
-*θ*<sub>*d*<sup>′</sup></sub> ∼ *N*(*μ*<sub>*d*<sup>′</sup></sub>, *τ*<sub>*d*<sup>′</sup></sub><sup>2</sup>)
+$$\theta_{d'} \sim N\left(\mu_{d'},\tau^2_{d'}\right)$$
 
-where *μ*<sub>*d*′</sub> and *τ*<sub>*d*′</sub><sup>2</sup> are
+where $\mu_{d'}$ and $\tau_{d'}^2$ are
 specified directly in FACTS. Subsequent dose response estimates
-*θ*<sub>*d*<sup>′</sup> + 1</sub>, …, *θ*<sub>*D*</sub> have priors
+$\theta_{d'+1}, \ldots, \theta_D$ have priors
 centered at the previous dose response with variances based on the
-distance between the dose *d* strength and the dose *d* − 1 strength.
+distance between the dose $d$ strength and the dose $d-1$ strength.
 Specifically,
 
-*θ*<sub>*d*</sub> ∼ *N*(*θ*<sub>*d* − 1</sub>, *τ*<sub>*d* − 1</sub><sup>2</sup>)
-for *d* = *d*<sup>′</sup> + 1, …, *D*
+$$\theta_d \sim N\left(\theta_{d-1},\tau^2_{d-1}\right) \text{ for } d=d'+1, \ldots, D$$
 
-where for dose strengths *v*<sub>*d*</sub> and *v*<sub>*d* − 1</sub>,
-*t*<sub>*d* − 1</sub><sup>2</sup> is defined as
-
-*τ*<sub>*d* − 1</sub><sup>2</sup> = *τ*<sup>2</sup>(*v*<sub>*d*</sub> − *v*<sub>*d* − 1</sub>)
+where for dose strengths $\nu_d$ and $\nu_{d-1}$,
+$\tau_{d-1}^2$ is defined as
+$$\tau^2_{d-1}=\tau^2\left(\nu_d-\nu_{d-1}\right)$$
 
 The prior distribution for the “drift” parameter, which controls the
 amount of smoothing is:
 
-$$\tau^{2}\sim IG\left( \frac{\tau\_{n}}{2},\frac{\tau\_{\mu}^{2}\tau\_{n}}{2} \right)$$
+$$\tau^{2}\sim IG\left( \frac{\tau_{n}}{2},\frac{\tau_{\mu}^{2}\tau_{n}}{2} \right)$$
 
-where *τ*<sub>*μ*</sub> and *τ*<sub>*n*</sub> are specified in the Dose
-Response tab in FACTS under Model Parameters.
+where $\tau_\mu$ and $\tau_n$ are specified in the Dose
+Response tab in FACTS under Model Parameters. [See here](../../../concepts/facts/InverseGammaDistribution.qmd "Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.") for help with specifying an inverse gamma distribution with center and weight.
 
 In the continuous case the residual error around the estimated dose
 response is
 
-$$\sigma^{2}\sim IG\left( \frac{\sigma\_{n}}{2},\frac{\sigma\_{\mu}^{2}\sigma\_{n}}{2} \right)$$
+$$\sigma^{2}\sim IG\left( \frac{\sigma_{n}}{2},\frac{\sigma_{\mu}^{2}\sigma_{n}}{2} \right)$$
 
-where *σ*<sub>*μ*</sub> and *σ*<sub>*n*</sub> are specified on the Dose
+where $\sigma_\mu$ and $\sigma_n$ are specified on the Dose
 Response tab in FACTS under Error Parameters.
 
 The Simple NDLM is generally a good model to use when the shape of the
@@ -1501,32 +1501,32 @@ informative prior is often used.
 
 In a ‘null’ scenario where the response on all the doses is the same as
 control, the simple NDLM reduces type-1 error. The estimate of
-*τ*<sup>2</sup> tends towards zero and the estimate of the dose response
+$\tau^2$ tends towards zero and the estimate of the dose response
 tends to a flat line. The smoothing of the estimates of the response
 reduces the random fluctuations in the estimates from dose to dose and
 is a very effective counter to the problem of type-1 error inflation due
 to the multiplicity of doses being tested. A small prior for the mean
-value of *τ* will accentuate this effect. The price to be paid for this
+value of $\tau$ will accentuate this effect. The price to be paid for this
 benefit is a tendency to underestimate large changes in response or
 where there is a peak in the response. This over-smoothing can reduce
-power. A prior for the mean of *τ* centered at large values will
+power. A prior for the mean of $\tau$ centered at large values will
 minimize over-smoothing, and a very large prior would simply remove any
-smoothing effect at all. A standard prior for the mean of *τ* would be
+smoothing effect at all. A standard prior for the mean of $\tau$ would be
 the expected average change in response from dose to dose, scaled to
 take into account the differences in the specified effective dose
 strengths.
 
-Usually, the choice of prior for *τ*<sup>2</sup> is tuned based on
+Usually, the choice of prior for $\tau^2$ is tuned based on
 simulation results, trading off reducing type-1 error in the null case
 against loss of power and reduced estimate of maximum response in the
 effective scenario with the largest jump in response or steepest peak.
 
 **Aside**: When using the NDLM model or any of its alternatives
-(2<sup>nd</sup> order or Monotonic NDLM), and including doses in a
+(2$^{nd}$ order or Monotonic NDLM), and including doses in a
 design that receive no subject allocation (ie. Allocation ratio set to
 0), some important characteristics of the model should be considered in
 the interpretation of results. First, the NDLM model “borrows”
-information from neighbouring doses, and therefore including unallocated
+information from neighboring doses, and therefore including unallocated
 intermediate doses will increase uncertainty in the fitted response.
 Information must “pass through” these intermediate doses, and
 uncertainty should be expected to increase as the number of intermediate
@@ -1535,8 +1535,8 @@ NDLM model estimates the response at unallocated doses, but without
 subject data at these doses the uncertainty in the estimate can be
 considerably larger than doses with subject data. This high degree of
 uncertainty can lead to a vestigial probability that an unallocated dose
-is the target dose (Pr(ED<sub>x</sub>), Pr(MED), Pr(Max)) even though
-the mean response estimate and probabilities at neighbouring doses with
+is the target dose ([Pr(EDq)]{.fake-code-block}, [Pr(MED)]{.fake-code-block}, [Pr(Max)]{.fake-code-block}) even though
+the mean response estimate and probabilities at neighboring doses with
 subject data would not suggest this to be the case.
 
 ### Monotonic NDLM
@@ -1552,125 +1552,115 @@ The use of this model is generally limited to endpoints where a strong
 presumption of increasing/decreasing response with dose is reasonable –
 such as a biomarker or a toxicity endpoint.
 
-Let doses *d* = *d*′, …, *D* be doses in the dose response model and
-*θ*<sub>*d*</sub> be the estimated dose response for dose *d*. The
-initial dose *d*<sup>′</sup> = 1 if there is no control or control is
-included in the dose response model, and *d*<sup>′</sup> = 2 if the
-control arm is modelled separately. The following model is the
+Let doses $d = d', \ldots, D$ be doses in the dose response model and
+$\theta_d$ be the estimated dose response for dose $d$. The
+initial dose $d'=1$ if there is no control or control is
+included in the dose response model, and $d'=2$ if the
+control arm is modeled separately. The following model is the
 monotonically positive NDLM:
 
-*θ*<sub>*d*′</sub> ∼ *N*(*μ*<sub>*d*′</sub>, *τ*<sub>*d*′</sub><sup>2</sup>)
+$$\theta_{d'} \sim N\left(\mu_{d'},\tau^2_{d'}\right)$$
 
 and
 
-*θ*<sub>*d*</sub> ∼ *N*<sup>+</sup>(*θ*<sub>*d* − 1</sub>, *τ*<sub>*d* − 1</sub><sup>2</sup>)
-for *d* = *d*<sup>′</sup>, …, *D*,
-
-Where *τ*<sub>*d* − 1</sub><sup>2</sup> is defined as in the NDLM, and
-*X* ∼ *N*<sup>+</sup>(*μ*, *σ*<sup>2</sup>) refers to a positive
+$$\theta_d \sim N^+\left(\theta_{d-1},\tau^2_{d-1}\right) \mbox{ for } d = d', \ldots, D,$$
+where $\tau_{d-1}^2$ is defined as in the NDLM, and
+$X \sim \text{N}^+(\mu, \sigma^2)$ refers to a positive
 truncated normal distribution with density function:
 
-$f\_{X}(x) = \frac{1 - \Phi\left( - \frac{\mu}{\sigma} \right)}{\sqrt{2\pi}\sigma}\exp\left\\ - \frac{1}{2\sigma^{2}}(x - \mu)^{2} \right\\$
-for x &gt; 0.
+$$f_{X}(x) = \frac{1 - \Phi\left( - \frac{\mu}{\sigma} \right)}{\sqrt{2\pi}\sigma}\exp\left\{ - \frac{1}{2\sigma^{2}}(x - \mu)^{2} \right\} \text{ for } x>0$$
 
 The result of this dose-response model is that the curve is
-monotonically increasing, in that
-*θ*<sub>*d*</sub> &gt; *θ*<sub>*d* − 1</sub>.
+monotonically increasing, in that $\theta_d>\theta_{d-1}$.
 
 The monotonically decreasing NDLM is similar except:
+$$\theta_d \sim N^-\left(\theta_{d-1},\tau^2_{d-1}\right) \mbox{ for } d = d', \ldots, D,$$
 
-*θ*<sub>*d*</sub> ∼ *N*<sup>−</sup>(*θ*<sub>*d* − 1</sub>, *τ*<sub>*d* − 1</sub><sup>2</sup>)
-for *d* = *d*<sup>′</sup>, …, *D*,
-
-Where *X* ∼ *N*<sup>−</sup>(*μ*, *σ*<sup>2</sup>) refers to a negative
+where $X \sim \text{N}^-(\mu, \sigma^2)$ refers to a negative
 truncated normal distribution:
 
-$f\_{X}(x) = \frac{\Phi\left( - \frac{\mu}{\sigma} \right)}{\sqrt{2\pi}\sigma}\exp\left\\ - \frac{1}{2\sigma^{2}}(x - \mu)^{2} \right\\$
-for x &lt; 0.
+$$f_{X}(x) = \frac{\Phi\left( - \frac{\mu}{\sigma} \right)}{\sqrt{2\pi}\sigma}\exp\left\{ - \frac{1}{2\sigma^{2}}(x - \mu)^{2} \right\} \text{ for } x<0$$
 
 The result of this dose-response model is that the curve is
 monotonically decreasing, in that
-*θ*<sub>*d*</sub> &lt; *θ*<sub>*d* − 1</sub>.
+$\theta_d<\theta_{d-1}$.
 
 ### Second Order NDLM
 
-The second order NDLM described in this section is the version utilized
-in FACTSTM version 4.0 and later. The model labelled “Second Order NDLM”
-versions before 4.0 is now maintained as the model labelled “Legacy 2nd
-Order NDLM.” The second order NDLM serves as a “smoother” similar to the
+::: {.callout-tip}
+## Note
+
+The second order NDLM described in this section is the version utilized in FACTS version 4.0 and later. The model labelled “Second Order NDLM” in versions before 4.0 is was maintained as the model labelled “Legacy 2nd Order NDLM” until the release of FACTS 7.1, at which time it was removed.
+:::
+
+The second order NDLM serves as a “smoother” similar to the
 NDLM, however it tends to smooth toward a linear fit with a slope (the
-NDLM itself tends to shrink each dose’s fit toward its neighbours, while
-the second order NDLM prefers any trend in the neighbours).
+NDLM itself tends to shrink each dose’s fit toward its neighbors, while
+the second order NDLM prefers any trend in the neighbors).
 
-Let doses *d* = *d*′, …, *D* be doses in the dose response model and
-*θ*<sub>*d*</sub> be the estimated dose response for dose *d*. The
-initial dose *d*<sup>′</sup> = 1 if there is no control arm or control
-is included in the dose response model, and *d*<sup>′</sup> = 2 if the
-control arm is modelled separately. The initial dose *d*′ is modelled:
+Let doses $d=d', \ldots, D$ be doses in the dose response model and $\theta_d$ be the estimated dose response for dose $d$. The
+initial dose $d'=1$ if there is no control arm or control
+is included in the dose response model, and $d'=2$ if the
+control arm is modelled separately. The initial dose $d'$ is modeled:
 
-*θ*<sub>*d*′</sub> ∼ *N*(*μ*<sub>0</sub>, *τ*<sub>0</sub><sup>2</sup>)
+$$\theta_{d'} \sim N\left(\mu_{0},\tau^2_{0}\right)$$
 
-Where *μ*<sub>0</sub> and *τ*<sub>0</sub><sup>2</sup> are specified
+where $\mu_0$ and $\tau_0^2$ are specified
 directly in FACTS.
 
-In the case of TTE, the initial dose *d*′ is the control arm, and has a
-*θ*<sub>*d*′</sub> = 0 by definition, so no prior distribution is
-needed.
+In the case of a time-to-event endpoint, the initial dose $d'$ is the control arm, and has a $\theta_{d'}= 0$ by definition, so no prior distribution is needed.
 
 The prior distribution for the dose response for the dose directly after
-the initial dose is specified on the difference between the *d*′ and
-*d*<sup>′</sup> + 1 level doses:
+the initial dose is specified on the difference between the $d'$ and
+$d'+1$ level doses:
 
-*θ*<sub>*d*<sup>′</sup> + 1</sub> − *θ*<sub>*d*<sup>′</sup></sub> ∼ *N*(*μ*<sub>1</sub>, *τ*<sub>1</sub><sup>2</sup>)
+\theta_{d'+1} - \theta_{d'} \sim N\left(\mu_{1},\tau^2_{1}\right)
 
-Successive doses are then modelled based on differences in slope between
+Successive doses are then modeled based on differences in slope between
 the dose and the two doses below them. Let:
 
-$$\theta\_{d} = \theta\_{d - 1} + \Delta\_{d}\zeta\_{d} + \frac{\Delta\_{d}}{\Delta\_{d - 1}}\left( \theta\_{d - 1} - \theta\_{d - 2} \right)$$
+$$\theta_{d} = \theta_{d - 1} + \Delta_{d}\zeta_{d} + \frac{\Delta_{d}}{\Delta_{d - 1}}\left( \theta_{d - 1} - \theta_{d - 2} \right)$$
 
-for doses *d* = *d*<sup>′</sup> + 2, …, *D*, where
-$\delta$<sub>*d*</sub> = *ν*<sub>*d*</sub> − *ν*<sub>*d* − 1</sub> and
-$\delta$<sub>*d* − 1</sub> = *ν*<sub>*d* − 1</sub> − *ν*<sub>*d* − 2</sub>.
-The priors for the dose response smoothing terms *ζ*<sub>*d*</sub> are:
+for doses $d=d'+2,\ldots,D$, where
+$\Delta_d=\nu_d-\nu_{d-1}$ and $\Delta_{d-1}=\nu_{d-1}-\nu_{d-2}$.
+The priors for the dose response smoothing terms $\zeta_d$ are:
 
-*ζ*<sub>*d*</sub> ∼ *N*(0, *τ*<sub>2</sub><sup>2</sup>)
-
-The smoothing is determined by the parameter *τ*<sub>2</sub>. Small
-values of *τ*<sub>2</sub> lead to more smoothing, while large values of
-*τ*<sub>2</sub> lead to little information sharing between doses (above
+$$\zeta_d \sim \text{N}(0, \tau_2^2)$$
+The smoothing is determined by the parameter $\tau_2$. Small
+values of $\tau_2$ lead to more smoothing, while large values of
+$\tau_2$ lead to little information sharing between doses (above
 dose 1). Note that “small” and “large” is dependent on the scale of the
 doses. The prior on the smoothing parameter is:
 
-$$\tau\_{2}^{2}\\\sim\\IG\left( \frac{\tau\_{n}}{2},\frac{\tau\_{\mu}^{2}\tau\_{n}}{2} \right)$$
+$$\tau_{2}^{2}\sim \text{IG}\left(\frac{\tau_{n}}{2},\frac{\tau_{\mu}^{2}\tau_{n}}{2} \right)$$
 
-where *τ*<sub>*μ*</sub> is a central value for *τ*<sub>2</sub>, and
-*τ*<sub>*n*</sub> is the prior weight.
+where $\tau_\mu$ is a central value for $\tau_2$, and
+$\tau_n$ is the prior weight. [See here](../../../concepts/facts/InverseGammaDistribution.qmd "Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.") for help with specifying an inverse gamma distribution with center and weight.
 
-Note that that in this formulation, *τ*<sub>2</sub><sup>2</sup> can be
+Note that that in this formulation, $\tau_2^2$ can be
 thought of as the deviation from linearity. The linear scaling of
 deviations thus leads to a conditional variance that scales as the
 square of the dose difference:
 
-*V**a**r*\[*θ*<sub>*d*</sub>|*θ*<sub>*d* − 1</sub>, *θ*<sub>*d* − 2</sub>\]= *τ*<sub>2</sub><sup>2</sup>•(*ν*<sub>*d*</sub> − *ν*<sub>*d* − 1</sub>)<sup>2</sup>
+$$\text{Var}[\theta_d \mid \theta_{d-1}, \theta_{d-2}]=\tau_2^2\cdot (\nu_d-\nu_{d-1})^2$$
 
-The Second Order NDLM, like the Simple NDLM, is generally a good model
+The second order NDLM, like the simple NDLM, is generally a good model
 to use when the shape of the likely dose response is unknown, but we
 would like to borrow information between a dose and its neighboring
-doses. No monotonicity or pre-determined shape is enforced by the Second
-Order NDLM. The variance in dose response from dose to dose is updated
+doses. No monotonicity or pre-determined shape is enforced by the Second Order NDLM. The variance in dose response from dose to dose is updated
 based on the observed data, but as the number of doses in a trial is
 typically small, a moderately informative prior is often used.
 
 In a ‘null’ scenario where the response on all the doses is the same as
-control, like the simple NDLM, the second order NDLM reduces type-1
-error. As the estimate of *τ*<sup>2</sup> tends to zero and the estimate
+control the Second Order NDLM, like the Simple NDLM, tends to reduce type-1
+error. As the estimate of $\tau^2$ tends to zero the estimate
 of the dose response tends to a line (with non-zero slope if
 appropriate).
 
 The second order NDLM has more power than the Simple NDLM when the dose
-response is smooth, but will tend to underestimate by more than the
+response is smooth, but will tend to shrink estimates to the control by more than the
 Simple NDLM if there are marked peaks or steps in the response. Because
-it borrows from two doses, it is better at estimating a response for a
+it borrows from two neighboring doses, it is better at estimating a response for a
 dose where there is no data than the simple NDLM can, and can be used
 with burn-in’s where not all doses have been allocated to, but doesn’t
 cope well if there are consecutive doses where there is no data.
@@ -1678,16 +1668,16 @@ cope well if there are consecutive doses where there is no data.
 However, unlike the simple NDLMs where the variance structure is
 preserved if doses are added to or dropped from the design, this is not
 true for the 2<sup>nd</sup> order NLDM. Thus, if using the
-2<sup>nd</sup> order NDLM, and the doses that are available to the model
+2<sup>nd</sup> order NDLM and the doses that are available to the model
 are changed, then the parameters for the prior for
-*τ*<sub>2</sub><sup>2</sup> may need to be re-visited.
+$\tau_2^2$ may need to be re-visited.
 
 The simple NDLM is likely to be preferred where there are fewer doses
 (4-5), and the second order NDLM is often preferred when there are 7 or
 more (it will depend on the expected smoothness of the response – the
 smoother it is the more useful the second order NDLM will be).
 
-As with the simple NDLM, the choice of prior for *τ*<sup>2</sup> can be
+As with the simple NDLM, the choice of prior for $\tau_2^2$ can be
 tuned based on simulation results: balancing having a smaller prior that
 limits type-1 error in the null case, against having a larger prior that
 yields more power and better estimate of maximum response in the
@@ -1698,59 +1688,60 @@ peaks.
 
 The 3-parameter logistic dose response model estimates efficacy as a
 smooth curve using an intuitive parameterization. The dose response for
-a dose d with effective dose strength *v*<sub>*d*</sub> is:
+a dose $d$ with effective dose strength $\nu_d$ is:
 
-$$\theta\_{d} = a\_{1} + \frac{a\_{2}v\_{d}}{v\_{d} + a\_{3}}$$
+$$\theta_{d} = a_{1} + \frac{a_{2}v_{d}}{v_{d} + a_{3}}$$
 
-Where the *a* parameters have the following description:
+Where the $a$ parameters have the following description:
 
-*a*<sub>1</sub> is the estimated dose response for a dose of strength 0
+$a_1$
+: the estimated dose response for a dose of strength 0
 
-> *a*<sub>2</sub> is the estimated change in dose response for a dose
-> with strength ∞ when compared to a dose of strength 0.
->
-> *a*<sub>3</sub> is the estimated ED50, the dose that has 50% of the
-> dose response maximum (*a*<sub>2</sub>)
+$a_2$
+: the estimated change in dose response for a dose with strength ∞ when compared to a dose of strength 0.
+
+$a_3$
+: the estimated ED50, the dose that has 50% of the dose response maximum ($a_2$)
 
 The shape of the 3-parameter logistic curve can vary wildly based on the
-parameter values, but always starts at *a*<sub>1</sub> at dose strength
-0 and monotonically increases to *a*<sub>1</sub> + *a*<sub>2</sub> as
+parameter values, but always starts at $a_1$ at dose strength
+0 and monotonically increases to $a_1+a_2$ as
 the effective dose strength goes to infinity.
 
 The following independent prior distributions are assumed:
 
-*a*<sub>1</sub> ∼ *N*(*Λ*<sub>1</sub>, *λ*<sub>1</sub><sup>2</sup>)
-
-*a*<sub>2</sub> ∼ *N*(*Λ*<sub>2</sub>, *λ*<sub>2</sub><sup>2</sup>)
-
-*a*<sub>3</sub> ∼ *N*<sup>+</sup>(*Λ*<sub>3</sub>, *λ*<sub>3</sub><sup>2</sup>)
+$$a_1\sim \text{N}(\Lambda_1, \lambda_1^2)$$
+$$a_2\sim \text{N}(\Lambda_2, \lambda_2^2)$$
+$$a_3\sim \text{N}^+(\Lambda_3, \lambda_3^2)$$
 
 In the continuous case, the prior distribution for the error term in the
 3-Parameter Logistic is Inverse Gamma:
 
-$$\sigma^{2}\sim IG\left( \frac{\sigma\_{n}}{2},\frac{\sigma\_{\mu}^{2}\sigma\_{n}}{2} \right)$$
+$$\sigma^{2}\sim IG\left( \frac{\sigma_{n}}{2},\frac{\sigma_{\mu}^{2}\sigma_{n}}{2} \right)$$
 
 An advantage of the 3-Parameter Logistic model is that it is has a small
 number of parameters that have defined, intuitive interpretations. Since
 there are few parameters it’s generally easy to estimate the parameters
 even on small amounts of data. Because of the limited flexibility of the
 logistic curve, the 3-parameter logistic model should only be used when
-there is evidence that it is appropriate. See the Hierarchical Logistic
-and Sigmoid (*E*<sub>max</sub>) models for dose response models with a
+there is evidence that it is appropriate. See the [Hierarchical Logistic](#hierlog)
+and [Sigmoid](#sigmoid) (E<sub>max</sub>) models for dose response models with a
 similar pattern, but slightly more flexibility in shape.
+
+<a name="hierlog"/>
 
 ### Hierarchical Logistic
 
-The hierarchical logistic model is an extension of the 3-parameter
+The [hierarchical logistic model](## "Scott Berry's favorite dose response model.") is an extension of the 3-parameter
 logistic with the form:
 
-$$\theta\_{d} = a\_{1} + \frac{a\_{2}v\_{d}}{v\_{d} + a\_{3}} + \zeta\_{d}$$
+$$\theta_{d} = a_{1} + \frac{a_{2}v_{d}}{v_{d} + a_{3}} + \zeta_{d}$$
 
-where *ζ*<sub>*d*</sub> is a random intercept term that modifies
-*a*<sub>1</sub> differently for each dose under the constraint that all
-*ζ*<sub>*d*</sub> must sum to 0.
+where $\zeta_d$ is a random intercept term that modifies $a_1$
+ differently for each dose under the constraint that all
+$\zeta_d$ must sum to 0.
 
-The additional term *ζ*<sub>*d*</sub> is a per dose ‘off-curve’ effect.
+The additional term $\zeta_d$ is a per dose ‘off-curve’ effect.
 It allows for a secondary non-parametric dose effect over and above the
 logistic model. It has been used in circumstances in which there is
 actually some falling away of effect at the highest dose. This is an
@@ -1760,100 +1751,85 @@ in green, and the true dose responses are shown by the black line.
 <img src="coreUGattachments/CoreUserGuide/media/image22.png"
 style="width:2.97677in;height:2.6604in" />
 
-*ζ*<sub>*d*</sub> is modelled as:
+$\zeta_d$ is modelled as:
 
-*ζ*<sub>*d*</sub> ∼ *N*(0, *a*<sub>4</sub><sup>2</sup>)
+$$\zeta_d \sim \text{N}(0, a_4^2)$$
 
 conditioned that
 
-$$\sum\_{d}^{}\zeta\_{d} = 0$$
+$$\sum_{d}^{}\zeta_{d} = 0$$
 
-And *a*<sub>4</sub><sup>2</sup> has an inverse gamma prior:
+And $a_4^2$ has an inverse gamma prior:
 
-$$a\_{4}^{2}\sim IG\left( \frac{\Lambda\_{n}}{2},\frac{\Lambda\_{\mu}^{2}\Lambda\_{n}}{2} \right)$$
+$$a_{4}^{2}\sim IG\left( \frac{\Lambda_{n}}{2},\frac{\Lambda_{\mu}^{2}\Lambda_{n}}{2} \right)$$
 
 The following independent prior distributions are assumed:
 
-*a*<sub>1</sub> ∼ *N*(*Λ*<sub>1</sub>, *λ*<sub>1</sub><sup>2</sup>)
-
-*a*<sub>2</sub> ∼ *N*(*Λ*<sub>2</sub>, *λ*<sub>2</sub><sup>2</sup>)
-
-*a*<sub>3</sub> ∼ *N*<sup>+</sup>(*Λ*<sub>3</sub>, *λ*<sub>3</sub><sup>2</sup>)
+$$a_1\sim \text{N}(\Lambda_1, \lambda_1^2)$$
+$$a_2\sim \text{N}(\Lambda_2, \lambda_2^2)$$
+$$a_3\sim \text{N}^+(\Lambda_3, \lambda_3^2)$$
 
 A typical recommended value for the center of the prior distribution of
-*α*<sub>4</sub> is the largest expected likely deviation in true
+$\alpha_4$ is the largest expected likely deviation in true
 response from the underlying logistic with a weight of 1. The effect of
 this prior is then checked through simulation of a range of plausible
 dose response profiles, with a range of designs to check the sensitivity
-of the final estimate of response to this prior.
+of the final estimate of response to this prior. Additionally, [see here](../../../concepts/facts/InverseGammaDistribution.qmd "Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.") for help with specifying an inverse gamma distribution with center and weight.
 
 In this model, compared to the ‘plain’ 3-parameter logistic above, it is
 important that the true ED50 lies within the expected dose range, and
-that the prior for the ED50, *a*<sub>3</sub>, has the majority of its
-probability mass in the available dose range, for example if the range
-of the effective dose strengths is from 0 to *ν*<sub>*D*</sub>, then a
-typical ‘weakly informative’ prior for *a*<sub>3</sub> would be:
+that the prior for the ED50, $a_3$, has the majority of its
+probability mass in the available dose range. For example, if the range
+of the effective dose strengths is from 0 to $\nu_D$ then a
+typical ‘weakly informative’ prior for $a_3$ would be:
 
-$$a\_{3}\\\sim\\N^{+}\left( \frac{\nu\_{D}}{2},\left( \frac{\nu\_{D}}{2} \right)^{2} \right)$$
+$$a_{3}\sim N^{+}\left( \frac{\nu_{D}}{2},\left( \frac{\nu_{D}}{2} \right)^{2} \right)$$
 
-Using a weaker prior, such as:
-*N*<sup>+</sup>(*ν*<sub>*D*</sub>, (*ν*<sub>*D*</sub>)<sup>2</sup>),
-leads to a more linear fit, for instance with just this change to the
-prior for *a*<sub>3</sub> the average of the estimated of the mean
-response change from the graph above, to:
+Using a weaker prior, such as $\text{N}^+(\nu_D, \nu_D^2)$ leads to a more linear fit. With just this change to the prior for $a_3$ the average of the estimated of the mean response changes from the graph above to:
 
 <img src="coreUGattachments/CoreUserGuide/media/image23.png"
 style="width:2.9739in;height:3.15818in" />
+
+<a name="sigmoid"/>
 
 ### Sigmoid Model
 
 A sigmoid model (*E*<sub>max</sub> model) provides a coherent
 parameterization of the dose response trend similar to the 3-parameter
-logistic, but with one extra shape parameter, *a*<sub>4</sub>.
+logistic, but with one extra shape parameter, $a_4$.
 
 The model formula is:
 
-$$\theta\_{d} = a\_{1} + \frac{(a\_{2} - a\_{1})v\_{d}^{a\_{4}}}{{a\_{3}}^{a\_{4}} + v\_{d}^{a\_{4}}}$$
+$$\theta_{d} = a_{1} + \frac{(a_{2} - a_{1})v_{d}^{a_{4}}}{{a_{3}}^{a_{4}} + v_{d}^{a_{4}}}$$
 
 The interpretation of the four parameters is:
 
-*a*<sub>1</sub> is the estimated dose response for a dose of strength 0
+$a_1$
+: the estimated dose response for a dose of strength 0
 
-> *a*<sub>2</sub> is the estimated dose response for a dose of strength
-> ∞ (slight difference from Logistic models)
->
-> *a*<sub>3</sub> is the estimated ED50, the dose that has 50% of the
-> dose response maximum attainable effect
-> (*a*<sub>2</sub> − *a*<sub>1</sub>)
->
-> *a*<sub>4</sub> controls the slope of the dose response model at the
-> ED50. A larger value of *a*<sub>4</sub> corresponds to a steeper
-> slope. A value of *a*<sub>4</sub> = 1 makes the Sigmoid model
-> equivalent to a Three Parameter Logistic model with *a*<sub>2</sub>
-> equal to *a*<sub>1</sub> + *a*<sub>2</sub> from the Sigmoid model. A
-> value of *a*<sub>4</sub> approaching 0 corresponds to a dose response
-> model that is nearly flat at $\frac{a\_{1} + a\_{2}}{2}$. By
-> differentiation, it can be seen that the slope where the effective
-> dose *ν*<sub>*d*</sub> = *a*<sub>3</sub> is
-> $(a\_{2} - a\_{1})\frac{a\_{4}}{4a\_{3}}$.
+$a_2$
+: the estimated dose response for a dose of strength $\infty$ (slight difference from Logistic models)
+
+$a_3$
+: the estimated ED50, the dose that has 50% of the dose response maximum attainable effect ($a_2-a_1$)
+
+$a_4$
+: controls the slope of the dose response model at the ED50. A larger value of $a_4$ corresponds to a steeper slope. A value of $a_4=1$ makes the Sigmoid model equivalent to a Three Parameter Logistic model with $a_2$ equal to $a_1 + a_2$ from the Sigmoid model. A value of $a_4$ approaching 0 corresponds to a dose response model that is nearly flat at $\frac{a_{1} + a_{2}}{2}$. By differentiation, it can be seen that the slope where the effective dose $\nu_d=a_3$ is $(a_{2} - a_{1})\frac{a_{4}}{4a_{3}}$.
 
 The following independent prior distributions are assumed:
 
-*a*<sub>1</sub> ∼ *N*(*Λ*<sub>1</sub>, *λ*<sub>1</sub><sup>2</sup>)
+$$a_1\sim \text{N}(\Lambda_1, \lambda_1^2)$$
+$$a_2\sim \text{N}(\Lambda_2, \lambda_2^2)$$
+$$a_3\sim \text{N}^+(\Lambda_3, \lambda_3^2)$$
+$$a_3\sim \text{N}^+(\Lambda_4, \lambda_4^2)$$
 
-*a*<sub>2</sub> ∼ *N*(*Λ*<sub>2</sub>, *λ*<sub>2</sub><sup>2</sup>)
-
-*a*<sub>3</sub> ∼ *N*<sup>+</sup>(*Λ*<sub>3</sub>, *λ*<sub>3</sub><sup>2</sup>)
-
-*a*<sub>4</sub> ∼ *N*<sup>+</sup>(*Λ*<sub>4</sub>, *λ*<sub>4</sub><sup>2</sup>)
-
-The advantage of the model is that it is considerably more flexible than
+The advantage of this model is that it is considerably more flexible than
 the logistic, but still more efficient to estimate than an NDLM. This
 model (if applicable) is ideal if the target is an Effective Dose (ED)
 such as an ED90. Estimating an ED requires estimating the response on
 control, the maximum response, and the gradient which is requires a lot
 of data to do well if using no model or a smoothing model such as one of
-the NDLMs. With the 4-parameter sigmoid model (or 3-parameter logistic –
+the NDLMs. With the 4-parameter Sigmoid model (or 3-parameter logistic –
 but that has a more limited applicability due to being significantly
 less flexible in shape), it’s usually not an issue to estimate the EDx
 well.
@@ -1868,13 +1844,11 @@ The caveats to using this model are:
     doses tested.
 
 -   Like the hierarchical logistic model above, the prior for
-    *a*<sub>3</sub> should be weakly informative, with the majority of
+    $a_3$ should be weakly informative, with the majority of
     its probability mass in the available dose range. So similarly, if
     the range of the effective dose strengths is from 0 to
-    *ν*<sub>*D*</sub> then a typical ‘weakly informative’ prior for
-    $\alpha$<sub>3</sub> would be:
-
-> $$a\_{3}\\\sim\\N^{+}\left( \frac{\nu\_{D}}{2},\left( \frac{\nu\_{D}}{2} \right)^{2} \right)$$
+    $\nu_D$ then a typical ‘weakly informative’ prior for
+    $a_3$ would be: $$a_3 \sim N^{+}\left( \frac{\nu_{D}}{2},\left( \frac{\nu_{D}}{2} \right)^{2} \right)$$
 
 <img src="coreUGattachments/CoreUserGuide/media/image24.png"
 style="width:3.384in;height:2.12987in" />
@@ -1882,99 +1856,82 @@ style="width:3.384in;height:2.12987in" />
 ### U-Shaped Model
 
 The U-shaped model when the allows for an initial increase (decrease) in
-the dose response with dose, followed by a levelling out of the mean,
+the dose response with dose, followed by a leveling out of the mean,
 then a decrease (increase). Whether the U-Shaped model increases then
 decreases or decreases then increases is specified by the user on the
 Dose Response tab. An example curve for this model is given in the
 figure below.
 
 The dose-response curve can be characterized in four different regions
-of doses. For the first region, which contains the lowest doses,
-0 &lt; *ν*<sub>*d*</sub> &lt; *p*<sub>min</sub>, the dose-response curve
+of doses. For the first region, which contains the lowest doses, $0<\nu_d<p_{min}$, the dose-response curve
 is increasing (decreasing):
 
-$$\theta\_{d} = \theta\_{0} + S \bullet \delta \bullet \left( \frac{\nu\_{d}}{p\_{\min}} \right)^{\alpha}$$
+$$\theta_{d} = \theta_{0} + S \cdot \delta \cdot \left( \frac{\nu_{d}}{p_{\min}} \right)^{\alpha}$$
 
 The next region is the plateau, where the dose-response curve is
-constant. For
-*p*<sub>min</sub> &lt; *ν*<sub>*d*</sub> &lt; *p*<sub>min</sub> + *p*<sub>*w**i**d**t**h*</sub>:
-
-*θ*<sub>*d*</sub> = *θ*<sub>0</sub> + *S* • $\delta$
-
+constant. For $p_{min} < \nu_d < p_{min}+p_{width}$:
+$$\theta_d=\theta_0 + S\cdot\delta$$
 For the third region, the dose-response curve is decreasing
 (increasing).
-For
-*p*<sub>min</sub> + *p*<sub>*w**i**d**t**h*</sub> &lt; *ν*<sub>*d*</sub> &lt; *p*<sub>min</sub> + *p*<sub>*w**i**d**t**h*</sub> + *w*<sub>*w**i**d**t**h*</sub>,
+For $p_{min}+p_{width} < \nu_d < p_{min}+p_{width} + w_{width}$,
 
-$$\theta\_{d} = \theta\_{0} + S \bullet \delta \bullet \left( 1 - \frac{\nu\_{d} - \left( p\_{\min} + p\_{width} \right)}{w\_{width}} \right)^{\beta}$$
+$$\theta_{d} = \theta_{0} + S \cdot \delta \cdot \left( 1 - \frac{\nu_{d} - \left( p_{\min} + p_{width} \right)}{w_{width}} \right)^{\beta}$$
 
 For the final region, the dose-response curve is again constant, at the
 same level as the zero-dose.
-For
-*ν*<sub>*d*</sub> &gt; *p*<sub>min</sub> + *p*<sub>*w**i**d**t**h*</sub> + *w*<sub>*w**i**d**t**h*</sub>,
-
-*θ*<sub>*d*</sub> = *θ*<sub>0</sub>
+For $\nu_d > p_{min}+p_{width} + w_{width}$,
+$$\theta_d = \theta_0$$
 
 The parameters of the model are described below:
 
-1.  *S* is 1 or -1, as determined by the Model is increasing/decreasing
-    radio buttons. S=1 if Model is Increasing is selected, indicating
+1.  $S$ is $1$ or $-1$, as determined by the Model is increasing/decreasing
+    radio buttons. $S=1$ if Model is Increasing is selected, indicating
     that the model starts increasing at low doses.
 
-2.  *θ*<sub>0</sub> represents the zero-strength dose response:
+2.  $\theta_0$ represents the zero-strength dose response. Its prior is: $$\theta_0 \sim \text{N}(\mu_0, \sigma_0^2)$$
 
-> *θ*<sub>0</sub> ∼ *N*(*μ*<sub>0</sub>, *σ*<sub>0</sub><sup>2</sup>)
+3.  $\delta$ represents the maximal change in response from the zero-strength
+    dose. It is restricted to be positive, and has a prior of: $$\delta \sim \text{N}^+(\mu_\delta, \sigma_\delta^2)$$
 
-1.  $\delta$ represents the maximal change in response from the zero-strength
-    dose. It is restricted to be positive:
-
-> $\delta$ ∼ *N*<sup>+</sup>(*μ*<sub>$\delta$</sub>, *σ*<sub>$\delta$</sub><sup>2</sup>)
-
-1.  *p*<sub>min</sub> represents the lowest dose at which the maximal
+4.  $p_{min}$ represents the lowest dose at which the maximal
     change in response from the zero-strength is achieved. It is
-    restricted to be positive:
+    restricted to be positive, and has a prior of: $$p_{min} \sim \text{N}^+(\mu_{min}, \sigma_{min}^2)$$
 
-> *p*<sub>min</sub> ∼ *N*<sup>+</sup>(*μ*<sub>min</sub>, *σ*<sub>min</sub><sup>2</sup>)
-
-1.  *p*<sub>*w**i**d**t**h*</sub> represents the width of the plateau –
+5.  $p_{width}$ represents the width of the plateau –
     the region where all doses achieve maximal change in response from
-    the zero-strength dose. It is restricted to be positive:
+    the zero-strength dose. It is restricted to be positive, and has a prior of:
+    $$p_{width} ~ \sim \text{N}^+(\mu_{width}, \sigma_{width}^2)$$
 
-> *p*<sub>*w**i**d**t**h*</sub> ∼ *N*<sup>+</sup>(*μ*<sub>*w**i**d**t**h*</sub>, *σ*<sub>*w**i**d**t**h*</sub><sup>2</sup>)
 
-1.  *w*<sub>*w**i**d**t**h*</sub> represents the width of the region for
+6.  $w_{width}$ represents the width of the region for
     doses beyond the plateau, where response is returning to the
-    zero-strength dose level. It is restricted to be positive:
+    zero-strength dose level. It is restricted to be positive, and has a prior of:
+    $$w_{width} ~ \sim \text{N}^+(\mu_{w}, \sigma_{w}^2)$$
 
-> *w*<sub>*w**i**d**t**h*</sub> ∼ *N*<sup>+</sup>(*μ*<sub>*w*</sub>, *σ*<sub>*w*</sub><sup>2</sup>)
-
-1.  $\alpha$ determines the rate of change of the dose response curve for
-    doses below the plateau. Values less than 1 indicate a rapid initial
+7.  $\alpha$ determines the rate of change of the dose response curve for
+    doses below the plateau. Values less than $1$ indicate a rapid initial
     change from baseline, with slower change as the plateau is reached.
-    Values greater than 1 indicate a slow initial change from baseline,
+    Values greater than $1$ indicate a slow initial change from baseline,
     with more rapid change as the plateau is reached. To help avoid
     identifiability issues, $\alpha$ is restricted to be between
-    10<sup>-1</sup> and 10<sup>1</sup>.
+    $10^{-1}$ and $10^{1}$. $\alpha$'s prior is:
+    $$\alpha \sim \text{LN}^*(\mu_\alpha, \sigma_\alpha^2)$$
+    where $\text{LN}^*()$ represents the lognormal distribution with
+    truncation constraints at $10^{-1}$ and $10^{1}$.
 
-> $\alpha$ ∼ *L**N*<sup>\*</sup>(*μ*<sub>*α*</sub>, *σ*<sub>*α*</sub><sup>2</sup>)
-
-where *L**N*<sup>\*</sup> represents the lognormal distribution, with
-the truncation constraints at 10<sup>-1</sup> and 10<sup>1</sup>.
-
-1.  *β* determines the rate of change of the dose response curve for
-    doses beyond the plateau. Values less than 1 indicate a slow initial
+8.  $\beta$ determines the rate of change of the dose response curve for
+    doses beyond the plateau. Values less than $1$ indicate a slow initial
     change from the plateau level, with more rapid change subsequently.
-    Values greater than 1 indicate a rapid initial change from the
+    Values greater than $1$ indicate a rapid initial change from the
     plateau level, with slower change subsequently. To help avoid
-    identifiability issues, *β* is restricted to be between
-    10<sup>-1</sup> and 10<sup>1</sup>:
-
-> *β* ∼ *L**N*<sup>\*</sup>(*μ*<sub>*β*</sub>, *σ*<sub>*β*</sub><sup>2</sup>)
+    identifiability issues, $\beta$ is restricted to be between
+    $10^{-1}$ and $10^{1}$. The prior on $\beta$ is:
+    $$\beta \sim \text{LN}^*(\mu_\beta, \sigma_\beta^2)$$
 
 The U-shaped model has seven free parameters, and thus it is inadvisable
 to use such a model for dose-finding trial designs that contain only a
 few dose levels. When a small number of doses are available, it may help
-to constrain the values of $\alpha$ and *β* by utilizing small standard
+to constrain the values of $\alpha$ and $\beta$ by utilizing small standard
 deviations in the priors.
 
 <img src="coreUGattachments/CoreUserGuide/media/image25.emf"
@@ -1983,53 +1940,50 @@ style="width:4.63571in;height:4.63571in" />
 ### Plateau Model
 
 The plateau model is a special case of the U-shaped model, in which
-*p*<sub>*w**i**d**t**h*</sub> = ∞. That is, there is no return to
-baseline for high doses. This model thus eliminates three parameters,
-since *p*<sub>*w**i**d**t**h*</sub>, *w*<sub>*w**i**d**t**h*</sub>, and
-*β* are not used. See the figure below to see an example dose response
+$p_{width}=\infty$. That is, there is no return to
+baseline for high doses. This model eliminates three parameters from the U-Shaped model,
+since $p_{width}$, $w_{width}$, and $\beta$ are not used. See the figure below to see an example dose response
 model for the plateau model that mimics the beginning of the U-Shaped
 model above.
 
 <img src="coreUGattachments/CoreUserGuide/media/image26.emf"
 style="width:4.70513in;height:4.70714in" />
 
-### 3 Parameter Exp Logistic (Dichotomous Only)
+### 3 Parameter Exponential Logistic (Dichotomous Only)
 
 The 3-parameter exponential logistic model has the following structure:
 
-*θ*<sub>*d*</sub> = *a*<sub>1</sub> + *a*<sub>2</sub> \* *ν*<sub>*d*</sub><sup>*a*<sub>3</sub></sup>
+$$\theta_d = a_1 + a_2 \nu_d^{a_3}$$
 
-Where *ν*<sub>*d*</sub> is the effective dose strength of dose *d*. This
+Where $\nu_d$ is the effective dose strength of dose $d$. This
 is a logistic model for the dichotomous endpoint because
-*θ*<sub>*d*</sub> is the log odds ratio of the probability of the
-response, *P*<sub>*d*</sub> at dose *d*.
+$\theta_d$ is the log odds ratio of the probability of the
+response, $P_d$ at dose $d$.
 
-The exponent parameter $\alpha$<sub>3</sub> allows the change in slope at the
+The exponent parameter $\alpha_3$ allows the change in slope at the
 lower end of the curve to be asymmetric in comparison to the change in
 curve at the upper end of the curve.
 
 The priors for the parameters are:
 
-*a*<sub>1</sub> ∼ *N*(*Λ*<sub>1</sub>, *λ*<sub>1</sub><sup>2</sup>)
-
-*a*<sub>2</sub> ∼ *N*(*Λ*<sub>2</sub>, *λ*<sub>2</sub><sup>2</sup>)
-
-*a*<sub>3</sub> ∼ *N*<sup>+</sup>(*Λ*<sub>3</sub>, *λ*<sub>3</sub><sup>2</sup>)
-
+$$a_1\sim \text{N}(\Lambda_1, \lambda_1^2)$$
+$$a_2\sim \text{N}(\Lambda_2, \lambda_2^2)$$
+$$a_3\sim \text{N}^+(\Lambda_3, \lambda_3^2)$$
 The interpretations of the parameters defining this model are:
 
-*a*<sub>1</sub> is the dose response for a dose with strength 0
+$a_1$
+: the dose response for a dose with strength 0
 
-*a*<sub>2</sub> is the slope associated with the exponentiated dose
-strength
+$a_2$
+: the slope associated with the exponentiated dose strength
 
-*a*<sub>3</sub> is a shape parameter modifying the effective dose
-strength through exponentiation.
+$a_3$
+: a shape parameter modifying the effective dose strength through exponentiation.
 
-The figure below shows an example of two different exp3-paramtere
-exponential logistic model fits. Notably, the fit showing in green has
-an *a*<sub>3</sub> parameter greater than 1, which leads to faster
-increases of the sigmoid model as the effective dose strength increases.
+The figure below shows an example of two different 3-parameter
+exponential logistic model fits. Notably, the fit shown in green has
+an $a_3$ parameter greater than $1$, which leads to faster
+increases of the response rate model as the effective dose strength increases.
 
 <img src="coreUGattachments/CoreUserGuide/media/image27.png"
 style="width:3.424in;height:2.28267in" />
@@ -2045,29 +1999,28 @@ of this encouragement can be controlled using parameters of the prior
 distribution. The hierarchical model assumes that the arm parameters are
 drawn from the same normal distribution:
 
-*θ*<sub>*d*</sub> ∼ *N*(*μ*, *τ*<sup>2</sup>)
+$$\theta_d \sim \text{N}(\mu, \tau^2)$$
 
-Where *d* is the set of doses included in the model. The prior
-distributions for *μ* and *τ*<sup>2</sup> are
+Where $d$ is the set of doses included in the model. The prior
+distributions for $\mu$ and $\tau^2$ are
 
-*μ* ∼ *N*(*Λ*<sub>*μ*</sub>, *λ*<sub>*μ*</sub><sup>2</sup>)
+$\mu \sim \text{N}(\Lambda_\mu, \lambda_\mu^2)$
 
 and
 
-$$\tau^{2}\\\sim\\IG\left( \frac{\tau\_{n}}{2},\frac{\tau\_{\mu}^{2}\tau\_{n}}{2} \right)$$
+$$\tau^{2}\sim \text{IG}\left(\frac{\tau_{n}}{2},\frac{\tau_{\mu}^{2}\tau_{n}}{2} \right)$$
 
-where *τ*<sub>*μ*</sub> is a central value for *τ*, and
-*τ*<sub>*n*</sub> is the prior weight. *τ*<sup>2</sup> governs the
-amount of information sharing between doses in the model. The estimates
+where $\tau_\mu$ is a central value for $\tau$, and
+$\tau_n$ is the prior weight. $\tau^2$ governs the
+amount of information shared between doses in the model. The estimates
 of the dose parameters can be encouraged to be close together by
-choosing a small value for *τ*<sub>*μ*</sub> and a large value for
-*τ*<sub>*n*</sub>.
+choosing a small value for $\tau_\mu$ and a large value for
+$\tau_n$. [See here](../../../concepts/facts/InverseGammaDistribution.qmd "Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.") for a tool to help understand the inverse gamma distribution specified by center and weight parameters.
 
-The control arm can be included in the hierarchical model, if it is
+The control arm can be included in the hierarchical model if it is
 desired to encourage the experimental arms to be similar to the control
-arm, or excluded from it, if the experimental arms are encouraged to be
-similar to each other but not necessarily to the control arm. The
-exception is with time-to-event data, when the control arm must be
+arm, or excluded from it if the experimental arms are encouraged to be
+similar to each other but not necessarily to the control arm. This is not true with time-to-event data, when the control arm can only be
 excluded from the hierarchical model.
 
 ### Linear Model
@@ -2077,14 +2030,12 @@ responses and the dose strengths. (For dichotomous models, the linearity
 is on the log-odds scale, and the linearity is on the log hazard ratio
 scale for TTE models.) The model is
 
-*θ*<sub>*d*</sub> = *α* + *β**ν*<sub>*d*</sub>
-
-for all doses *d* in the model. Both $\alpha$ and *β* are given normal prior
+$$\theta_d=\alpha+\beta\nu_d$$
+for all doses $d$ in the model. Both $\alpha$ and $\beta$ are given normal prior
 distributions:
 
-*α* ∼ *N*(*Λ*<sub>*α*</sub>, *λ*<sub>*α*</sub><sup>2</sup>)
-
-*β* ∼ *N*(*Λ*<sub>*β*</sub>, *λ*<sub>*β*</sub><sup>2</sup>)
+$$\alpha \sim \text{N}(\Lambda_\alpha, \lambda_\alpha^2)$$
+$$\beta \sim \text{N}(\Lambda_\beta, \lambda_\beta^2)$$
 
 The linear model is appropriate when there is strong scientific
 knowledge that the shape of the response curve should be linear as a
@@ -2092,7 +2043,7 @@ function of dose strength. Note that if an arm has a dose strength
 between two other arms in the model, its response will always be
 estimated to be between the responses of those two arms. As a result,
 the linear model may not be appropriate in combination with certain
-decision quantities such as Pr(Max), because some doses are guaranteed
+decision quantities such as [Pr(Max)]{.fake-code-block}, because some doses are guaranteed
 to have probability zero of being the best arm. If the control arm is
 included in the linear model and it has the smallest dose value, then
 all experimental arms will always have exactly the same probability of
@@ -2102,9 +2053,13 @@ We recommend creating scenarios where the true parameters deviate from
 linearity and simulating them to test the robustness of a design based
 on the linear model.
 
+::: {.callout-tip}
+## Note
+
 For dichotomous models, the linear model replaces the 2-parameter
 logistic model available in FACTS versions before 6.4. The two models
 are identical.
+:::
 
 ### Hierarchical Linear Model
 
@@ -2113,28 +2068,25 @@ model. This model encourages the arm responses to have a linear-like
 shape, but also includes a term allowing parameters to deviate from
 linearity when appropriate. The arm parameters satisfy the relationship
 
-*θ*<sub>*d*</sub> = *α* + *β**ν*<sub>*d*</sub> + *ζ*<sub>*d*</sub>
-
-where the $\alpha$ and *β* parameters are as in the linear model, with prior
+$$\theta_d = \alpha + \beta \nu_d + \zeta_d$$
+where the $\alpha$ and $\beta$ parameters are as in the linear model, with prior
 distributions
 
-*α* ∼ *N*(*Λ*<sub>*α*</sub>, *λ*<sub>*α*</sub><sup>2</sup>)
-
-*β* ∼ *N*(*Λ*<sub>*β*</sub>, *λ*<sub>*β*</sub><sup>2</sup>),
-
-and the *ζ*<sub>*d*</sub> parameters are the deviations from linearity.
+$$\alpha \sim \text{N}(\Lambda_\alpha, \lambda_\alpha^2)$$
+$$\beta \sim \text{N}(\Lambda_\beta, \lambda_\beta^2)$$
+and the $\zeta_d$ parameters are the deviations from linearity.
 These deviations are assumed to have a normal distribution constrained
 so that their average value is zero:
 
-*ζ*<sub>*d*</sub> ∼ *N*(0, *τ*<sup>2</sup>) with ∑*ζ*<sub>*d*</sub> = 0.
+$$\zeta_d \sim \text{N}(0, \tau^2) \text{ with } \sum_d\zeta_d=0.$$
 
-The prior distribution for *τ*<sup>2</sup> is
+The prior distribution for $\tau^2$ is
 
-$$\tau^{2}\\\sim\\IG\left( \frac{\tau\_{n}}{2},\frac{\tau\_{\mu}^{2}\tau\_{n}}{2} \right)$$
+$$\tau^{2}\sim\text{IG}\left(\frac{\tau_{n}}{2},\frac{\tau_{\mu}^{2}\tau_{n}}{2} \right)$$
 
-If *τ*<sup>2</sup> is small, which can be encouraged by choosing
-*τ*<sub>*μ*</sub> to be small and *τ*<sub>*n*</sub> to be large, then
-the dose parameter estimates will lie close to a line.
+If $\tau^2$ is small, which can be encouraged by choosing
+$\tau_\mu$ to be small and $\tau_n$ to be large, then
+the dose parameter estimates will lie close to a line. [See here](../../../concepts/facts/InverseGammaDistribution.qmd "Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.") for help understanding FACTS's parameterization of the inverse gamma distribution.
 
 The hierarchical linear model is a good choice when, for example, one
 expects a linear relationship between the dose strengths and the
@@ -2144,13 +2096,13 @@ response.
 
 ## 2D Treatment Dose Response Models
 
-If on the Study &gt; Treatment Arms tab, the “Use 2D treatment arm
+If on the Study > Treatment Arms tab, the “Use 2D treatment arm
 model” option has been checked, the user may either use any of the 1D
 Dose Response options described above, or may use a dose response model
 specifically modelling the two dosing dimensions.
 
 If using one of the 1D dose response models, the effective dose strength
-ν<sub>d</sub> is as specified by the user on the “Select doses to be
+$\nu_d$ is as specified by the user on the “Select doses to be
 used in the trial” tab. These calculated dose levels are forced to be
 distinct values, and this results in a 1D ordering of the combinations.
 
@@ -2166,55 +2118,49 @@ These are described in the next sections.
 
 The 2D dose response models work with a slightly different notation to
 accommodate that treatments are defined as the combination of two
-factors. Rather than *θ*<sub>*i*</sub> being the estimated mean of the
-dose response estimate for dose *i*, the estimated dose response for the
-treatment created from row factor level *r* and column factor level *c*
-is denoted *θ*<sub>*r**c*</sub>. *Y*<sub>*r**c*</sub> denotes the mean
+factors. Rather than $\theta_i$ being the estimated mean of the
+dose response estimate for dose $i$, the estimated dose response for the
+treatment created from row factor level $r$ and column factor level $c$
+is denoted $\theta_{rc}$. $Y_{rc}$ denotes the mean
 of the observed data in the cell.
 
 In the continuous case, the likelihood for the data is,
 
-*Y*<sub>*r**c*</sub> ∼ *N*(*θ*<sub>*r**c*</sub>, *σ*<sup>2</sup>)
+$$Y_{rc} \sim \text{N}(\theta_{rc}, \sigma^2)$$
+$$\sigma^{2}\sim\text{IG}\left(\frac{\sigma_{n}}{2},\frac{\sigma_{\mu}^{2}\sigma_{n}}{2} \right)$$
 
-$$\sigma^{2}\\\sim\\IG\left( \frac{\sigma\_{n}}{2},\frac{\sigma\_{\mu}^{2}\sigma\_{n}}{2} \right)$$
-
-Where the form of *θ*<sub>*r**c*</sub> varies based on dose response
+Where the form of $\theta_{rc}$ varies based on dose response
 model selection.
 
 Similarly, in the dichotomous case,
 
-*Y*<sub>*r**c*</sub> ∼ *B**e**r**n**o**u**l**l**i*(*P*<sub>*r**c*</sub>)
-
-$$P\_{rc} = \\\frac{e^{\theta\_{rc}}}{1 + e^{\theta\_{rc}}}$$
+$$Y_{rc} \sim \text{Bernoulli}(P_{rc})$$
+$$P_{rc} = \frac{e^{\theta_{rc}}}{1 + e^{\theta_{rc}}}$$
 
 ### 2D Continuous Factorial Model
 
 The 2D Continuous Factorial Model fits a regression on the dose response
 that uses the numeric dose strength as a continuous valued covariate.
-The dose response (with *η*<sub>*r*</sub> and *ζ*<sub>*c*</sub> denoting
+The dose response (with $\eta_r$ and $\zeta_c$ denoting
 dose strength of the row level and column level, respectively) is
-modelled as:
+modeled as:
 
-*θ*<sub>*r**c*</sub> = *α*<sub>0</sub> + *α*<sub>1</sub>*ζ*<sub>*c*</sub> + *α*<sub>2</sub>*η*<sub>*r*</sub> + *α*<sub>3</sub>*ζ*<sub>*c*</sub>*η*<sub>*r*</sub>
-
+$$\theta_{rc} = \alpha_0 + \alpha_1 \zeta_c + \alpha_2 \eta_r + \alpha_3\zeta_c \eta_r$$
 With priors
 
-*α*<sub>0</sub> ∼ *N*(*μ*<sub>0</sub>, *σ*<sub>0</sub><sup>2</sup>)
+$$\alpha_0 \sim \text{N}(\mu_0, \sigma_0^2)$$
+$$\alpha_1 \sim \text{N}(\mu_1, \sigma_1^2)$$
+$$\alpha_2 \sim \text{N}(\mu_2, \sigma_2^2)$$
+$$\alpha_3 \sim \text{N}(\mu_3, \sigma_3^2)$$
 
-*α*<sub>1</sub> ∼ *N*(*μ*<sub>1</sub>, *σ*<sub>1</sub><sup>2</sup>)
-
-*α*<sub>2</sub> ∼ *N*(*μ*<sub>2</sub>, *σ*<sub>2</sub><sup>2</sup>)
-
-*α*<sub>3</sub> ∼ *N*(*μ*<sub>3</sub>, *σ*<sub>3</sub><sup>2</sup>)
-
-Thus $\alpha$<sub>0</sub> is the response at the control combination,
-*α*<sub>1</sub> is the linear coefficient of the response to the column
-factor strengths *ζ*<sub>*c*</sub>, and $\alpha$<sub>2</sub> is the linear
+Then, $\alpha_0$ is the response at the control combination,
+$\alpha_1$ is the linear coefficient of the response to the column
+factor strengths $\zeta_c$, and $\alpha_2$ is the linear
 coefficient of the response to the row factor strengths
-*η*<sub>*r*</sub>.
+$\eta_r$.
 
 The user has the option to simplify the model and exclude the
-interaction term $\alpha$<sub>3</sub>, which is the coefficient of the
+interaction term $\alpha_3$, which is the coefficient of the
 product of the two factor strengths.
 
 Note that despite being called “continuous” this dose response model
@@ -2233,18 +2179,18 @@ that uses the dose strength as a factor covariate rather than a numeric
 dose strength. Each dose is an independent level within each row or
 column factor, so any dose is equidistant from all other doses
 
-*θ*<sub>*r**c*</sub> = *α* + *γ*<sub>*r*</sub> + *β*<sub>*c*</sub>
+$$\theta_{rc} = \alpha + \gamma_r + \beta_c$$
 
 With priors
 
-*α* ∼ *N*(*μ*<sub>*α*</sub>, *σ*<sub>*α*</sub><sup>2</sup>)
+$$\alpha \sim \text{N}(\mu_\alpha, \sigma_\alpha^2)$$
 
-*β*<sub>*c*</sub> ∼ *N*(*μ*<sub>*β*<sub>*c*</sub></sub>, *σ*<sub>*β*<sub>*c*</sub></sub><sup>2</sup>)
+$$\beta_c \sim \text{N}(\mu_{\beta_c}, \sigma_{\beta_c}^2)$$
+$$\gamma_r \sim \text{N}(\mu_{\gamma_r}, \sigma_{\gamma_r}^2)$$
 
-*γ*<sub>*r*</sub> ∼ *N*(*μ*<sub>*γ*<sub>*r*</sub></sub>, *σ*<sub>*γ*<sub>*r*</sub></sub><sup>2</sup>)
 
 The parameters associated with lowest level of each factor,
-*γ*<sub>0</sub> and *β*<sub>0</sub>, are constrained to be 0.
+$\gamma_0$ and $\beta_0$, are constrained to be $0$.
 
 <img src="coreUGattachments/CoreUserGuide/media/image30.png"
 style="width:5.51472in;height:4.35172in"
@@ -2258,45 +2204,37 @@ column factors separately.
 
 #### The Base Model, with Control Included
 
-The treatment effect for the combination of level *r* in the row factor
-and level *c* in the column factor is denoted as *θ*<sub>*r**c*</sub>,
-and *Y*<sub>*r**c*</sub> is the observed data in that cell. The
-borrowing parameters are denoted as *ϕ* for the row factor smoothing,
-and *τ* for the column factor smoothing. The dose strengths are denoted
-as *v*<sub>*r*</sub> for the row factors, and *ω*<sub>*c*</sub> for the
-column factors. Let
-Δ*ν*<sub>*r*</sub> = *ν*<sub>*r*</sub> − *ν*<sub>*r* − 1</sub> and
-Δ*ω*<sub>*c*</sub> = *ω*<sub>*c*</sub> − *ω*<sub>*c* − 1</sub> (for
-*r* &gt; 0 and *c* &gt; 0). For notational convenience at the grid edge,
-let *θ*<sub>−1, *c*</sub> = 0, *θ*<sub>*r*, −1</sub> = 0,
-Δ*ν*<sub>0</sub> ≡ ∞, and Δ*ω*<sub>0</sub> ≡ ∞.
+The treatment effect for the combination of level $r$ in the row factor
+and level $c$ in the column factor is denoted as $\theta_{rc}$,
+and $Y_{rc}$ is the observed data in that cell. The
+borrowing parameters are denoted as $\phi$ for the row factor smoothing,
+and $\tau$ for the column factor smoothing. The dose strengths are denoted
+as $\nu_r$ for the row factors, and $\omega_c$ for the
+column factors. Let $\Delta \nu_r = \nu_r - \nu_{r-1}$ and $\Delta \omega_c = \omega_c - \omega_{c-1}$ (for $r>0$ and $c>0$). For notational convenience at the grid edge,
+let $\theta_{-1, c} = 0$, $\theta_{r,-1}$, $\Delta\nu_0\equiv\infty$, and $\Delta\omega_0\equiv\infty$.
 
-The 2-D NDLM Model *with control included in the model* can then be
+The 2-D NDLM Model ***with control included in the model*** can then be
 specified as:
 
-*θ*<sub>0, 0</sub> ∼ *N*(*μ*<sub>0</sub>, *τ*<sub>0</sub><sup>2</sup>)
-
-*θ*<sub>*r**c*</sub> ∼ *N*(*μ*<sub>*r**c*</sub>, *τ*<sub>*r**c*</sub><sup>2</sup>)
-
+$$\theta_{0,0} \sim \text{N}(\mu_0, \tau_0^2)$$
+$$\theta_{rc} \sim \text{N}(\mu_{rc}, \tau_{rc}^2)$$
 where
 
-$$\tau\_{rc}^{2} = \\\left( \frac{1}{\mathrm{\Delta}\nu\_{r}\phi^{2}} + \frac{1}{\mathrm{\Delta}\omega\_{c}\tau^{2}} \right)^{- 1}$$
+$$\tau_{rc}^{2} = \left( \frac{1}{\mathrm{\Delta}\nu_{r}\phi^{2}} + \frac{1}{\mathrm{\Delta}\omega_{c}\tau^{2}} \right)^{- 1}$$
 
-$$\mu\_{rc} = \\\tau\_{rc}^{2}\left( \frac{\theta\_{r - 1,c}}{\mathrm{\Delta}\nu\_{r}\phi^{2}} + \frac{\theta\_{r,c - 1}}{\mathrm{\Delta}\omega\_{c}\tau^{2}} \right)$$
+$$\mu_{rc} = \tau_{rc}^{2}\left( \frac{\theta_{r - 1,c}}{\mathrm{\Delta}\nu_{r}\phi^{2}} + \frac{\theta_{r,c - 1}}{\mathrm{\Delta}\omega_{c}\tau^{2}} \right)$$
 
 with priors
 
-$$\tau^{2}\\\sim\\IG\left( \frac{\tau\_{n}}{2},\frac{\tau\_{\mu}^{2}\tau\_{n}}{2} \right)$$
+$$\tau^{2}\sim\text{IG}\left( \frac{\tau_{n}}{2},\frac{\tau_{\mu}^{2}\tau_{n}}{2} \right)$$
 
-$$\phi^{2}\\\sim\\IG\left( \frac{\phi\_{n}}{2},\frac{\phi\_{\mu}^{2}\phi\_{n}}{2} \right)$$
+$$\phi^{2}\sim\text{IG}\left( \frac{\phi_{n}}{2},\frac{\phi_{\mu}^{2}\phi_{n}}{2} \right)$$
 
-Note: that not all combinations of *r* and *c* will have data associated
+Note: that not all combinations of $r$ and $c$ will have data associated
 with them. However, FACTS will still evaluate the prior at all
 combinations. Thus, in the situation depicted below where the grayed-out
 point indicates a treatment combination with no allocation,
-*θ*<sub>1, 2</sub> is not modeled conditionally only on
-*θ*<sub>1, 1</sub>; *θ*<sub>0, 1</sub> also informs on
-*θ*<sub>1, 2</sub> via *θ*<sub>0, 2</sub>.
+$\theta_{1,2}$ is not modeled conditioned only on $\theta_{1,1}$. $\theta_{0,1}$ also informs on $\theta_{1,2}$ via $\theta_{0,2}$.
 
 <img src="coreUGattachments/CoreUserGuide/media/image31.png"
 style="width:2.1in;height:2.1in"
@@ -2307,10 +2245,9 @@ alt="Calendar Description automatically generated" />
 Optionally, the user might want to specify the row factor borrowing as a
 function of the column factor borrowing:
 
-*ϕ* ≡ *k* • *τ*
-
-where *k* is a user-specified constant. This can be performed by
-selecting “Fixed smoothing ratio” in the *ϕ*<sup>2</sup> prior
+$$\phi\equiv k \cdot \tau$$
+where $k$ is a user-specified constant. This can be performed by
+selecting “Fixed smoothing ratio” in the $\phi^2$ prior
 specification area.
 
 ####  Control not in model, no zero-level doses
@@ -2320,81 +2257,57 @@ expect if the column factor represented doses and the row factor
 represented frequency), then a prior for the lowest dose would instead
 be needed as input from the GUI:
 
-*θ*<sub>1, 1</sub> ∼ *N*(*μ*<sub>1</sub>, *τ*<sub>1</sub><sup>2</sup>)
+$$\theta_{1,1} \sim \text{N}(\mu_1, \tau_1^2)$$
 
 <img src="coreUGattachments/CoreUserGuide/media/image32.png"
 style="width:5.47053in;height:4.31685in"
 alt="A screenshot of a social media post Description automatically generated" />
 
-## Baseline Adjusted Model (Continuous Only)
+
+
+## Baseline Adjusted Dose Response Models (Continuous Only)
 
 If a baseline endpoint is simulated, the user has the option of adding a
-linear covariate effect to the dose response model. Thus, if the chosen
-dose response model states that for dose d,
+linear covariate effect to the dose response model. If the chosen
+dose response model states that for dose $d$,
+$$Y\sim \text{N}(\theta_d, \sigma^2)$$,
+then the distribution including the baseline adjustment term is
+$$Y\sim \text{N}(\theta_d+\beta Z, \sigma^2)$$.
+where $Z$ is the standardized baseline value $\left(Z=\frac{X-\bar X}{s_x}\right)$, and $\beta$ is an estimated parameter that is distinct from any parameter called $\beta$ within the dose response model. 
 
-*E*\[*Y*<sub>*d*</sub>\] = *g*(*d*)
-
-Then the baseline adjusted model will fit a model of the form
-
-*E*\[*Y*<sub>*d*</sub>|*Z*\] = *g*(*d*)+ *β**Z*
-
-where β is a parameter estimated alongside the dose response parameters,
-and *Z* is the standardized baseline value (take each baseline value,
-subtract the observed mean, and divide by the observed standard
-deviation, for a given dataset this creates a set of fixed known
-constants). The model uses a normal prior for β for which the user
+The baseline adjustment model uses a normal prior for $\beta$ for which the user
 enters a mean and standard deviation.
 
-Note that the VSR based simulation of baseline is more general than the
-model description (this is to allow baseline to be incorporated in a
+:::{.callout-tip}
+## Technical Note
+
+The VSR based simulation of baseline is more general than the
+model adjustment for baseline (this is to allow baseline to be incorporated in a
 number of different ways). This means that the parameters entered in the
-VSR (for example the β parameter) need not match its estimated value. As
-a simple example, suppose we enter into the VSR response
-*Y* ∼ *N*(*μ*<sub>*Y*</sub>, *σ*<sub>*Y*</sub>), baseline
-*X* ∼ *N*(*μ*<sub>*X*</sub>, *σ*<sub>*X*</sub>), and use the baseline
-adjustment so the actual simulated Y is
-$Y^{'} = Y + \beta\_{VSR}\frac{X - c}{s}$.
+VSR (for example the $\beta$ parameter) will not always match the corresponding parameter estimated in the dose response model.
 
-The baseline adjusted value works for Z (standardized value of X). For a
-sufficiently large sample, this should be approximately
-$Z = \\\frac{X - \mu\_{X}\\}{\sigma\_{X}}$ and thus X is approximately
-*Z**σ*<sub>*X*</sub> + *μ*<sub>*X*</sub>. Thus, the actual simulated
-response is
+As a simple example, suppose we enter into the VSR response $Y\sim \text{N}(\mu_Y, \sigma_Y^2)$, baseline $X\sim \text{N}(\mu_X, \sigma_X^2)$, and use the baseline adjustment ($c$, $s$, and $\beta_{VSR}$ are user inputs) so the actual simulated response $Y$ is $Y^{'} = Y + \beta_{VSR}\frac{X - c}{s}$.
 
-$$Y^{'} = Y + \beta\_{VSR}\left( \frac{Z\sigma\_{X} + \mu\_{X} - c}{s} \right)$$
-
-The model is fit under the assumption the Z values are fixed constants
-(identical to any simple linear regression). Thus, for a simple dose
-response (no model assumed, just fitting a separate mean for each dose
-
-$$E\left\lbrack Y^{'} \right\rbrack = \mu\_{Y} + \beta\_{VSR}\left( \frac{Z\sigma\_{X} + \mu\_{X} - c}{s} \right) = \left\lbrack \mu\_{Y} + \beta\_{VSR}\left( \frac{\mu\_{X} - c}{s} \right) \right\rbrack + \left\lbrack \beta\_{VSR}\frac{\sigma\_{X}}{s} \right\rbrack Z$$
-
-Thus, the fitted β from the model may not match the β used in the VSR,
-unless the values are also standardized in the VSR. Note the variances
-will always be inflated by using a baseline adjustment, so the estimated
-standard deviation of the responses from the model will tend to be
-greater than the standard deviation entered in the dose response tab of
-the VSR.
+If the values of $c$ and $s$ used in the baseline adjustment are the same as the mean $\mu_X$ and standard deviation $\sigma_X$ of the simulated baseline, then the $\beta_{VSR}$ will converge to the estimated $\beta$ parameter as the sample size of the study increases. If $c\ne\mu_X$ or $s\ne\sigma_X$, then the estimated $\beta$ will not converge to the $\beta_{VSR}$ used in data simulation. Additionally, if the baseline values are simulated from a truncated normal distribution, then the estimated $\beta$ will not converge to $\beta_{VSR}$.
+:::
 
 ## Control and Comparator Priors
 
-The control arm may be modelled as part of the dose response model or
-separately. If it is modelled separately, it may have a simple user
+For [most](## "All continuous and dichotomous models except the U-shaped and Plateau models.") dose response models the control arm can be modeled either as part of the dose response model or separately. If it is modeled separately, it may have a simple user
 specified Normal prior or a “historical” prior. A historical prior in
 FACTS is a hierarchical prior that models the response on control as
-coming from a distribution that also contains some historical response
-rates.
+coming from a distribution that also contains trial outcomes from external historical studies.
 
 <img src="coreUGattachments/CoreUserGuide/media/image33.png"
 style="width:5.7284in;height:4.23754in" />
 
-The active comparator is always modelled separately, and as with a
-control arm modelled separately, it can be modelled with a user
+The active comparator is always modeled separately, and as with a
+control arm modeled separately, it can be modeled with a user
 specified Normal prior or a “historical” prior.
 
-When a user specified Normal prior is used the user specifies the mean
+When a user specified Normal prior is used, the user specifies the mean
 and standard deviation of the prior normal distribution for
-*θ*<sub>0</sub>. This is useful if the control response is not thought
+$\theta_0$. This is useful if the control response is not thought
 to be consistent with the model being used to model the study doses –
 for instance if using an NDLM and there might be a sharp step in
 response from control to the lowest dose.
@@ -2409,11 +2322,11 @@ conjugate and allow efficient computation and avoid problems of
 convergence. 
 [Andrew Gelman’s 2006 paper](#gelman "Prior distributions for variance parameters in hierarchical models, Andrew Gelman, Bayesian Analysis 2006, 1, Number 3 pp 515-533.") however notes a potential problem with this model, the problem is specifically
 
--   When updating the estimate of the variance of a **hierarchical**
+-   When updating the estimate of the variance of a hierarchical
     model parameter there will be typically relative few actual data
     observations (e.g. relatively few historic studies for estimating
-    the variance of the hyper parameter in a BAC (Bayesian Augmented
-    Control) model for the response on a control arm, and relatively few
+    the variance of the hyper parameter in a Bayesian Augmented
+    Control model for the response on a control arm, and relatively few
     observations of the change in response from one dose to the next
     when using an NDLM dose-response model).
 
@@ -2422,21 +2335,26 @@ convergence.
     the posterior estimate of variance.
 
 In FACTS this possibility arises in the dose response models in the
-context of priors for ‘tau’ *τ* parameter for the NDLM models and
-*α*<sub>4</sub> parameter for the hierarchical logistic dose response
+context of priors for the $\tau$ parameter for the NDLM models and the $a_4$ parameter for the hierarchical logistic dose response
 model, where the number of observations is the number of doses or dose
-intervals. \[It also arises in the context of Bayesian Augmented Control
-and the hierarchical modeling or responses in different groups in ED\].
+intervals.
 
 To avoid the problem reported by Gelman we recommend using a weakly
 informative prior. Using the settings that control how the inverse-gamma
-distribution is parameterized (Settings &gt; Options &gt; Gamma
-Distribution Parameters), use the ‘mean and weight’ options and use a
+distribution is parameterized (Settings > Options > Gamma
+Distribution Parameters), use the ‘center and weight’ options and use a
 weight of 1, with a ‘reasonable’ expectation for the upper limit
-difference in the values being modeled entered as the prior mean for the
-SD. Strictly the distribution is the prior of the variance, so the
-parameter being specified is more correctly the prior mean of the square
+difference in the values being modeled entered as the center for the
+SD. The inverse gamma distribution is the prior of the variance, so the center parameter being specified is more correctly an expectation of the square
 root of the mean of the variance.
+
+:::{.callout-tip}
+## Help with Inverse Gamma specification
+
+We have created a tool that can help visualize the inverse gamma distribution and relate the center/weight parameterization, which FACTS uses by default, to the alpha/beta parameterization that is common. 
+
+[See here.](../../../concepts/facts/InverseGammaDistribution.qmd)
+:::
 
 This ‘reasonable’ upper limit for the difference is a value that a
 clinical team will usually have an intuition about: for the largest
@@ -2447,19 +2365,13 @@ change in response from one dose to the next is the ‘expected difference
 in effect size’ that might have been used to power the trial in a
 conventional setting.
 
-In this setting we are typically less concerned with the final estimate
-of the parameters of the hierarchical model and more concerned with the
-estimates of the values in the model (the dose –response) and thus less
-concerned to have a non-informative prior for it. The purpose of the
-trial is usually to estimate the dose response, and the hierarchical
-models are a means to an end, not an end in themselves.
+In the dose response setting the smoothing parameters like $\tau$ in the NDLM are nuisance parameters in the sense that they are necessary to estimate in order to get appropriate estimates of the dose response values, but are rarely of inferential interest on their own. This can ease some of the undue burden of setting a prior on $\tau$. If it [gives estimates of the dose responses that look like they should](## "This is subjective. The **Per Sim: Response and Subject Alloc** plot in FACTS can help assess this fit."), then it is generally good enough.
 
 ## Handling Missing Data
 
-FACTS allows a “preprocessing” step to occur in handling missing data
-due to dropouts. If a subject has incomplete data due to a dropout, the
+FACTS allows a “pre-processing” step before fitting the dose response model that helps with handling of data that is missing due to dropouts. If a subject has incomplete data due to a dropout, the
 user may specify all dropouts have their unknown final endpoint treated
-as known with the following options
+as known with the following options:
 
 1.  BOCF (continuous only, requires baseline be simulated) – All
     dropouts are assumed to have a final endpoint equal to their
@@ -2475,9 +2387,9 @@ as known with the following options
     be failures (which may be coded as 0 or 1 depending on whether a
     response is considered a success).
 
-Subjects who are imputed in this preprocessing step have final endpoint
+Subjects who are imputed in this pre-processing step have final endpoint
 values known and used for the purposes of estimating the dose response
-curve. However, these preprocessed final endpoint values are not used in
+curve. However, these pre-processed final endpoint values are not used in
 the updating on the longitudinal model, which is based only on observed
 visit data.
 
@@ -2485,8 +2397,7 @@ If the user does not specify one of the dropout imputation methods
 specified above, the dropout subjects and incomplete subjects (subjects
 who have not reached their final endpoint but are still continuing in
 the study) will have their final endpoints multiply imputed using
-Bayesian Multiple Imputation, described in the longitudinal modeling
-section.
+Bayesian Multiple Imputation, described in the [Longitudinal Modeling](#longitudinalModeling) section.
 
 Generally, patients with “no data” do not affect the posterior
 distribution, and thus are omitted from the analysis. However, one must
@@ -2497,39 +2408,18 @@ recorded, then the subject still supplies information through the
 dropout imputation (similarly for BOCF). However, if LOCF is selected
 and no visit data is available, there remains no information on the
 subject to be used for the LOCF dropout imputation, and thus these
-subjects are omitted from the analysis as well. Thus, all subjects are
-included which either 1) have some visit data available, or 2) are
+subjects are omitted from the analysis. All subjects are
+included if they either 1) have some visit data available, or 2) are
 dropouts before visit 1 with sufficient information to impute their
-final endpoint with this preprocessing step.
+final endpoint with this pre-processing step.
 
 ### Time-to-Event Missingness
 
 For a time-to-event endpoint, as is the convention in this endpoint,
 subjects are observed up to the time they have an event (or the end of
-follow up), so no subject drops out after having had an event; subjects
+follow up), so no subject drops out after having had an event. Subjects
 that do drop-out are included in the analysis as not having had an event
 up to the last observation of the subject.
-
-## Bayesian Baseline Adjusted Model
-
-For a continuous endpoint, if Baseline has been included in the
-simulation, it is possible to include modeling a linear covariate effect
-to the dose response model. The model for response changes from:
-
-*Y* ∼ *N*(*θ*<sub>*d*</sub>, *σ*<sup>2</sup>)
-
-to:
-
-*Y* ∼ *N*(*θ*<sub>*d*</sub> + *β**Z*, *σ*<sup>2</sup>)
-
-where β is the estimated parameter and Z is the standardized baseline
-value.
-
-$$Z = \frac{\left( X - \overline{X} \right)}{s\_{x}}$$
-
-Note that the estimate of β will only correspond to the β used on the
-VSR tab to simulate the baseline adjustment if the centering and scaling
-values are the mean and the standard deviation of the baseline values.
 
 # Augmented Priors (Historical Prior)
 
@@ -3023,7 +2913,9 @@ The following variations for adjusting the alpha level for multiple
 comparisons should be available using the user-specified 1-sided alpha:
 unadjusted, and Bonferonni adjusted.
 
-# Longitudinal Modelling
+<a name="longitudinalModeling"/>
+
+# Longitudinal Modeling
 
 The continuous and dichotomous endpoints provide the ability to use
 longitudinal models to utilize data from incomplete subject’s observed
@@ -3213,7 +3105,7 @@ instance are formulated as:
 
 *β*<sub>*t*</sub> ∼ *N*(*β*<sub>*μ*</sub>, *β*<sub>*σ*</sub><sup>2</sup>)
 
-$$\lambda\_{t}^{2}\\\sim\\IG\left( \frac{\lambda\_{n}}{2},\frac{\lambda\_{\mu}^{2}\lambda\_{n}}{2} \right)$$
+$$\lambda_{t}^{2}\\\sim\\IG\left( \frac{\lambda_{n}}{2},\frac{\lambda_{\mu}^{2}\lambda_{n}}{2} \right)$$
 
 The above prior formulation may not be desirable if specifying priors
 that are not extremely diffuse – especially on the *β* parameters.
@@ -3228,7 +3120,7 @@ priors apply to all model instances:
 
 *β*<sub>*t*</sub> ∼ *N*(*β*<sub>*μ*<sub>*t*</sub></sub>, *β*<sub>*σ*<sub>*t*</sub></sub><sup>2</sup>)
 
-$$\lambda\_{t}^{2}\\\sim\\IG\left( \frac{\lambda\_{n\_{t}}}{2},\frac{\lambda\_{\mu\_{t}}^{2}\lambda\_{n\_{t}}}{2} \right)$$
+$$\lambda_{t}^{2}\\\sim\\IG\left( \frac{\lambda_{n_{t}}}{2},\frac{\lambda_{\mu_{t}}^{2}\lambda_{n_{t}}}{2} \right)$$
 
 It is also possible to specify priors “Per model instance and visit,” in
 which every visit has separate priors, and those differing priors vary
@@ -3240,7 +3132,7 @@ method. The user inputted prior parameters are now subscripted by both
 
 *β*<sub>*t**i*</sub> ∼ *N*(*β*<sub>*i*</sub>, *β*<sub>*σ*<sub>*t**i*</sub></sub><sup>2</sup>)
 
-$$\lambda\_{ti}^{2}\\\sim\\IG\left( \frac{\lambda\_{n\_{ti}}}{2},\frac{\lambda\_{\mu\_{ti}}^{2}\lambda\_{n\_{ti}}}{2} \right)$$
+$$\lambda_{ti}^{2}\\\sim\\IG\left( \frac{\lambda_{n_{ti}}}{2},\frac{\lambda_{\mu_{ti}}^{2}\lambda_{n_{ti}}}{2} \right)$$
 
 A potential starting place for non-informative prior values would be
 
@@ -3317,13 +3209,13 @@ an inverse gamma prior distribution with prior central value
 *τ*<sub>*μ*</sub> and weight (in terms of “equivalent number of
 observations”) *τ*<sub>*n*</sub>:
 
-$$\tau^{2}\\\sim\\IG\left( \frac{\tau\_{n}}{2},\\\frac{\tau\_{\mu}^{2}\tau\_{n}}{2} \right)$$
+$$\tau^{2}\\\sim\\IG\left( \frac{\tau_{n}}{2},\\\frac{\tau_{\mu}^{2}\tau_{n}}{2} \right)$$
 
 The prior for the *λ*<sub>*t*</sub><sup>2</sup> terms is an inverse
 gamma distribution with prior central value *λ*<sub>*μ*</sub> and weight
 (in terms of “equivalent number of observations”) *λ*<sub>*n*</sub>:
 
-$$\lambda\_{t}^{2}\\\sim\\IG\left( \frac{\lambda\_{n}}{2},\frac{\lambda\_{\mu}^{2}\lambda\_{n}}{2} \right)$$
+$$\lambda_{t}^{2}\\\sim\\IG\left( \frac{\lambda_{n}}{2},\frac{\lambda_{\mu}^{2}\lambda_{n}}{2} \right)$$
 
 A reasonable starting place for prior values would be
 
@@ -3367,7 +3259,7 @@ pair (*X*<sub>*k**t*</sub>, *X*<sub>*k**T*</sub>) is selected with
 probability based on the pair’s time *t* visit response’s proximity to
 the observed *Y*<sub>*i**t*</sub>:
 
-$$\Pr\left( Selecting\\\left( X\_{kt},\\X\_{kT} \right) \right) = \frac{\exp\left( - \frac{1}{2h\_{X\_{t}}^{2}}\left( Y\_{it} - X\_{kt} \right)^{2} \right)}{\sum\_{k = 1}^{n}{\exp\left( - \frac{1}{2h\_{X\_{t}}^{2}}\left( Y\_{it} - X\_{kt} \right)^{2} \right)}}$$
+$$\Pr\left( Selecting\\\left( X_{kt},\\X_{kT} \right) \right) = \frac{\exp\left( - \frac{1}{2h_{X_{t}}^{2}}\left( Y_{it} - X_{kt} \right)^{2} \right)}{\sum_{k = 1}^{n}{\exp\left( - \frac{1}{2h_{X_{t}}^{2}}\left( Y_{it} - X_{kt} \right)^{2} \right)}}$$
 
 Then, a value of *Y*<sub>*i**T*</sub> is imputed from the following
 distribution, which uses the selected pair’s final endpoint response
@@ -3379,7 +3271,7 @@ The bandwidths *h*<sub>*X*<sub>*t*</sub></sub> and
 *h*<sub>*X*<sub>*T*</sub></sub> are selected based on the criterion
 given by Scott (1992). That is,
 
-$$h\_{X\_{j}} = \sigma\_{X\_{j}}\\\left( 1 - \rho^{2} \right)^{\frac{5}{12}}\\\left( 1 + \\\frac{\rho^{2}}{2} \right)^{- \frac{1}{6}}{\\n}^{- \frac{1}{6}}\\\\\\\\\\\\for\\j = t\\and\\T$$
+$$h_{X_{j}} = \sigma_{X_{j}}\\\left( 1 - \rho^{2} \right)^{\frac{5}{12}}\\\left( 1 + \\\frac{\rho^{2}}{2} \right)^{- \frac{1}{6}}{\\n}^{- \frac{1}{6}}\\\\\\\\\\\\for\\j = t\\and\\T$$
 
 where *σ*<sub>*X*<sub>*j*</sub></sub> is the standard deviation of the
 observed responses at time *j*, *n* is the number of pairs
@@ -3417,7 +3309,7 @@ take ~10 times longer to run, and having no prior model there has to be
 The ITP (Integrated Two-component Prediction) model fits an observation
 for patient *i* on dose *d* at visit *t* as:
 
-$$y\_{idt} = \left( \theta\_{d} + s\_{id} + \epsilon\_{idt} \right)\left( \frac{1 - \text{exp}\left( kx\_{idt} \right)}{1 - \text{exp}(kX)} \right)$$
+$$y_{idt} = \left( \theta_{d} + s_{id} + \epsilon_{idt} \right)\left( \frac{1 - \text{exp}\left( kx_{idt} \right)}{1 - \text{exp}(kX)} \right)$$
 
 where*
 *
@@ -3462,9 +3354,9 @@ The priors for the parameters in the ITP model are:
 
 *θ*<sub>*d*</sub> ∼ *N*(*μ*<sub>*θ*<sub>*d*</sub></sub>, *σ*<sub>*θ*<sub>*d*</sub></sub><sup>2</sup>)
 
-$$\tau^{2}\\\sim\\IG\left( \frac{\tau\_{n}}{2},\\\frac{\tau\_{\mu}^{2}\tau\_{n}}{2} \right)$$
+$$\tau^{2}\\\sim\\IG\left( \frac{\tau_{n}}{2},\\\frac{\tau_{\mu}^{2}\tau_{n}}{2} \right)$$
 
-$$\lambda^{2}\\\sim\\IG\left( \frac{\lambda\_{n}}{2},\\\frac{\lambda\_{\mu}^{2}\lambda\_{n}}{2} \right)$$
+$$\lambda^{2}\\\sim\\IG\left( \frac{\lambda_{n}}{2},\\\frac{\lambda_{\mu}^{2}\lambda_{n}}{2} \right)$$
 
 A reasonable starting place for prior values would be:
 
@@ -3559,7 +3451,7 @@ where *π*<sub>*t**y*<sub>*i**t*</sub></sub> is the probability of a
 response at the final endpoint time given that its early observed
 endpoint at time *t* is *y*<sub>*i**t*</sub>. Then, we define the
 parameter
-$\theta\_{ty\_{it}} = logit\left( \pi\_{ty\_{it}} \right) = \log\left( \frac{\pi\_{ty\_{it}}}{1 - \pi\_{ty\_{it}}} \right)$.
+$\theta_{ty_{it}} = logit\left( \pi_{ty_{it}} \right) = \log\left( \frac{\pi_{ty_{it}}}{1 - \pi_{ty_{it}}} \right)$.
 The priors on *θ*<sub>*t*0</sub> and *θ*<sub>*t*1</sub> are:
 
 *θ*<sub>*t*0</sub> ∼ *N*(*μ*<sub>0</sub>, *σ*<sub>0</sub><sup>2</sup>)
@@ -4012,7 +3904,7 @@ where *γ* is the allocation probability power.
 If information weighting is selected, then the allocation target for
 *P*<sub>*i*, *d*</sub> is:
 
-$$V\_{d,i}^{\*} = \left\lbrack \sqrt{\frac{P\_{d,i}Var\left( \theta\_{d} \right)}{n\_{d} + 1}} \right\rbrack^{\gamma}$$
+$$V_{d,i}^{\*} = \left\lbrack \sqrt{\frac{P_{d,i}Var\left( \theta_{d} \right)}{n_{d} + 1}} \right\rbrack^{\gamma}$$
 
 where *γ* is the allocation probability power, *n*<sub>*d*</sub> is the
 number of subjects on dose *d*, and *θ*<sub>*d*</sub> is the
@@ -4023,7 +3915,7 @@ randomization, then these allocation targets are combined to create a
 single allocation weight *W*<sub>*d*</sub>. The allocation weight for a
 dose is the weighted average of the allocation targets for the dose.
 
-$$W\_{d} = \sum\_{i = 1}^{I}{w\_{i}V\_{d,i}}$$
+$$W_{d} = \sum_{i = 1}^{I}{w_{i}V_{d,i}}$$
 
 where *I* is the number of allocation targets, *w*<sub>*i*</sub> is the
 weight of allocation target *i*, and *V*<sub>*d*, *i*</sub> is the value
@@ -4054,7 +3946,7 @@ allocated to those arms.
 
 Then, the allocation to the control arm *V*<sub>0</sub> is:
 
-$$V\_{0} = \min\left\\ \sum\_{d = 1}^{D}{V\_{d}\frac{(n\_{d} + 1)}{(n\_{0} + 1)},\\\\max\\ V\_{1},V\_{2},\ldots,\\V\_{D}\\} \right\\$$
+$$V_{0} = \min\left\\ \sum_{d = 1}^{D}{V_{d}\frac{(n_{d} + 1)}{(n_{0} + 1)},\\\\max\\ V_{1},V_{2},\ldots,\\V_{D}\\} \right\\$$
 
 Following fixing this control rate, the allocation probabilities for the
 non-fixed doses are renormalized to add up to the total non-fixed
