@@ -2365,7 +2365,7 @@ change in response from one dose to the next is the ‘expected difference
 in effect size’ that might have been used to power the trial in a
 conventional setting.
 
-In the dose response setting the smoothing parameters like $\tau$ in the NDLM are nuisance parameters in the sense that they are necessary to estimate in order to get appropriate estimates of the dose response values, but are rarely of inferential interest on their own. This can ease some of the undue burden of setting a prior on $\tau$. If it [gives estimates of the dose responses that look like they should](## "This is subjective. The **Per Sim: Response and Subject Alloc** plot in FACTS can help assess this fit."), then it is generally good enough.
+In the dose response setting the smoothing parameters like $\tau$ in the NDLM are nuisance parameters in the sense that they are necessary to estimate in order to get appropriate estimates of the dose response values, but are rarely of inferential interest on their own. This can ease some of the undue burden of setting a prior on $\tau$. If it [gives estimates of the dose responses that look like they should](## "This is subjective. The Per Sim: Response and Subject Alloc plot in FACTS can help assess this fit."), then it is generally good enough.
 
 ## Handling Missing Data
 
@@ -2424,7 +2424,7 @@ up to the last observation of the subject.
 # Augmented Priors (Historical Prior)
 
 If a Bayesian Augmentation is used for either the Control or Active
-Comparator arm is used then the user specifies:
+Comparator arm then the user specifies:
 
 -   The sufficient statistics to be included from each historic study,
     these are:
@@ -2453,38 +2453,32 @@ style="width:6.5in;height:4.62723in" />
 The hierarchical models for the control or active comparator rates are
 very similar across the endpoints. They are briefly described below.
 
+:::{.panel-tabset}
 ## Continuous Endpoints
 
 The model used for incorporating data from previous trials is as
 follows:
 
-*θ*<sub>0*t*</sub> ∼ *N*(*μ*<sub>0</sub>, *τ*<sub>0</sub><sup>2</sup>)
-for *t* = 0, 1, 2, …, *T*
+$$\theta_{0t} \sim \text{N}(\mu_0, \tau_0^2) \text{ for } \tau=0,1,2,\ldots,T$$
+where $\theta_{0t}$ is the mean for the control arm in trial $t$
+($t=0$ for the current trial and $t=1,2,\ldots,T$ for previous trials).
+A user needs to specify appropriate priors for the hyper-parameters:
 
-where *θ*<sub>0*t*</sub> is the mean for the control arm in trial *t*
-(*t* = 0 for the current trial; *t* = 1, 2, …, *T* for previous trials).
-User needs to specify appropriate priors for the hyper-parameters:
-
-*μ*<sub>0</sub> ∼ *N*(*m*<sub>0</sub>, *σ*<sub>0</sub><sup>2</sup>)
-
-*τ*<sub>0</sub><sup>2</sup> ∼ *I**G*(*a*<sub>0</sub>, *b*<sub>0</sub>)
+$$\mu_0 \sim \text{N}(m_0, \sigma_0^2)$$
+$$\tau_0^2 \sim \text{IG}(a_0, b_0)$$
 
 ## Dichotomous Endpoints
 
 The model used for incorporating data from previous trials is as
 follows:
 
-*θ*<sub>0*t*</sub> ∼ *N*(*μ*<sub>0</sub>, *τ*<sub>0</sub><sup>2</sup>)
-for *t* = 0, 1, 2, …, *T*
+$$\theta_{0t} \sim \text{N}(\mu_0, \tau_0^2) \text{ for } \tau=0,1,2,\ldots,T$$
+where $\theta_{0t}$ is the log-odds for the control arm in trial
+$t$ ($t=0$ for the current trial; $t=1,2,\ldots,T$ for previous
+trials). A user needs to specify appropriate priors for the hyper-parameters:
 
-where *θ*<sub>0*t*</sub> is the log-odds for the control arm in trial
-*t* (*t* = 0 for the current trial; *t* = 1, 2, …, *T* for previous
-trials). User needs to specify appropriate priors for the
-hyper-parameters:
-
-*μ*<sub>0</sub> ∼ *N*(*m*<sub>0</sub>, *σ*<sub>0</sub><sup>2</sup>)
-
-*τ*<sub>0</sub><sup>2</sup> ∼ *I**G*(*a*<sub>0</sub>, *b*<sub>0</sub>)
+$$\mu_0 \sim \text{N}(m_0, \sigma_0^2)$$
+$$\tau_0^2 \sim \text{IG}(a_0, b_0)$$
 
 The prior distributions for the hyper-parameters of the hierarchical
 model. The hyper-parameters are the mean and standard deviation of
@@ -2496,99 +2490,67 @@ historical studies and the current study.
 The model used for incorporating data from previous trials is as
 follows:
 
-*λ*<sub>*s**t*</sub>= *λ*<sub>*s*</sub>exp (*γ*<sub>*t*</sub>) for
-*t* = 0, 1, 2, …, *T*
-
-where *λ*<sub>*s**t*</sub> is the hazard rate for the control arm in
-segment *s* (*s* = 1, 2, …, *S*) for previous trial *t*
-(*t* = 1, 2, …, *T*) and *λ*<sub>*s*0</sub> is the hazard rate for the
-current control arm in segment *s*; *λ*<sub>*s*</sub> is a base hazard
-for segment *s*; and *γ*<sub>*t*</sub> is the log hazard ratio between
-that base rate and the *λ*<sub>*s**t*</sub> values.
+$$\lambda_{st}=\lambda_s \exp(\gamma_t) \text{ for } t=0,1,2,\ldots,T$$
+where $\lambda_{st}$ is the hazard rate for the control arm in
+segment $s$ ($s=1,2,\ldots,S$) for previous trial $t$
+($t=1,2,\ldots,T$) and $\lambda_{s0}$ is the hazard rate for the
+current control arm in segment $s$; $\lambda_s$ is a base hazard
+for segment $s$; and $\gamma_t$ is the log hazard ratio between
+that base rate and the $\lambda_{st}$ values.
 
 The following hierarchical model is used
 
-*γ*<sub>*t*</sub> ∼ *N*(*μ*<sub>*γ*</sub>, *τ*<sub>*γ*</sub><sup>2</sup>)
-for *t* = 0, 1, 2, …, *T*
-
+$$\gamma_t \sim \text{N}(\mu_\gamma, \tau_\gamma^2) \text{ for } t=0,1,2,\ldots,T$$
 Users specify priors for the hyper-parameters:
 
-*μ*<sub>*γ*</sub> ∼ *N*(*m*<sub>*γ*</sub>, *t*<sub>*γ*</sub><sup>2</sup>)
-
-and
-
-*τ*<sup>2</sup> ∼ *I**G*(*a*<sub>*γ*</sub>, *b*<sub>*γ*</sub>)
+$$\mu_\gamma \sim \text{N}(m_\gamma, t_\gamma^2)$$
+$$\tau^2 \sim \text{IG}(a_\gamma, b_\gamma)$$
 
 The formulation above is not identifiable as changes in
-*λ*<sub>*s*</sub> can be compensated for by changes in the
-*γ*<sub>*t*</sub> values (thus, one can use different combination of
-*λ*<sub>*s*</sub> and *γ*<sub>*t*</sub> but acquire the same set of
-values *λ*<sub>*s**t*</sub> and thus the same likelihood. To avoid this
-difficulty, we use the above formulation but fix *γ*<sub>0</sub> = 0. In
+$\lambda_s$ can be compensated for by changes in the
+$\gamma_t$ values (thus, one can use different combination of
+$\lambda_s$ and $\gamma_t$ but acquire the same set of
+values $\lambda_{st}$ and thus the same likelihood. To avoid this
+difficulty, we use the above formulation but fix $\gamma_0 = 0$. In
 addition to preserving the identifiability of the structure, this
-constraint allows *λ*<sub>*s*</sub> to have the interpretation of being
+constraint allows $\lambda_s$ to have the interpretation of being
 the hazard rate for the current control arm, and thus the prior on
-*λ*<sub>*s*</sub> from the main dose response may be used as the prior
-for *λ*<sub>*s*</sub>.
+$\lambda_s$ from the main dose response may be used as the prior
+for $\lambda_s$.
+:::
 
 ## Setting Priors for Hierarchical Model Hyper Parameters
 
-<table>
-<caption><p>Figure 8‑2 Execution &gt; Accrual tab, with deterministic
-accrual</p></caption>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th><p>Unless the intent is to add information that is not included in
-the historic studies, the hyper parameters can and should be set so that
-they are ‘weak’ priors, centered on the expected values.</p>
-<p>In this case the following would be reasonable:</p>
-<ul>
-<li><p>Set the prior mean value for Mu as the mean of the mean responses
-on the control arm in the historic studies</p></li>
-<li><p>Set the prior SD for Mu equal to the average SD of response
-divided by the square root of the number of studies.</p></li>
-<li><p>Set the mean for tau to the same value as the prior SD for
-Mu.</p></li>
-<li><p>Set the weight for tau to be &lt; 1.</p></li>
-</ul>
-<p>One can traverse the spectrum from ‘complete pooling of data’ to
-‘completely separate analyses’ through the prior for tau. If the weight
-of the prior for tau is small (relative to the number of studies), then
-(unless set to a very extreme value) the mean of the prior for tau will
-have little impact and the degree of borrowing will depend on the
-observed data.</p>
-<p>To give some prior preference towards pooling or separate analysis
-the <strong>weight</strong> for tau has to be large (relative to the
-number of historic studies) – to have a design that is like pooling all
-the historic studies the <strong>mean</strong> for tau needs to be small
-(say 10% or less of the value suggested above). For there to be no
-borrowing from the historic studies the value for tau needs to be large
-(say 10x or more the value suggested above).</p>
-<p>The best way to understand the impact of the priors is try different
-values and run simulations.</p></th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
+Unless the intent is to add information that is not included in the historic studies, the hyper parameters can and should be set so that they are ‘weak’ priors, centered on the expected values.
 
-Figure 8‑2 Execution &gt; Accrual tab, with deterministic accrual
+In this case the following would be reasonable:
 
-## BAC Example:
+- Set the prior mean value for Mu as the mean of the mean responses on the control arm in the historic studies
+
+- Set the prior SD for Mu equal to the average SD of response divided by the square root of the number of studies.
+
+- Set the center for tau to the same value as the prior SD for Mu.
+
+- Set the weight for tau to be < 1.
+
+One can traverse the spectrum from ‘complete pooling of data’ to ‘completely separate analyses’ through the prior for tau. If the weight of the prior for tau is small (relative to the number of studies), then (unless set to a very extreme value) the mean of the prior for tau will have little impact and the degree of borrowing will depend on the observed data. 
+
+To give some prior preference towards pooling or separate analysis the **weight** for tau has to be large (relative to the number of historic studies) – to have a design that is like pooling all the historic studies the mean for tau needs to be small (say 10% or less of the value suggested above). For there to be no borrowing from the historic studies the value for tau needs to be large (say 10x or more the value suggested above).
+
+The best way to understand the impact of the priors is try different values and run simulations.
+
+## Bayesian Augmented Control (BAC) Example:
 
 It is easiest to study the impact of BAC in a simplified version of the
 trial being designed, for example use a 2 arm fixed design with ‘no
 model’, no adaptation, no longitudinal modeling, etc.
 
-For instance in a continuous setting with an expected sample size of 50
+For instance, in a continuous setting with an expected sample size of 50
 on control, a mean response of 5 and an SD in the response of 2, looking
 at the effect of having 4 prior, similarly sized studies:
 
 <table>
-<caption><p>Figure 8‑4 Deterministic accrual tab</p></caption>
+<caption><p>External Study Sufficient Statistics</p></caption>
 <colgroup>
 <col style="width: 24%" />
 <col style="width: 22%" />
@@ -2631,8 +2593,6 @@ at the effect of having 4 prior, similarly sized studies:
 </tbody>
 </table>
 
-Figure 8‑4 Deterministic accrual tab
-
 For simplicity we have just varied the means of the studies – they are
 all consistent with a normally distributed estimate, with mean of 5 and
 a standard error of $\frac{2}{\sqrt{50}}$.
@@ -2646,7 +2606,7 @@ the final estimate and the shrinkage in the SD of the estimate that
 could be brought about by using BAC:
 
 <table>
-<caption><p>Figure 3‑1 Quantities of Interest tab</p></caption>
+<caption><p>Quick simulation study of how the hierarchical model for BAC effects estimates of the control rate under different true control rate scenarios.</p></caption>
 <colgroup>
 <col style="width: 13%" />
 <col style="width: 13%" />
@@ -2725,8 +2685,6 @@ could be brought about by using BAC:
 </tbody>
 </table>
 
-Figure 3‑1 Quantities of Interest tab
-
 Note it is important to use the column “SD Mean resp 1” from the
 simulations file to see the SD of the estimate and not use the SD of the
 estimates in the summary table.
@@ -2737,19 +2695,17 @@ same shrinkage in the raw estimate. These are useful savings for small
 additional bias.
 
 The “effective additional subjects” was calculated:
-
-$\left( \frac{True\\sigma}{AVG(SD\\Mean\\resp)} \right)^{2} - \left( \frac{True\\sigma}{AVG(SE\\Mean\\Raw\\Response)} \right)^{2}$where
-in this example True Sigma was 2.
+$$\left( \frac{\text{True sigma}}{\text{AVG(SD Mean resp)}} \right)^{2} - \left( \frac{\text{True sigma}}{\text{AVG(SE Mean Raw Response)}} \right)^{2}$$
+where in this example $\text{True sigma}$ was 2.
 
 # Frequentist Analysis
 
 On the Frequentist Analysis tab the user can specify that some standard
-frequentist analyses be performed at trial analyses. Note that the
-frequentist analysis tab is completely separate from and independent of
-any p-value QOIs that have been defined.
+frequentist analyses be performed at trial analyses. The
+frequentist analysis tab is completely separate from, and independent of,
+any p-value QOIs that have been defined. The analyses specified on this tab cannot be used for simulated trial decisions - they are for storing in output only.
 
-Different analyses use different rules for how to treat missing data can
-be selected independently:
+Each specified analysis can be conducted using a variety of ways of handling missingness. Select all ways of handling missingness that are desired:
 
 -   Missing data replaced by last observation carried forward (LOCF)
 
@@ -2762,16 +2718,15 @@ be selected independently:
 -   Missing data is treated as a failure. This is only available if the
     endpoint is dichotomous.
 
-If the trial has interims, then for the simulations for which
+If the trial has interim analyses, then for the simulations for which
 frequentist weeks files are to be output (specified on the Simulation
 tab) the standard frequentist analyses will be performed. If the trial
 has p-values QOIs, those QOIs are calculated every interim in all
 simulations.
 
-Having the frequentist analysis include [Dunnett's](#dunnett "Dunnett CW. A multiple comparison procedure for comparing several treatments with a control. Journal of the American Statistical Association. 1955; 50: 1096-1121.") adjust p-values is a
-separate option (that applies to all the analysis type requested)
+Having the frequentist analysis include [Dunnett's](#dunnett "Dunnett CW. A multiple comparison procedure for comparing several treatments with a control. Journal of the American Statistical Association. 1955; 50: 1096-1121.") adjusted p-values is a separate option (that applies to all the analysis type requested)
 because of the significant run-time overhead this can entail. [Dunnett's](#dunnett "Dunnett CW. A multiple comparison procedure for comparing several treatments with a control. Journal of the American Statistical Association. 1955; 50: 1096-1121.")
-adjustment is available for the continuous and dichotomous frequentist
+adjustment is available for continuous and dichotomous frequentist
 analyses.
 
 The frequentist analysis tabs for the continuous and dichotomous engines
@@ -2790,7 +2745,7 @@ style="width:4.51964in;height:3.24521in" />
 ## Continuous Endpoints
 
 At the end of each simulated trial the following frequentist values will
-be calculated using LOCF for missing data:
+be calculated for each missingness handling method checked:
 
 1.  Using unadjusted dose-placebo comparisons based on a two-sample
     t-test calculate the:
@@ -2805,8 +2760,7 @@ be calculated using LOCF for missing data:
         number of times it was significantly separated from placebo
         independent of whether any other doses were) .
 
-2.  using [Dunnett](#dunnett "Dunnett CW. A multiple comparison procedure for comparing several treatments with a control. Journal of the American Statistical Association. 1955; 50: 1096-1121.")-adjusted dose-placebo comparisons based on a
-    two-sample t-test calculate the:
+2.  If selected, using [Dunnett](#dunnett "Dunnett CW. A multiple comparison procedure for comparing several treatments with a control. Journal of the American Statistical Association. 1955; 50: 1096-1121.")-adjusted dose-placebo comparisons based on a two-sample t-test calculate the:
 
     1.  test statistic,
 
@@ -2821,25 +2775,19 @@ be calculated using LOCF for missing data:
 3.  Using the general trend test calculate the t-test statistic and
     p-value using user supplied contrast coefficients.
 
-(If neither placebo or active comparator are specified, difference from
-0 is assessed for each dose arm and [Dunnett](#dunnett "Dunnett CW. A multiple comparison procedure for comparing several treatments with a control. Journal of the American Statistical Association. 1955; 50: 1096-1121.")-adjusted calculations are
-not carried out.)
+If neither placebo nor an active comparator are simulated, a difference from
+0 is assessed for each dose arm and [Dunnett](#dunnett "Dunnett CW. A multiple comparison procedure for comparing several treatments with a control. Journal of the American Statistical Association. 1955; 50: 1096-1121.")-adjusted calculations are not carried out.
 
-P-values are calculated using a one-sided t-test testing
-*H*<sub>0</sub>: μ<sub>T</sub> &lt; μ<sub>C</sub> against
-*H*<sub>1</sub>: μ<sub>T</sub> ≥ μ<sub>C</sub>, with subscript T
-referring to the treatment arm and subscript C referring to the control
-arm (if high values are good; otherwise, the opposite hypotheses are
-being tested).
-
-Last observation carried forward (LOCF), baseline observation carried
-forward (BOCF), and Per-protocol (Ignore) are available as ways to
-handle missingness in continuous frequentist calculations.
+If high values of the endpoint are good, P-values are calculated using a one-sided t-test testing
+$$H_0: \mu_T < \mu_C$$
+against
+$$H_1: \mu_T \ge \mu_C$$
+with $\mu_T$ being the true treatment response mean and $\mu_C$ being the true control response mean. If low values of the endpoint are good, then the signs of the hypotheses are flipped.
 
 ## Dichotomous Endpoints
 
 At the end of each simulated trial the following frequentist values will
-be calculated using LOCF for missing data:
+be calculated for each missingness handling method checked:
 
 1.  Using the methodology described by [Agresti](#agresti "Agresti, A. 2002.  Categorical Data Analysis. Second Edition. Wiley."), [Mee](#mee "Mee, R. W. 1984. Confidence bounds for the difference between two probabilities. Biometrics. 40, 1175-1176.") and [Nurminem](#nurminem "Nurminen, M. 1986. Confidence intervals for the ratio and difference of two binomial proportions. Biometrics. 42, 675-676.") for comparing the difference of proportions:
 
@@ -2851,7 +2799,7 @@ be calculated using LOCF for missing data:
 
     4.  marginal probabilities of significance.
 
-2.  using [Dunnett](#dunnett "Dunnett CW. A multiple comparison procedure for comparing several treatments with a control. Journal of the American Statistical Association. 1955; 50: 1096-1121.")-adjusted dose-placebo comparisons for comparing the
+2.  If checked, using [Dunnett](#dunnett "Dunnett CW. A multiple comparison procedure for comparing several treatments with a control. Journal of the American Statistical Association. 1955; 50: 1096-1121.")-adjusted dose-placebo comparisons for comparing the
     difference of proportions:
 
     1.  test statistic,
@@ -2875,13 +2823,8 @@ the null hypothesis should be greater or equal to 5 for both groups. In
 cases where this is not guaranteed, Fisher’s exact test is recommended
 when strict type 1 error control is required.
 
-If neither placebo or active comparator are specified, difference from 0
-is assessed for each dose arm and [Dunnett](#dunnett "Dunnett CW. A multiple comparison procedure for comparing several treatments with a control. Journal of the American Statistical Association. 1955; 50: 1096-1121.")-adjusted calculations are not
-carried out.
-
-Last observation carried forward (LOCF), Per-protocol (Ignore), and
-missing data considered failure are available as ways to handle
-missingness in dichotomous frequentist calculations.
+If neither placebo nor active comparator are specified, a difference from 0
+is assessed for each dose arm and [Dunnett](#dunnett "Dunnett CW. A multiple comparison procedure for comparing several treatments with a control. Journal of the American Statistical Association. 1955; 50: 1096-1121.")-adjusted calculations are not carried out.
 
 ## Time-to-Event Frequentist Analysis
 
@@ -2924,55 +2867,49 @@ out, or subjects at an interim that have not had the opportunity to
 complete their follow-up.
 
 To perform any longitudinal modeling, ‘Use longitudinal modeling’ must
-be checked on the Study &gt; Study Info tab, and the subjects visit
-schedule must be defined. If enabled then subjects that are incomplete
-at an interim will be included in the dose response analysis using the
-model selected on the Design &gt; Longitudinal tab.
+be checked on the Study > Study Info tab, and the subject visit
+schedule must be defined.
 
-To include dropouts in the longitudinal analysis, on the Design &gt;
+To include dropouts in the longitudinal analysis, on the Design >
 Dose Response tab select “Bayesian multiple imputation from post
 baseline.”
 
-## Imputation
+## Multiple Imputation
 
 Unless a deterministic method is used such as LOCF or BOCF, longitudinal
 models inform the dose response estimates by using the longitudinal
 model to stochastically impute subjects’ final endpoint data when it’s
 not been directly observed.
 
-First, data from subjects with intermediate and final observations is
-used to estimate the parameters of the longitudinal models.
+First, data from subjects with both intermediate and final observations is
+used to estimate the parameters of whatever longitudinal imputation model has been selected.
 
 <img src="coreUGattachments/CoreUserGuide/media/image36.png"
 style="width:3.33848in;height:1.92in" />
 
 Subjects with missing final data have final data sampled from the
-posterior probability distribution of the longitudinal model given the
+posterior distribution of the longitudinal model given the
 subjects most recent intermediate visit (or in some models, all their
 available intermediate visit data). Subjects with no final or
-intermediate data have final data sampled from the posterior probability
+intermediate data have final data sampled from the posterior
 distribution of the dose response model given the dose arm the subject
 was allocated to.
 
 <img src="coreUGattachments/CoreUserGuide/media/image37.png"
 style="width:3.336in;height:1.91857in" />
 
-The dose response model is then re-estimated using all the data.
+Once every randomized subject has either a real known final endpoint or an imputed final endpoint, the dose response model is re-estimated using that *complete* dataset.
 
 <img src="coreUGattachments/CoreUserGuide/media/image38.png"
 style="width:3.352in;height:2.10985in" />
 
-This process is then repeated on successive iterations of the MCMC
-sampling loop. Thus the imputed values are imputed with both the
-uncertainty in the longitudinal model and the uncertainty in the
-estimates of the parameters of that model.
+This impute-then-fit-dose-response process is built into the MCMC estimation sampling loop. Each time we draw a new set of parameters from the longitudinal model they are used to impute the final endpoint of incomplete subjects. These subjects then inform the dose response model. Then we get a new sample from the longitudinal model and so on. The longitudinal models, with [one exception](## "The ITP model uses the current state of the dose response models in its imputation."), are not conditioned on the dose response models.
 
-It is actually better not to update both the longitudinal model
-parameters and the dose response model parameters every MCMC step, but
-allow the model parameters to converge slightly before imputing the
-missing data again. This can be done on the MCMC settings control on the
-Simulation tab and setting the “Samples per Imputation” parameter. As a
-rough guide, if it at some early interims &gt; 5% of the data being
+The missing final endpoint values are imputed with the
+uncertainty in the longitudinal model, and, as a result, the dose response model is estimated including both the uncertainty in the longitudinal model and the usual uncertainty in its parameters.
+
+Above, it says "fit the dose response model," as a step in the iterative process. The idea is that once you create a dataset through imputation you should update the dose response model MCMC chain until it converges. By default only 1 step is taken on the dose response model MCMC chain. It is safer, especially if doing a real analysis, to allow the dose response model parameter chains to converge slightly before imputing the missing data again. This can be done on the MCMC settings control on the Simulation tab and setting the “Samples per Imputation” parameter. As a
+rough guide, if it at some early interims > 5% of the data being
 analyzed will be imputed, a value in the range 2 to 10 is recommended to
 avoid underestimating the uncertainty. A higher number should be used
 the greater the proportion of imputed data.
@@ -2980,13 +2917,18 @@ the greater the proportion of imputed data.
 A similar procedure is used when imputing event times based on a
 predictor endpoint in FACTS Core Time-to-Event.
 
-**Note: FACTS is not fitting a joint Bayesian model of the longitudinal
+:::{.callout-tip}
+
+## Computational Note
+
+FACTS is not fitting a joint Bayesian model of the longitudinal
 and dose response models. This would require a full MCMC fit of one
 model for every MCMC step of the other. Thus, if taking 2,500 samples,
 we would require a total of 2,500<sup>2</sup> samples. This would make
 running simulations with longitudinal model prohibitively
-expensive. Rather in FACTS the LM is a “working mode” to improve
-our estimate of the dose response model.
+expensive.
+
+:::
 
 ## How many longitudinal models?
 
@@ -3050,14 +2992,14 @@ prior specification (for all LMs but linear regression) are:
 
 1.  Same priors across all model instances
 
-    1.  Each instance of the model has identical prior distributions on
-        its parameters. Estimation is still performed independently on
-        each model instance.
+ -  Each instance of the model has identical prior distributions on
+    its parameters. Estimation is still performed independently on
+    each model instance.
 
 2.  Specify priors per model instance
 
-    1.  Each instance of the model has its own priors that may vary
-        across instances.
+ -  Each instance of the model has its own priors that may vary
+    across instances.
 
 The linear regression longitudinal model has a different parameter set
 estimated for each visit, so its prior specification rules are slightly
