@@ -3309,94 +3309,96 @@ correct this can be a very effective longitudinal model.
 
 ### LOCF (Last Observation Carried Forward)
 
-The simplest possible longitudinal model. If {*y*<sub>*i**t*</sub>} is
+The simplest possible longitudinal model. If {$y_{it}$} is
 the set of observed responses from early visits, and
-*y*<sub>*i**t*<sub>*m*</sub></sub> is the last observed value of
-*y*<sub>*i**t*</sub>, then the LOCF model for the final endpoint
-*Y*<sub>*i*</sub> is
+$y_{i t_m}$  is the last observed value of
+$y_{it}$, then the LOCF model for the final endpoint
+$Y_i$ is
 
-*Y*<sub>*i*</sub>|{*y*<sub>*i**t*</sub>} = *y*<sub>*i**t*<sub>*m*</sub></sub>
+$$Y_i \mid \{y_{it}} = y_{i t_m}$$
 
 ### Beta Binomial
 
 The Beta Binomial longitudinal model imputes a patient’s final endpoint
 given their most recent observed response.
 
-The final endpoint response *Y*<sub>*i*</sub> is modeled as:
+The final endpoint response $Y_i$ is modeled as:
 
-*Y*<sub>*i*</sub> ∼ *B**e**r**n**o**u**l**l**i*(*π*<sub>*t**y*<sub>*i**t*</sub></sub>)
+$$Y_i \sim \text{Bernoulli}(\pi_{t y_{it}})$$
 
-where *π*<sub>*t**y*<sub>*i**t*</sub></sub> is the probability that a
+where $\pi_{t y_{it}}$ is the probability that a
 patient is a response at the final endpoint given its early observed
-endpoint at time *t* is *y*<sub>*i**t*</sub>,
+endpoint at time $t$ is $y_{it}$,
 
-*π*<sub>*t**y*<sub>*i**t*</sub></sub> = Pr (*Y*<sub>*i*</sub> = 1 | *y*<sub>*i**t*</sub>) ∼ *B**e**t**a*(*α*<sub>*t**y*<sub>*i**t*</sub></sub>, *β*<sub>*t**y*<sub>*i**t*</sub></sub>)
+$$\pi_{t y_{it}} = \Pr(Y_i = 1 \mid y_{it}) \sim \text{Beta}(\alpha_{t {y_it}}, \beta_{t y_{it}})$$
 
-We use the set cardinality operator |…| to obtain the posterior
-distributions of $\alpha$<sub>*t*\*</sub> and *β*<sub>*t*\*</sub> as:
+We use the set cardinality operator $\mid \ldots \mid$ to obtain the posterior
+distributions of $\alpha_t$ and $\beta_t$ as:
 
-*α*<sub>*t*0</sub> = *α*<sub>*μ*0</sub> + |*Y*<sub>*i*</sub> = 1, *y*<sub>*i**t*</sub> = 0|
+$$\alpha_{t0} = \alpha_{\mu 0} + \left| Y_i = 1, y_{it} = 0 \right| $$
+$$\alpha_{t1} = \alpha_{\mu 1} + \left| Y_i = 0, y_{it} = 0 \right| $$
+$$\beta_{t0} = \beta_{\mu 0} + \left| Y_i = 1, y_{it} = 1 \right| $$
+$$\beta_{t1} = \beta_{\mu 1} + \left| Y_i = 0, y_{it} = 1 \right| $$
 
-*β*<sub>*t*0</sub> = *β*<sub>*μ*0</sub> + |*Y*<sub>*i*</sub> = 0, *y*<sub>*i**t*</sub> = 0|
-
-*α*<sub>*t*1</sub> = *α*<sub>*μ*1</sub> + |*Y*<sub>*i*</sub> = 1, *y*<sub>*i**t*</sub> = 1|
-
-*β*<sub>*t*1</sub> = *β*<sub>*μ*1</sub> + |*Y*<sub>*i*</sub> = 0, *y*<sub>*i**t*</sub> = 1|
-
-i.e. a prior value
-(*α*<sub>*μ*0</sub>, *α*<sub>*μ*1</sub>, *β*<sub>*μ*0</sub>, *β*<sub>*μ*1</sub>)
+i.e. a prior value $(\alpha_{\mu 0}, \alpha_{\mu 1}, \beta_{\mu 0}, \beta_{\mu 1})$
 plus the number of subjects for which the final response is known to be
-1 for $\alpha$<sub>*t**x*</sub> (or 0 for *β*<sub>*t**x*</sub>) and the
-response at time *t* is *x*.
+1 for $\alpha_{tx}$ (or 0 for $\beta_{tx}$) and the
+response at time $t$ is $x$.
 
-The $\alpha$<sub>*t**x*</sub> and *β*<sub>*t**x*</sub> parameters are
+The $\alpha_{tx}$ and $\beta_{tx}$ parameters are
 independently estimated using only patients in their model instance, and
-may or not have identical priors $\alpha$<sub>*μ*\*</sub> and
-*β*<sub>*μ*\*</sub> depending on the Model Priors selection in FACTS. A
-common non-informative prior for the *π*<sub>*t*0</sub> and
-*π*<sub>*t*1</sub> parameters is Beta(1,1).
+may or not have identical priors $\alpha_{\mu *}$ and
+$\beta_{\mu *}$ depending on the Model Priors selection in FACTS. A
+common non-informative prior for the $\pi_{t0}$ and
+$\pi_{t1}$ parameters is $\text{Beta}(1,1)$.
 
 ### Logistic regression
 
 The Logistic regression longitudinal model works similarly to the Beta
 Binomial imputation model. The difference is in the method of modeling
 the probability of a transition from an interim visit to the final visit
-Pr (*Y*<sub>*i*</sub> = 1|*y*<sub>*i**t*</sub>). Like the Beta Binomial
+$\Pr(Y_i = 1 \mid y_{it})$. Like the Beta Binomial
 model, the logistic regression model imputes a patient’s final endpoint
 given their most recent observed response.
 
-The final endpoint response *Y*<sub>*i*</sub> is modeled as:
+The final endpoint response $Y_i$ is modeled as:
 
-*Y*<sub>*i*</sub> ∼ *B**e**r**n**o**u**l**l**i*(*π*<sub>*t**y*<sub>*i**t*</sub></sub>)
+$$Y_i \sim \text{Bernoulli}(\pi_{t y_{it}})$$
 
-where *π*<sub>*t**y*<sub>*i**t*</sub></sub> is the probability of a
+where $\pi_{t y_{it}}$ is the probability of a
 response at the final endpoint time given that its early observed
-endpoint at time *t* is *y*<sub>*i**t*</sub>. Then, we define the
+endpoint at time $t$$ is $y_{it}$. Then, we define the
 parameter
-$\theta_{ty_{it}} = logit\left( \pi_{ty_{it}} \right) = \log\left( \frac{\pi_{ty_{it}}}{1 - \pi_{ty_{it}}} \right)$.
-The priors on *θ*<sub>*t*0</sub> and *θ*<sub>*t*1</sub> are:
 
-*θ*<sub>*t*0</sub> ∼ *N*(*μ*<sub>0</sub>, *σ*<sub>0</sub><sup>2</sup>)
+$$\theta_{ty_{it}} = \text{logit}\left( \pi_{ty_{it}} \right) = \log\left( \frac{\pi_{ty_{it}}}{1 - \pi_{ty_{it}}} \right)$$.
 
-*θ*<sub>*t*1</sub> ∼ *N*(*μ*<sub>1</sub>, *σ*<sub>1</sub><sup>2</sup>)
+The priors on $\theta_{t0}$ and $\theta{t1}$ are:
 
-The model computes the posterior distribution of *θ*<sub>*t*0</sub> and
-*θ*<sub>*t*1</sub> using all patients in arms belonging to the model
-instance that have observed endpoint values at time *t* and the final
-endpoint time *T*.
+$$\theta_{t0} \sim \text{N}(\mu_0, \sigma_0^2)$$
+$$\theta_{t1} \sim \text{N}(\mu_1, \sigma_1^2)$$
 
-The priors on *θ*<sub>*t*0</sub> and *θ*<sub>*t*1</sub> may be shared
+The model computes the posterior distribution of $\theta_{t0}$ and $\theta_{t1}$ using all patients on arms belonging to the model
+instance that have observed endpoint values at time $t$ and the final
+endpoint time $T$.
+
+The priors on $\theta_{t0}$ and $\theta_{t1}$ may be shared
 across model instances and/or visits depending on the selection made in
 the Model Priors section of the FACTS Logistic regression Longitudinal
 model page.
 
 A possible starting place for non-informative priors in this model would
-be: *μ* = 0,  *σ* = 2. A weakly informative set of priors that an early
+be: $\mu=0$, $\sigma=2$. A weakly informative set of priors that an early
 response makes a final response more likely could be
-*θ*<sub>*t*0</sub> ∼ *N*(−.75, 1.25<sup>2</sup>) and
-*θ*<sub>*t*1</sub> ∼ *N*(0.75, 1.25<sup>2</sup>).
+$$\theta_{t0} \sim \text{N}(-.75, 1.25^2)$$ and
+$$\theta_{t1} \sim \text{N}(0.75, 1.25^2)$$
 
 ### Restricted Markov Model (Absorbing Markov Chain)
+
+:::{.callout-tip}
+### Using the Restricted Markov Model
+
+The restricted markov model is special in the sense that it can be used if and only if the "Use longitudinal modeling" check box is checked, the "Enable Special Longitudinal Options" check box is checked, and "Use restriced Markov model" is selected. When these conditions are met the Virtual Subject Response tab changes and the Design > Longitudinal tab only has the Restricted Markov option.
+:::
 
 The Absorbing Markov Chain model assumes that at each visit a subject is
 in one of three states – responder (1), stable (S), or failure (0). The
@@ -3410,20 +3412,20 @@ Model estimates the probability of a result at a visit based on the
 visit right before it, rather than predicting directly to the final
 endpoint from the early visit.
 
-Pr (*y*<sub>*i**t*</sub> = *n* |*y*<sub>*i*, *t* − 1 </sub> = *S*) ∼ *D**i**r**i**c**h**l**e**t*({*α*<sub>0*t*</sub>, *α*<sub>1*t*</sub>, *α*<sub>*S**t*</sub>})   *f**o**r* *t* ≥ 2
+$$\Pr(y_{it} = n \mid y_{i, t-1} = S) \sim \text{Dirichlet}(\{\alpha_{0,t}, \alpha_{1,t}\, \alpha_{S,t}\}) \text{ for } t\ge 2$$
 
 Where n can be 0, 1, or S, denoting the probability of going to the Fail
-state, the Responder state, or the Stable state at visit *t* from the
-Stable state at visit *t* − 1. *t* must be greater than or equal to 2,
+state, the Responder state, or the Stable state at visit $t$ from the
+Stable state at visit $t-1$. $t$ must be greater than or equal to $2$,
 because we do not impute the first visit – a subject missing visit 1 and
 all visits after does not contribute to the longitudinal model or dose
 response model.
 
 The priors for the $\alpha$ parameters are specified in terms of the prior
-number of transitions from Stable at *t* − 1 to each different state at
-time *t*. For example, if the prior value for the parameter
-*γ*<sub>13</sub> is 2, we are putting a priori information into the
-Dirichlet distribution suggesting that 2 patients transitioned from
+number of transitions from Stable at $t-1$ to each different state at
+time $t$. For example, if the prior value for the parameter
+$\alpha_{1,3}$ is $2$, we are putting apriori information into the
+Dirichlet distribution suggesting that $2$ patients transitioned from
 Stable at visit 2 to Responders at visit 3. Specified priors can either
 be common or different across model instances based on user
 specification.
@@ -3431,26 +3433,22 @@ specification.
 The parameters defining the posterior distribution of the state
 probabilities are available in closed form as:
 
-*α*<sub>0*t*</sub> = *γ*<sub>0*t*</sub> + |*y*<sub>*i**t*</sub> = 0, *y*<sub>*i*, *t* − 1</sub> = *S*|
+$$\alpha_{0,t} = \gamma_{0,t} + \left|y_{it}=0, y_{i, t-1} = S\right|$$
+$$\alpha_{S,t} = \gamma_{S,t} + \left|y_{it}=S, y_{i, t-1} = S\right|$$
+$$\alpha_{1,t} = \gamma_{1,t} + \left|y_{it}=1, y_{i, t-1} = S\right|$$
 
-*α*<sub>*S**t*</sub> = *γ*<sub>*S**t*</sub> + |*y*<sub>*i**t*</sub> = *S*, *y*<sub>*i*, *t* − 1</sub> = *S*|
-
-*α*<sub>1*t*</sub> = *γ*<sub>1*t*</sub> + |*y*<sub>*i**t*</sub> = 1, *y*<sub>*i*, *t* − 1</sub> = *S*|
-
-To create a dichotomous endpoint, the user specifies in the Study &gt;
-Study Info &gt; Design Options section whether patients remaining in a
+To create a dichotomous endpoint, the user specifies in the `Study > Study Info > Design Options` section whether patients remaining in a
 stable state at the final visit should be dichotomized as responders or
 failures.
 
 ### Dichotomous Endpoint: Dichotomized Continuous Longitudinal Model
 
-The user may select (on the study tab) to assume that the dichotomous
-final endpoint is generated by observed continuous longitudinal data and
-then dichotomizing the final endpoint. The user specifies the
-dichotomization thresholds and whether a response occurs for values
-above or below the threshold. If the user selects this option, then the
-user may select any of the continuous longitudinal models specified in
-the Continuous Longitudinal Models section above. The engine will impute
+The user may select (on the Study tab) to assume that the dichotomous
+final endpoint is generated by observing continuous longitudinal data and
+then dichotomizing the final endpoint based on whether it is greater than
+or less than a provided threshold. If the user selects this option, then they
+may select any of the continuous longitudinal models specified in
+the [Continuous Longitudinal Models section](hh_longmodels/longmodels_cont.qmd). The engine will impute
 incomplete subjects according to the continuous model, resulting in a
 continuous imputed final endpoint. The imputed dichotomous final
 endpoint is then simply the dichotomized version of the continuous
