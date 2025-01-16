@@ -3459,7 +3459,7 @@ models mentioned above.
 
 ## Time-to-Event Predictor Models
 
-For all predictors (Z) for time to event endpoints, the engine estimates
+For all predictors ($Z$) for time-to-event endpoints, the engine estimates
 both a marginal distribution (normal mean and variance for continuous,
 probability of response for dichotomous, and a piecewise exponential
 hazard model for time to event predictors) and a working model relating
@@ -3469,15 +3469,14 @@ and may also be used for stopping (see section on stopping). The working
 model is used to impute final endpoints for subjects lacking a final
 endpoint. For subject missing both a predictor and final endpoint, the
 predictor is imputed first from its marginal distribution, and then the
-final endpoint is imputed conditionally on the predictor Z.
+final endpoint is imputed conditionally on the predictor $Z$.
 
 #### Continuous Predictor
 
 Within each dose (including control and active comparator), the marginal
-distribution of Z is a normal distribution with mean
-*θ*<sub>*Z**d*</sub> and standard deviation *σ*<sub>*Z*</sub>. The
+distribution of $Z$ is a normal distribution with mean $\theta_{Zd}$ and standard deviation $\sigma_Z$. The
 standard deviation is common across the doses, but the means
-*θ*<sub>*Z**d*</sub> are allowed to vary across the same range of dose
+$\theta_{Zd}$ are allowed to vary across the same range of dose
 response models as the final endpoint (NDLM, Logistic, etc.). The prior
 specification for these predictor dose response models is identical in
 structure to the final endpoint, although the user selects a separate
@@ -3485,12 +3484,11 @@ set of parameter values. The dose response for the predictor does not
 need to match the dose response for the final endpoint.
 
 The working model assumes the final event time T is related to the
-predictor Z by assuming
-*T*|*Z* ∼ *E**x**p*(*λ*<sub>*d*</sub>*e*<sup>*β**Z*</sup>), where
-*λ*<sub>*d*</sub> varies by dose and has separate priors
-*λ*<sub>*d*</sub> ∼ *G**a**m**m**a*(*α*<sub>*d*</sub>, *β*<sub>*d*</sub>)
-for each dose. The coefficient in the exponent β (no subscript) is
-constant across doses with prior *β* ∼ *N*(*m*, *s*). 
+predictor $Z$ by assuming $T\mid Z \sim \Exp(\lambda_d e^{\beta Z})$, where
+$\lambda_d$ varies by dose and has separate priors
+$\lambda_d \sim \text{Gamma}(\alpha_d, \beta_d)$
+for each dose. The coefficient in the exponent $\beta$ (no subscript) is
+constant across doses with prior $\beta \sim \text{N}(m, s)$. 
 
 #### Dichotomous Predictor
 
@@ -3499,32 +3497,26 @@ with a marginal distribution having a predictor dose response model.
 However, in this case the predictor dose response relates the log-odds
 rather than the probability of response itself. The working model for
 dichotomous is identical to the working model for a continuous
-predictor, with
-*T*|*Z* ∼ *E**x**p*(*λ*<sub>*d*</sub>*e*<sup>*β**Z*</sup>). In this
+predictor, with $$T\mid Z \sim \Exp(\lambda_d e^{\betaZ})$$. In this
 situation the working model is simpler to understand, as
-*T*|(*Z* = 0) ∼ *E**x**p*(*λ*<sub>*d*</sub>) and
-*T*|(*Z* = 1) ∼ *E**x**p*(*λ*<sub>*d*</sub>*β*)).
+$$T\mid (Z=0) \sim \Exp(\lambda_d)$$ and $$T \mid (Z=1) \sim Exp(\lambda_{d\beta})$$.
 
 #### Time to Event Predictor
 
 The time to event predictor is qualitatively different than the
 continuous or dichotomous predictors. Instead of the predictor adjusting
 the hazard, the time to event predictor is viewed as an offset. The
-final endpoint is viewed as a sum of a predictor time *Z*<sub>1</sub>
-and a post-predictor time *Z*<sub>2</sub>, where *Z*<sub>1</sub> and
-*Z*<sub>2</sub> are independent random variables and the final endpoint
-is thus *Z*<sub>1</sub> + *Z*<sub>2</sub>.
+final endpoint is viewed as a sum of a predictor time $Z_1$ and a post-predictor time $Z_2$, where $Z_1$ and
+$Z_2$ are independent random variables and the final endpoint
+is thus $Z_1 + Z_2$.
 
-For the working model,
-*Z*<sub>1</sub> ∼ *P**E**x**p*(*λ*<sub>1*s*</sub> \* *θ*<sub>1*d*</sub>)
-and *Z*<sub>2</sub> ∼ *E**x**p*(*λ*<sub>2*d*</sub>), with priors
-*λ*<sub>1*s*</sub> ∼ *G**a**m**m**a*(*α*<sub>1*s*</sub>, *β*<sub>1*s*</sub>),
-*λ*<sub>2*d*</sub> ∼ *G**a**m**m**a*(*α*<sub>2*d*</sub>, *β*<sub>2*d*</sub>)
-(with *Z*<sub>1</sub>’s control hazard model potentially being piecewise
+For the working model, $Z_1 \sim \text{PWExp}(\lambda_{1s}*\theta_{1d})$ and $Z_2 \sim \text{Exp}(\lambda_{2d})$, with priors
+$\theta_{1s} \sim \text{Gamma(\alpha_{1s}, \beta_{1s})}$, $\theta_{2d} \sim \text{Gamma}(\alpha_{2d}, \beta_{2d})$
+(with $Z_1$’s control hazard model potentially being piecewise
 exponential). For imputation, a subject missing both the biomarker and
-final endpoint times has both *Z*<sub>1</sub> and *Z*<sub>2</sub>
+final endpoint times has both $Z_1$ and $Z_2$
 imputed, with the final endpoint imputed as the sum. For a subject with
-a predictor time but no final endpoint, *Z*<sub>2</sub> is imputed and
+a predictor time but no final endpoint, $Z_2$ is imputed and
 added to the observed predictor time to impute the final endpoint.
 
 # Allocation
