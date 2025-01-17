@@ -10,5 +10,164 @@ format:
     number-depth: 4
 ---
 
+# Success/Futility Criteria
 
-Placeholder.
+The Success/Futility Criteria tab is where users specify the decision rules
+for determining study success or failure. The Final Analysis criteria always
+exist, and should, in general, be specified for every simulated trial. If
+simulating an adaptive trial, then interim analysis decision rules are also
+specified here.
+
+There are $7$ possible decisions that can be made in a FACTS Core design, each
+with a numeric identifier that FACTS uses in the .csv output to denote
+decisions:
+
+1. Early Success
+: Early success is achieved if and only if the trial meets the success condition
+at an interim analysis, and does not meet the futility criteria at the final analysis.
+The final analysis criteria must not be met whether or not subjects were selected
+to follow-up after an early success decision.
+
+2. Late Success
+: Late success is achieved if and only if the trial enrolls to the maximum sample
+size, collects full follow-up, and then meets the final analysis success criteria.
+
+3. Late Futility
+: Late success is achieved if and only if the trial enrolls to the maximum sample
+size, collects full follow-up, and then meets the final analysis futility criteria.
+Late futility is not automatically the complement of late success; the futility
+rule must be specified as the complement of the success rule to make it true.
+
+4. Early Futility
+: Early futility is achieved if and only if the trial meets the futility condition
+at an interim analysis, and does not meet the success criteria at the final analysis.
+The final analysis criteria must not be met whether or not subjects were selected
+to follow-up after an early success decision.
+
+5. Success to futility flip-flop
+: Success to futility flip-flop is achieved if and only if the trial meets the
+success condition at an interim analysis, but meets the futility condition at the
+final analysis. Success to futility flip-flops can be achieved whether or not
+subjects are followed up after the early success decision.
+
+6. Futility to success flip-flop
+: Futility to success flip-flop is achieved if and only if the trial meets the
+futility condition at an interim analysis, but meets the success condition at the
+final analysis. Futility to success flip-flops can be achieved whether or not
+subjects are followed up after the early futility decision.
+
+7. Inconclusive
+: Inconclusive is achieved if and only if the trial enrolls to the maximum sample
+size, collects full follow-up, and then does not meet the final success or
+final futility criteria.
+
+Every simulated trial will result in exactly one of these decisions. Non-adaptive
+trials will result in either Late Success, Late Futility, or Inconclusive. An
+adaptive trial that does not stop at an interim analysis will result in Late
+Success, Late Futility, or Inconclusive. An adaptive trial that stops enrolling for early
+success at an interim analysis will end up as an Early Success or a Success to
+Futility flip-flop. An adaptive trial that stops enrolling for early futility will result
+in Early Futility or Futility to Success flip-flop.
+
+## Final Evaluation
+
+On the Final Evaluation tab, the user can specify rules for
+judging the study for final futility or final success at its end.
+
+The left column of the Final Evaluation tab contains the specification of the
+trial final futility rule, and the right column contains the specification of
+the final success rule.
+
+To add a decision rule, click the "Add..." button within the appropriate column,
+select a decision quantity QOI, a comparison inequality sign, and a threshold.
+Final success and final futility criteria can each have multiple components to them,
+and the selection at the bottom of the column called "Combine criteria using:"
+dictates if success or futility should be declared if every single criteria is met
+(AND) or if any criteria is met (OR).
+
+The success and futility rules need not be complementary - there can be trials
+that do not meet either criteria at the final analysis. These trials would be
+considered inconclusive. It is allowable, although generally not recommended, to specify overlapping success and futility
+rules. If a trial were to satisfy both the success and futility criteria at the
+final analysis it would be considered a final futility.
+
+The Final Evaluation Criteria are always applied at the time of the
+final analysis, even if the study stops early for success or futility,
+and whether or not “Continue follow-up if study stopped for success” or
+“Continue follow-up if study stopped for futility” are selected. As a
+result, setting final analysis criteria that are easier to satisfy than
+interim analysis criteria may result in the labelling of trials that
+meet the interim analysis criteria but do not satisfy the final analysis
+criteria as flip-flops.
+
+<img src="../coreUGattachments/CoreUserGuide/media/image54.png"
+style="width:5.48603in;height:4.10627in"
+alt="A screenshot of a social media post Description automatically generated" />
+
+## Interim Analysis Criteria
+
+On the success/futility criteria of a design with "Enable adaptive features"
+checked on the Study > Study Info page, the user can specify rules for
+judging the study for futility or success at an interim and at the final
+evaluation. If the trial has no interims there will be just a tab for
+the Final Evaluation criteria. If the trial has interim analyses, then
+there can be tabs that define different early success/futility criteria
+at the different interims.
+
+At the top of the main tab is a control to allow tabs to be created for
+different interims. In a newly created adaptive design, FACTS will
+create a tab for interim 1.
+
+If early success/futility criteria are specified for an interim, then
+they will be taken to apply to all subsequent interims until the next
+one for which criteria are supplied, then those criteria will apply
+until the next interim for which criteria are applied and so on. There will
+be no stopping for success or futility until the first interim for which
+early stopping criteria have been defined.
+
+It is possible to specify overlapping early success and early futility criteria at
+an interim, but it is not possible to stop
+for both success and futility at the same time. The FACTS design
+engines will stop the trial but the user should not rely on one or
+other outcome taking precedence. It is not considered good practice
+to have success and futility rules that could both be true, so FACTS
+does not [guarantee a “tie break” rule](## "As of FACTS 7.1 early futility will
+be the result if both early success and early futility criteria are met.").
+
+In the output files there are columns labeled “Success <QOI>”
+and “Futile <QOI>” indicating whether any decision criteria
+became true, and “Success Combined” and “Futile Combined” indicating
+if all the criteria for a success or futility determination have
+been met. If both sets of criteria are met simultaneously, FACTS
+will only flag one of “Success Combined” and “Futile Combined” as
+being met, corresponding to how the outcome of the trial has been
+flagged.
+
+<img src="../coreUGattachments/CoreUserGuide/media/image53.png"
+style="width:5.52058in;height:4.13213in"
+alt="A screenshot of a social media post Description automatically generated" />
+
+Having created a tab to define the early success/futility criteria at an
+interim, the user has options to delete the tab or to copy criteria that
+have already been entered on another tab before editing them.
+
+The user specifies:
+
+-   Whether early stopping for futility or success is to be allowed by
+    selecting the “Futility criteria” or “Success criteria”
+
+-   The stopping rules are specified, by selecting the QOI to be tested,
+    the direction of the comparison and the threshold value for the
+    criteria to be met, as in the Final Evaluation tab above.
+
+-   The user can specify whether, if multiple criteria have been
+    specified, they all need to be meet (Criteria combined using “AND”)
+    or only any one of them needs to be met (Criteria combined using
+    “OR”). These are specified independently for stopping for success
+    and for futility.
+
+-   If stopping is allowed, the user specifies what the minimum amount
+    of information (using the information type specified on the Interims
+    tab). This can be specified both in overall terms and information on
+    specific doses. If multiple minimum-information criteria are
+    specified they must all be met for the QOI criteria to be evaluated.

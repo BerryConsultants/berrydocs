@@ -4049,7 +4049,9 @@ trial. Interims can either be specified with calendar frequency –
 occurring every specified number of weeks or specified to occur after a
 specified amount of information has been collected.
 
-## Continuous and Dichotomous Endpoints
+## Interim Analysis Triggers
+
+### Continuous and Dichotomous Endpoint
 
 Information can be defined in terms of:
 
@@ -4060,9 +4062,31 @@ Information can be defined in terms of:
 -   the number of subjects who have had the opportunity to complete a
     specified visit (includes drop-outs)
 
--   interims can be by time with the first interim defined by
-    information and time thereafter, or each information can be defined
-    by the amount of information required to trigger the interim.
+When specifying an interim analysis schedule, it can be done either based
+on time or based on one of the information categories above.
+
+If specifying interims based on time the first interim
+analysis timing must be based on information,
+and each subsequent interim is triggered after the provided amount of time
+has elapsed. If accrual completes before the first interim threshold is reached,
+and the first interim was defined in terms of the number of subjects
+enrolled, then the interims by time start at full accrual. If the first
+interim is defined in any other terms (by events, subjects complete or
+subjects with opportunity to complete) then interims only start when
+this is reached (which might be never).
+
+If specifying interims based solely on information, the table
+on the "Interims" tab determines when the analyses will be triggered.
+Each interim is defined individually by the number of
+patients/observations that have satisfied some criteria. If information is
+If information is defined as Subjects Enrolled, then interim are triggered
+immediately upon enrollment of the subject satisfying the criteria. If
+information is defined as completers or opportunity to complete, then interims
+are triggered immediately upon the visit being reached that satisfies the
+specified criteria. Successive interims must be in terms of the same or
+more observations at the same or later visit, and either Visit or Subject must
+increase. Different types of information cannot be mixed to trigger interim analyses
+except in using time to trigger interims after the first based on information.
 
 <img src="coreUGattachments/CoreUserGuide/media/image50.png"
 style="width:2.94314in;height:2.8326in"
@@ -4071,30 +4095,11 @@ alt="Graphical user interface Description automatically generated" />
 style="width:2.99611in;height:2.86372in"
 alt="Graphical user interface Description automatically generated" />
 
-If defining interims by time, these are defined by frequency (number of
-weeks between interim) – fractions of weeks can be used for very
-frequent interims! The first interim is defined in terms of an
-information threshold, with the type of information selected above.
-
-If the accrual completes before the first interim threshold is reached,
-and the first interim was defined in terms of the number of subjects
-enrolled, then the interims by time start at full accrual. If the first
-interim is defined in any other terms (by events, subjects complete or
-subjects with opportunity to complete) then interims only start when
-this is reached (which might be never).
-
-If defiing interims by information, then each interim is defined
-individually, by number of patients/observations and iif information is
-interms of completers, then the week of the visit that is being used to
-define “complete”. Successive interims must be in terms of the same or
-more observations at the same or later visit and at least one needs to
-be “more” or “later”.
-
-If interims are governed by time, completers or events there is the
+If interims are governed by time, there is the
 option as to whether interims should continue after full accrual, or
 discontinue.
 
-## Time-to-Event Endpoint
+### Time-to-Event Endpoint
 
 Information can be defined in terms of:
 
@@ -4105,45 +4110,49 @@ Information can be defined in terms of:
 -   the number of subjects who have had the opportunity to observe their
     predictor endpoint (includes drop-outs)
 
--   specified numbers of events have observed (time to event trials
-    only). With early stopping only, or arm dropping designs, the
-    occurrence of the first interim is also specified, with an adaptive
-    allocation design, the first interim is at the end of the burn-in.
+-   specified numbers of events observed
 
-## Follow-up
+-   specified number of predictor events observed
+
+Outside of the new types of information, the time-to-event triggers work
+in exactly the same way that continuous and dichotomous triggers do.
+
+## Subject Follow-up Options
 
 Regardless of endpoint, the Interims tab contains options that control
-the behaviour should a trial stop at an interim. The option allows the
+the behaviour should a trial stop at an interim analysis. The options allows the
 user to specify whether or not to complete the follow-up of subjects who
 have been accrued, but have not had time to observe their final
 endpoint.
 
 The default options available for Subject Follow-Up are:
 
--   Continue follow-up if study stopped for success
+-   Continue follow-up if study stopped for early success
 
-<!-- -->
-
--   Continue follow-up if study stopped for futility
+-   Continue follow-up if study stopped for early futility
 
 If the check box corresponding to an interim decision is checked, then
-at the time of an interim analysis decision accrual will be stopped, all
+at the time of an interim analysis decision - accrual will be stopped, all
 subjects currently enrolled will be followed-up until they have had the
 opportunity to observe their final endpoint, and then the final analysis
 will be performed.
 
 If the check box corresponding to an interim decision is not checked,
-then at the time of an interim analysis decision accrual is stopped, the
+then at the time of an interim analysis decision - accrual is stopped, the
 data is locked, and no follow-up on randomized patients is collected.
-The interim dataset is the final dataset. The final analysis is then
+The interim dataset is the final dataset. [The final analysis is then
 performed using the same data and model as was used for the interim
-analysis.
+analysis.](## "This can result in success to futility flip-flops or futility
+to success flip-flops, even if there is no additional follow-up, since the
+final analysis criteria can be specified to be less strict than the interim
+analysis threshold. If you do not follow up after a success, then a success
+to futility flip-flop can be considered simply an early success.")
 
 <img src="coreUGattachments/CoreUserGuide/media/image52.png"
 style="width:2.96325in;height:0.70635in"
 alt="Graphical user interface, text, application Description automatically generated" />
 
-If the allocation method is selected as, “Arm Dropping” then an
+If the allocation method is selected as, “Arm Dropping,” then an
 additional check box is provided in the Subject Follow-up Options box
 asking whether the user would like to “Continue follow-up if arm
 dropped.” If the box is checked, then subjects randomized to an arm that
@@ -4154,9 +4163,102 @@ that is dropped will never have future endpoint values observed.
 
 # Success/Futility Criteria
 
+The Success/Futility Criteria tab is where users specify the decision rules
+for determining study success or failure. The Final Analysis criteria always
+exist, and should, in general, be specified for every simulated trial. If
+simulating an adaptive trial, then interim analysis decision rules are also
+specified here.
+
+There are $7$ possible decisions that can be made in a FACTS Core design, each
+with a numeric identifier that FACTS uses in the .csv output to denote
+decisions:
+
+1. Early Success
+: Early success is achieved if and only if the trial meets the success condition
+at an interim analysis, and does not meet the futility criteria at the final analysis.
+The final analysis criteria must not be met whether or not subjects were selected
+to follow-up after an early success decision.
+
+2. Late Success
+: Late success is achieved if and only if the trial enrolls to the maximum sample
+size, collects full follow-up, and then meets the final analysis success criteria.
+
+3. Late Futility
+: Late success is achieved if and only if the trial enrolls to the maximum sample
+size, collects full follow-up, and then meets the final analysis futility criteria.
+Late futility is not automatically the complement of late success; the futility
+rule must be specified as the complement of the success rule to make it true.
+
+4. Early Futility
+: Early futility is achieved if and only if the trial meets the futility condition
+at an interim analysis, and does not meet the success criteria at the final analysis.
+The final analysis criteria must not be met whether or not subjects were selected
+to follow-up after an early success decision.
+
+5. Success to futility flip-flop
+: Success to futility flip-flop is achieved if and only if the trial meets the
+success condition at an interim analysis, but meets the futility condition at the
+final analysis. Success to futility flip-flops can be achieved whether or not
+subjects are followed up after the early success decision.
+
+6. Futility to success flip-flop
+: Futility to success flip-flop is achieved if and only if the trial meets the
+futility condition at an interim analysis, but meets the success condition at the
+final analysis. Futility to success flip-flops can be achieved whether or not
+subjects are followed up after the early futility decision.
+
+7. Inconclusive
+: Inconclusive is achieved if and only if the trial enrolls to the maximum sample
+size, collects full follow-up, and then does not meet the final success or
+final futility criteria.
+
+Every simulated trial will result in exactly one of these decisions. Non-adaptive
+trials will result in either Late Success, Late Futility, or Inconclusive. An
+adaptive trial that does not stop at an interim analysis will result in Late
+Success, Late Futility, or Inconclusive. An adaptive trial that stops enrolling for early
+success at an interim analysis will end up as an Early Success or a Success to
+Futility flip-flop. An adaptive trial that stops enrolling for early futility will result
+in Early Futility or Futility to Success flip-flop.
+
+## Final Evaluation
+
+On the Final Evaluation tab, the user can specify rules for
+judging the study for final futility or final success at its end.
+
+The left column of the Final Evaluation tab contains the specification of the
+trial final futility rule, and the right column contains the specification of
+the final success rule.
+
+To add a decision rule, click the "Add..." button within the appropriate column,
+select a decision quantity QOI, a comparison inequality sign, and a threshold.
+Final success and final futility criteria can each have multiple components to them,
+and the selection at the bottom of the column called "Combine criteria using:"
+dictates if success or futility should be declared if every single criteria is met
+(AND) or if any criteria is met (OR).
+
+The success and futility rules need not be complementary - there can be trials
+that do not meet either criteria at the final analysis. These trials would be
+considered inconclusive. It is allowable, although generally not recommended, to specify overlapping success and futility
+rules. If a trial were to satisfy both the success and futility criteria at the
+final analysis it would be considered a final futility.
+
+The Final Evaluation Criteria are always applied at the time of the
+final analysis, even if the study stops early for success or futility,
+and whether or not “Continue follow-up if study stopped for success” or
+“Continue follow-up if study stopped for futility” are selected. As a
+result, setting final analysis criteria that are easier to satisfy than
+interim analysis criteria may result in the labelling of trials that
+meet the interim analysis criteria but do not satisfy the final analysis
+criteria as flip-flops.
+
+<img src="coreUGattachments/CoreUserGuide/media/image54.png"
+style="width:5.48603in;height:4.10627in"
+alt="A screenshot of a social media post Description automatically generated" />
+
 ## Interim Analysis Criteria
 
-On the success/futility criteria page the user can specify rules for
+On the success/futility criteria of a design with "Enable adaptive features"
+checked on the Study > Study Info page, the user can specify rules for
 judging the study for futility or success at an interim and at the final
 evaluation. If the trial has no interims there will be just a tab for
 the Final Evaluation criteria. If the trial has interim analyses, then
@@ -4170,31 +4272,27 @@ create a tab for interim 1.
 If early success/futility criteria are specified for an interim, then
 they will be taken to apply to all subsequent interims until the next
 one for which criteria are supplied, then those criteria will apply
-until the next interim for which criteria are applied and so on.
+until the next interim for which criteria are applied and so on. There will
+be no stopping for success or futility until the first interim for which
+early stopping criteria have been defined.
 
-Note:
+It is possible to specify overlapping early success and early futility criteria at
+an interim, but it is not possible to stop
+for both success and futility at the same time. The FACTS design
+engines will stop the trial but the user should not rely on one or
+other outcome taking precedence. It is not considered good practice
+to have success and futility rules that could both be true, so FACTS
+does not [guarantee a “tie break” rule](## "As of FACTS 7.1 early futility will
+be the result if both early success and early futility criteria are met.").
 
-1.  Early stopping for success/futility only occurs at interims.
-
-2.  There will be no stopping for success or futility until the first
-    interim for which early stopping criteria have been defined.
-
-3.  It is left to the user to ensure that the early stopping criteria at
-    any interim are mutually exclusive and it is not possible to stop
-    for both success and futility at the same time. The FACTS design
-    engines will stop the trial but the user should not rely on one or
-    other outcome taking precedence. It is not considered good practice
-    to have success and futility rules that could both be true, so FACTS
-    does not guarantee a “tie break” rule.
-
-4.  In the output files there are columns labeled “Success &lt;QOI&gt;”
-    and “Futile &lt;QOI&gt;” indicating whether any decision criteria
-    became true, and “Success Combined” and “Futile Combined” indicating
-    if all the criteria for a success or futility determination have
-    been met. If both sets of criteria are met simultaneously, FACTS
-    will only flag one of “Success Combined” and “Futile Combined” as
-    being met, corresponding to how the outcome of the trial has been
-    flagged.
+In the output files there are columns labeled “Success <QOI>”
+and “Futile <QOI>” indicating whether any decision criteria
+became true, and “Success Combined” and “Futile Combined” indicating
+if all the criteria for a success or futility determination have
+been met. If both sets of criteria are met simultaneously, FACTS
+will only flag one of “Success Combined” and “Futile Combined” as
+being met, corresponding to how the outcome of the trial has been
+flagged.
 
 <img src="coreUGattachments/CoreUserGuide/media/image53.png"
 style="width:5.52058in;height:4.13213in"
@@ -4211,7 +4309,7 @@ The user specifies:
 
 -   The stopping rules are specified, by selecting the QOI to be tested,
     the direction of the comparison and the threshold value for the
-    criteria to be met.
+    criteria to be met, as in the Final Evaluation tab above.
 
 -   The user can specify whether, if multiple criteria have been
     specified, they all need to be meet (Criteria combined using “AND”)
@@ -4224,278 +4322,3 @@ The user specifies:
     tab). This can be specified both in overall terms and information on
     specific doses. If multiple minimum-information criteria are
     specified they must all be met for the QOI criteria to be evaluated.
-
-> Note that stopping is only assessed at interims, not immediately when
-> these criteria are met.
-
-## Final Evaluation Criteria
-
-On the Final Evaluation Criteria tab, the user can specify rules for
-judging the study for final futility or final success at its end. The
-tab layout is the same as an interim Success/Futility tab except there
-are no minimum information rules to be specified.
-
-The Final Evaluation Criteria are always applied at the time of the
-final analysis, even if the study stops early for success or futility,
-and whether or not “Continue follow-up if study stopped for success” or
-“Continue follow-up if study stopped for futility” are selected. As a
-result, setting final analysis criteria that are easier to satisfy than
-interim analysis criteria may result in the labelling of trials that
-meet the interim analysis criteria but do not satisfy the final analysis
-criteria as flip-flops.
-
-<img src="coreUGattachments/CoreUserGuide/media/image54.png"
-style="width:5.48603in;height:4.10627in"
-alt="A screenshot of a social media post Description automatically generated" />
-
-# Trial States
-
-## State descriptions
-
-For the purposes of interims, the different states or stages of a trial
-are:
-
-1.  **In Burn-in / before first analysis.** In adaptive allocation
-    designs, the burn-in denotes the initial group of subjects
-    explicitly assigned to treatment arms before probabilistic
-    allocation begins. FACTS prevents the burn-in requiring more
-    subjects than the maximum number of subjects – but the numbers can
-    be equal. Regardless of the interim schedule specified (e.g.,
-    frequency, number of subjects or number of events), a) no analyses
-    are performed during this period of time, and b) the first analysis
-    is performed at its conclusion. In arm dropping and early stopping
-    designs the first analysis occurs at the explicitly specified
-    initial interim. Interims are never performed in non-adaptive
-    designs; rather, the first and only analysis occurs when the max
-    subject’s final observation is taken. In all cases, it is possible
-    to reach the maximum number of events prior to the first analysis,
-    making the study complete.
-
-2.  **Mid Trial**. Interims are performed and all rules assessed. If
-    arms have been dropped, the per-arm posterior probabilities are
-    still calculated for the dropped arms but the drop decision for the
-    arms is absorbing and not re-assessed.
-
-3.  **Fully Accrued but not complete**. All subjects have been recruited
-    and being followed up. If interims are by subject or ‘interim
-    analysis beyond full accrual’ is set to FALSE, then the only
-    possible next event is ‘last subject final observation’.
-
-4.  **Stopped Early but still following up.** The study stopping rules
-    are not evaluated, but arm dropping rules are. Interims may still
-    occur.
-
-5.  **Complete.** All possible data collected for every enrolled
-    subject.
-
-## Analysis trigger events
-
-The following are the events that trigger interims, stopping or changes
-of trial state:
-
-1.  Last event is observed (TTE trial with a max number of events – this
-    is the only circumstance that can arise before the end of burn-in /
-    first analysis that can stop the trial).
-
-2.  A “number of subjects interim” occurs (other than last subject of
-    burn-in / first analysis)
-
-3.  A “cohort complete” interim occurs (when using cohort enrolment). A
-    cohort complete event is slightly different from a “number of
-    subjects interim” in that after a cohort is fully enrolled the
-    interim does not occur until all the subjects are complete.
-
-4.  Study max subject size is reached.
-
-5.  Recruit last subject of burn-in / first analysis occurs.
-
-6.  A “time” or “number of events” interim occurs.
-
-7.  Last subject’s final observation is taken (in a TTE trial this might
-    be that the last subject to have an event has their event, or last
-    subject recruited reaches the end of the maximum follow-up and is
-    censored).
-
-## Trial State Transitions
-
-Note: the term “study arms” is used to refer to the treatment arms that
-are not the control or active comparator arm. In an arm dropping design
-only the study arms can be dropped, and the trial stops if all study
-arms are dropped.
-
-<table>
-<caption><p>Figure 3‑2 Add Posterior Probability QOI
-dialog</p></caption>
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 17%" />
-<col style="width: 16%" />
-<col style="width: 16%" />
-<col style="width: 17%" />
-<col style="width: 15%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th></th>
-<th colspan="5">State transition table</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><p>Triggers</p>
-<p>Processed in order …</p></td>
-<td><p><strong>1: In Burn-in / before first analysis</strong></p>
-<p>[This is the starting state for adaptive allocation designs]</p></td>
-<td><p><strong>2: Mid Trial</strong></p>
-<p>[This is the starting state for arm dropping, early stopping, and
-non-adaptive designs]</p></td>
-<td><strong>3: Fully Accrued but not complete</strong></td>
-<td><p><strong>4: Stopped Early but following up</strong></p>
-<p>[This state can only be entered if “Continue follow-up if study
-stopped for success/futility is set]</p></td>
-<td><p><strong>5: Complete</strong></p>
-<p>[This is the final state]</p></td>
-</tr>
-<tr class="even">
-<td>A: Last event is observed [can only occur in TTE trials]</td>
-<td><p>A “final evaluation” is output.</p>
-<p>Go to “5: Complete”</p></td>
-<td><p>A “final evaluation” is output.</p>
-<p>Go to “5: Complete”</p></td>
-<td><p>A “final evaluation” is output.</p>
-<p>Go to “5: Complete”</p></td>
-<td><p>A “final evaluation” is output.</p>
-<p>Go to “5: Complete”</p></td>
-<td>N/A</td>
-</tr>
-<tr class="odd">
-<td>B: A “number of subjects” interim occurs</td>
-<td>N/A</td>
-<td><p>An interim is output.</p>
-<p>If arm dropping, check not yet dropped arms to see if any should be
-dropped and flag those that are.</p>
-<p>If stopping conditions are met or all study arms dropped then if
-“Continue follow-up” for the appropriate decision is selected go to “4:
-Stopped Early” otherwise a “final evaluation” is output and</p>
-<p>Go to “5: Complete”</p>
-<p>If the interim size = Max subjects then go to “3: Fully Accrued”</p>
-<p>Otherwise stay in “2: Mid Trial”</p></td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-</tr>
-<tr class="even">
-<td>C: A “cohort complete” interim occurs [for trials using cohort
-enrolment]</td>
-<td><p>[Can only occur when the final observation of a burn-in cohort is
-observed]</p>
-<p>An interim is output.</p>
-<p>If stopping conditions are met a “final evaluation” is output and go
-to “5: Complete”.</p>
-<p>Otherwise go to “2: Mid Trial”.</p></td>
-<td><p>An interim is output.</p>
-<p>If stopping conditions are met a “final evaluation” is output and go
-to “5: Complete”.</p>
-<p>If the interim size = Max cohort or the max cohort size is reached
-then a “final evaluation” is output and go to “5: Complete”.</p>
-<p>Otherwise stay in “2: Mid Trial”</p></td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-</tr>
-<tr class="odd">
-<td>D: Study max subject size is reached</td>
-<td><p>[Can only occur if Burn-in / first interim size = Max
-subjects]</p>
-<p>Go to “3: Fully Accrued”.</p></td>
-<td>Go to “3: Fully Accrued”</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-</tr>
-<tr class="even">
-<td>E: Recruit last subject of burn-in / first analysis</td>
-<td><p>An interim is output.</p>
-<p>If arm dropping, check not yet dropped arms to see if any should be
-dropped and flag those that are.</p>
-<p>If stopping conditions are met or all study arms dropped then ff
-“Continue Follow-up if study stopped“ for the appropriate decision is
-set go to “4: Stopped Early but following up” otherwise a “final
-evaluation” is output and go to “5: Complete”</p>
-<p>Otherwise go to “2: Mid Trial”</p></td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-<td>N/A</td>
-</tr>
-<tr class="odd">
-<td>F: A “time” or “number of events” interim occurs</td>
-<td>N/A</td>
-<td><p>An interim is output.</p>
-<p>If arm dropping, check not yet dropped arms to see if any should be
-dropped and flag those that are.</p>
-<p>If stopping conditions are met or all study arms dropped then ff
-“Continue Follow-up if study stopped“ for the appropriate decision is
-set go to “4: Stopped Early but following up” otherwise a “final
-evaluation” is output and go to “5: Complete”</p>
-<p>Otherwise stay in “2: Mid Trial”</p></td>
-<td><p>If “Discontinue interim analysis after full enrollment” is set,
-then there is no output. Stay in “3: Fully Accrued”</p>
-<p>Otherwise:</p>
-<p>An interim is output.</p>
-<p>If arm dropping, check not yet dropped arms to see if any should be
-dropped and flag those that are.</p>
-<p>If stopping conditions are met or all study arms dropped then ff
-“Continue Follow-up if study stopped“ for the appropriate decision is
-set go to “4: Stopped Early but following up” otherwise a “final
-evaluation” is output and go to “5: Complete”</p>
-<p>Otherwise stay in “3: Fully Accrued”</p></td>
-<td><p>If “Discontinue interim analysis after full enrollment” is set
-then there is no output, stay in “4: Stopped Early”</p>
-<p>Otherwise:</p>
-<p>An interim only checking arm-dropping is output. Stopping conditions
-not checked.</p>
-<p>If arm dropping, check not yet dropped arms to see if any should be
-dropped and flag those that are.</p>
-<p>If all study arms are dropped then if “Continue follow-up if arm
-dropped” is set stay in “4: Stopped Early” otherwise a “final
-evaluation” is output and go to “5: Complete”</p></td>
-<td>N/A</td>
-</tr>
-<tr class="even">
-<td>G: Last subject’s final observation is taken</td>
-<td>N/A</td>
-<td>N/A</td>
-<td><p>A “final evaluation” is output.</p>
-<p>Go to “5: Complete”</p></td>
-<td><p>A “final evaluation” is output.</p>
-<p>Go to “5: Complete”</p></td>
-<td>N/A</td>
-</tr>
-</tbody>
-</table>
-
-Figure 3‑2 Add Posterior Probability QOI dialog
-
-# Reporting of Results
-
-For detailed descriptions of trial output see the user guide corresponding to the endpoint used in the FACTS file.
-
-# References
-
-<a name="jennisonturnbull">Jennison, C., & Turnbull, B.W. (1999). Group Sequential Methods with Applications to Clinical Trials (1st ed.). Chapman and Hall/CRC. https://doi.org/10.1201/9780367805326</a>
-
-<a name="pass">NCSS, LLC. Assurance for Non-Inferiority Tests for the Difference Between Two Proportions. In *PASS Sample Size Software Documentation* (pp. 289-1-289–31). Retrieved from <https://www.ncss.com/wp-content/themes/ncss/pdf/Procedures/PASS/Assurance_for_Non-Inferiority_Tests_for_the_Difference_Between_Two_Proportions.pdf>.</a>
-
-<a name="sas">SAS Institute Inc. 2016. Base SAS® 9.4 Procedures Guide: Statistical Procedures, Sixth Edition. Cary, NC: SAS Institute Inc.</a>
-
-<a name="gelman">Prior distributions for variance parameters in hierarchical models”, Andrew Gelman, Bayesian Analysis 2006, 1, Number 3 pp 515-533</a>
-
-<a name="dunnett"> Dunnett CW. A multiple comparison procedure for comparing several treatments with a control. Journal of the American Statistical Association. 1955; 50: 1096-1121.</a>
-
-<a name="agresti">Agresti, A. 2002.  Categorical Data Analysis. Second Edition. Wiley.</a>
-
-<a name="mee">Mee, R. W. 1984. Confidence bounds for the difference between two probabilities. Biometrics. 40, 1175-1176.</a>
-
-<a name="nurminen">Nurminen, M. 1986. Confidence intervals for the ratio and
-difference of two binomial proportions. Biometrics. 42, 675-676.</a>
