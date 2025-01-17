@@ -427,6 +427,12 @@ ul.task-list li input[type="checkbox"] {
   </li>
       </ul>
   </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -478,11 +484,11 @@ ul.task-list li input[type="checkbox"] {
 <h2 data-number="1.1" class="anchored" data-anchor-id="multiple-imputation"><span class="header-section-number">1.1</span> Multiple Imputation</h2>
 <p>Unless a deterministic method is used such as LOCF or BOCF, longitudinal models inform the dose response estimates by using the longitudinal model to stochastically impute subjects’ final endpoint data when it’s not been directly observed.</p>
 <p>First, data from subjects with both intermediate and final observations is used to estimate the parameters of whatever longitudinal imputation model has been selected.</p>
-<p><img src="coreUGattachments/CoreUserGuide/media/image36.png" style="width:3.33848in;height:1.92in"></p>
+<p><img src="../coreUGattachments/CoreUserGuide/media/image36.png" style="width:3.33848in;height:1.92in"></p>
 <p>Subjects with missing final data have final data sampled from the posterior distribution of the longitudinal model given the subjects most recent intermediate visit (or in some models, all their available intermediate visit data). Subjects with no final or intermediate data have final data sampled from the posterior distribution of the dose response model given the dose arm the subject was allocated to.</p>
-<p><img src="coreUGattachments/CoreUserGuide/media/image37.png" style="width:3.336in;height:1.91857in"></p>
+<p><img src="../coreUGattachments/CoreUserGuide/media/image37.png" style="width:3.336in;height:1.91857in"></p>
 <p>Once every randomized subject has either a real known final endpoint or an imputed final endpoint, the dose response model is re-estimated using that <em>complete</em> dataset.</p>
-<p><img src="coreUGattachments/CoreUserGuide/media/image38.png" style="width:3.352in;height:2.10985in"></p>
+<p><img src="../coreUGattachments/CoreUserGuide/media/image38.png" style="width:3.352in;height:2.10985in"></p>
 </a><p><a name="longitudinalModeling">This impute-then-fit-dose-response process is built into the MCMC estimation sampling loop. Each time we draw a new set of parameters from the longitudinal model they are used to impute the final endpoint of incomplete subjects. These subjects then inform the dose response model. Then we get a new sample from the longitudinal model and so on. The longitudinal models, with </a><a href="##" title="The ITP model uses the current state of the dose response models in its imputation.">one exception</a>, are not conditioned on the dose response models.</p>
 <p>The missing final endpoint values are imputed with the uncertainty in the longitudinal model, and, as a result, the dose response model is estimated including both the uncertainty in the longitudinal model and the usual uncertainty in its parameters.</p>
 <p>Above, it says “fit the dose response model,” as a step in the iterative process. The idea is that once you create a dataset through imputation you should update the dose response model MCMC chain until it converges. By default only 1 step is taken on the dose response model MCMC chain. It is safer, especially if doing a real analysis, to allow the dose response model parameter chains to converge slightly before imputing the missing data again. This can be done on the MCMC settings control on the Simulation tab and setting the “Samples per Imputation” parameter. As a rough guide, if it at some early interims &gt; 5% of the data being analyzed will be imputed, a value in the range 2 to 10 is recommended to avoid underestimating the uncertainty. A higher number should be used the greater the proportion of imputed data.</p>

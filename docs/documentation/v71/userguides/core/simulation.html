@@ -427,16 +427,34 @@ ul.task-list li input[type="checkbox"] {
   </li>
       </ul>
   </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../documentation/references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#trial-states" id="toc-trial-states" class="nav-link active" data-scroll-target="#trial-states"><span class="header-section-number">1</span> Trial States</a>
+  <ul>
+  <li><a href="#state-descriptions" id="toc-state-descriptions" class="nav-link" data-scroll-target="#state-descriptions"><span class="header-section-number">1.1</span> State descriptions</a></li>
+  <li><a href="#analysis-trigger-events" id="toc-analysis-trigger-events" class="nav-link" data-scroll-target="#analysis-trigger-events"><span class="header-section-number">1.2</span> Analysis trigger events</a></li>
+  <li><a href="#trial-state-transitions" id="toc-trial-state-transitions" class="nav-link" data-scroll-target="#trial-state-transitions"><span class="header-section-number">1.3</span> Trial State Transitions</a></li>
+  </ul></li>
+  <li><a href="#reporting-of-results" id="toc-reporting-of-results" class="nav-link" data-scroll-target="#reporting-of-results"><span class="header-section-number">2</span> Reporting of Results</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content column-page-right" id="quarto-document-content">
+<main class="content column-body" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Version 7.1</li><li class="breadcrumb-item">User Guides</li><li class="breadcrumb-item"><a href="../../../../documentation/v71/userguides/core/aa_coreOverview.html">FACTS Core Designs</a></li><li class="breadcrumb-item"><a href="../../../../documentation/v71/userguides/core/simulation.html">Simulation</a></li></ol></nav>
 <div class="quarto-title">
@@ -446,7 +464,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<div class="quarto-title-meta column-page-right">
+<div class="quarto-title-meta column-body">
 
     
   
@@ -458,9 +476,394 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Placeholder.</p>
+<section id="trial-states" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Trial States</h1>
+<section id="state-descriptions" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="state-descriptions"><span class="header-section-number">1.1</span> State descriptions</h2>
+<p>For the purposes of interims, the different states or stages of a trial are:</p>
+<ol type="1">
+<li><p><strong>In Burn-in / before first analysis.</strong> In adaptive allocation designs, the burn-in denotes the initial group of subjects explicitly assigned to treatment arms before probabilistic allocation begins. FACTS prevents the burn-in requiring more subjects than the maximum number of subjects – but the numbers can be equal. Regardless of the interim schedule specified (e.g., frequency, number of subjects or number of events), a) no analyses are performed during this period of time, and b) the first analysis is performed at its conclusion. In arm dropping and early stopping designs the first analysis occurs at the explicitly specified initial interim. Interims are never performed in non-adaptive designs; rather, the first and only analysis occurs when the max subject’s final observation is taken. In all cases, it is possible to reach the maximum number of events prior to the first analysis, making the study complete.</p></li>
+<li><p><strong>Mid Trial</strong>. Interims are performed and all rules assessed. If arms have been dropped, the per-arm posterior probabilities are still calculated for the dropped arms but the drop decision for the arms is absorbing and not re-assessed.</p></li>
+<li><p><strong>Fully Accrued but not complete</strong>. All subjects have been recruited and being followed up. If interims are by subject or ‘interim analysis beyond full accrual’ is set to FALSE, then the only possible next event is ‘last subject final observation’.</p></li>
+<li><p><strong>Stopped Early but still following up.</strong> The study stopping rules are not evaluated, but arm dropping rules are. Interims may still occur.</p></li>
+<li><p><strong>Complete.</strong> All possible data collected for every enrolled subject.</p></li>
+</ol>
+</section>
+<section id="analysis-trigger-events" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="analysis-trigger-events"><span class="header-section-number">1.2</span> Analysis trigger events</h2>
+<p>The following are the events that trigger interims, stopping or changes of trial state:</p>
+<ol type="1">
+<li><p>Last event is observed (TTE trial with a max number of events – this is the only circumstance that can arise before the end of burn-in / first analysis that can stop the trial).</p></li>
+<li><p>A “number of subjects interim” occurs (other than last subject of burn-in / first analysis)</p></li>
+<li><p>A “cohort complete” interim occurs (when using cohort enrolment). A cohort complete event is slightly different from a “number of subjects interim” in that after a cohort is fully enrolled the interim does not occur until all the subjects are complete.</p></li>
+<li><p>Study max subject size is reached.</p></li>
+<li><p>Recruit last subject of burn-in / first analysis occurs.</p></li>
+<li><p>A “time” or “number of events” interim occurs.</p></li>
+<li><p>Last subject’s final observation is taken (in a TTE trial this might be that the last subject to have an event has their event, or last subject recruited reaches the end of the maximum follow-up and is censored).</p></li>
+</ol>
+</section>
+<section id="trial-state-transitions" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="trial-state-transitions"><span class="header-section-number">1.3</span> Trial State Transitions</h2>
+<p>Note: the term “study arms” is used to refer to the treatment arms that are not the control or active comparator arm. In an arm dropping design only the study arms can be dropped, and the trial stops if all study arms are dropped.</p>
+<style>
+ .table_wrapper{
+    /* display: block; */
+    overflow-x: auto;
+    /* white-space: nowrap; */
+    /* min-width: 1000px; */
+    width: 100%;
+}
+</style>
+<div class="table_wrapper">
+<table class="table">
+<caption>
+<p>
+Figure 3‑2 Add Posterior Probability QOI dialog
+</p>
+</caption>
+<!-- <colgroup>
+<col style="width: 16%" />
+<col style="width: 17%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 17%" />
+<col style="width: 15%" />
+</colgroup> -->
+<thead>
+<tr class="header">
+<th>
+</th>
+<th colspan="5">
+State transition table
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+<p>
+Triggers
+</p>
+<p>
+<span style="white-space: nowrap;">Processed in order…</span>
+</p>
+</td>
+<td>
+<p>
+<strong><span style="white-space: nowrap;">1: In Burn-in / before</span> first analysis</strong>
+</p>
+<p>
+[This is the starting state for adaptive allocation designs]
+</p>
+</td>
+<td>
+<p>
+<strong>2: Mid Trial</strong>
+</p>
+<p>
+<span style="white-space: nowrap;">[This is the starting state</span> for arm dropping, early stopping, and non-adaptive designs]
+</p>
+</td>
+<td>
+<p>
+<strong><span style="white-space: nowrap;">3: Fully Accrued but not</span> complete</strong>
+</p>
+</td>
+<td>
+<p>
+<strong><span style="white-space: nowrap;">4: Stopped Early but following</span> up</strong>
+</p>
+<p>
+[This state can only be entered if “Continue follow-up if study stopped for success/futility is set]
+</p>
+</td>
+<td>
+<p>
+<strong><span style="white-space: nowrap;">5: Complete</span></strong>
+</p>
+<p>
+[This is the final state]
+</p>
+</td>
+</tr>
+<tr class="even">
+<td>
+A: Last event is observed [can only occur in TTE trials]
+</td>
+<td>
+<p>
+A “final evaluation” is output.
+</p>
+<p>
+Go to “5: Complete”
+</p>
+</td>
+<td>
+<p>
+A “final evaluation” is output.
+</p>
+<p>
+Go to “5: Complete”
+</p>
+</td>
+<td>
+<p>
+A “final evaluation” is output.
+</p>
+<p>
+Go to “5: Complete”
+</p>
+</td>
+<td>
+<p>
+A “final evaluation” is output.
+</p>
+<p>
+Go to “5: Complete”
+</p>
+</td>
+<td>
+N/A
+</td>
+</tr>
+<tr class="odd">
+<td>
+B: A “number of subjects” interim occurs
+</td>
+<td>
+N/A
+</td>
+<td>
+<p>
+An interim is output.
+</p>
+<p>
+If arm dropping, check not yet dropped arms to see if any should be dropped and flag those that are.
+</p>
+<p>
+If stopping conditions are met or all study arms dropped then if “Continue follow-up” for the appropriate decision is selected go to “4: Stopped Early” otherwise a “final evaluation” is output and
+</p>
+<p>
+Go to “5: Complete”
+</p>
+<p>
+If the interim size = Max subjects then go to “3: Fully Accrued”
+</p>
+<p>
+Otherwise stay in “2: Mid Trial”
+</p>
+</td>
+<td>
+N/A
+</td>
+<td>
+N/A
+</td>
+<td>
+N/A
+</td>
+</tr>
+<tr class="even">
+<td>
+C: A “cohort complete” interim occurs [for trials using cohort enrolment]
+</td>
+<td>
+<p>
+[Can only occur when the final observation of a burn-in cohort is observed]
+</p>
+<p>
+An interim is output.
+</p>
+<p>
+If stopping conditions are met a “final evaluation” is output and go to “5: Complete”.
+</p>
+<p>
+Otherwise go to “2: Mid Trial”.
+</p>
+</td>
+<td>
+<p>
+An interim is output.
+</p>
+<p>
+If stopping conditions are met a “final evaluation” is output and go to “5: Complete”.
+</p>
+<p>
+If the interim size = Max cohort or the max cohort size is reached then a “final evaluation” is output and go to “5: Complete”.
+</p>
+<p>
+Otherwise stay in “2: Mid Trial”
+</p>
+</td>
+<td>
+N/A
+</td>
+<td>
+N/A
+</td>
+<td>
+N/A
+</td>
+</tr>
+<tr class="odd">
+<td>
+D: Study max subject size is reached
+</td>
+<td>
+<p>
+[Can only occur if Burn-in / first interim size = Max subjects]
+</p>
+<p>
+Go to “3: Fully Accrued”.
+</p>
+</td>
+<td>
+Go to “3: Fully Accrued”
+</td>
+<td>
+N/A
+</td>
+<td>
+N/A
+</td>
+<td>
+N/A
+</td>
+</tr>
+<tr class="even">
+<td>
+E: Recruit last subject of burn-in / first analysis
+</td>
+<td>
+<p>
+An interim is output.
+</p>
+<p>
+If arm dropping, check not yet dropped arms to see if any should be dropped and flag those that are.
+</p>
+<p>
+If stopping conditions are met or all study arms dropped then ff “Continue Follow-up if study stopped“ for the appropriate decision is set go to “4: Stopped Early but following up” otherwise a “final evaluation” is output and go to “5: Complete”
+</p>
+<p>
+Otherwise go to “2: Mid Trial”
+</p>
+</td>
+<td>
+N/A
+</td>
+<td>
+N/A
+</td>
+<td>
+N/A
+</td>
+<td>
+N/A
+</td>
+</tr>
+<tr class="odd">
+<td>
+F: A “time” or “number of events” interim occurs
+</td>
+<td>
+N/A
+</td>
+<td>
+<p>
+An interim is output.
+</p>
+<p>
+If arm dropping, check not yet dropped arms to see if any should be dropped and flag those that are.
+</p>
+<p>
+If stopping conditions are met or all study arms dropped then ff “Continue Follow-up if study stopped“ for the appropriate decision is set go to “4: Stopped Early but following up” otherwise a “final evaluation” is output and go to “5: Complete”
+</p>
+<p>
+Otherwise stay in “2: Mid Trial”
+</p>
+</td>
+<td>
+<p>
+If “Discontinue interim analysis after full enrollment” is set, then there is no output. Stay in “3: Fully Accrued”
+</p>
+<p>
+Otherwise:
+</p>
+<p>
+An interim is output.
+</p>
+<p>
+If arm dropping, check not yet dropped arms to see if any should be dropped and flag those that are.
+</p>
+<p>
+If stopping conditions are met or all study arms dropped then ff “Continue Follow-up if study stopped“ for the appropriate decision is set go to “4: Stopped Early but following up” otherwise a “final evaluation” is output and go to “5: Complete”
+</p>
+<p>
+Otherwise stay in “3: Fully Accrued”
+</p>
+</td>
+<td>
+<p>
+If “Discontinue interim analysis after full enrollment” is set then there is no output, stay in “4: Stopped Early”
+</p>
+<p>
+Otherwise:
+</p>
+<p>
+An interim only checking arm-dropping is output. Stopping conditions not checked.
+</p>
+<p>
+If arm dropping, check not yet dropped arms to see if any should be dropped and flag those that are.
+</p>
+<p>
+If all study arms are dropped then if “Continue follow-up if arm dropped” is set stay in “4: Stopped Early” otherwise a “final evaluation” is output and go to “5: Complete”
+</p>
+</td>
+<td>
+N/A
+</td>
+</tr>
+<tr class="even">
+<td>
+G: Last subject’s final observation is taken
+</td>
+<td>
+N/A
+</td>
+<td>
+N/A
+</td>
+<td>
+<p>
+A “final evaluation” is output.
+</p>
+<p>
+Go to “5: Complete”
+</p>
+</td>
+<td>
+<p>
+A “final evaluation” is output.
+</p>
+<p>
+Go to “5: Complete”
+</p>
+</td>
+<td>
+N/A
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="reporting-of-results" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Reporting of Results</h1>
+<p>For detailed descriptions of trial output see the user guide corresponding to the endpoint used in the FACTS file.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <!-- footer.html -->
