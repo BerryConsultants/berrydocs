@@ -1,0 +1,135 @@
+---
+title: "The Standard FACTS Menus"
+subtitle: "Common to all Engines"
+format: 
+  html:
+    toc: true
+    toc-depth: 4
+    toc-title: "Table of Contents"
+    number-sections: true
+    number-depth: 4
+---
+
+## The "File" Menu
+
+FACTS has a File menu with commands similar to those found in most Windows applications, but also some unique to FACTS. The commands can be found in [@tbl-filecommands].
+
+| Command | Definition |
+|:-----------------------------------|:-----------------------------------|
+| New | Allows the user to select a trial design type and start a new design; if there are unsaved changes in the current design the user is prompted to save them first. |
+| Open | Allows the user to select an existing FACTS file and open it; if there are unsaved changes in the current design the user is prompted to save them first. |
+| Save | Saves the current changes in the design to the currently open FACTS file. |
+| Save As | Allows the current version of the design to be saved to a new FATCS file; this file is then the “currently open” FACTS file going forward. |
+| Export Project | Creates a “Zip” archive containing the current FACTS file and all the simulation results, so these can be easily archived, emailed, saved, etc. |
+| Recent Projects | Contains entries for the last ten FACTS files opened: selecting one re-opens it. |
+| Recent Folders | Contains entries for the folders that contain the last ten FACTS files opened: selecting one opens a file browser window on that folder allowing a ‘.facts’ file in that folder to be selected (or allowing the user to navigate to some different folder and select a ‘.facts’ file there). |
+| Examples | Contains example projects for the different design engines: selecting one opens it. |
+| Close | Closes the current FACTS file, returning the user to the FACTS introduction screen. |
+| Exit | Closes FACTS altogether. |
+
+: List of commands in the CRM file menu {#tbl-filecommands .striped .hover tbl-colwidths="\[15,85\]"}
+
+## FACTS Settings Menu
+
+The "Settings" command menu allows the user to do 2 things:
+
+-   Set various FACTS options to local settings -- see below for details.
+-   Reset the options based on the stored configuration file. This file, "config.xml", will initially be installed during the FACTS installation process and is stored in the Windows "Program Files" folder, in the sub-folder where FACTS get installed.
+-   Change the stored configuration file. This command allows you to select a new configuration file and have FACTS copy it to the sub-folder within the Windows "Program Files" folder, where FACTS get installed so it becomes the new stored configuration file. This allows IT support to easily disseminate configuration changes.
+-   Enter a new or changed license key.
+
+### Set Options
+
+The FACTS Options dialog allows the user to:
+
+-   Set and Test the connection parameters to access a compute grid for running simulations.
+-   Configure the version and location of R or R Studio that can be launched from within FACTS
+-   Select how gamma distributions are parameterized.
+
+#### Grid Configuration
+
+A grid compute facility for running simulations will only be available if your local IT services have set one up. If they have done so, they
+
+-   May have already set the appropriate parameters In the FACTS configuration file included with the FACTS installation files.
+-   Inform you of the parameters to be set manually via this dialog
+-   Send a new configuration file that can be installed using the "Load Options" menu command.
+
+If modifying the grid options manually, select the "Options" menu command and enter the values on the "Grid Configuration" tab of the displayed dialog window.
+
+![Webservice Configuration](crmUGattachments/images/clipboard-1963956967.png){#fig-webservice width="60%" fig-align="center"}
+
+First select the type of interface to the grid to be used, this is either:
+
+-   Via a network shared drive (with a “sweeper script” running on a client machine to transfer jobs to the grid management system and return results from it).
+-   Via a web service system using a webserver and database to communicate to a grid management system. The IT group supporting the grid should be able to tell you which interface they have implemented, if any. If access to the grid is via a Network Share it is necessary to specify:
+-   The location of the network share folder, usually in the form \\\<server name\>\\\<folder name\\\>.
+-   Whether the grid client is running Windows or Linux (so end-of-line characters can be corrected)
+-   The listener delay – this is the interval between “looks” when FACTS is waiting for simulation results to be complete
+
+Once specified it is possible to use the “Test” button to check that the Network Shared folder is accessible and writeable.
+
+If access to the grid is via a web service:
+
+-   The location of the web service endpoint.
+
+Clicking on “Test Configuration” and will cause FACTS will attempt to connect to the FACTS grid controller. The control will show which components of the connection are working.
+
+See the FACTS Installation Guide and FACTS Simple Grid Interface Guide for more details of setting up a grid.
+
+#### R Configuration
+
+In FACTS on the Simulation tab there are two controls that launch R – “Open in R” and “ Design Report” (in FACTS 6.2.0 the latter only available for FACTS Core designs).
+
+To enable these to work the user must specify where the R or RStudio executable is installed and (if there is more than one version of R installed) which version of R to use.
+
+![The R Configuration Dialog](crmUGattachments/images/clipboard-1268844426.png){#fig-rconfig width="60%" fig-align="center"}
+
+The dialog allows the user to Add, Edit, Test and Remove links to versions of R.
+
+![Adding a link to R](crmUGattachments/images/clipboard-272657384.png){#fig-rlink width="60%" fig-align="center"}
+
+Clicking on “Add” opens a normal Windows directory browser window, the user must navigate to the location of an R installation (for example “C:\\Program Files\\R\\R-2.15.2\\bin”, select the file R.exe, and click “Open”. This adds a new entry on the R configuration dialog.
+
+Clicking on “Edit” operates similarly to “Add” above, except the selected location replaces that currently selected entry on the R configuration dialog rather than adding a new one.
+
+Clicking on “Test” checks whether the currently selected entry on the R configuration dialog is available, if it is not an error dialog is displayed:
+
+![Example of R Configuration error](crmUGattachments/images/clipboard-2537319102.png){#fig-rconfigerror width="60%" fig-align="center"}
+
+Clicking on “Remove” removes the currently selected location on the R configuration dialog.
+
+The version of R to use by default is selected by clicking on the ‘Active’ check box of the version to use.
+
+#### Gamma Distribution Parameters
+
+In FACTS a number of parameters require inverse gamma distributions to be specified as priors for the parameter value. There are two different parameterization of the inverse gamma provided so that the user can select the form they find the most intuitive.
+
+![The parameterisation of Inverse Gamma Distributions](crmUGattachments/images/clipboard-718655442.png){#fig-gammaparam width="60%" fig-align="center"}
+
+The first form uses parameters that are the mean of the distribution and the equivalent weight in terms of the equivalent number of observations. The second form uses an ‘Alpha’ and ‘Beta’ parameterization that some statisticians are familiar with and will find natural to use.
+
+### Enter a license key
+
+If a new license key is required, this command can be used to enter one. There are two ways of entering a new license:
+
+![Enter FACTS License Key](crmUGattachments/images/clipboard-1671179033.png){#fig-licensekey width="60%" fig-align="center"}
+
+The key can be entered directly, along with the associated Organization name, or by selecting a supplied license file.
+
+## The Help Menu
+
+FACTS has a Help menu with commands to assist you with the use of FACTS, providing links to users guides, tutorial and training videos. The commands are:
+
+| Command | Definition |
+|:-----------------------------------|:-----------------------------------|
+| User Guides | Provides access to documents such as this one, with (mainly) one user guide to each design type within FACTS. Exceptions to this simple structure are: <br> 1. Core Design User Guide: A guide to the options under the ‘Design” tab for FACTS Core for all endpoints. <br> 2. Staged Design User Guide: As the staged design allows the design of one FACTS Core stage followed by a second, most of the interface is common to the basic FACTS Core. This guide describes the differences and additional aspects for all endpoints. <br> 3. Dose Escalation User Guide: This covers all the Dose Escalation engines except for N-CRM and 2D-CRM that have their own. It thus covers the 3+3, mTPI, CRM(Toxicity), CRM(Ordinal), CRM(Efficacy) and bCRM engines. |
+| Tutorials | Provides access to all the tutorial documents, which describes detailed examples of use of all the engines in FACTS and many of their options. The examples under the File \> Examples menu option largely correspond to the different tutorials described here. |
+| Design Specifications | These are technical documents that describe the mathematical models implemented in FACTS in detail. |
+| Execution Guides | The FACTS GUI can be run in command line mode so simulations can be run/re-run from scripts. With the simulation command line flag, and passed a directory rather than a file, FACTS will run simulations for every “.facts” file in that directory – and recurse into any sub-directories and simulate any “.facts” files there too. A full guide to command line mode can be found here. The FACTS simulation engines are also available in “command line executable” form. There are guides here that document their command line parameters and how to use them to analyse a data set – e.g. to perform an interim analysis whilst executing a trial designed with FACTS. |
+| FACTS file XML Specs | These guides describe the parameters in the “.facts” files, which are text files in XML format. For expert users understanding this format allows them to use scripts to generate versions of an initial “.facts” file with slight variations in the parameters such as stopping thresholds or priors. Modification of “.facts” files outside of FACTS needs to be done with care, errors may render the file unusable by FACTS. |
+| Videos | Provides access to links to the introductory, training and webinar videos that Berry Consultants has recorded and makes available over the internet to FACTS users. |
+| View log… | If an error has occurred in FACTS, often the FACTS log file can shed light on what is going wrong. The log file is hidden away in some unfashionable and hard to locate Windows folder; this command option provides easy access to it. Allowing you to email facts support with a description of what occurred, attaching a copy of this log file having saved it somewhere convenient such as your desktop. |
+| Support | Launch a simple editor for sending an email to our support account: facts\@berryconsultants.net |
+| About | Displays a simple “about box” that includes the detailed version number of FACTS. |
+
+: List of commands in the CRM help menu {#tbl-helpcommands .striped .hover tbl-colwidths="\[15,85\]"}
