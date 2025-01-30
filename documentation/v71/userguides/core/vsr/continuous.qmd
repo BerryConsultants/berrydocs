@@ -1,18 +1,24 @@
 ---
-title: "Continuous Endpoints"
+title: "Virtual Subject Response - Continuous Endpoint"
 subtitle: "Description of how to specify the virtual subject response for continuous endpoints."
 format:
   html:
     toc: true
     toc-depth: 4
     toc-title: "Table of Contents"
-    number-sections: true
+    number-sections: false
     number-depth: 4
 ---
 
-# Virtual Subject Response for Continuous Endpoints
+In FACTS Core with a continuous endpoint there are 2 different
+ways to specify the virtual subject response:
 
-## Explicitly Defined
+1.  Explicit specification of the continuous endpoint
+
+2.  Importation of an externally generated set of simulated subject
+    results.
+
+# Explicitly Defined Continuous Response
 
 Explicitly defined VSRs are the most common type specified in FACTS. In
 continuous endpoint designs, an explicitly defined VSR is specified by providing
@@ -20,10 +26,9 @@ a mean response and patient level standard deviation of the response
 for each arm in the trial. In certain cases, based on the selections made in the
 Study Info tab, baseline VSRs and Longitudinal VSRs may also need to be specified.
 
-### Dose Response
+## Dose Response
 
-![](../coreUGattachments/continuous/media/image21.png){width="5.9838418635170605in"
-height="4.425892388451444in"}
+![](../coreUGattachments/continuous/media/image21.png){}
 
 Dose response profiles can be added and deleted, and for each profile
 the user specifies:
@@ -55,9 +60,7 @@ specified for each treatment arm +/- 1.96 SD, and the control response + the def
 If a 2D treatment arm model is being used, the doses are listed in
 "effective dose strength order" as was defined on the treatment arm tab.
 
-![A screenshot of a social media post Description automatically
-generated](../coreUGattachments/continuous/media/image22.png){width="5.055750218722659in"
-height="3.838963254593176in"}
+![](../coreUGattachments/continuous/media/image22.png){}
 
 #### Load Scenario Means From File
 
@@ -79,9 +82,7 @@ over that range of possible circumstance. Note that, to give different
 VSRs different weights of expectation, the more likely VSRs should be
 repeated within the file.
 
-![A screenshot of a social media post Description automatically
-generated](../coreUGattachments/continuous/media/image23.png){width="6.011470909886264in"
-height="4.564667541557306in"}
+![](../coreUGattachments/continuous/media/image23.png){}
 
 After selecting the ".mvsr" file the graph shows the individual mean
 responses and the overall mean response over all the VSRs.
@@ -103,7 +104,7 @@ order. E.g.:
 -1, -2.5, -3.25, -2.5, 5, 5, 5, 5
 ```
 
-### Longitudinal VSR
+## Longitudinal VSR
 
 The explicitly defined virtual subject longitudinal responses can be
 specified with any of 3 methods. No matter which longitudinal VSR simulation
@@ -128,16 +129,14 @@ The three longitudinal VSRs available for continuous endpoints are:
 
 3.  ITP
 
-#### Correlated Simulation of Longitudinal Data
+### Correlated Simulation of Longitudinal Data
 
 The *Correlated* method for generating longitudinal responses simulates
 the response observed at each visit by summing 3 elements -- a fraction
 of the final response, a fraction of the 'noise' from the previous
 observation, and additional element of noise at the current visit.
 
-![Table Description automatically
-generated](../coreUGattachments/continuous/media/image24.png){width="5.975197944006999in"
-height="4.537123797025372in"}
+![](../coreUGattachments/continuous/media/image24.png){}
 
 The user specifies:
 
@@ -167,8 +166,7 @@ $$y_{i,1}\ \sim\ N\left( \mu_{j,1},\sigma_{j,1}^{2} \right)$$
 
 For time points after the first visit, observed data is simulated as:
 
-$y_{i,t}\ \sim\ \mu_{j,t} + \sqrt{1 - \rho_{t}^{2}}N\left( 0,\sigma_{j,t}^{2} \right) + \rho_{t}\left( y_{i,t - 1} - \mu_{j,t - 1} \right)\frac{\sigma_{j,t}}{\sigma_{j,t - 1}}$
-for $t \geq 2$.
+$$y_{i,t}\ \sim\ \mu_{j,t} + \sqrt{1 - \rho_{t}^{2}}N\left( 0,\sigma_{j,t}^{2} \right) + \rho_{t}\left( y_{i,t - 1} - \mu_{j,t - 1} \right)\frac{\sigma_{j,t}}{\sigma_{j,t - 1}} \text{   for } t \geq 2.$$
 
 There are 3 components of this equation. First, is the marginal mean of
 the response at the particular visit $t$. This parameter is called
@@ -217,7 +215,7 @@ $\sigma_{j,t}^{2}$ as response fractions and fractions of final SD,
 respectively, allows for each created longitudinal VSR to work with
 every created Dose Response VSR.
 
-#### Hierarchical model
+### Hierarchical model
 
 The hierarchical method for generating longitudinal responses simulates
 the response observed by sampling responses from a Normal distribution,
@@ -232,8 +230,7 @@ scaling parameter $f_{t}$. In the very similar Hierarchical (MMRM) model
 (described below), the random effect $\delta_{i}$ is not scaled by
 $f_{t}$, so it provides a constant adjustment to all visits.
 
-![](../coreUGattachments/continuous/media/image25.png){width="5.95597987751531in"
-height="4.238392388451444in"}
+![](../coreUGattachments/continuous/media/image25.png){}
 
 In the Hierarchical longitudinal subject data simulation model, the response
 variance is decomposed into two components. One is the within-subject variability
@@ -292,7 +289,9 @@ that is more predictive of the final endpoint.
 Note that, in this model the response fraction $f_{t}$ is multiplied by
 both the final endpoint mean and the patient level random effect. This
 results in the variance of the dose $j$ response at visit $t$
-being${\ \left( \phi_{jt}^{2} - f_{t}^{2}\omega \right)\ \sigma}_{j}^{2} + f_{t}^{2}\omega\sigma_{j}^{2} = \phi_{jt}^{2}\sigma_{j}^{2}$.
+being
+$${\left( \phi_{jt}^{2} - f_{t}^{2}\omega \right)\sigma}_{j}^{2} + f_{t}^{2}\omega\sigma_{j}^{2} = \phi_{jt}^{2}\sigma_{j}^{2}.$$
+
 Additionally, since $f_{t}$ changes the proportion of the overall
 variance that comes from the random effect, the simulated correlation
 between visits decreases when values of $f_{t}$ less than 1 are
@@ -330,7 +329,7 @@ $\phi_{jt}^{2} - \omega$ \> 0.
 The Hierarchical MMRM method simulates responses at visit $t$ for a
 subject $i$ that was randomized to dose $j$ from the distribution:
 
-$y_{i,t} = f_{t}\mu_{j} + \delta_{i} + N\left(0,\ \left( \phi_{jt}^{2} - \omega \right)\ \sigma_{j}^{2} \right)$.
+$$y_{i,t} = f_{t}\mu_{j} + \delta_{i} + N\left(0,\ \left( \phi_{jt}^{2} - \omega \right)\ \sigma_{j}^{2} \right)$$.
 
 where $\sigma_{j}^{2}$ is the variance of the final endpoint response
 for dose $j$, $\phi_{jt}^{2}$ is the fraction of total variance observed
@@ -357,7 +356,9 @@ that is more predictive of the final endpoint.
 Note that, in this model the response fraction $f_{t}$ is multiplied by
 only the final endpoint mean and not the patient level random effect.
 This results in the variance of the dose $j$ response at visit $t$
-being ${\ \left( \phi_{jt}^{2} - \omega \right)\ \sigma}_{j}^{2} + \omega\sigma_{j}^{2} = \phi_{jt}^{2}\sigma_{j}^{2}$.
+being
+$${\left( \phi_{jt}^{2} - \omega \right)\sigma}_{j}^{2} + \omega\sigma_{j}^{2} = \phi_{jt}^{2}\sigma_{j}^{2}.$$
+
 This total variance is the same as the non MMRM Hierarchical method, but
 only the $\phi_{jt}^{2}$ parameter effects the variance of early
 endpoint responses. If all $\phi_{jt}^{2} = 1$, then the visits will
@@ -374,9 +375,7 @@ by an exponential function. The 3 elements are: the mean final response,
 an element of inter-subject variability, and a residual variability at
 the current visit.
 
-![A screenshot of a cell phone Description automatically
-generated](../coreUGattachments/continuous/media/image26.png){width="6.005688976377953in"
-height="4.56027668416448in"}
+![](../coreUGattachments/continuous/media/image26.png){}
 
 The user specifies
 
@@ -426,17 +425,15 @@ values of $k$.
 Additionally, unlike the Correlated or Hierarchical simulation methods,
 the ITP method uses the actual visit time to simulate subject values.
 
-![](../coreUGattachments/continuous/media/image27.png){width="4.043425196850394in"
-height="2.645932852143482in"}
+![](../coreUGattachments/continuous/media/image27.png){}
 
-### Baseline VSR
+## Baseline VSR
 
 If simulation of baseline has been included on the Study > Study Info
 tab, a new virtual subject response tab is available for specifying the
 baseline score.
 
-![](../coreUGattachments/continuous/media/image28.png){width="5.718996062992126in"
-height="4.071244531933508in"}
+![](../coreUGattachments/continuous/media/image28.png){}
 
 The simulation of distribution of baseline scores is specified using a
 normal distribution with user specified mean and standard deviation,
@@ -475,7 +472,7 @@ baseline.
 Be aware that performing a baseline adjustment for subject response can
 change the marginal distribution of the dose response VSR.
 
-#### Example
+##### Example
 
 In the above screenshot a baseline of mean 25 and SD 10 has
 been specified for the distribution of the baseline values, so a centering of $c=25$ and scaling of $s=10$ is used.
@@ -483,8 +480,8 @@ Wishing to simulate an overall SD of 5 in the final change from baseline
 and apportion two-thirds the variance to baseline, $\beta$ has been set as
 follows:
 
--   The desired final variance is 25 ($5^2$), divided between 1/3^rd^
-    dose response and 2/3^rd^ baseline effects.
+-   The desired final variance is 25 ($5^2$), divided into 1/3
+    dose response and 2/3 baseline effects.
 
 -   The SD of the simulated response is set to $\sqrt{\left( 25*\frac{1}{3} \right)} = 2.89$
 
@@ -497,7 +494,7 @@ follows:
     exclusion criteria in the protocol -- can significantly reduce the
     variance in the final endpoint due to the baseline effect.
 
-## External Files VSR
+# External Files VSR
 
 As well as simulating subject responses within FACTS they can be
 simulated externally, and imported into
@@ -514,9 +511,7 @@ locate the external file on their computer with a dialog box.
 As with other virtual subject responses, the user can specify which arms
 "should succeed" at the bottom of the tab.
 
-![A screenshot of a social media post Description automatically
-generated](../coreUGattachments/continuous/media/image29.png){width="5.981505905511811in"
-height="4.894612860892389in"}
+![](../coreUGattachments/continuous/media/image29.png){}
 
 ### Required Format of Externally Simulated Detail
 
@@ -532,7 +527,7 @@ data in comma separated value format with the following columns:
 
 4)  Response
 
-    a.  If **no** baseline is included, then the response provided must
+    a.  If no baseline is included, then the response provided must
         be change from baseline
 
     b.  If baseline is included, then the response provided must be the
@@ -545,7 +540,11 @@ subject should be contiguous and in visit order.
 
 The GUI requires that the file name has a ".dat" suffix.
 
-Example 3 subjects, both assigned to the first arm, data for 4 visits :
+Below are two examples of files providing externally simulated patient data
+for 3 subjects with 4 post baseline visits. The left side of the table shows
+an example file for a trial that does not simulate the baseline value, and
+the right panel shows an example file for a trial that does simulate the
+baseline visit.
 
 +---------------------------------+------------------------------------+
 | Continuous only                 | Continuous with baseline           |
@@ -584,7 +583,7 @@ Example 3 subjects, both assigned to the first arm, data for 4 visits :
 |                                 | 3, 1, 4, 0.12870                   |
 +---------------------------------+------------------------------------+
 
-: Figure 3‑1: FACTS introduction screen
+: Figure 3‑1: Two example external files providing externally simulated patient data. Note the pound sign to begin the header line, which indicates that it is ignored.
 
 ### External Directory of Files
 
@@ -601,6 +600,4 @@ individual file should be the same as for a single external file, above.
 Only files with the ".dat" suffix will be read, other files will be
 ignored.
 
-![A screenshot of a social media post Description automatically
-generated](../coreUGattachments/continuous/media/image30.png){width="6.01919728783902in"
-height="4.925456036745407in"}
+![](../coreUGattachments/continuous/media/image30.png){}
