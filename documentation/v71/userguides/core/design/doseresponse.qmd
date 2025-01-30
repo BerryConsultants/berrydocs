@@ -6,12 +6,9 @@ format:
     toc: true
     toc-depth: 4
     toc-title: "Table of Contents"
-    number-sections: true
+    number-sections: false
     number-depth: 4
 ---
-
-
-# Dose Response
 
 Dose response models in FACTS may be more accurately called final
 endpoint models. They create and model a relationship across the doses
@@ -35,7 +32,7 @@ range of dose response models to be used for all endpoint types.
 Transformations (see below) of the dichotomous and time-to-event
 responses are used to achieve this.
 
-## Continuous, Dichotomous, and Time-To-Event
+# Continuous, Dichotomous, and Time-To-Event
 
 With the exception of two dose response models specific to a dichotomous
 endpoint, the same dose response modeling facilities are available for
@@ -52,6 +49,9 @@ In the continuous dose response models the individual response or change from ba
 $$
 Y_i \sim \text{N}(\theta_{d_i}, \sigma^2)
 $$
+
+The dose means $\theta_{d}$ have formulations depending on the selected dose response model.
+
 The variance $\sigma^2$ has an inverse-gamma prior. For a description in how FACTS elicits parameterizations for the Inverse Gamma distribution, [see here](../../../../../concepts/facts/InverseGammaDistribution.qmd "Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.").
 
 ## Dichotomous
@@ -106,7 +106,7 @@ priors that have standard deviations less than about 10 are generally
 acceptably diffuse for most situations while avoiding edge case
 curiosities.
 
-## Descriptions of Dose Response Models
+# Dose Response Models
 
 The Dose Response section of the Design tab allows the user to specify
 how to analyze the relationship between dose/treatment arm and the final
@@ -144,7 +144,7 @@ Some, but not all, of the dose response models use the effective dose
 strength, $\nu_d$, to model the dose response
 $\theta_d$. The effective dose strength is specified on the Study > Treatment Arms tab. It is always fixed at 0 for the control arm ($\nu_0\equiv 0$).
 
-### Independent Dose Model
+## Independent Dose Model
 
 The “Independent Dose Model” providing a simple pair-wise comparison
 between the study drug arms and the control arm and/or the active
@@ -169,7 +169,7 @@ This model is useful:
 Otherwise for trials with multiple related arms that differ by dose, it
 is usually more efficient to use a dose-response model.
 
-### Independent Beta-Binomial Model (Dichotomous Only)
+## Independent Beta-Binomial Model (Dichotomous Only)
 
 This is a “no model” option similar to the above, but only available for the Dichotomous endpoint. Unlike any other dose response model, this model uses the beta distribution to model the probability of response directly rather than fitting a model to the log-odds of the probability.
 
@@ -196,7 +196,7 @@ borrow information between them. With trials with multiple arms of the
 same treatment at different doses it is usually more advantageous to fit
 a dose response model.
 
-###  Simple NDLM
+##  Simple NDLM
 
 The Normal Dynamic Linear Model (NDLM) estimates the final endpoint as a
 smoothed curve across doses included in the model. Doses are tied
@@ -292,7 +292,7 @@ is the target dose ([Pr(EDq)]{.fake-code-block}, [Pr(MED)]{.fake-code-block}, [P
 the mean response estimate and probabilities at neighboring doses with
 subject data would not suggest this to be the case.
 
-### Monotonic NDLM
+## Monotonic NDLM
 
 The Monotonic NDLM endpoint model is similar to the NDLM in the sense
 that it smooths dose response estimates using neighboring doses, but is
@@ -338,7 +338,7 @@ The result of this dose-response model is that the curve is
 monotonically decreasing, in that
 $\theta_d<\theta_{d-1}$.
 
-### Second Order NDLM
+## Second Order NDLM
 
 ::: {.callout-tip}
 ## Note
@@ -367,7 +367,7 @@ The prior distribution for the dose response for the dose directly after
 the initial dose is specified on the difference between the $d'$ and
 $d'+1$ level doses:
 
-\theta_{d'+1} - \theta_{d'} \sim N\left(\mu_{1},\tau^2_{1}\right)
+$$\theta_{d'+1} - \theta_{d'} \sim N\left(\mu_{1},\tau^2_{1}\right)$$
 
 Successive doses are then modeled based on differences in slope between
 the dose and the two doses below them. Let:
@@ -437,7 +437,7 @@ yields more power and better estimate of maximum response in the
 effective scenarios with the large jumps in response or pronounced
 peaks.
 
-### 3-Parameter Logistic
+## 3-Parameter Logistic
 
 The 3-parameter logistic dose response model estimates efficacy as a
 smooth curve using an intuitive parameterization. The dose response for
@@ -483,7 +483,7 @@ similar pattern, but slightly more flexibility in shape.
 
 <a name="hierlog"/>
 
-### Hierarchical Logistic
+## Hierarchical Logistic
 
 The [hierarchical logistic model](## "Scott Berry's favorite dose response model.") is an extension of the 3-parameter
 logistic with the form:
@@ -501,8 +501,7 @@ actually some falling away of effect at the highest dose. This is an
 example mean fit from 100 simulations. The model fit and error bars are
 in green, and the true dose responses are shown by the black line.
 
-<img src="../coreUGattachments/CoreUserGuide/media/image22.png"
-style="width:2.97677in;height:2.6604in" />
+![An example of a fit from the hierarchical logistic model averaged over 100 simulations. The black line shows the truth, and the green line with error bars shows the model fits.](../coreUGattachments/CoreUserGuide/media/image22.png){#fig-hierlog}
 
 $\zeta_d$ is modelled as:
 
@@ -540,14 +539,14 @@ $$a_{3}\sim N^{+}\left( \frac{\nu_{D}}{2},\left( \frac{\nu_{D}}{2} \right)^{2} \
 
 Using a weaker prior, such as $\text{N}^+(\nu_D, \nu_D^2)$ leads to a more linear fit. With just this change to the prior for $a_3$ the average of the estimated of the mean response changes from the graph above to:
 
-<img src="../coreUGattachments/CoreUserGuide/media/image23.png"
-style="width:2.9739in;height:3.15818in" />
+![An example of hierarchical logistic model fits using a prior that results
+in a flatter dose response model fit.](../coreUGattachments/CoreUserGuide/media/image23.png){#fig-hierlog2}
 
 <a name="sigmoid"/>
 
-### Sigmoid Model
+## Sigmoid Model
 
-A sigmoid model (*E*<sub>max</sub> model) provides a coherent
+A sigmoid model ($\text{E}_{\text{max}}$) provides a coherent
 parameterization of the dose response trend similar to the 3-parameter
 logistic, but with one extra shape parameter, $a_4$.
 
@@ -603,10 +602,9 @@ The caveats to using this model are:
     $\nu_D$ then a typical ‘weakly informative’ prior for
     $a_3$ would be: $$a_3 \sim N^{+}\left( \frac{\nu_{D}}{2},\left( \frac{\nu_{D}}{2} \right)^{2} \right)$$
 
-<img src="../coreUGattachments/CoreUserGuide/media/image24.png"
-style="width:3.384in;height:2.12987in" />
+![Example of a sigmoid model with $\alpha_1=5$, $\alpha_2=10$, $\alpha_3=3$, and $\alpha_4=5$.](../coreUGattachments/CoreUserGuide/media/image24.png){#fig-sigmoid}
 
-### U-Shaped Model
+## U-Shaped Model
 
 The U-shaped model when the allows for an initial increase (decrease) in
 the dose response with dose, followed by a leveling out of the mean,
@@ -687,10 +685,9 @@ few dose levels. When a small number of doses are available, it may help
 to constrain the values of $\alpha$ and $\beta$ by utilizing small standard
 deviations in the priors.
 
-<img src="../coreUGattachments/CoreUserGuide/media/image25.emf"
-style="width:4.63571in;height:4.63571in" />
+![An example dose response curve for the U-shaped model. In this example, $\alpha<1$ and $\beta > 1$.](../coreUGattachments/CoreUserGuide/media/image25.png){#fig-ushaped}
 
-### Plateau Model
+## Plateau Model
 
 The plateau model is a special case of the U-shaped model, in which
 $p_{width}=\infty$. That is, there is no return to
@@ -699,10 +696,9 @@ since $p_{width}$, $w_{width}$, and $\beta$ are not used. See the figure below t
 model for the plateau model that mimics the beginning of the U-Shaped
 model above.
 
-<img src="../coreUGattachments/CoreUserGuide/media/image26.emf"
-style="width:4.70513in;height:4.70714in" />
+![An example dose response curve for the Plateau model.](../coreUGattachments/CoreUserGuide/media/image26.png){#fig-plateau}
 
-### 3 Parameter Exponential Logistic (Dichotomous Only)
+## 3 Parameter Exponential Logistic (Dichotomous Only)
 
 The 3-parameter exponential logistic model has the following structure:
 
@@ -738,10 +734,9 @@ exponential logistic model fits. Notably, the fit shown in green has
 an $a_3$ parameter greater than $1$, which leads to faster
 increases of the response rate model as the effective dose strength increases.
 
-<img src="../coreUGattachments/CoreUserGuide/media/image27.png"
-style="width:3.424in;height:2.28267in" />
+![Two different examples of 3-parameter exponential logistic model fits. The green model has an $\alpha_3$ parameter greater than 1, which leads to faster increases of the sigmoid model as the effective dose strength increases.](../coreUGattachments/CoreUserGuide/media/image27.png){#fig-threeparamlogistic}
 
-### Hierarchical Model
+## Hierarchical Model
 
 Like the Independent Dose Model, the hierarchical model treats the arms
 as if they are an unordered set of treatments, but unlike the
@@ -776,7 +771,7 @@ arm, or excluded from it if the experimental arms are encouraged to be
 similar to each other but not necessarily to the control arm. This is not true with time-to-event data, when the control arm can only be
 excluded from the hierarchical model.
 
-### Linear Model
+## Linear Model
 
 The linear model uses a strong assumption of exact linearity between the
 responses and the dose strengths. (For dichotomous models, the linearity
@@ -814,7 +809,7 @@ logistic model available in FACTS versions before 6.4. The two models
 are identical.
 :::
 
-### Hierarchical Linear Model
+## Hierarchical Linear Model
 
 A more flexible version of the linear model is the hierarchical linear
 model. This model encourages the arm responses to have a linear-like
@@ -847,7 +842,7 @@ response but one is not prepared to assume exact linearity. It can also
 be a good way of encouraging, but not requiring, monotonicity in the
 response.
 
-## 2D Treatment Dose Response Models
+# 2D Treatment Dose Response Models
 
 If on the Study > Treatment Arms tab, the “Use 2D treatment arm
 model” option has been checked, the user may either use any of the 1D
@@ -890,7 +885,7 @@ Similarly, in the dichotomous case,
 $$Y_{rc} \sim \text{Bernoulli}(P_{rc})$$
 $$P_{rc} = \frac{e^{\theta_{rc}}}{1 + e^{\theta_{rc}}}$$
 
-### 2D Continuous Factorial Model
+## 2D Continuous Factorial Model
 
 The 2D Continuous Factorial Model fits a regression on the dose response
 that uses the numeric dose strength as a continuous valued covariate.
@@ -921,11 +916,9 @@ applies to all endpoints. It’s called continuous because the
 coefficients act on the dose strengths as continuous measures of
 strength.
 
-<img src="../coreUGattachments/CoreUserGuide/media/image29.png"
-style="width:5.50007in;height:4.17635in"
-alt="A screenshot of a social media post Description automatically generated" />
+![2D Continuous Factorial Dose Response model specification page.](../coreUGattachments/CoreUserGuide/media/image29.png){#fig-2dcontinuousfactorial}
 
-### 2D Discrete Factorial Model
+## 2D Discrete Factorial Model
 
 The 2D Discrete Factorial Model fits a regression on the dose response
 that uses the dose strength as a factor covariate rather than a numeric
@@ -945,17 +938,15 @@ $$\gamma_r \sim \text{N}(\mu_{\gamma_r}, \sigma_{\gamma_r}^2)$$
 The parameters associated with lowest level of each factor,
 $\gamma_0$ and $\beta_0$, are constrained to be $0$.
 
-<img src="../coreUGattachments/CoreUserGuide/media/image30.png"
-style="width:5.51472in;height:4.35172in"
-alt="A screenshot of a social media post Description automatically generated" />
+![2D Discrete Factorial Dose Response model specification page.](../coreUGattachments/CoreUserGuide/media/image30.png){#fig-2ddiscretefactorial}
 
-### 2D NDLM
+## 2D NDLM
 
 The 2-D NDLM Model takes the idea of smoothing across doses that was
 used in the standard NDLM model, but smooths across row factors and
 column factors separately.
 
-#### The Base Model, with Control Included
+### The Base Model, with Control Included
 
 The treatment effect for the combination of level $r$ in the row factor
 and level $c$ in the column factor is denoted as $\theta_{rc}$,
@@ -989,11 +980,9 @@ combinations. Thus, in the situation depicted below where the grayed-out
 point indicates a treatment combination with no allocation,
 $\theta_{1,2}$ is not modeled conditioned only on $\theta_{1,1}$. $\theta_{0,1}$ also informs on $\theta_{1,2}$ via $\theta_{0,2}$.
 
-<img src="../coreUGattachments/CoreUserGuide/media/image31.png"
-style="width:2.1in;height:2.1in"
-alt="Calendar Description automatically generated" />
+![2D dosing grid example with no data for (0,2).](../coreUGattachments/CoreUserGuide/media/image31.png){#fig-2dndlmgrid}
 
-#### Fix smoothing ratio for row factor and column factor
+### Fix smoothing ratio for row factor and column factor
 
 Optionally, the user might want to specify the row factor borrowing as a
 function of the column factor borrowing:
@@ -1003,7 +992,7 @@ where $k$ is a user-specified constant. This can be performed by
 selecting “Fixed smoothing ratio” in the $\phi^2$ prior
 specification area.
 
-####  Control not in model, no zero-level doses
+###  Control not in model, no zero-level doses
 
 If neither treatment arm allows zero-level doses (e.g. like one would
 expect if the column factor represented doses and the row factor
@@ -1012,13 +1001,9 @@ be needed as input from the GUI:
 
 $$\theta_{1,1} \sim \text{N}(\mu_1, \tau_1^2)$$
 
-<img src="../coreUGattachments/CoreUserGuide/media/image32.png"
-style="width:5.47053in;height:4.31685in"
-alt="A screenshot of a social media post Description automatically generated" />
+![2D NDLM Dose Response model specification page.](../coreUGattachments/CoreUserGuide/media/image32.png){#fig-2dndlm}
 
-
-
-## Baseline Adjusted Dose Response Models (Continuous Only)
+# Baseline Adjusted Dose Response Models (Continuous Only)
 
 If a baseline endpoint is simulated, the user has the option of adding a
 linear covariate effect to the dose response model. If the chosen
@@ -1044,15 +1029,12 @@ As a simple example, suppose we enter into the VSR response $Y\sim \text{N}(\mu_
 If the values of $c$ and $s$ used in the baseline adjustment are the same as the mean $\mu_X$ and standard deviation $\sigma_X$ of the simulated baseline, then the $\beta_{VSR}$ will converge to the estimated $\beta$ parameter as the sample size of the study increases. If $c\ne\mu_X$ or $s\ne\sigma_X$, then the estimated $\beta$ will not converge to the $\beta_{VSR}$ used in data simulation. Additionally, if the baseline values are simulated from a truncated normal distribution, then the estimated $\beta$ will not converge to $\beta_{VSR}$.
 :::
 
-## Control and Comparator Priors
+# Control and Comparator Priors
 
 For [most](## "All continuous and dichotomous models except the U-shaped and Plateau models.") dose response models the control arm can be modeled either as part of the dose response model or separately. If it is modeled separately, it may have a simple user
 specified Normal prior or a “historical” prior. A historical prior in
 FACTS is a hierarchical prior that models the response on control as
 coming from a distribution that also contains trial outcomes from external historical studies.
-
-<img src="../coreUGattachments/CoreUserGuide/media/image33.png"
-style="width:5.7284in;height:4.23754in" />
 
 The active comparator is always modeled separately, and as with a
 control arm modeled separately, it can be modeled with a user
@@ -1065,132 +1047,29 @@ to be consistent with the model being used to model the study doses –
 for instance if using an NDLM and there might be a sharp step in
 response from control to the lowest dose.
 
-If “historical” prior is selected for either the control arm or an
-Active Comparator arm, an “Augmented Priors” tab is created.
+If "Hierarchical Prior" is selected for either the control arm or an
+Active Comparator arm, a "Hierarchical Priors" tab is created.
 
-## Inverse-gamma priors
+## Hierarchical Priors
 
-FACTS uses inverse-gamma priors for parameters of variance – these are
-conjugate and allow efficient computation and avoid problems of
-convergence.
-[Andrew Gelman’s 2006 paper](#gelman "Prior distributions for variance parameters in hierarchical models, Andrew Gelman, Bayesian Analysis 2006, 1, Number 3 pp 515-533.") however notes a potential problem with this model, the problem is specifically
+If a hierarchical prior is used for either the Control or Active
+Comparator arm, then FACTS will estimate a prior for that arm using
+external data that the user provides. This prior is estimated through a
+hierarchical model, and then the in-study data collected on subjects randomized
+to that arm are used to estimate the posterior distribution for the arm.
 
--   When updating the estimate of the variance of a hierarchical
-    model parameter there will be typically relative few actual data
-    observations (e.g. relatively few historic studies for estimating
-    the variance of the hyper parameter in a Bayesian Augmented
-    Control model for the response on a control arm, and relatively few
-    observations of the change in response from one dose to the next
-    when using an NDLM dose-response model).
+To specify a hierarchical prior, the user specifies the sufficient statistics
+from each historical study. These are:
 
--   The conventional ‘non-informative’ gamma-prior of IG(0.001, 0.001)
-    has an effect when the observed variance is small, of over-shrinking
-    the posterior estimate of variance.
+-   Continuous: the mean response and the SD of the response of the
+    control or active comparator arm and the number of subjects
+    observed.
 
-In FACTS this possibility arises in the dose response models in the
-context of priors for the $\tau$ parameter for the NDLM models and the $a_4$ parameter for the hierarchical logistic dose response
-model, where the number of observations is the number of doses or dose
-intervals.
+-   Dichotomous: the observed number of responders and the number of
+    subjects observed in the study.
 
-To avoid the problem reported by Gelman we recommend using a weakly
-informative prior. Using the settings that control how the inverse-gamma
-distribution is parameterized (Settings > Options > Gamma
-Distribution Parameters), use the ‘center and weight’ options and use a
-weight of 1, with a ‘reasonable’ expectation for the upper limit
-difference in the values being modeled entered as the center for the
-SD. The inverse gamma distribution is the prior of the variance, so the center parameter being specified is more correctly an expectation of the square
-root of the mean of the variance.
-
-:::{.callout-tip}
-## Help with Inverse Gamma specification
-
-We have created a tool that can help visualize the inverse gamma distribution and relate the center/weight parameterization, which FACTS uses by default, to the alpha/beta parameterization that is common.
-
-[See here.](../../../../../concepts/facts/InverseGammaDistribution.qmd)
-:::
-
-This ‘reasonable’ upper limit for the difference is a value that a
-clinical team will usually have an intuition about: for the largest
-change in mean response from one dose to another for instance, it is
-(often)[## "If the trial has doses that are more closely spaced than usual, a
-smaller figure can be used."] reasonable to assume that the upper limit for the expected
-change in response from one dose to the next is the ‘expected difference
-in effect size’ that might have been used to power the trial in a
-conventional setting.
-
-In the dose response setting the smoothing parameters like $\tau$ in the NDLM are nuisance parameters in the sense that they are necessary to estimate in order to get appropriate estimates of the dose response values, but are rarely of inferential interest on their own. This can ease some of the undue burden of setting a prior on $\tau$. If it [gives estimates of the dose responses that look like they should](## "This is subjective. The Per Sim: Response and Subject Alloc plot in FACTS can help assess this fit."), then it is generally good enough.
-
-## Handling Missing Data
-
-FACTS allows a “pre-processing” step before fitting the dose response model that helps with handling of data that is missing due to dropouts. If a subject has incomplete data due to a dropout, the
-user may specify all dropouts have their unknown final endpoint treated
-as known with the following options:
-
-1.  BOCF (continuous only, requires baseline be simulated) – All
-    dropouts are assumed to have a final endpoint equal to their
-    observed baseline value.
-
-2.  LOCF (continuous or dichotomous, requires longitudinal data be
-    present) – All dropouts are assumed to have a final endpoint equal
-    to their last observed visit value. If no post-baseline visits are
-    available, but the subject has a baseline visit value, then the
-    baseline values is carried forward to their final endpoint.
-
-3.  Missing is failure (dichotomous only) – All dropouts are assumed to
-    be failures (which may be coded as 0 or 1 depending on whether a
-    response is considered a success).
-
-Subjects who are imputed in this pre-processing step have final endpoint
-values known and used for the purposes of estimating the dose response
-curve. However, these pre-processed final endpoint values are not used in
-the updating on the longitudinal model, which is based only on observed
-visit data.
-
-If the user does not specify one of the dropout imputation methods
-specified above, the dropout subjects and incomplete subjects (subjects
-who have not reached their final endpoint but are still continuing in
-the study) will have their final endpoints multiply imputed using
-Bayesian Multiple Imputation, described in the [Longitudinal Modeling](#longitudinalModeling) section.
-
-Generally, patients with “no data” do not affect the posterior
-distribution, and thus are omitted from the analysis. However, one must
-take into account a subject can have no visit data but still have “data”
-based on these dropout imputation methods. For example, if one selects
-“missing as failure” and a patient drops out before any visit data is
-recorded, then the subject still supplies information through the
-dropout imputation (similarly for BOCF). However, if LOCF is selected
-and no visit data is available, there remains no information on the
-subject to be used for the LOCF dropout imputation, and thus these
-subjects are omitted from the analysis. All subjects are
-included if they either 1) have some visit data available, or 2) are
-dropouts before visit 1 with sufficient information to impute their
-final endpoint with this pre-processing step.
-
-### Time-to-Event Missingness
-
-For a time-to-event endpoint, as is the convention in this endpoint,
-subjects are observed up to the time they have an event (or the end of
-follow up), so no subject drops out after having had an event. Subjects
-that do drop-out are included in the analysis as not having had an event
-up to the last observation of the subject.
-
-# Augmented Priors (Historical Prior)
-
-If a Bayesian Augmentation is used for either the Control or Active
-Comparator arm then the user specifies:
-
--   The sufficient statistics to be included from each historic study,
-    these are:
-
-    -   Continuous: the mean response and the SD of the response of the
-        control or active comparator arm and the number of subjects
-        observed.
-
-    -   Dichotomous: the observed number of responders and the number of
-        subjects observed in the study.
-
-    -   Time-to-Event: the number of events and the amount of exposure
-        within each bin in the piecewise model.
+-   Time-to-Event: the number of events and the amount of exposure
+    within each bin in the piecewise model.
 
 The information from the historical studies can be ‘down-weighted’ by
 decreasing the effective information in the sample size. For continuous,
@@ -1200,14 +1079,13 @@ would be decreased by a percentage. For time-to-event, multiplying the
 number of events and the exposure by the same fraction will reduce the
 information in the study without changing the reported hazard rate.
 
-<img src="../coreUGattachments/CoreUserGuide/media/image34.png"
-style="width:6.5in;height:4.62723in" />
+![The Hierarchical Priors tab for a continuous study when both the Control and Active Comparator are given hierarchical priors.](../coreUGattachments/CoreUserGuide/media/image34.png){#fig-hierarchicalpriors}
 
 The hierarchical models for the control or active comparator rates are
 very similar across the endpoints. They are briefly described below.
 
 :::{.panel-tabset}
-## Continuous Endpoints
+### Continuous Endpoints
 
 The model used for incorporating data from previous trials is as
 follows:
@@ -1220,7 +1098,7 @@ A user needs to specify appropriate priors for the hyper-parameters:
 $$\mu_0 \sim \text{N}(m_0, \sigma_0^2)$$
 $$\tau_0^2 \sim \text{IG}(a_0, b_0)$$
 
-## Dichotomous Endpoints
+### Dichotomous Endpoints
 
 The model used for incorporating data from previous trials is as
 follows:
@@ -1238,7 +1116,7 @@ model. The hyper-parameters are the mean and standard deviation of
 Normal distribution for the log hazard ratios of the event rates of the
 historical studies and the current study.
 
-## Time-to-Event Endpoints
+### Time-to-Event Endpoints
 
 The model used for incorporating data from previous trials is as
 follows:
@@ -1262,17 +1140,18 @@ $$\tau^2 \sim \text{IG}(a_\gamma, b_\gamma)$$
 The formulation above is not identifiable as changes in
 $\lambda_s$ can be compensated for by changes in the
 $\gamma_t$ values (thus, one can use different combination of
-$\lambda_s$ and $\gamma_t$ but acquire the same set of
-values $\lambda_{st}$ and thus the same likelihood. To avoid this
+$\lambda_s$ and $\gamma_t$, but acquire the same set of
+values $\lambda_{st}$ and thus the same likelihood). To avoid this
 difficulty, we use the above formulation but fix $\gamma_0 = 0$. In
 addition to preserving the identifiability of the structure, this
 constraint allows $\lambda_s$ to have the interpretation of being
 the hazard rate for the current control arm, and thus the prior on
 $\lambda_s$ from the main dose response may be used as the prior
 for $\lambda_s$.
+
 :::
 
-## Setting Priors for Hierarchical Model Hyper Parameters
+### Setting Priors for Hierarchical Model Hyper Parameters
 
 Unless the intent is to add information that is not included in the historic studies, the hyper parameters can and should be set so that they are ‘weak’ priors, centered on the expected values.
 
@@ -1292,7 +1171,7 @@ To give some prior preference towards pooling or separate analysis the **weight*
 
 The best way to understand the impact of the priors is try different values and run simulations.
 
-## Bayesian Augmented Control (BAC) Example:
+### Bayesian Augmented Control (BAC) Example:
 
 It is easiest to study the impact of BAC in a simplified version of the
 trial being designed, for example use a 2 arm fixed design with ‘no
@@ -1450,3 +1329,109 @@ additional bias.
 The “effective additional subjects” was calculated:
 $$\left( \frac{\text{True sigma}}{\text{AVG(SD Mean resp)}} \right)^{2} - \left( \frac{\text{True sigma}}{\text{AVG(SE Mean Raw Response)}} \right)^{2}$$
 where in this example $\text{True sigma}$ was 2.
+
+# Inverse-gamma priors
+
+FACTS uses inverse-gamma priors for parameters of variance – these are
+conjugate and allow efficient computation and avoid problems of
+convergence.
+[Andrew Gelman’s 2006 paper](#gelman "Prior distributions for variance parameters in hierarchical models, Andrew Gelman, Bayesian Analysis 2006, 1, Number 3 pp 515-533.") however notes a potential problem with this model, the problem is specifically
+
+-   When updating the estimate of the variance of a hierarchical
+    model parameter there will be typically relative few actual data
+    observations (e.g. relatively few historic studies for estimating
+    the variance of the hyper parameter in a Bayesian Augmented
+    Control model for the response on a control arm, and relatively few
+    observations of the change in response from one dose to the next
+    when using an NDLM dose-response model).
+
+-   The conventional ‘non-informative’ gamma-prior of IG(0.001, 0.001)
+    has an effect when the observed variance is small, of over-shrinking
+    the posterior estimate of variance.
+
+In FACTS this possibility arises in the dose response models in the
+context of priors for the $\tau$ parameter for the NDLM models and the $a_4$ parameter for the hierarchical logistic dose response
+model, where the number of observations is the number of doses or dose
+intervals.
+
+To avoid the problem reported by Gelman we recommend using a weakly
+informative prior. Using the settings that control how the inverse-gamma
+distribution is parameterized (Settings > Options > Gamma
+Distribution Parameters), use the ‘center and weight’ options and use a
+weight of 1, with a ‘reasonable’ expectation for the upper limit
+difference in the values being modeled entered as the center for the
+SD. The inverse gamma distribution is the prior of the variance, so the center parameter being specified is more correctly an expectation of the square
+root of the mean of the variance.
+
+:::{.callout-tip}
+## Help with Inverse Gamma specification
+
+We have created a tool that can help visualize the inverse gamma distribution and relate the center/weight parameterization, which FACTS uses by default, to the alpha/beta parameterization that is common.
+
+[See here.](../../../../../concepts/facts/InverseGammaDistribution.qmd)
+:::
+
+This ‘reasonable’ upper limit for the difference is a value that a
+clinical team will usually have an intuition about: for the largest
+change in mean response from one dose to another for instance, it is
+(often)[## "If the trial has doses that are more closely spaced than usual, a
+smaller figure can be used."] reasonable to assume that the upper limit for the expected
+change in response from one dose to the next is the ‘expected difference
+in effect size’ that might have been used to power the trial in a
+conventional setting.
+
+In the dose response setting the smoothing parameters like $\tau$ in the NDLM are nuisance parameters in the sense that they are necessary to estimate in order to get appropriate estimates of the dose response values, but are rarely of inferential interest on their own. This can ease some of the undue burden of setting a prior on $\tau$. If it [gives estimates of the dose responses that look like you expect](## "This is subjective. The Per Sim: Response and Subject Alloc plot in FACTS can help assess this fit."), then it is generally good enough.
+
+# Handling Missing Data
+
+FACTS allows a “pre-processing” step before fitting the dose response model that helps with handling of data that is missing due to dropouts. If a subject has incomplete data due to a dropout, the
+user may specify all dropouts have their unknown final endpoint treated
+as known with the following options:
+
+1.  BOCF (continuous only, requires baseline be simulated) – All
+    dropouts are assumed to have a final endpoint equal to their
+    observed baseline value.
+
+2.  LOCF (continuous or dichotomous, requires longitudinal data be
+    present) – All dropouts are assumed to have a final endpoint equal
+    to their last observed visit value. If no post-baseline visits are
+    available, but the subject has a baseline visit value, then the
+    baseline values is carried forward to their final endpoint.
+
+3.  Missing is failure (dichotomous only) – All dropouts are assumed to
+    be failures (which may be coded as 0 or 1 depending on whether a
+    response is considered a success).
+
+Subjects who are imputed in this pre-processing step have final endpoint
+values known and used for the purposes of estimating the dose response
+curve. However, these pre-processed final endpoint values are not used in
+the updating on the longitudinal model, which is based only on observed
+visit data.
+
+If the user does not specify one of the dropout imputation methods
+specified above, the dropout subjects and incomplete subjects (subjects
+who have not reached their final endpoint but are still continuing in
+the study) will have their final endpoints multiply imputed using
+Bayesian Multiple Imputation, described in the [Longitudinal Modeling](#longitudinalModeling) section.
+
+Generally, patients with “no data” do not affect the posterior
+distribution, and thus are omitted from the analysis. However, one must
+take into account a subject can have no visit data but still have “data”
+based on these dropout imputation methods. For example, if one selects
+“missing as failure” and a patient drops out before any visit data is
+recorded, then the subject still supplies information through the
+dropout imputation (similarly for BOCF). However, if LOCF is selected
+and no visit data is available, there remains no information on the
+subject to be used for the LOCF dropout imputation, and thus these
+subjects are omitted from the analysis. All subjects are
+included if they either 1) have some visit data available, or 2) are
+dropouts before visit 1 with sufficient information to impute their
+final endpoint with this pre-processing step.
+
+## Time-to-Event Missingness
+
+For a time-to-event endpoint, as is the convention in this endpoint,
+subjects are observed up to the time they have an event (or the end of
+follow up), so no subject drops out after having had an event. Subjects
+that do drop-out are included in the analysis as not having had an event
+up to the last observation of the subject.

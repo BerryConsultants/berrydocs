@@ -1,41 +1,40 @@
 ---
-title: "Quantities of Interest"
+title: "Quantities of Interest (QOI) Tab"
 subtitle: "Description of the available quantities of interest."
 format:
   html:
     toc: true
     toc-depth: 4
     toc-title: "Table of Contents"
-    number-sections: true
+    number-sections: false
     number-depth: 4
 ---
 
-# Quantities of Interest (QOI)
-
 The quantities of interest tab allows the user to specify the Bayesian
-posterior probabilities and frequentist p-values to be calculated and
-reported in the simulation results and available for use in early
-stopping decisions, trial adaptations and final evaluation.
+posterior quantities and frequentist p-values that are eligible to be used
+to make decisions in the trial as well as being output to the simulations
+results files.
 
 There are 3 classes of QOI:
 
-1.  A probability calculated independently **for each dose**, there are
+1.  A probability calculated independently **for each dose**. There are
     3 types of comparison:
 
-    1.  The posterior probability that the estimate of the response of
+    a.  The posterior probability that the estimate of the response of
         the subjects on that dose is better/worse than an absolute value
         or the estimate of response of the subjects on a reference dose,
         such as Control.
 
-    2.  The predictive probability/conditional power of success (achieving frequentist statistical significance) in the current trial or a future trial comparing the estimate of response on the dose against that on the Control arm.
+    b.  The predictive probability/conditional power of success (achieving frequentist statistical significance) in the current trial or a future trial comparing the estimate of response on the dose against that on the Control arm.
 
-    3.  P-values for each dose comparing the estimate of response on
+    c.  P-values for each dose comparing the estimate of response on
         that dose against that on the Control arm.
 
 2.  Probabilities calculated across the doses for which dose is most
     likely to satisfy a specified **target dose** criteria. The target dose criteria can be to determine the dose with the maximum effect (QOI is called [Pr(Max)]{.fake-code-block}), the minimum dose that achieves some known minimum effect (called [Pr(MED ...)]{.fake-code-block}), or that it is the minimum dose that achieves some percentago of the effect estimated for the most effective dose (called [Pr(EDq ...)]{.fake-code-block} where $q$ is the effect percentage).
 
-3.  A **decision quantity** – which is the value of either of the other types of QOIs at a specific dose level. The method of choosing the dose level that should be used for decision QOI is specified at the time of creating the decision QOI. As an example: a QOI may be created that calculates the Probability that each dose is superior to the control arm - [Pr(PBO)]{.fake-code-block}. Additionally, a target QOI can be created that calculates the probability that each dose is the ED90 - [Pr(EDq relative to Control: Quantile=0.9)]{.fake-code-block}. Then, a decision quantity could be created that is a scalar value representing the probability that the dose that is the most likely to be the ED90 is superior to control - [Pr($\theta_d>\theta_{Control}$); d=Greatest Pr(EDq relative to Control: Quantile=0.9)]{.fake-code-block}. It is also easy to create a decision QOI that is simply the largest (or smallest) value of the dose specific QOI. An example of this would be the p-value of the dose with the smallest p-value.
+3.  A **decision quantity** – which is the value of either of the other
+    types of QOIs at a specific dose level. The method of choosing the dose level that should be used for decision QOI is specified at the time of creating the decision QOI. As an example: a QOI may be created that calculates the Probability that each dose is superior to the control arm - [Pr(PBO)]{.fake-code-block}. Additionally, a target QOI can be created that calculates the probability that each dose is the ED90 - [Pr(EDq relative to Control: Quantile=0.9)]{.fake-code-block}. Then, a decision quantity could be created that is a scalar value representing the probability that the dose that is the most likely to be the ED90 is superior to control - [Pr($\theta_d>\theta_{Control}$); d=Greatest Pr(EDq relative to Control: Quantile=0.9)]{.fake-code-block}. It is also easy to create a decision QOI that is simply the largest (or smallest) value of the dose specific QOI. An example of this would be the p-value of the dose with the smallest p-value.
 
 Trial decisions at interim analyses or the final analysis are made based on decision quantities, but adaptations like adaptive allocation can be based on posterior probabilities, predictive probabilities, and target probabilities.
 
@@ -56,17 +55,17 @@ There are a number of pre-defined, default QOIs which simplifies the
 specification of the most commonly used decision quantities, and the
 importation of past FACTS designs. These are:
 
-**Default Posterior Probabilities**
+#### Default Posterior Probabilities
 
 -   The probability of being better than the control arm: [Pr($\theta_d > \theta_{Control}$)]{.fake-code-block}, previously referred to as [Pr($\theta_d – \theta_0$)]{.fake-code-block}, [Pr(Pbo)]{.fake-code-block} and [Prob. Beats Ctrl]{.fake-code-block} in earlier versions of FACTS.
 
 -   The probability of being better than the control arm by a clinically significant difference [Pr($\theta_d - \theta_{Control} > \delta^*$)]{.fake-code-block}”, previously referred to as [Pr($\theta_d – \theta_0 >$ CSD)]{.fake-code-block}, [Pr(CSD)]{.fake-code-block} and [Prob. Beats CSD]{.fake-code-block} in earlier versions of FACTS. The value for the $\delta^*$ is the CSD, which is set in the “Standard Evaluation Variables” panel at the bottom of the QOI tab.
 
-**Default Predictive Probabilities**
+#### Default Predictive Probabilities
 
 -   The probability of success in a future trial [Pr(Succ. Future Trial): N=$N_{Future}$, *Sup/Noninf*, $\alpha=\alpha^*$; $\delta=\delta^*$]{.fake-code-block}, previously referred to as [Pr(S Phase III)]{.fake-code-block} and [Prob. Stat Sig]{.fake-code-block} in earlier versions of FACTS. The parameters for the future trial can be modified from the default by clicking on the QOI’s row in the table.
 
-**Default Target Doses**
+#### Default Target Doses
 
 -   The probability for each dose that it is the dose with the maximum response, [Pr(Max)]{.fake-code-block}, previously referred to as [$d_{max}$]{.fake-code-block} and [Ppn Max]{.fake-code-block} in earlier versions of FACTS. When used to select a dose in a decision quantity the label [p… $d$ = Greatest Pr(MAX)]{.fake-code-block} is used.
 
@@ -77,7 +76,7 @@ importation of past FACTS designs. These are:
     in the Evaluation Variables panel at the bottom of the QOI tab. When
     used to select a dose in a decision quantity the label [$d$=
     Greatest Pr(MED relative to *Control/Active Comparator*: Delta =
-    $delta^*$)]{.fake-code-block} is used.
+    $\delta^*$)]{.fake-code-block} is used.
 
 -   The minimum dose that gives a certain proportion of the maximum
     estimated response [Pr(EDq relative to Control: Quantile=$Q$)]{.fake-code-block},
@@ -105,7 +104,8 @@ the final analysis.
 
 ![Add dichotomous posterior probabilities page.](coreUGattachments/CoreUserGuide/media/image7.png){#fig-addpostprob}
 
-A Posterior Probability is specified as:
+A Posterior Probability is specified by providing a value for each of the
+following:
 
 -   Compare:
 
@@ -134,18 +134,18 @@ A Posterior Probability is specified as:
 
 ### Notes on setting Deltas
 
-In the three endpoints delta’s are defined as:
+For the three endpoint types, delta’s are defined as:
 
 Continuous
 : A CSD (Clinically Significant Difference) in the estimates of the mean response.
 
 Dichotomous
-: A CSD in the estimate of the response rates if Rates is selected in the QOI, and of Odds Ratios
+: A CSD in the estimate of the response rates if Rates is selected in the QOI, and of log-odds of the response rate if Log-odds is selected in the QOI.
 
 Time-to-Event
 : A CSHRD (Clinically Significant Hazard Ratio Difference) in the estimate of the Hazard Ratio
 
-A *standard* hypothesis test for demonstrating superiority to control
+A standard hypothesis test for demonstrating superiority to control
 uses a delta of 0. Testing for superiority with a non-zero delta is
 different, and the implications need to be [carefully understood](## "Simulating its use in FACTS is a good way to achieve that
 understanding!"). Where the term CSD is used in this document, it should be taken to refer
