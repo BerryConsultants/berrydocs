@@ -291,19 +291,19 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../../../../documentation/v71/userguides/core/longitudinalmodels/continuous.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Continuous Endpoints</span></a>
+ <span class="menu-text">Continuous</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../../../../documentation/v71/userguides/core/longitudinalmodels/dichotomous.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Dichotomous Endpoint</span></a>
+ <span class="menu-text">Dichotomous</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../../../../documentation/v71/userguides/core/longitudinalmodels/tte.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Time-to-event Endpoint</span></a>
+ <span class="menu-text">Time-to-Event</span></a>
   </div>
 </li>
       </ul>
@@ -472,10 +472,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of Contents</h2>
    
   <ul>
-  <li><a href="#longitudinal-modeling" id="toc-longitudinal-modeling" class="nav-link active" data-scroll-target="#longitudinal-modeling"><span class="header-section-number">1</span> Longitudinal Modeling</a>
+  <li><a href="#multiple-imputation" id="toc-multiple-imputation" class="nav-link active" data-scroll-target="#multiple-imputation">Multiple Imputation</a>
   <ul>
-  <li><a href="#multiple-imputation" id="toc-multiple-imputation" class="nav-link" data-scroll-target="#multiple-imputation"><span class="header-section-number">1.1</span> Multiple Imputation</a></li>
-  <li><a href="#how-many-longitudinal-models" id="toc-how-many-longitudinal-models" class="nav-link" data-scroll-target="#how-many-longitudinal-models"><span class="header-section-number">1.2</span> How many longitudinal models?</a></li>
+  <li><a href="#how-many-longitudinal-models" id="toc-how-many-longitudinal-models" class="nav-link" data-scroll-target="#how-many-longitudinal-models">How many longitudinal models?</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -504,20 +503,45 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p><a name="longitudinalModeling"></a></p><a name="longitudinalModeling">
-</a><section id="longitudinal-modeling" class="level1" data-number="1"><a name="longitudinalModeling">
-<h1 data-number="1"><span class="header-section-number">1</span> Longitudinal Modeling</h1>
 <p>The continuous and dichotomous endpoints provide the ability to use longitudinal models to utilize data from incomplete subject’s observed early endpoint values. These subjects may be those that have dropped out, or subjects at an interim that have not had the opportunity to complete their follow-up.</p>
 <p>To perform any longitudinal modeling, ‘Use longitudinal modeling’ must be checked on the Study &gt; Study Info tab, and the subject visit schedule must be defined.</p>
 <p>To include dropouts in the longitudinal analysis, on the Design &gt; Dose Response tab select “Bayesian multiple imputation from post baseline.”</p>
-</a><section id="multiple-imputation" class="level2" data-number="1.1"><a name="longitudinalModeling">
-<h2 data-number="1.1" class="anchored" data-anchor-id="multiple-imputation"><span class="header-section-number">1.1</span> Multiple Imputation</h2>
+</a><section id="multiple-imputation" class="level1"><a name="longitudinalModeling">
+<h1>Multiple Imputation</h1>
 <p>Unless a deterministic method is used such as LOCF or BOCF, longitudinal models inform the dose response estimates by using the longitudinal model to stochastically impute subjects’ final endpoint data when it’s not been directly observed.</p>
 <p>First, data from subjects with both intermediate and final observations is used to estimate the parameters of whatever longitudinal imputation model has been selected.</p>
-<p><img src="../coreUGattachments/CoreUserGuide/media/image36.png" style="width:3.33848in;height:1.92in"></p>
+<div id="fig-longdatacomp" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-longdatacomp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image36.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-longdatacomp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Toy dataset demonstrating imputation - highlighting subjects with complete observations.
+</figcaption>
+</figure>
+</div>
 <p>Subjects with missing final data have final data sampled from the posterior distribution of the longitudinal model given the subjects most recent intermediate visit (or in some models, all their available intermediate visit data). Subjects with no final or intermediate data have final data sampled from the posterior distribution of the dose response model given the dose arm the subject was allocated to.</p>
-<p><img src="../coreUGattachments/CoreUserGuide/media/image37.png" style="width:3.336in;height:1.91857in"></p>
+<div id="fig-longdataimp" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-longdataimp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image37.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-longdataimp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Toy dataset demonstrating imputation - highlighting subjects that are imputed.
+</figcaption>
+</figure>
+</div>
 <p>Once every randomized subject has either a real known final endpoint or an imputed final endpoint, the dose response model is re-estimated using that <em>complete</em> dataset.</p>
-<p><img src="../coreUGattachments/CoreUserGuide/media/image38.png" style="width:3.352in;height:2.10985in"></p>
+<div id="fig-longdatafinal" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-longdatafinal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image38.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-longdatafinal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Toy dataset demonstrating imputation - highlighting the final observation for each subject.
+</figcaption>
+</figure>
+</div>
 </a><p><a name="longitudinalModeling">This impute-then-fit-dose-response process is built into the MCMC estimation sampling loop. Each time we draw a new set of parameters from the longitudinal model they are used to impute the final endpoint of incomplete subjects. These subjects then inform the dose response model. Then we get a new sample from the longitudinal model and so on. The longitudinal models, with </a><a href="##" title="The ITP model uses the current state of the dose response models in its imputation.">one exception</a>, are not conditioned on the dose response models.</p>
 <p>The missing final endpoint values are imputed with the uncertainty in the longitudinal model, and, as a result, the dose response model is estimated including both the uncertainty in the longitudinal model and the usual uncertainty in its parameters.</p>
 <p>Above, it says “fit the dose response model,” as a step in the iterative process. The idea is that once you create a dataset through imputation you should update the dose response model MCMC chain until it converges. By default only 1 step is taken on the dose response model MCMC chain. It is safer, especially if doing a real analysis, to allow the dose response model parameter chains to converge slightly before imputing the missing data again. This can be done on the MCMC settings control on the Simulation tab and setting the “Samples per Imputation” parameter. As a rough guide, if it at some early interims &gt; 5% of the data being analyzed will be imputed, a value in the range 2 to 10 is recommended to avoid underestimating the uncertainty. A higher number should be used the greater the proportion of imputed data.</p>
@@ -535,9 +559,8 @@ Computational Note
 <p>FACTS is not fitting a joint Bayesian model of the longitudinal and dose response models. This would require a full MCMC fit of one model for every MCMC step of the other. Thus, if taking 2,500 samples, we would require a total of 2,500<sup>2</sup> samples. This would make running simulations with longitudinal model prohibitively expensive.</p>
 </div>
 </div>
-</section>
-<section id="how-many-longitudinal-models" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="how-many-longitudinal-models"><span class="header-section-number">1.2</span> How many longitudinal models?</h2>
+<section id="how-many-longitudinal-models" class="level2">
+<h2 class="anchored" data-anchor-id="how-many-longitudinal-models">How many longitudinal models?</h2>
 <p>When specifying a longitudinal model in FACTS, the user must clarify whether the longitudinal model is shared across all doses, or if different arms are to estimate different functions connecting early endpoints to the final endpoint.</p>
 <p>The options that may be selected for the number of model instances are:</p>
 <ul>
