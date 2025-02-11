@@ -13,7 +13,17 @@ format:
 The analysis tab allows the user to supply a specific data set for
 analysis by the design specified in the Design tab of the ".facts" file.
 
-![The blank analysis tab.](./coreUGattachments/continuous/media/image79.png){#fig-analysis}
+:::{.panel-tabset}
+
+### Continuous/Dichotomous
+
+![The blank analysis tab.](./coreUGattachments/continuous/media/image79.png){#fig-blankanalysiscd}
+
+### Time-to-Event
+
+![The blank analysis tab.](./coreUGattachments/tte/media/image87.png){#fig-blankanalysistte}
+
+:::
 
 Clicking on the "Use Design to Analyze Data" button, will create an
 empty "subject.csv" file in the main simulation results directory and an
@@ -26,14 +36,35 @@ to analyze. This is a shortcut for first clicking on the "Use Design to
 Analyze Data" button, and then clicking on the "Select File to Create
 New Analysis" button on the subject data tab.
 
-![The analysis tab after clicking "Use Design to Analyze Data"](./coreUGattachments/continuous/media/image80.png){}
+:::{.panel-tabset}
+
+### Continuous/Dichotomous
+
+![The analysis tab after clicking "Use Design to Analyze Data"](./coreUGattachments/continuous/media/image80.png){#fig-80cd}
+
+### Time-to-Event
+
+![The analysis tab after clicking "Use Design to Analyze Data"](./coreUGattachments/tte/media/image88.png){#fig-88tte}
+
+:::
+
 
 After enabling data analysis, the analysis screen is shown with no data
 loaded. By clicking on the "Subject Data" tab the user is now able to
 enter data values directly, or to load a '.csv' file already containing
 data:
 
-![The analysis tab when selecting a file to use in the analysis.](./coreUGattachments/continuous/media/image81.png){}
+:::{.panel-tabset}
+
+### Continuous/Dichotomous
+
+![The analysis tab when selecting a file to use in the analysis.](./coreUGattachments/continuous/media/image81.png){#fig-81cd}
+
+### Time-to-Event
+
+![The analysis tab when selecting a file to use in the analysis.](./coreUGattachments/tte/media/image89.png){#fig-89tte}
+
+:::
 
 # Entering the data directly
 
@@ -46,6 +77,10 @@ data modified.
 The data format is the same as the 'patientsNNNN.csv' output file from
 simulations, so it is easy to use these as the basis for a trial
 analysis.
+
+:::{.panel-tabset}
+
+### Continuous/Dichotomous
 
 Subject ID
 : FACTS does not use this value,
@@ -93,6 +128,63 @@ Visit1, ...
 : These are the subjects response values at the defined
 visits, up to and including the final visit. There should be 1 column per non-baseline visit.
 
+### Time-to-Event
+
+Subject ID
+: FACTS does not use this value,
+it is there to allow the data to be cross-referenced to an external
+data source. If not required there is no harm simply entering '1' on
+each row.
+
+Region ID
+: Region ID is a value output from FACTS simulation, reflecting the
+recruiting region the simulated subject was recruited in. It is not
+used in analysis, if a region ID is not available there is no harm
+simply entering '1' for each subject.
+
+Date
+: Date is a real number indicating when the subject was recruited [in
+weeks](## "This value is in weeks from FACTS 7.0 onwards, before that it was in days.")
+from the start of the trial. It is output from FACTS
+simulation, it is not used in analysis. If a date is not available
+there is no harm simply entering '1' for each subject.
+
+Dose Index
+:  Dose index indicates which arm the subject was randomized to. The
+index of each arm is visible on the Study \> Treatment Arms tab.
+Index '1' is the Control arm if a Control is present.
+
+Dropout
+: Dropout is a flag, value '0' (not dropped out) or '1' (dropped
+out). For a subject that has dropped out, FACTS will apply the
+defined value for the subject from the 'Last Visit#'.
+
+Duration
+: The current time for which the subject has been observed, in weeks. Also
+called exposure. May be time to event, time to dropout, or time of follow-up
+observed without observing an event yet.
+
+Outcome
+: Whether a primary endpoint event has been observed or not for this
+subject. If the primary event has been observed, then 'Duration'
+should be the time to that event from the start of observation of
+the subject.
+
+Predictor value
+: If a predictor is being using, this should be the value of the predictor
+endpoint for the subject. For a continuous predictor it's change from baseline,
+for a dichotomous predictor it is 0 (no reponse) or 1 (response). For a
+time-to-event predictor it's the current duration (or exposure) for the subject
+on the predictor endpoint.
+
+Predictor outcome
+: If a time-to-event predictor is being used, this
+should be '0' if no predictor event has been observed, and '1' if a predictor
+event has been observed. Otherwise leave this field as '0' (or '-9999' if
+preferred), it's ignored.
+
+:::
+
 :::{.panel-tabset}
 
 ### Continuous
@@ -102,6 +194,10 @@ visits, up to and including the final visit. There should be 1 column per non-ba
 ### Dichotomous
 
 ![Manually entered subject data, ready for analysis.](./coreUGattachments/dichotomous/media/image78.png){#fig-78d}
+
+### Time-to-Event
+
+![Manually entered subject data, ready for analysis.](./coreUGattachments/tte/media/image90.png){#fig-78d}
 
 :::
 
@@ -136,7 +232,7 @@ readability (but **not**, currently, tabs). Each line defines the dose
 given to a single subject and that subject's response.
 
 The format of the file is the same as the 'patientsNNNN.csv' output
-file, (Section 18.5 below) and the column values described above.
+file ([continuous/dichotomous](./simulation/contanddichot.qmd#contents-of-patientsnnnnn.csv) or [time-to-event](./simulation/tte.qmd#contents-of-patientsnnnnn.csv)), and the column values described above.
 
 ## Converting arrival date value from days to weeks
 
@@ -216,11 +312,15 @@ graph showing the data.
 
 ### Continuous
 
-![The Analysis tab after running the analysis. The trial result is in the box to the left - the success criteria have been met.](./coreUGattachments/continuous/media/image86.png){#fig-analysisresultscont}
+![The Analysis tab after running the analysis. The trial result is in the box to the left - the success criteria have been met. The observed response distributions are shown in the plot on the right.](./coreUGattachments/continuous/media/image86.png){#fig-analysisresultscont}
 
 ### Dichotomous
 
-![The Analysis tab after running the analysis. The trial result is in the box to the left - no interim stopping criteria have been met.](./coreUGattachments/dichotomous/media/image82.png){#fig-analysisresultsdich}
+![The Analysis tab after running the analysis. The trial result is in the box to the left - no interim stopping criteria have been met. The observed response rates are shown in the plot on the right.](./coreUGattachments/dichotomous/media/image82.png){#fig-analysisresultsdich}
+
+### Time-to-Event
+
+![The Analysis tab after running the analysis. The trial result is in the box to the left - no interim stopping criteria have been met. The kaplan-meier curves show the observed data on the right side of the tab.](./coreUGattachments/tte/media/image94.png){#fig-analysisresultstte}
 
 :::
 
@@ -238,6 +338,10 @@ set to control the analysis performed:
 ### Dichotomous
 
 ![The Analysis options section of the Analysis tab.](./coreUGattachments/dichotomous/media/image83.png){#fig-analysisoptionsd}
+
+### Time-to-Event
+
+![The Analysis options section of the Analysis tab.](./coreUGattachments/tte/media/image95.png){#fig-analysisoptionstte}
 
 :::
 
