@@ -113,11 +113,26 @@ resulting weekly accrual rate
 
 # Drop-out Rates
 
-For the continuous and dichotomous engines, and the multiple endpoint
-engine, the default dropout scenario is that no subjects drop out of the
-study before observing their final endpoint data. If dropouts are
-expected, the user can specify either the “Dropouts per Dose,” or
-“Dropouts per Dose per Visit.”
+The Dropout Rate sub-tab provides an interface for specifying dropout
+profiles; these define the probability of subjects dropping out during
+the trial.
+
+Dropout profiles are listed on the left of the screen, as depicted
+below. These profiles may be renamed by double-clicking on them, and
+typing a new profile name. The default dropout scenario is that no
+subjects drop out of the study before observing their final endpoint data.
+
+The continuous, dichotomous, and multiple endpoint engines allow specification
+of dropout rate slightly differently than the time-to-event engine.
+
+::: {.panel-tabset}
+
+### Continuous/Dichotomous
+
+For the continuous, dichotomous, and multiple endpoint
+engines, if dropouts are expected, the user can specify either
+“Dropouts per Dose,” or “Dropouts per Dose per Visit,” to specify a non-zero
+dropout rate.
 
 If “Dropouts per Dose” is selected, then each subject has a probability
 of not having an observable final endpoint value equal to the dropout
@@ -138,4 +153,49 @@ $v$ given that that they had not dropped out by visit $v-1$. This
 leads to a total dropout rate $\pi_D$ for a participant that
 is equal to:
 
-$$\pi_{D} = 1 - \prod_{v = 0}^{V}{(1 - \pi_{v})}$$
+$$\pi_{D} = 1 - \prod_{v = 1}^{V}{(1 - \pi_{v})}$$
+
+### Time-to-Event
+
+![Dropout Rate specification for time-to-event endpoints.](./attachments/tte/media/image37.png){#fig-ttedropouts}
+
+For time-to-event trials, the dropout scenario is one of:
+
+-   No dropouts included in the simulation ("No Dropouts");
+
+-   Specifying "Dropouts per Dose"
+
+-   Specifying "Dropouts per Dose per Visit" (only if visits are used)
+
+-   Specifying "Dropouts per Dose per Segment"
+
+In any of the above non-zero dropout rate scenarios, the dropout rates can
+be specified either by the mean time or hazard rate (in weeks) of an assumed
+exponential time to dropout. When specifying the "Dropouts per Dose," the
+hazard rate for simulating dropouts is constant over time, but varies by dose.
+
+When specifying "Dropouts per Dose per Visit," the probability of dropping out
+between visits (not the hazard rate) is specified for each visit. This is
+the same way that dropouts are specified for continuous and dichotomous trials.
+Additionally, the post-final visit dropout rate is specified as a hazard rate
+moving forward. If the subject does not drop out before the final visit they
+have an exponentially simulated dropout time after that final visit.
+
+Finally, the "Dropouts per Dose per Segment"
+option allows for a set of dropout specific time segments to be entered. These
+segments do not have to match the segments used in defining the control
+hazard rate (or segments used in the design). The dropout hazard rate is
+individually specified per arm and segment, and dropout times are piecewise
+exponential using those pieces.
+
+In the time-to-event engine every subject has a latent simulated dropout time.
+This dropout time will only be "known" in the simulated trial if the subject
+accrues enough exposure to observe the dropout and the subject does not
+experience a primary endpoint event before the dropout time is reached.
+
+Similarly, if a subject drops out of the study before they would have observed
+a predictor endpoint or a primary analysis event, then that event is never
+known to the simulation because the subject's follow-up is truncated at
+dropout time.
+
+:::

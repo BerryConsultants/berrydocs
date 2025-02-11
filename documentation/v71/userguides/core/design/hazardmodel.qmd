@@ -1,0 +1,319 @@
+---
+title: "Hazard Model and Predictor Model"
+subtitle: "A description of the time-to-event specific design tabs, Hazard Model and Predictor Model."
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-title: "Table of Contents"
+    number-sections: false
+    number-depth: 4
+---
+
+The two main differences in the design tabs available for a time-to-event
+endpoint rather than continuous or dichotomous are way that the control arm
+hazard model is defined and the use of a predictor model.
+
+# Hazard Model
+
+The hazard model is how the hazard rate on the control arm is modeled. In the
+continuous and dichotomous engines the control arm and the active arms have
+their own estimated response rate (mean or probability of response) that can
+be compared to the control arm. When using a time-to-event endpoint the control
+arm has an estimated hazard rate, and each active arm has an estimated
+hazard ratio that, when applied to the control arm hazard rate, provides its
+hazard rate.
+
+There are essentially two different models for modeling the
+control hazard rate:
+
+First is the Cox proportional hazards model, which is a non-parametric model
+that requires no prior distributions or model specification. The treatment effects are
+estimated as modifiers to the non-parametric survival curve estimate.
+
+![](../coreUGattachments/tte/media/image43.png){}
+
+Second is the Piecewise exponential model. In this model, the observation period
+can be divided into separate time segments, and the hazard rate is
+estimated separately in each. When specifying the prior distributions for
+the hazard rates within time segments there are two different methods of
+specifying the prior - fixed priors or hierarchical priors. The time segments
+used in modeling the hazard rates can be different from those used in the specification
+of visits, VSRs, or dropout rates.
+
+## Fixed priors
+
+If "Enable hierarchical data modeling for the control arm" is not selected, then independent gamma distributions with parameters
+specified in Hazard Rate tab's table are used. The gamma parameters have been
+reparameterized so that the mean hazard rate and a weight (in terms of number
+of events) are provided instead of the traditional $\alpha$ and $\beta$ parameters.
+
+![Specifying a fixed prior for a piecewise exponential model with 2 time segments.](../coreUGattachments/tte/media/image44.png){#fig-fixedprior}
+
+## Hierarchical Prior
+
+If "Enable hierarchical data modeling for the control arm" is selected, then
+the independent priors specified per segment are augmented by additional data
+specified on the "Hierarchical Priors" tab.
+
+![Specifying the sufficient statistics and hierarchical models hyper-parameters for the bayesian augmented control model.](../coreUGattachments/tte/media/image45.png){#fig-ttebac}
+
+The additional data comes in the form of sufficient statistics from an outside
+data source. The sufficient statistics are, for each segment in each study, the number of events on the
+control arm and the control arm exposure time in subject weeks. The information
+from the prior study can be 'down-weighted' by reducing, pro-rata,
+the number of events and exposure time before entering them.
+By supplying the summary statistics
+from previous trials and specifying the parameters for prior distributions for
+the parameters of a hierarchical model, the gamma priors are updated and become
+the priors applied to the data collected on the virtual subjects.
+
+The hyper-parameters are the mean and standard deviation of
+Normal distribution for the log hazard ratios of the event rates of
+the historical studies and the current study. The prior distribution for
+the mean hyper-parameter is a Normal distribution, for which the user
+specifies the mean and standard deviation. The prior distribution for the
+standard deviation hyper-parameter is an Inverse-Gamma distribution for which
+the user specifies either as a mean and a weight, or via Alpha and Beta
+parameters (depending on the user selection on Settings \> Options \> Gamma
+Distribution Parameters).
+
+
+:::{.callout-tip}
+
+## Setting the priors for Hierarchical model hyper parameters
+
+Unless the intent is to add information that is not included in the
+historic studies, the hyper parameters can and should be set so that
+they are 'weak' priors, centered on the expected values.
+
+In this case the following would be reasonable:
+
+-   Set the prior mean value for Mu as the mean of the log-hazard
+    ratios of the event rates of the control arm and the historic
+    studies (usually this will be 0)
+
+-   Set the prior SD for Mu equal to at least the largest log hazard
+    ratio of the event rates for the historic studies.
+
+-   Set the mean for tau to the same value as the prior SD for Mu.
+
+-   Set the weight for tau to be \< 1.
+
+One can traverse the spectrum from 'complete pooling of data' to
+'completely separate analyses' through the prior for tau. If the
+weight of the prior for tau is small relative to the number of
+studies, then (unless set to a very extreme value) the mean of the
+prior for tau will have little impact and the degree of borrowing
+will depend on the observed data.
+
+To give some prior preference towards pooling or separate analysis
+the **weight** for tau has to be large, relative to the number of
+historic studies. To have a design that is like pooling the
+historic studies, the **mean** for tau needs to be small -- say 10% or
+less of the value suggested above. For there to be no borrowing from
+the historic studies the value for tau needs to be large -- say 10x or
+more the value suggested above.
+
+The best way to understand the impact of the priors is try different
+values and run simulations.
+
+:::
+
+# Predictor Model
+
+In FACTS Core TTE 'predictor endpoints' can be used in a similar way to
+early observations of the clinical endpoint measure in FACTS Core
+Continuous and Dichotomous. That is, they are used to inform the
+analysis about what the final outcome is likely to be for subjects for
+whom the final outcome has not [yet been observed](## "If a subject drop's out, their final endpoint will never be observed, but their predictors are still used to impute the subject's possibly final time to event if the predictor is observed before the dropout."). The estimates of
+the predictor response can also be used in QOIs, and thus somewhat like
+an additional endpoint and used for decision making.
+
+The dose-predictor model is used to impute subjects' predictor responses
+based on their treatment allocation when their predictor response has
+not yet been observed. The predictor-endpoint model is used to impute
+their time to final endpoint when that has not yet been observed.
+
+The differences between predictor endpoints in FACTS Core TTE
+and early endpoints with longitudinal modeling in FACTS Core Continuous
+and Dichotomous, are that:
+
+-   There is only one observation of a predictor per-subject, there may
+    be multiple early observations per subject of the clinical endpoint.
+
+-   In FACTS Continuous and Dichotomous longitudinal modeling is over
+    time, there is no response modeling of early observations **across**
+    doses, longitudinal modeling is either for different doses or
+    pooled.
+
+-   In FACTS TTE the design can include a dose-predictor model that
+
+    -   Allows subjects' predictor event endpoint to be imputed (Imputation is
+        described in the FACTS Core Design Guide).
+
+    -   Allows early stopping decisions to taken based on the estimates
+        of the dose-predictor model.
+
+## Continuous & Dichotomous Predictors
+
+For the predictor model with a continuous or dichotomous predictor,
+there are two tabs -- the Dose Response and the Relationship to Endpoint
+tabs.
+
+The dose response model for the predictor is the model used to estimate
+the marginal distribution of the predictor response at each dose as a
+normal mean and variance (for a continuous endpoint) or mean and
+variance of the log-odds (for a dichotomous endpoint). The dose response
+options are as per the continuous and dichotomous endpoint standard dose
+response options (except use of BAC for the predictor is not supported).
+The predictor dose-response model can be selected and specified
+completely independently of the dose response model for the
+time-to-event endpoint (the model of the log hazard ratio). See the
+FACTS Core Design Guide for details.
+
+![The dichotomous predictor model showing a Simple NDLM dose response. The NDLM model for the predictor response works exactly like the NDLM dose response model.](../coreUGattachments/tte/media/image40.png){#fig-predNDLM}
+
+### Relationship to Endpoint Model
+
+The relationship to endpoint model is:
+
+-   $T_{i} \sim \text{Exp}(\lambda_{d}\ e^{\beta Z_{i}})$ for a
+    continuous predictor where $Z_i$, is the observed value of the
+    predictor for the $i$^th^ subject
+
+-   $T_{i} \sim \text{Exp}(\lambda_{d}\ e^{\beta Z_{i}})$ for a
+    dichotomous predictor where $Z_i=0$ or $1$ is the observed dichotomous
+    predictor for the i^th^ subject
+
+That is, for the i^th^ subject, the time to their event is taken to
+follow an exponential distribution with mean $\lambda_d\ e^{\beta Z_i}$.
+The parameters
+of the model are estimated from the values of the predictor, and the
+time to event for the subjects for whom these have been observed. Then
+the time to event is imputed for subjects for whom predictor values have
+been observed, but not events.
+
+![The Relationship to Endpoint tab for a continuous or dichotomous predictor.](../coreUGattachments/tte/media/image41.png){#fig-reltoendpoint}
+
+On the Relationship to Endpoint tab, the user specifies the prior
+distributions for the relationship to endpoint model.
+
+For a continuous predictor, $\lambda_d$ is the dose dependent hazard rate
+when the predictor is at its 'center' value. For a dichotomous predictor
+$\lambda_d$ is the dose dependent hazard rate when the predictor is 0. The $\lambda$s have
+independent gamma priors for each dose, specified by their expected mean
+and a weight in equivalent number of events seen. Thus, a weight of 1
+would be very weakly informative with any normal number of events.
+A weight of 0.1 would be uninformative with even a small number of events.
+A way to think about the use of a weight of $>1$ is, if weight of $n>1$ is
+used, then after $n$ actual events are observed the
+posterior mean estimate of $\lambda$ will be the average of the observed mean and
+the prior mean.
+
+The $\beta$ parameter has a normal prior, specified by its
+prior mean and standard deviation. For a continuous predictor, this is
+the log scaling factor of the hazard rate for the correlation of the
+event rate to the predictor. For a dichotomous predictor, it is the log
+scaling factor of the hazard rate for subjects who have had response on
+the predictor. For a continuous predictor with the center and scale values set so that the
+value of $Z$ will vary approximately between $-1$ and $1$, and a dichotomous
+predictor where the predictor value is $0$ or $1$, a prior distribution of
+$N(0,5)$ for $\beta$ would mean that $e^{\beta Z}$ will take values between $22,000^{-1}$ to
+22,000 and the prior could be deemed to be essentially uninformative.
+Large values (\>\>5) for the SD of the prior for $\beta$ can lead to numeric
+overflow in the simulator. If the values of Z do not largely fall in the range
+$[-1, 1]$, it is suggested that the prior for $\beta$ be constructed to limit the coefficient
+$\exp{(Z\beta)}$ to lie within its plausible range. If the prior for $\beta$ is left
+uninformative and $Z$ can take values $>> 1$ it can result in inflation
+in the uncertainty in the estimates of the hazard ratios of subject's
+time to final event from a few extreme imputed time-to-event values
+for subjects whose times-to-event are imputed, particularly if their
+predictor value is imputed too.
+
+:::{callout-tip}
+
+## Tips on prior strength
+
+If the main use of the predictor is to improve the information for
+the final analysis, unless the trial has a particularly small sample
+size, usually weak priors can be used so the model is driven by the
+data observed in the trial.
+
+If the model is to be used to improve the information at interim
+analyses, and even at the first interim there will be some events
+observed to allow an initial model to be fitted (even though it
+might have a very diffuse posterior), again weak priors can be used.
+
+If the model is to be used to allow interim analyses before any
+events are likely to have been seen, then informative priors are
+necessary.
+
+When there is a need to set informative priors, one way to establish the
+values to use is to estimate them from simulations using external data
+file based on actual data.
+
+Method
+
+1.  Create a simple, fixed trial with a sample size (per arm) of the
+    weight of the prior desired, with non-informative priors for the
+    predictor model.
+
+2.  Create an external file of actual data, or data sampled from the
+    prior predictor-time-to-event model with at least as many samples per arm
+    as the sample size in step 1.
+
+3.  Run 100 simulations and take the averages of the posterior estimates
+    of the predictor model parameters to use as informative values in
+    the actual design.
+
+:::
+
+It is possible to specify a minimum information (subjects with both
+predictor outcomes and final events) before the predictor model is used
+to impute time-to-event for subjects where their final event has not
+yet been observed. It also possible to disable the imputation
+completely, and simply have the predictor endpoint and final event be
+modelled separately.
+
+The priors will be combined with the data from the subjects for whom the
+predictor value and the endpoint has been observed to estimate the
+parameters of the model. The model is then used to impute missing event
+times for subjects whose event is not observed because
+
+-   it occurs after the end of the follow-up period,
+
+-   the subject has dropped out, or
+
+-   the analysis is at an interim before the end of the subjects
+    follow-up period and the event has not occurred yet.
+
+Thus, the model can increase the information available both at the end of
+the trial and at interims.
+
+### Time-to-event Predictor
+
+For the predictor model with a time-to-event predictor, there are three
+tabs within the Design > Predictor Model tab -- the Hazard Model, Dose Response,
+and the Relationship to Endpoint tabs.
+
+![The Relationship to Endpoint tab for the time-to-event engine with a time-to-event predictor.](../coreUGattachments/tte/media/image42.png){#fig-reltoendpointttepred}
+
+As in the response model for the primary event, the response model for a
+time to event predictor comprises a hazard model for the event rate on
+the control arm, and a dose response model used to estimate the marginal
+distribution of the predictor response at each dose as a normal mean and
+variance log-hazard ratio.
+
+The hazard model and dose response options are as per the time-to-event
+endpoint standard hazard model and dose response options (except use of
+the cox model or BAC for the predictor hazard model is not supported).
+The predictor dose-response model can be selected and specified
+completely independently of the dose response model for the
+time-to-event endpoint.
+
+For the time-to-event predictor, the relationship to endpoint model is
+simply a per-dose hazard rate for the time from the predictor event to
+the final event. For each dose the user specifies the parameters of a
+gamma prior distribution for this 'post-predictor event' hazard rate.
+This model is a simple exponential, not piecewise.
