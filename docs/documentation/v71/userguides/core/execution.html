@@ -66,12 +66,19 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 
+
+
 <!-- Roboto Serif -->
+
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
 
+
+
 <!-- Roboto Sans -->
+
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
@@ -582,30 +589,79 @@ Figure&nbsp;2: Execution &gt; Deterministic Accrual tab.
 </section>
 <section id="drop-out-rates" class="level1">
 <h1>Drop-out Rates</h1>
-<p>For the continuous and dichotomous engines, and the multiple endpoint engine, the default dropout scenario is that no subjects drop out of the study before observing their final endpoint data. If dropouts are expected, the user can specify either the “Dropouts per Dose,” or “Dropouts per Dose per Visit.”</p>
+<p>The Dropout Rate sub-tab provides an interface for specifying dropout profiles; these define the probability of subjects dropping out during the trial.</p>
+<p>Dropout profiles are listed on the left of the screen, as depicted below. These profiles may be renamed by double-clicking on them, and typing a new profile name. The default dropout scenario is that no subjects drop out of the study before observing their final endpoint data.</p>
+<p>The continuous, dichotomous, and multiple endpoint engines allow specification of dropout rate slightly differently than the time-to-event engine.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Continuous/Dichotomous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Time-to-Event</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>For the continuous, dichotomous, and multiple endpoint engines, if dropouts are expected, the user can specify either “Dropouts per Dose,” or “Dropouts per Dose per Visit,” to specify a non-zero dropout rate.</p>
 <p>If “Dropouts per Dose” is selected, then each subject has a probability of not having an observable final endpoint value equal to the dropout rate of the dose that subject is randomized to. If each subject has multiple visits and “Dropouts per Dose” is selected, then the conditional probability of dropping out before each visit given that the subject had not dropped out up to the visit before rates are all equal. In other words, if the total dropout rate is <span class="math inline">\(\pi_D\)</span>, the probability of dropping out between visits <span class="math inline">\(i\)</span> and <span class="math inline">\(i+1\)</span> given that the subject had not dropped out at visit <span class="math inline">\(i\)</span> is <span class="math inline">\(1 - \left( 1 - \pi_{D} \right)^{\frac{1}{V}}\)</span> where <span class="math inline">\(V\)</span> is the total number of visits.</p>
 <p>If “Dropouts per Dose per Visit” is selected, then each subject has a user specified probability of dropping out before a visit <span class="math inline">\(v\)</span> that is specified as the conditional probability of dropping out before visit <span class="math inline">\(v\)</span> given that that they had not dropped out by visit <span class="math inline">\(v-1\)</span>. This leads to a total dropout rate <span class="math inline">\(\pi_D\)</span> for a participant that is equal to:</p>
-<p><span class="math display">\[\pi_{D} = 1 - \prod_{v = 0}^{V}{(1 - \pi_{v})}\]</span></p>
+<p><span class="math display">\[\pi_{D} = 1 - \prod_{v = 1}^{V}{(1 - \pi_{v})}\]</span></p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div id="fig-ttedropouts" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ttedropouts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./attachments/tte/media/image37.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ttedropouts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Dropout Rate specification for time-to-event endpoints.
+</figcaption>
+</figure>
+</div>
+<p>For time-to-event trials, the dropout scenario is one of:</p>
+<ul>
+<li><p>No dropouts included in the simulation (“No Dropouts”);</p></li>
+<li><p>Specifying “Dropouts per Dose”</p></li>
+<li><p>Specifying “Dropouts per Dose per Visit” (only if visits are used)</p></li>
+<li><p>Specifying “Dropouts per Dose per Segment”</p></li>
+</ul>
+<p>In any of the above non-zero dropout rate scenarios, the dropout rates can be specified either by the mean time or hazard rate (in weeks) of an assumed exponential time to dropout. When specifying the “Dropouts per Dose,” the hazard rate for simulating dropouts is constant over time, but varies by dose.</p>
+<p>When specifying “Dropouts per Dose per Visit,” the probability of dropping out between visits (not the hazard rate) is specified for each visit. This is the same way that dropouts are specified for continuous and dichotomous trials. Additionally, the post-final visit dropout rate is specified as a hazard rate moving forward. If the subject does not drop out before the final visit they have an exponentially simulated dropout time after that final visit.</p>
+<p>Finally, the “Dropouts per Dose per Segment” option allows for a set of dropout specific time segments to be entered. These segments do not have to match the segments used in defining the control hazard rate (or segments used in the design). The dropout hazard rate is individually specified per arm and segment, and dropout times are piecewise exponential using those pieces.</p>
+<p>In the time-to-event engine every subject has a latent simulated dropout time. This dropout time will only be “known” in the simulated trial if the subject accrues enough exposure to observe the dropout and the subject does not experience a primary endpoint event before the dropout time is reached.</p>
+<p>Similarly, if a subject drops out of the study before they would have observed a predictor endpoint or a primary analysis event, then that event is never known to the simulation because the subject’s follow-up is truncated at dropout time.</p>
+</div>
+</div>
+</div>
 
 
 </section>
 
 </main> <!-- /main -->
 <footer style="display: flex; justify-content: space-between; align-items: center;">
+
   <!-- Left side: Copyright -->
+
   <p style="margin: 0;">
+
     © <span id="year"></span>
+
     <a href="https://www.berryconsultants.com">Berry Consultants</a>
+
   </p>
+
+
 
   <!-- Right side: Relative link -->
+
   <p style="margin: 0;">
+
     <a href="../../../../introduction/citation.html">Cite FACTS and the FACTS Knowledgehub</a>
+
   </p>
+
 </footer>
 
+
+
 <script>
+
   document.getElementById('year').textContent = new Date().getFullYear();
+
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
