@@ -1,5 +1,5 @@
 ---
-title: "FACTS Platform Trial User Guide"
+title: "Platform Trials"
 subtitle: "Description of how to simulate a platform trial in FACTS."
 title-block-banner: '#125740'
 title-block-banner-color: white
@@ -324,17 +324,24 @@ An example of how this can be important is considering a quantity like power: th
 
 It's still typical to consider an arm's Type I error to be the probability of success given the arm has a fixed efficacy exactly equal to the control arm.
 
-## Response Specification -- Continuous Endpoint
+## Response Specification
 
-With a conventional continuous response being simulated, FACTS allows
-subject responses to be simulated by specifying the mean response
-(change from baseline) and the standard deviation (SD) of the response.
+This tab allows for the specification of the efficacy assumptions for the control and treatment arms in the platform. It is expected that multiple VSR scenarios will be created, so that the design can be simulated across various treatment effect assumptions.
 
-### Arm Response -- Continuous Endpoint
+For a continuous endpoint, the control arm can have a known mean response or a distribution of potential control rates. The standard deviation of the final response is always assumed as a fixed value. The treatment effects for a continuous trial can be specified as known means, known changes from the control arm, or simulated from a distribution of effects.
+
+For a dichotomous endpoint, the control arm can have a fixed assumed response rate or a response rate drawn from a distribution. The treatment arms can be specified has response rates, change from control on the probability scale, change from control on the log-odds scale, or have a change from baseline drawn from a distribution.
+
+### Arm Response
 
 This sub-tab allows the user to set up several scenarios for how the
-true response to be simulated for each treatment arm. Two types of
-inputs are needed for a given scenario:
+true response to be simulated for each treatment arm.
+
+:::{.panel-tabset}
+
+### Continuous Endpoint
+
+Two types of inputs are needed for a given scenario:
 
 1.  The mean response for each treatment arm. There are three ways that
     the mean response can be specified.
@@ -365,16 +372,20 @@ inputs are needed for a given scenario:
         called "Sampled", and the distribution is specified on this tab,
         in the "Control Sampled Mean Response" box.
 
-> If baseline is not being modeled, this simulated response is 'change
-> from baseline'. If baseline is being simulated the user can select
-> whether the response to be analyzed is the change from baseline or
-> absolute response (the option is selected on the Study tab), depending
-> on that selection the response specified on this tab is either change
-> from baseline or absolute response. \[**Note**: the mean response to
-> be analyzed is always as specified on this tab, if the analysis is on
-> change from baseline then the response specified here is change from
-> baseline, if the response to be analyzed is absolute, then the
-> response specified here is the absolute final score.\].
+
+:::{.callout-note}
+
+### Continuous Response Simulation
+
+If a baseline value is not being simulated, the final response simulated is
+equivalent to 'change from baseline,' where baseline is always assumed
+to be 0. If baseline is being simulated, the user can select
+whether the response to be analyzed is the change from baseline or
+absolute response (the option is selected on the Study tab). Depending
+on that selection, the response specified on this tab is either change
+from baseline or absolute response.
+
+:::
 
 2.  The standard deviation of the response -- either through a common SD
     of response for all treatment arms, or by specifying the standard
@@ -383,133 +394,9 @@ inputs are needed for a given scenario:
     greater than this if a baseline adjustment for subject response is
     specified\]
 
-![](./platformattachments/media/image19.png){width="6.8359962817147855in"
-height="4.439343832020997in"}
+![The Virtual Response > Response Specification > Arm Response tab for a continuous endpoint.](./platformattachments/media/image19.png){#fig-PTarmresp}
 
-### Treatment Distribution -- Continuous Endpoint
-
-This tab is used to set up distribution profiles, so that the arm
-response is drawn randomly for each simulated trial. Any distribution
-profile that is added on this sub-tab will appear as an option in the
-drop-down menu for the Mean Fixed/Sampled column in the Arm Response
-sub-tab. For each distribution profile, three components must be
-established by the user:
-
-1.  Response vs Effect Size. This selection determines whether the value
-    being simulated is the actual mean response or a difference from the
-    control arm response. Note: FACTS does not use the convention that
-    positive effects always indicate improvement. I.e., if "Lower
-    response is improvement" is specified on the Trial \> Trial Info
-    tab, an effective arm should have a negative value if Effect Size is
-    the selection.
-
-2.  Prob same as control / Prob effect size is 0: The distribution that
-    is simulated will be a mixture distribution with a point mass on the
-    value of the control arm, and the remaining probability assigned to
-    a continuous distribution. This value specifies the probability
-    assigned to the point mass. Values of 0 are allowed, meaning that
-    only the continuous distribution would be utilized.
-
-3.  The distribution for the continuous portion of the mixture.
-    Currently, three distributions types are available.
-
-    a.  The normal distribution, which requires the specification of the
-        mean and standard deviation of the distribution.
-
-    b.  The truncated normal distribution, which requires the
-        specification of the mean and standard deviation of the
-        (non-truncated) distribution, along with the minimum and maximum
-        values that are to be allowed. Note: if the maximum (minimum)
-        value is left blank in the gui, the value is interpreted as
-        infinity (negative infinity), allowing for one-sided truncation.
-
-    c.  The generalized beta distribution, which requires the
-        specification of the minimum, maximum, mean, and standard
-        deviation. Note that not all combinations of values lead to a
-        valid specification of the beta distribution. The mean must be
-        between the minimum and maximum, and the standard deviation must
-        then be no larger than:\
-        $$\sqrt{(Maximum - Mean) \bullet (Mean - Minimum)}$$
-
-> $$
-> $$![](./platformattachments/media/image20.png){width="6.16in"
-> height="4.02in"}
-
-### Baseline -- change from baseline
-
-If simulation of baseline has been included on the Study \> study Info
-tab, if response is change from baseline then the explicitly defined
-dose response is still in terms of change from baseline, and a new
-virtual subject response tab is available for specifying the baseline
-score.
-
-![](./platformattachments/media/image21.png){width="6.925in"
-height="4.51880905511811in"}
-
-The simulation of distribution of baseline scores is specified using a
-normal distribution --with user specified mean and standard deviation
-and optionally applied upper and lower bounds to reflect limitations on
-the score range or screening criteria. . \[Note that if the observed
-baseline score is truncated then the ***true*** mean and SD of the
-baseline are likely to be different from these values of the mean and SD
-which are before truncation. Even if the upper and lower bounds are
-equi-distant above and below the mean the reported true mean may be very
-slightly different from the specified mean due to floating point
-arithmetic and rounding errors.\]
-
-Either baseline is simulated separately from the final response (for use
-with BOCF), or the simulation of the final response can include a
-baseline dependent element.
-
-If adjusting the final response based on baseline, then the user selects
-"Use Baseline Adjustment for Subject Response" and supplies 3
-parameters:
-
--   Beta - a coefficient that reflects the degree of influence of
-    baseline on final score and the degree of variability in the final
-    score due to baseline.
-
--   C -- a centering offset, typically the expected mean of the observed
-    baseline scores
-
--   S -- a scaling element, typically set to the expected SD of the
-    baseline.
-
-Example -- in the above screenshot a baseline of mean 25 and SD 10 has
-been specified -- so a centering of 25 and scaling of 10 is used.
-Wishing to simulate an overall SD of 5 in the final change from baseline
-and apportion two-thirds the variance to baseline, Beta has been set as
-follows:
-
--   The desired final variance is 25 (5^2^), divided between 1/3^rd^
-    dose response and 2/3^rd^ baseline effects.
-
--   The SD of the simulated response is set to 2.89
-    $\sqrt{\left( 25*\frac{1}{3} \right)}$
-
--   The SD of the scaled baseline score is 1, so to contribute half the
-    final variance of 25, Beta is set to 4.08
-    $\sqrt{\left( 25*\frac{2}{3} \right)}$
-
--   Note that when simulating a baseline effect in this way, limiting
-    the range of baseline by specifying upper and lower cut-offs --
-    which might be natural limits of the endpoint, or due to inclusion /
-    exclusion criteria in the protocol -- can significantly reduce the
-    variance in the final endpoint due to the baseline effect.
-
-### Baseline -- final endpoint
-
-If the response is specified to be final endpoint score, then baseline
-is specified as above, but the explicitly defined dose response is now
-defined in terms of final endpoint.
-
-##  Response Specification -- Dichotomous Endpoint
-
-With a conventional dichotomous response being simulated, FACTS allows
-subject responses to be simulated by specifying the rate of the
-response.
-
-### Arm Response -- Dichotomous Endpoint
+### Dichotomous Endpoint
 
 This sub-tab differs for a dichotomous endpoint in that there are
 options for how to specify the treatment effect, and no specification of
@@ -549,10 +436,64 @@ response can be specified.
     called "Sampled", and the distribution is specified on this tab, in
     the "Control Sampled Response Rate" box.
 
-![](./platformattachments/media/image22.png){width="5.998721566054243in"
-height="3.9515955818022745in"}
+![The Virtual Response > Response Specification > Arm Response tab for a dichotomous endpoint.](./platformattachments/media/image22.png){#fig-PTarmrespdich}
 
-### Treatment Distribution -- Dichotomous Endpoint
+:::
+
+### Treatment Distribution
+
+This tab is used to set up distribution profiles, so that the arm
+response is drawn randomly for each simulated trial. Any distribution
+profile that is added on this sub-tab will appear as an option in the
+drop-down menu for the Mean Fixed/Sampled column in the Arm Response
+sub-tab. There is an auto created treatment distribution created by default on this tab, so "Sampled" from a distribution can be selected on the Arm Response tab before visiting the Treatment Distribution tab.
+
+:::{.panel-tabset}
+
+#### Continuous
+
+For each distribution profile, three components must be
+established by the user:
+
+1.  Response vs Effect Size. This selection determines whether the value
+    being simulated is the actual mean response or a difference from the
+    control arm response. Note: FACTS does not use the convention that
+    positive effects always indicate improvement. I.e., if "Lower
+    response is improvement" is specified on the Trial \> Trial Info
+    tab, an effective arm should have a negative value if Effect Size is
+    the selection.
+
+2.  Prob same as control / Prob effect size is 0: The distribution that
+    is simulated will be a mixture distribution with a point mass on the
+    value of the control arm, and the remaining probability assigned to
+    a continuous distribution. This value specifies the probability
+    assigned to the point mass. Values of 0 are allowed, meaning that
+    only the continuous distribution would be utilized.
+
+3.  The distribution for the continuous portion of the mixture.
+    Currently, three distributions types are available.
+
+    a.  The normal distribution, which requires the specification of the
+        mean and standard deviation of the distribution.
+
+    b.  The truncated normal distribution, which requires the
+        specification of the mean and standard deviation of the
+        (non-truncated) distribution, along with the minimum and maximum
+        values that are to be allowed. Note: if the maximum (minimum)
+        value is left blank in the gui, the value is interpreted as
+        infinity (negative infinity), allowing for one-sided truncation.
+
+    c.  The generalized beta distribution, which requires the
+        specification of the minimum, maximum, mean, and standard
+        deviation. Note that not all combinations of values lead to a
+        valid specification of the beta distribution. The mean must be
+        between the minimum and maximum, and the standard deviation must
+        then be no larger than:\
+        $$\sqrt{(Maximum - Mean) \bullet (Mean - Minimum)}$$
+
+![The Virtual Response > Response Specification > Treatment Distribution tab for continuous endpoints showing specification of a distributional treatment effect.](./platformattachments/media/image20.png){#fig-PTtrtdistcont}
+
+#### Dichotomous
 
 This tab is used to set up distribution profiles, so that the arm
 response rate is drawn randomly for each simulated trial. Any
@@ -609,8 +550,79 @@ sampled, since the control rate for any simulation may draw a rate near
 the boundary). In this case, the distribution in truncated to ensure a
 rate in the range \[0, 1\].
 
-> ![](./platformattachments/media/image23.png){width="6.41in"
-> height="3.39in"}
+![The Virtual Response > Response Specification > Treatment Distribution tab for dichotomous endpoints showing specification of a distributional treatment effect on the probability scale.](./platformattachments/media/image23.png){#fig-PTtrtdistdich}
+
+:::
+
+### Baseline (Continuous Only)
+
+#### Response is Change from Baseline
+
+If the endpoint is continuous, then there will be a Baseline sub-tab within the Response Specification tab.
+
+If simulation of baseline has been included on the Study \> study Info
+tab, if response is change from baseline then the explicitly defined
+dose response is still in terms of change from baseline, and a new
+virtual subject response tab is available for specifying the baseline
+score.
+
+![The Virtual Response > Response Specification > Baseline tab showing the specification of a baseline VSR with a baseline adjustment to the response.](./platformattachments/media/image21.png){#fig-ptbaseline}
+
+The simulation of distribution of baseline scores is specified using a
+normal distribution --with user specified mean and standard deviation
+and optionally applied upper and lower bounds to reflect limitations on
+the score range or screening criteria. Note that if the observed
+baseline score is truncated, then the ***true*** mean and SD of the
+baseline are likely to be different from these values of the mean and SD
+which are before truncation.
+
+Either baseline is simulated separately from the final response (for use
+with BOCF), or the simulation of the final response can include a
+baseline dependent element.
+
+If adjusting the final response based on baseline, then the user selects
+"Use Baseline Adjustment for Subject Response" and supplies 3
+parameters:
+
+$\beta$
+: a coefficient that reflects the degree of influence of
+baseline on final score and the degree of variability in the final
+score due to baseline.
+
+c
+: a centering offset, typically the expected mean of the observed
+baseline scores
+
+s
+: a scaling element, typically set to the expected SD of the baseline.
+
+Example -- in the above screenshot a baseline of mean 25 and SD 10 has
+been specified -- so a centering of 25 and scaling of 10 is used.
+Wishing to simulate an overall SD of 5 in the final change from baseline
+and apportion two-thirds the variance to baseline, Beta has been set as
+follows:
+
+-   The desired final variance is 25 (5^2^), divided between 1/3^rd^
+    dose response and 2/3^rd^ baseline effects.
+
+-   The SD of the simulated response is set to 2.89
+    $\sqrt{\left( 25*\frac{1}{3} \right)}$
+
+-   The SD of the scaled baseline score is 1, so to contribute half the
+    final variance of 25, Beta is set to 4.08
+    $\sqrt{\left( 25*\frac{2}{3} \right)}$
+
+-   Note that when simulating a baseline effect in this way, limiting
+    the range of baseline by specifying upper and lower cut-offs --
+    which might be natural limits of the endpoint, or due to inclusion /
+    exclusion criteria in the protocol -- can significantly reduce the
+    variance in the final endpoint due to the baseline effect.
+
+#### Response is Final endpoint
+
+If the response is specified to be final endpoint score, then baseline
+is specified as above, but the explicitly defined dose response is now
+defined in terms of final endpoint.
 
 ## Dropout Rate
 
@@ -618,8 +630,7 @@ The probability of a subject dropping out before observing their final
 endpoint value is provided by arm. There is no longitudinal model, so
 Dropouts Per Arm Per Visit cannot be selected.
 
-![](./platformattachments/media/image24.png){width="6.33in"
-height="4.18in"}
+![The Virtual Response > Dropout Rate tab, specifying the dropout rate per arm.](./platformattachments/media/image24.png){#fig-ptdropouts}
 
 # Accrual
 
@@ -670,16 +681,16 @@ to show the time at which full accrual is reached. An accrual profile
 that does not reach full accrual is invalid and cannot be used to run
 simulations.
 
-![](./platformattachments/media/image25.png){width="5.040031714785652in"
-height="3.8028958880139982in"}
+![The Accrual tab.](./platformattachments/media/image25.png){#fig-ptaccrual}
 
 In the screenshot above you can see the two step ramp up in accrual from
 four regions -- each starting at different offsets into the trial.
 
-Note that the accrual profile graph is only the mean expectation; actual
-accrual is simulated using exponential distributions for the intervals
+Note that the accrual profile graph is only the mean of the actual accrual
+per month; the simulated
+accrual is done using exponential distributions for the intervals
 between subjects, derived from the mean accrual profile specified here.
-Thus some simulated trials will recruit more quickly than this and some
+Thus, some simulated trials will recruit more quickly than the specified rate, and some
 more slowly.
 
 There are commands to import and export region details from/to simple
@@ -690,99 +701,107 @@ them.
 This is an example of a very simple region file defining just one
 region:
 
-\<?xml version=\"1.0\" encoding=\"utf-8\"?\>
-
-\<regions\>
-
-\<region\>
-
-\<name\>Region 1\</name\>
-
-\<rate\>5\</rate\>
-
-\<start\>0\</start\>
-
-\<ramp-up /\>
-
-\<ramp-down /\>
-
-\</region\>
-
-\</regions\>
+```
+<?xml version="1.0" encoding="utf-8"?>
+<regions>
+  <region>
+    <name>Region 1</name>
+    <rate>5</rate>
+    <start>0</start>
+    <ramp-up />
+    <ramp-down />
+  </region>
+</regions>
+```
 
 # Quantities of Interest
 
 The Quantities of Interest (QOI) tabs allows the user to specify which
 statistical quantities to calculate at each interim, either to ensure
-the values are output for perusal and analysis by the user or for use
+the values are output for perusal and analysis by the user, or for use
 within the trial design for adaptation or decision making.
 
-These tabs are largely common across the different FACTS Core engines
-and so are described in a single document the FACTS Core Design Guide.
+![The default QOI tab for the Platform Trials engine.](./platformattachments/media/image27.png){#fig-ptqois}
 
-There are some things to note for the FACTS Platform Trial simulator.
+The platform trials engine QOI tab is largely the same as the [FACTS Core QOI tab](../userguides/core/qois.qmd),
+so the differences between the two engine's QOI tabs are the main focus of this
+section.
 
--   An "Analysis Population" selection is available for QOIs. The
-    current options are "All Participants" and "Concurrent Controls."
+### Analysis Population
 
-    -   The "All Participants" selection computes all model quantities
-        based QOI calculation can be based on the data from all
-        participants in the trial at the time of the analysis,
-        regardless of the arm assignment, including arms that are no
-        longer active in the trial.
+Unlike in the FACT Core QOI tab, the Posterior Probability, Predictive Probability, and
+p-value QOIs have an option to select the Analysis Population used to calculate them. The
+analysis population can either be "All Participants" or "Concurrent Controls."
 
-    -   The "Concurrent Controls" selection restricts the database to
-        only the treatment arm being evaluated and participants
-        randomized to the control arm concurrently with that arm's
-        enrolment. The definition of *concurrence* is those participants
-        randomized to one of these two arms from the time of analysis
-        back to the *start time* of the treatment arm (when the arm
-        became available for randomization rather than when the first
-        patient was actually randomized), plus a window of time prior to
-        that, as input on the Design -\> Control Response tab.
+The "All Participants" selection computes all model quantities based on the data from all
+participants in the trial at the time of the analysis,
+regardless of the arm assignment, including arms that are no
+longer active in the trial.
 
-        -   Note: when a final analysis is run for a treatment arm,
-            concurrent QOIs for other arms are not computed, though
-            final values for any arm that has previously completed will
-            appear in the output.
+The "Concurrent Controls" selection restricts the database to
+only the treatment arm being evaluated and participants
+randomized to the control arm concurrently with that arm's
+enrolment. The definition of *concurrence* is those participants
+randomized to one of these two arms from the time of analysis
+back to the *start time* of the treatment arm (when the arm
+became available for randomization rather than when the first
+patient was actually randomized), plus a window of time prior to
+that, as input on the Design > Control Response tab.
 
--   For platform trials, there is no need to specify "Decision
-    Quantities (Scalars)" as all decisions are made based on the QOI
-    evaluated for the arm for which the decision is being made.
+When using "Concurrent Controls" models, each treatment arm has it's own
+model that is run on its individual dataset. An arms QOIs are calculated
+based on that arm's model, and no QOIs for any other arm are calculated from
+the concurrent dataset of an arm. Thus, when a final analysis is run for a
+treatment arm, concurrent QOIs for other arms are not computed. When an arm
+is removed from the study, its concurrent dataset is locked. This means that
+the concurrent QOIs for an arm that has been removed in the study will persist
+as the final analysis calculated QOIs for that arm, and will continue to
+appear in the trial output.
 
--   Pr(Max) in the FACTS Platform Trial simulator comes in 3 versions:
+### Lack of Decision Quantities QOIs
 
-    -   Pr(Max) across all treatments that have been in the trial
+In the FACTS Core engine, one must choose the arm that should be used to
+[pick a single value of a QOI that should be compared to a threshold](../userguides/core/qois.qmd#decision-quantities). This is
+because in Core, multiple arms are used to make a single trial-wide decision.
+In FACTS Platform Trials, a decision is made separately for each arm. As such,
+there is no need to specify decision quantity QOIs in FACTS core. Decisions
+for an arm are always made based on that arm's QOI value.
+
+### Arms Included in Pr(Max) Calculation
+
+The Pr(Max) QOI in the FACTS Platform Trial simulator comes in 3 versions:
+
+    -   ** All arms** -- Pr(Max) across all treatments that have been in the trial
         (including treatments that are complete). This might be used in
         a treatment's early futility condition for example.
 
-    -   Pr(Max) across the currently active treatments (treatments
+    -   **Active Arms** -- Pr(Max) across the currently active treatments (treatments
         enrolling and treatments that have finished enrolling but are
         stilling following-up).
 
-    -   Pr(Max) across all the currently randomizing treatments. This
-        might be used to guide response adaptive randomization for
+    -   **Randomizing Arms** -- Pr(Max) across all the currently randomizing treatments. This
+        might be used to guide response adaptive randomization, for
         example.
 
-![A screenshot of a computer Description automatically
-generated](./platformattachments/media/image26.png){width="2.625in"
-height="2.0694444444444446in"}
+![The Pr(Max) QOI specification window showing the 3 options available.](./platformattachments/media/image26.png){#fig-ptqoiprmax}
 
--   Unlike FACTS Core, the Platform Trial simulator does not assign each
-    treatment arm an effective dose level, and thus the concept of an
-    MED or EDq arm is irrelevant and not available.
+### Treatment Arm Dosing
 
--   Predictive probabilities in the Platform Trial simulator are
-    restricted to predictions for future trials, precisely as defined
-    for FACTS Core (prediction of a separate trial with 1:1
-    treatment:control randomization). Within-trial predictive
-    probabilities are not currently implemented.
+Unlike FACTS Core, the Platform Trial simulator does not assign each
+treatment arm an effective dose level, and thus the concept of an
+MED or EDq arm is irrelevant and not available.
 
--   P-values do not offer Bonferroni or Dunnett's adjustments.
+### Predictive Probabilities
 
-> ![Graphical user interface, application Description automatically
-> generated](./platformattachments/media/image27.png){width="5.987684820647419in"
-> height="3.781632764654418in"}
+Predictive probabilities in the Platform Trial simulator are
+restricted to predictions for future trials, precisely as defined
+for FACTS Core (prediction of a separate trial with 1:1
+treatment:control randomization). Within-trial predictive
+probabilities are not currently implemented.
+
+### P-value Adjustments
+
+P-values do not offer Bonferroni or Dunnett's adjustments.
 
 # Design
 
@@ -793,7 +812,22 @@ decision-making timing and criteria.
 ## Control Response
 
 This sub-tab is used to set up the normal prior distribution for the
-control arm. All arms are modeled independently.
+control arm. There are two separate priors to create - one for the all participants
+model, and one for the concurrent controls only model.
+
+In the all participants model, only the prior mean and standard deviation for the
+shared control arm must be entered. The treatment effect priors are specified on
+the Treatment Response tab. All arms are modeled independently in the platform trials engine.
+
+Additionally, the Concurrent Control box allows for the specification of the
+fixed normal prior for the control arm estimate for all of the individual
+concurrent controls models. The concurrent control arm esimate for all arms has
+the same prior. There is also a box to specify a window before the arms begin
+randomizing in which the randomized control participants should be considered
+concurrent with an active arm. So, if it's specified that FACTS should include participants
+up to "8" weeks from treatment entering trial, then all control subjects randomized between
+8 weeks before an arm started randomizing to when an arm stopped randomizing (or the current time if still randomizing)
+are considered concurrent controls.
 
 ## Treatment Response
 
@@ -809,70 +843,102 @@ distribution.
 
 This tab also contains the method for handling missing data due to
 dropouts. Since longitudinal modeling is not yet implemented, the only
-method that currently applies is BOCF, if baseline data is simulated.
+method that currently applies is BOCF, if the endpoint is continuous and baseline data is simulated.
 Without longitudinal modeling to incorporate post-baseline visit data,
 the Bayesian multiple imputation from post-baseline method will ignore
 dropouts.
 
 ## Allocation
 
-A radio button at the top of the Allocation sub-tab allows choice
+As long as "Enable Adaptive Features" is selected on the Trial > Trial Info tab,
+a radio button at the top of the Design > Allocation sub-tab allows choice
 between the two options for specifying arm allocation in the Platform
 Trial simulator.
 
 ### Fixed Allocation
 
-A radio button allows a choice between two options for fixed allocation.
+If Fixed Allocation is selected, then the blocking for randomization can
+either be done by creating a control:treatment block for each active arm, or
+by specifying a specific block size based on the number of arms currently
+randomizing. A radio button allows a choice between the two options.
 
--   *Constant proportion allocated to control*. For this option, the
-    proportion of participants that are allocated to the control arm
-    remains constant, regardless of the number of treatment arms that
-    are active in the trial. The user specifies the number of control
-    participants and treatment participants per sub-block. A full block
-    consists of a number of sub-blocks corresponding to the number of
-    active treatment arms being allocated. Within each sub-block, the
-    number of control participants is fixed, while the participants for
-    any particular active treatment arm may be spread across the
-    sub-blocks.
+![The fixed allocation tab for the platform trials engine.](./platformattachments/media/image28.png){#fig-ptfixedalloc}
 
--   *Allocation dependent on the number of treatments*. For this option,
-    the proportion allocated to the control arm is allowed to vary
-    depending on the number of active treatment arms in the trial. For
-    each potential number of active treatment arms, the user specifies
-    the allocation to treatments and control by specifying Y and X for
-    that allocation Y:Y:...:Y:X. That is, each treatment arm gets an
-    equal number of participants per block, while the control has a
-    (possibly) different allocation.
+#### Constant proportion allocated to control
 
-![Graphical user interface, application Description automatically
-generated](./platformattachments/media/image28.png){width="6.059695975503062in"
-height="3.6782327209098864in"}
+For this option, the
+proportion of participants that are allocated to the control arm
+remains constant, regardless of the number of treatment arms that
+are active in the trial. The user specifies the number of control
+participants and treatment participants per sub-block. A full block
+consists of a number of sub-blocks corresponding to the number of
+active treatment arms being allocated. Within each sub-block, the
+number of control participants is fixed, while the participants for
+any particular active treatment arm may be spread across the
+sub-blocks.
+
+As an example, suppose the inputs for constant proportion allocated to
+control are
+
+ - Allocation to control per sub-block = 2
+
+ - Allocation to treatments per sub-block = 6
+
+Then, "Sub-block size per treatment" is calculated to be 8. Suppose that there
+are currently 3 active arms accruing and 1 control arm.
+
+When randomizing participants, the blocks that subjects allocations are drawn
+from are then a total size of $8*4=32$. It is guaranteed that each sub-block of 8 within
+the total 32 will have exactly 2 control. The other 24 slots in the block are
+completely suffled, so there is no guarantee that any number of a non-control arm
+will be contained within the sub-blocks.
+
+#### Allocation dependent on the number of treatments
+
+For this option, the proportion allocated to the control arm is allowed
+to vary depending on the number of active treatment arms in the trial. For
+each potential number of active treatment arms, the user specifies
+the allocation to each treatment and control by specifying Y and X for
+that allocation Y:Y:...:Y:X. That is, each treatment arm gets an
+equal number of participants per block, while the control has a
+(possibly) different allocation. The entire block of size X + Y*(# treatments) is
+then shuffled.
 
 ### Adaptive Allocation
+
+If Adaptive Allocation is selected, then the blocking for randomization can
+either be done by creating a block with a fixed proportion of controls and the
+same number of adaptively randomized slots per block, or
+by specifying a specific block size based on the number of arms currently
+randomizing. A radio button allows a choice between the two options.
 
 A radio button allows a choice between two options for adaptive
 allocation.
 
--   *Constant proportion allocated to control*. This option works
-    similarly to the Fixed Allocation version, with constant proportion
-    allocated to the control arm, and the block allocation is broken
-    into sub-blocks with fixed numbers of controls per sub-block. The
-    remaining slots (i.e., the number of active arms times the
-    "allocation to treatments per sub-block") are allocated to arms
-    using response-adaptive randomization.
+#### Constant proportion allocated to control
 
--   *Allocation dependent on the number of treatments*. For this option,
-    the proportion allocated to the control arm is allowed to vary
-    depending on the number of active treatment arms in the trial. For
-    each potential number of active treatment arms, the user specifies
-    the allocation to treatments and control for each block by
-    specifying Y and X for that allocation Y:X of treatment to control.
-    In this case (differing from the fixed allocation version), Y is the
-    *total* allocation to treatment arms that are being adaptively
-    allocated to.
+This option works in the same way as the fixed allocation constant proportion
+allocated to control, except that the non-control parts of the block are
+randomly assigned to active treatment arms based on the response-adaptive
+randomization probabilities.
 
-The response-adaptive randomization (RAR) follows the same scheme as
-FACTS Core with respect to specifying the quantity(ies) of interest to
+
+#### Allocation dependent on the number of treatments
+
+For this option,
+the proportion allocated to the control arm is allowed to vary
+depending on the number of active treatment arms in the trial. For
+each potential number of active treatment arms, the user specifies
+the allocation to treatments and control for each block by
+specifying Y and X for that allocation Y:X of treatment to control.
+In this case (differing from the fixed allocation version), Y is the
+*total* allocation to treatment arms that are being adaptively
+allocated to. Notice that this Y:X differs from the Y:Y:...:Y:X pattern used for fixed
+allocation.
+
+#### RAR Probabilities
+
+The response-adaptive randomization (RAR) follows the same [scheme as FACTS Core](../userguides/core/design/allocation.qmd#adaptive-allocation) with respect to specifying the quantity(ies) of interest to
 use in determining allocation by arm. However, one important difference
 is the definition of the burn-in period.
 
@@ -890,9 +956,7 @@ in the burn-in phase, a treatment arm is allocated a fixed 1/T ratio of
 the adaptive allocation slots, where T is the number of active treatment
 arms.
 
-![Graphical user interface, application Description automatically
-generated](./platformattachments/media/image29.png){width="6.014318678915136in"
-height="4.023417541557305in"}
+![The Design > Allocation tab with an Adaptive Allocation target specified.](./platformattachments/media/image29.png){#fig-ptallocrar}
 
 ## Interims
 
@@ -900,9 +964,7 @@ The Interims sub-tab is used to specify the timing of trial update
 analyses and to specify which set of stopping criteria (if any) are to
 be applied at the update.
 
-![Graphical user interface, application Description automatically
-generated](./platformattachments/media/image30.png){width="6.006462160979877in"
-height="4.001898512685914in"}
+![The Interims tab with information specified as opportunity to complete, updates every 4 weeks, follow-up before a final analysis if the decision for the arm is success, and decision milestones at 30, 55, and 80 subjects with the opportunity to complete.](./platformattachments/media/image30.png){#fig-ptinterims}
 
 ### Update Frequency
 
@@ -923,57 +985,44 @@ and "Updates occur on a regular schedule". The former option is only
 available if Fixed Allocation is chosen on the Design \> Allocation
 sub-tab.
 
--   *Updates occur whenever a treatment milestone is met*. In this mode,
-    the only time an analysis is performed is when a treatment arm
-    reaches a milestone -- i.e. when a particular level of information
-    has been reached, as specified in the Treatment Milestones portion
-    of the sub-tab. The analysis will include all patients enrolled up
-    to that point in time and provide model output for all arms, but
-    decisions will be made only for the treatment arm whose milestone
-    triggered the analysis. An analysis will also occur if a treatment
-    arm has reached full follow-up on its maximum number of enrolled
-    participants.
+#### Updates occur whenever a treatment milestone is met
 
--   *Updates occur on a regular schedule*. In this mode, analyses are
-    performed on a regular schedule based on time or information at the
-    trial level (based on all participants). The timing of the first
-    update can be specified as either time from the start of the trial
-    or a fixed level of information. If adaptive allocation is being
-    utilized, it may begin after this first analysis, provided that at
-    least one individual treatment arm burn-in has been reached. After
-    the first update, updates can be specified to occur at either fixed
-    time intervals or after a fixed incremental level of information has
-    accrued.\
-    An exception to the regular schedule is that an analysis is always
-    performed whenever a treatment arm has reached its time for a final
-    analysis. When this happens, an "off-schedule" trial update is
-    performed, but no actions are taken except for the declaration of
-    success or futility for the completed arm.\
-    Note that in this mode, it is possible for treatment milestones to
-    be skipped. E.g. if milestones were set up to occur at enrollment of
-    30, 55, and 80 participants, it is possible that a treatment arm
-    could have 20 participants enrolled at one trial update and 60
-    participants at the next. If this were the case, any decisions
-    associated with milestone 1 would be skipped and milestone 2
-    decisions would be evaluated instead.\
-    Within this mode, further input from the user is required, using the
-    radio buttons in the Treatment Milestones box:
+In this mode,
+the only time an analysis is performed is when a treatment arm
+reaches a milestone -- i.e. when a particular level of information
+has been reached, as specified in the Treatment Milestones portion
+of the sub-tab. The analysis will include all patients enrolled up
+to that point in time and provide model output for all arms, but
+decisions will be made only for the treatment arm whose milestone
+triggered the analysis. An analysis will also occur if a treatment
+arm has reached full follow-up on its maximum number of enrolled
+participants.
 
-    -   *Evaluate milestone criteria at each update*. With this
-        selection, decisions associated with a particular milestone may
-        be evaluated more than once. E.g., suppose milestones occurred
-        at enrollment of 30 and 55 participants, and at a trial update
-        with 32 participants enrolled, an early futility decision was
-        evaluated. At the next trial update, if only 50 participants are
-        enrolled, the early futility decision associated with milestone
-        1 would be re-evaluated with the updated model results.
+#### Updates occur on a regular schedule
 
-    -   *Evaluate milestone criteria when milestone first reached*. With
-        this selection, a given milestone can be evaluated at most once
-        -- the first time it is reached (if a higher milestone hasn't
-        already been reached). In the example above, there would be no
-        futility evaluation at 50 participants because the milestone had
-        already been evaluated to 32 participants.
+In this mode, analyses are performed on a regular schedule based on
+time or information at the trial level (based on all participants).
+The timing of the first update can be specified as either time from the
+start of the trial or a fixed level of information. If adaptive allocation
+is being utilized, it may begin after this first analysis, provided that at
+least one individual treatment arm burn-in has been reached. After
+the first update, updates can be specified to occur at either fixed
+time intervals or after a fixed incremental level of information has
+accrued.
+
+Note that in this mode, it is possible for treatment milestones to
+be skipped. E.g. if milestones were set up to occur at enrollment of
+30, 55, and 80 participants, it is possible that a treatment arm
+could have 20 participants enrolled at one trial update and 60
+participants at the next. If this were the case, any decisions
+associated with milestone 1 would be skipped and milestone 2
+decisions would be evaluated instead.
+
+An exception to the regular schedule is that an analysis is always
+performed whenever a treatment arm has reached its time for a final
+analysis. When this happens, an "off-schedule" trial update is
+performed, but no actions are taken except for the declaration of
+success or futility for the completed arm.
 
 ### Subject Follow-up Options
 
@@ -983,6 +1032,46 @@ participants that were allocated to the arm that is being stopped.
 Control participants and participants on other treatment arms continue
 to be followed.
 
+### Treatment Milestones
+
+Treatment milestones are benchmarks that a treatment can reach that determine
+which success/futility fules should be used on the arm at that point in time.
+Before an arm has reached a milestone, there are no success or futility rules
+for that arm to evaluate. Once it reaches the first milestone, any time its
+status is evaluated it will use the set of success/futility rules that correspond
+to the most recent milestone that has been reached.
+
+If updates occur every time a treatment milestone is met, then there is an update
+performed immediately every time an arm crosses a milestone threshold. This
+update is specific to the arm reaching the threshold, and while all arm data is
+used in the analysis models, only the arm that reached the threshold can make
+a decision at this milestone based update.
+
+When updates are regularly scheduled, an update triggers based on the specified
+rules, and all arms have an opportunity to make a decision as long as they have
+reached at least the first milestone. Each arm keeps track of its own milestone
+benchmark and uses its own rules based on its progress through the platform.
+When regularly scheduled updates are selected, further input from the user is
+required in the Treatment Milestones box to dictate if milestone specific criteria
+can be assessed many times, or only once.
+
+Evaluate milestone criteria at each update
+: With this
+selection, decisions associated with a particular milestone may
+be evaluated more than once. E.g., suppose milestones occurred
+at enrollment of 30 and 55 participants, and at a trial update
+with 32 participants enrolled, an early futility decision was
+evaluated. At the next trial update, if only 50 participants are
+enrolled, the early futility decision associated with milestone
+1 would be re-evaluated with the updated model results.
+
+Evaluate milestone criteria when milestone first reached
+: With this selection, a given milestone can be evaluated at most once
+-- the first time it is reached (if a higher milestone hasn't
+already been reached). In the example above, there would be no
+futility evaluation at 50 participants because the milestone had
+already been evaluated to 32 participants.
+
 ## Success/Futility Criteria
 
 The success/futility criteria sub-tab is used to specify the rules for
@@ -991,9 +1080,7 @@ criterion with a QOI, a direction, and a threshold follows the
 conventions used in FACTS Core. However, the Platform Trial Simulator
 has some differences and additions, as outlined below.
 
-![Graphical user interface, application Description automatically
-generated](./platformattachments/media/image31.png){width="6.069446631671041in"
-height="3.4388648293963255in"}
+![The Success/Futility Criteria tab, specifying the milestone 1 criteria for all subjects.](./platformattachments/media/image31.png){#fig-ptsuccfutil}
 
 Early stopping criteria can be set up for each milestone defined on the
 Design \> Interims sub-tab. Use the Create button to add a sub-tab for
@@ -1049,7 +1136,9 @@ for an individual treatment in the following way.
 The Simulation tab allows the user to execute simulations for each of
 the scenarios specified for the study. The user may choose the number of
 simulations, whether to execute locally or on the Grid, and modify the
-random number seeds, Figure 11‑1.
+random number seeds.
+
+![The Simulation tab for FACTS Platform Trials.](./platformattachments/media/image17.png){#fig-ptsimulations}
 
 N.B. Each time the FACTS application opens, the "Number of Simulations"
 will be set to the number of simulations last run for this design. If
@@ -1067,10 +1156,6 @@ number of VSR lines or external files, in which case just the first S
 are run. Finally note that the simulations will be performed in packets
 such that each packet only uses one external VSR line or file, so packet
 sizes may be smaller than requested.
-
-![A screenshot of a computer Description automatically
-generated](./platformattachments/media/image17.png){width="6.130442913385827in"
-height="4.65500656167979in"}
 
 N.B. FACTS uses Markov Chain Monte Carlo methods in the generation of
 simulated patient response data and trial results. In order to exactly
