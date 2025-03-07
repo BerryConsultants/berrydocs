@@ -4767,7 +4767,7 @@
     "href": "documentation/index.html#what-youll-find-here",
     "title": "Documentation",
     "section": "What You’ll Find Here",
-    "text": "What You’ll Find Here\n\nUser Guides: Access detailed manuals covering the full range of our engines. From foundations to advanced features, learn how to set up your desired trial design, learn about best practices and obtain focused understanding of the subject matter, and troubleshoot common issues.\n\n3+3 and mTPI - Rule Based Dose Escalation\nPhase II & III Designs\nCRM - Model Based Dose Escalation\nFACTS/R - How to Call FACTS from R\nFLFLL - FACTS Linux File Loader Light\nPlatform Trials\nFACTS Design Report\n\nExamples: Explore a range of constructed and real-world studies that demonstrate FACTS’s capabilities in action and discover strategies to optimize performance.",
+    "text": "What You’ll Find Here\n\nUser Guides: Access detailed manuals covering the full range of our engines. From foundations to advanced features, learn how to set up your desired trial design, learn about best practices and obtain focused understanding of the subject matter, and troubleshoot common issues.\n\n3+3 and mTPI - Rule Based Dose Escalation\nPhase II & III Designs\nCRM - Model Based Dose Escalation\n2D CRM - 2D Model Based Dose Escalation\nFACTS/R - How to Call FACTS from R\nFLFLL - FACTS Linux File Loader Light\nPlatform Trials\nFACTS Design Report\n\nExamples: Explore a range of constructed and real-world studies that demonstrate FACTS’s capabilities in action and discover strategies to optimize performance.",
     "crumbs": [
       "Documentation"
     ]
@@ -5191,5 +5191,681 @@
     "title": "Nick Berry",
     "section": "",
     "text": "No matching items"
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html",
+    "href": "documentation/v71/userguides/2dcrm.html",
+    "title": "2D-CRM",
+    "section": "",
+    "text": "This document describes how use the FACTS Dose Escalation (DE) 2D-CRM design engine. It is intended for all end users of the system.\n\n\n\nThis document covers the FACTS Dose Escalation 2D-CRM design engine user interface.\nThis document does not address the internal workings of the design engines or algorithms, which are addressed in the associated Design Engine Specification. It also does not address the use of FACTS Core Designs or Enrichment Designs, which are covered in other User Guides.\nThe screenshots provided are specific to a particular installation and may not reflect the exact layout of the information seen by any particular user. They were taken from FACTS 6 or later installed on Windows 10. Different versions of Windows or the use of different Windows themes will introduce some differences in appearance. The contents of each tab, however, will be consistent with the software.\n\n\n\nThis document is a guide to the version 7.0 release of Dose Escalation FACTS.\n\n\n\nIf writing in LaTex and using Bibtex, if you wish to cite FACTS (thank you!), can we suggest the following:\n\n\n\nThe following acronyms and abbreviations are used in this document.\nCap A limit on the number of subjects recruited. In FACTS N-CRM users can specify a cap on the overall number of subjects to be recruited in the trial (the ‘Overall Cap’) and specify stopping rules to define when the trial should stop before it reaches cap.\nControl Is the treatment arm with which the novel treatment(s) are principally being compared. Control may be placebo, or some existing standard of care, or therapy, against which the novel treatment has to be benchmarked in order to determine its likely usefulness.\nCore FACTS Core: A mode of FACTS for designing trials where multiple treatments, (possibly different doses of a novel treatment) are tested against a control and optionally an active comparator.\nCRM Continual Reassessment Method – a dose escalation design where the dose-toxicity is estimated using a simple Bayesian model, and the resulting estimates used to control the dose escalation and estimate the Maximum Tolerated Dose (MTD).\nDE Dose Escalation: a mode of FACTS where subjects are treated in cohorts and dose escalation is determined by the number of toxicities observed.\nED Enrichment Designs: a mode of FACTS for designing trials where the same treatment is testing in different settings for example different sub-populations or different but related indications.\nEndpoint An endpoint is a measure of the subject’s health that is being analyzed in order to learn about the effects of the treatments being studied in the trial.\nFACTS Fixed and Adaptive Clinical Trial Simulator\nFinal Endpoint The final value, or state, of a subject’s endpoint.\nGUI Graphical User Interface, the part of the FACTS application that the user interacts with.\nMethod In the FACTS documentation we try to reserve the term ‘method’ for the algorithms used in the simulation (as opposed to the analysis) part of the program. In the analysis part we use the term ‘Model’, see below.\nModel In the FACTS documentation we try to reserve the term ‘model’ for the statistical models used in the analysis of the trial data (in the ‘design’ section of the FACTS user interface). Where mathematical algorithms are used for other purposes in FACTS (for instance in the generation of the simulated data) we try to use the term ‘method’. We have found that initially it is very easy for users to be confused between these two parts of FACTS and we feel that using distinct terminology may help to reduce this.\nMTD The dose most likely to be the Maximum Tolerated Dose (MTD) – the dose with the highest Pr(MTD).\nMTD+ The dose most likely to be the MTD+ – the dose with the highest Pr(MTD+).\nPr(MTD) A dose’s probability of being MTD is the probability that it is the dose with the highest probability of having a toxicity rate in the acceptable toxicity band, and (if a threshold has been specified) does not have a probability of excess or unacceptable toxicity above the threshold. This estimate of MTD is constrained to select one of the available doses.\nPr(MTD+) A doses probability of being the MTD+ is the probability that it is the dose with the highest probability of having a toxicity rate in the acceptable band, and (if a threshold has been specified) does not have a probability of excess or unacceptable toxicity above the threshold. Unlike Pr(MTD), Pr(MTD+) includes estimating whether a dose below or a dose above the range of those being tested is more likely to have a toxicity in the acceptable band than any of the doses in the range.\nProfile A profile is a specification of one aspect of a scenario. A scenario is made up of one profile of each of the required types for the type of trial being simulated. FACTS allows the user to specify multiple profiles of each type and then presents all the possible combinations of profiles as scenarios that can be used to drive simulations.\nResponse The change in a subject’s endpoint compared to their baseline state.\nScenario A scenario is the complete specification of the unknown external factors that determine the data observed on the trial and its timing. The exact factors depend on the type of trial being simulated but typically include:\n\nthe distribution of the final change from base line, or probability of response or rate of events in the different treatment groups,\nthe properties of subjects’ early responses and the correlation with their final outcome,\nthe rate at which subjects are recruited into the trial,\nthe rate at which subjects drop out of the trial.\n\nSPEC The Design Engine Specification, describes the system algorithms, and meaning of parameters.\nSubject Someone recruited onto a clinical trial for the purposes of learning about the properties of a treatment. Depending on the type of trial they might be patients or they might be healthy volunteers.\nTreatment Arm Subjects on entering the study are randomized to different ‘treatment arms’. Subjects randomized to the same arm receive the same treatment and the responses of the subjects in the arm analyzed to determine the expected response to that treatment, allowing the expected responses to the different treatments to be compared.\nUG The User Guide, describes how to use the system.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#purpose-of-this-document",
+    "href": "documentation/v71/userguides/2dcrm.html#purpose-of-this-document",
+    "title": "2D-CRM",
+    "section": "",
+    "text": "This document describes how use the FACTS Dose Escalation (DE) 2D-CRM design engine. It is intended for all end users of the system.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#scope-of-this-document",
+    "href": "documentation/v71/userguides/2dcrm.html#scope-of-this-document",
+    "title": "2D-CRM",
+    "section": "",
+    "text": "This document covers the FACTS Dose Escalation 2D-CRM design engine user interface.\nThis document does not address the internal workings of the design engines or algorithms, which are addressed in the associated Design Engine Specification. It also does not address the use of FACTS Core Designs or Enrichment Designs, which are covered in other User Guides.\nThe screenshots provided are specific to a particular installation and may not reflect the exact layout of the information seen by any particular user. They were taken from FACTS 6 or later installed on Windows 10. Different versions of Windows or the use of different Windows themes will introduce some differences in appearance. The contents of each tab, however, will be consistent with the software.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#context-of-this-issue",
+    "href": "documentation/v71/userguides/2dcrm.html#context-of-this-issue",
+    "title": "2D-CRM",
+    "section": "",
+    "text": "This document is a guide to the version 7.0 release of Dose Escalation FACTS.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#citing-facts",
+    "href": "documentation/v71/userguides/2dcrm.html#citing-facts",
+    "title": "2D-CRM",
+    "section": "",
+    "text": "If writing in LaTex and using Bibtex, if you wish to cite FACTS (thank you!), can we suggest the following:",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#definition-of-terms",
+    "href": "documentation/v71/userguides/2dcrm.html#definition-of-terms",
+    "title": "2D-CRM",
+    "section": "",
+    "text": "The following acronyms and abbreviations are used in this document.\nCap A limit on the number of subjects recruited. In FACTS N-CRM users can specify a cap on the overall number of subjects to be recruited in the trial (the ‘Overall Cap’) and specify stopping rules to define when the trial should stop before it reaches cap.\nControl Is the treatment arm with which the novel treatment(s) are principally being compared. Control may be placebo, or some existing standard of care, or therapy, against which the novel treatment has to be benchmarked in order to determine its likely usefulness.\nCore FACTS Core: A mode of FACTS for designing trials where multiple treatments, (possibly different doses of a novel treatment) are tested against a control and optionally an active comparator.\nCRM Continual Reassessment Method – a dose escalation design where the dose-toxicity is estimated using a simple Bayesian model, and the resulting estimates used to control the dose escalation and estimate the Maximum Tolerated Dose (MTD).\nDE Dose Escalation: a mode of FACTS where subjects are treated in cohorts and dose escalation is determined by the number of toxicities observed.\nED Enrichment Designs: a mode of FACTS for designing trials where the same treatment is testing in different settings for example different sub-populations or different but related indications.\nEndpoint An endpoint is a measure of the subject’s health that is being analyzed in order to learn about the effects of the treatments being studied in the trial.\nFACTS Fixed and Adaptive Clinical Trial Simulator\nFinal Endpoint The final value, or state, of a subject’s endpoint.\nGUI Graphical User Interface, the part of the FACTS application that the user interacts with.\nMethod In the FACTS documentation we try to reserve the term ‘method’ for the algorithms used in the simulation (as opposed to the analysis) part of the program. In the analysis part we use the term ‘Model’, see below.\nModel In the FACTS documentation we try to reserve the term ‘model’ for the statistical models used in the analysis of the trial data (in the ‘design’ section of the FACTS user interface). Where mathematical algorithms are used for other purposes in FACTS (for instance in the generation of the simulated data) we try to use the term ‘method’. We have found that initially it is very easy for users to be confused between these two parts of FACTS and we feel that using distinct terminology may help to reduce this.\nMTD The dose most likely to be the Maximum Tolerated Dose (MTD) – the dose with the highest Pr(MTD).\nMTD+ The dose most likely to be the MTD+ – the dose with the highest Pr(MTD+).\nPr(MTD) A dose’s probability of being MTD is the probability that it is the dose with the highest probability of having a toxicity rate in the acceptable toxicity band, and (if a threshold has been specified) does not have a probability of excess or unacceptable toxicity above the threshold. This estimate of MTD is constrained to select one of the available doses.\nPr(MTD+) A doses probability of being the MTD+ is the probability that it is the dose with the highest probability of having a toxicity rate in the acceptable band, and (if a threshold has been specified) does not have a probability of excess or unacceptable toxicity above the threshold. Unlike Pr(MTD), Pr(MTD+) includes estimating whether a dose below or a dose above the range of those being tested is more likely to have a toxicity in the acceptable band than any of the doses in the range.\nProfile A profile is a specification of one aspect of a scenario. A scenario is made up of one profile of each of the required types for the type of trial being simulated. FACTS allows the user to specify multiple profiles of each type and then presents all the possible combinations of profiles as scenarios that can be used to drive simulations.\nResponse The change in a subject’s endpoint compared to their baseline state.\nScenario A scenario is the complete specification of the unknown external factors that determine the data observed on the trial and its timing. The exact factors depend on the type of trial being simulated but typically include:\n\nthe distribution of the final change from base line, or probability of response or rate of events in the different treatment groups,\nthe properties of subjects’ early responses and the correlation with their final outcome,\nthe rate at which subjects are recruited into the trial,\nthe rate at which subjects drop out of the trial.\n\nSPEC The Design Engine Specification, describes the system algorithms, and meaning of parameters.\nSubject Someone recruited onto a clinical trial for the purposes of learning about the properties of a treatment. Depending on the type of trial they might be patients or they might be healthy volunteers.\nTreatment Arm Subjects on entering the study are randomized to different ‘treatment arms’. Subjects randomized to the same arm receive the same treatment and the responses of the subjects in the arm analyzed to determine the expected response to that treatment, allowing the expected responses to the different treatments to be compared.\nUG The User Guide, describes how to use the system.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#facts-7.0",
+    "href": "documentation/v71/userguides/2dcrm.html#facts-7.0",
+    "title": "2D-CRM",
+    "section": "FACTS 7.0",
+    "text": "FACTS 7.0\nThere have been no changes to 2D-CRM in FACTS 7.0.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#facts-6.5",
+    "href": "documentation/v71/userguides/2dcrm.html#facts-6.5",
+    "title": "2D-CRM",
+    "section": "FACTS 6.5",
+    "text": "FACTS 6.5\nThere have been no changes to 2D-CRM in FACTS 6.5.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#facts-6.4.1-changes-to-2d-crm",
+    "href": "documentation/v71/userguides/2dcrm.html#facts-6.4.1-changes-to-2d-crm",
+    "title": "2D-CRM",
+    "section": "FACTS 6.4.1 Changes to 2D-CRM",
+    "text": "FACTS 6.4.1 Changes to 2D-CRM\nCompared to 6.4 there have been slight changes to address circumstances where the model could fail to converge, and parameter estimates could reach very large values. This was due to wanting to allow 0 doses in 2D-CRM, because in the 2D setting it is sometimes the case that there have been monotherapy escalation studies and there is a desire to incorporate this data in the 2D trial. To do this a 0 dose is included for the other drug so there are monotherapy combinations in the design (possibly excluded from being actually given during the 2D trial). This means the posterior parameter estimates from the monotherapy can be used for that drug’s prior, or the data from the monotherapy trial can be included as “Prior Toxicities”.\nUp to this release (6.4.1) there were two problems doing this:\n\nInherited from the N-CRM code, FACTS was still storing the logs of the dose strengths, so doses could not be 0, and the advice was to use small values instead such as 0.001.\nThe presence of a combination with very small values for the transformed dose strength (and now 0 values) causes problems for the model’s stability, in particular when the dose strengths are 0 it becomes impossible for the model to have anything other than 0 DLT rate at the 0,0 combination.\n\nIn FACTS 6.4.1 these problems have been addressed by the following changes:\n\nFACTS now allows 0 strength doses.\nIt there is any combination where both dose strengths after transformation are less than 0.001 then this combination must be excluded from the trial and can have no prior toxicities specified for it (however prior observations of no toxicities are allowed).\nIf both drugs include 0 strength doses, the lower asymptote for the Response Model (the range is usually [0, 1]) must be raised slightly, e.g. to 0.0001.\n\nRestrictions 2 and 3 are checked when there is an attempt to run simulations, and if violated a warning message is displayed and the simulations not run.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#facts-6.4-changes-to-2d-crm",
+    "href": "documentation/v71/userguides/2dcrm.html#facts-6.4-changes-to-2d-crm",
+    "title": "2D-CRM",
+    "section": "FACTS 6.4 Changes to 2D-CRM",
+    "text": "FACTS 6.4 Changes to 2D-CRM\nThere were no changes to the 2D-CRM simulator for FACTS 6.4.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#facts-6.3-changes-to-2d-crm",
+    "href": "documentation/v71/userguides/2dcrm.html#facts-6.3-changes-to-2d-crm",
+    "title": "2D-CRM",
+    "section": "FACTS 6.3 Changes to 2D-CRM",
+    "text": "FACTS 6.3 Changes to 2D-CRM\nThere were no changes to the 2D-CRM simulator for FACTS 6.3.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#the-use-of-the-2d-crm-simulator-to-design-a-trial",
+    "href": "documentation/v71/userguides/2dcrm.html#the-use-of-the-2d-crm-simulator-to-design-a-trial",
+    "title": "2D-CRM",
+    "section": "The use of the 2D-CRM simulator to design a trial",
+    "text": "The use of the 2D-CRM simulator to design a trial\nThe typical pattern of use of the simulator is as follows:\n\nEnter the constraints and objectives of the study: maximum sample size and the bounds of the different toxicity bands.\nSelect the choice of and overdose control thresholds.\nSpecify a small number of expected toxicity responses as VSR scenarios.\nSelect the desired run-in and dose escalation rules.\nSpecify an initial set of priors for the model.\nRun a small number of simulations (25 is usually adequate at this stage) of each scenario.\nCheck the performance of the design:\n\nDo the majority of the final combinations being selected have an acceptable level of toxicity?\nIs the overall level of toxicity observed in the trial acceptable?\nIn the scenarios where the performance is worst, observe the behavior in individual simulations.\n\nTry a number of modifications to the design and simulate each modification individually. Increasing the number of simulations (usually 100 is still adequate at this stage).\nConsider if more VSRs need to be included to check a greater range of possible actual toxicity rate patterns.\nCombine modifications with promising results and re-simulate, (usually 500 is an adequate number at this stage).\n\nThe design changes that are typically considered are:\n\nExclude low dose combinations that are certain to be too weak.\nExclude high dose combinations that are certain to be too toxic.\nModify the run-in to be more aggressive if it is taking too many subjects and cycles to reach the escalation phase.\n\nThe ”Huang” diagonals method is the least aggressive, both the “Ivanova” and “Tri-axial” can skip some combinations, finally consider a user specified run-in sequence.\nThe “Huang” and the “Tri-axial” can make use of the “multiple simultaneous cohorts” option in the run-in phase to test multiple combinations simultaneously.\n\nIf the escalation phase is too aggressive – incurring too many toxicities or selecting combinations with high toxicity true toxicity too often - then options are:\n\nMake the run-in expand at the dose below observed toxicities, not at the toxicity\nMake the priors for the model less informative (if the priors are informative and predicting low toxicity at higher combinations), the greater uncertainty in the toxicity at higher doses may then result in the estimate of their toxicity exceeding the overdose control threshold.\nMake the priors for the model predict higher levels of toxicity.\nIncrease the overdose control thresholds.\nShift the toxicity band bounds downwards.\nAdd prior toxicity data.\nIncrease the number of subjects before escalation.\n\nIf the escalation phase is not aggressive enough – selecting combinations with too low a toxicity too often - then options are:\n\nMake the run-in expand at the dose where toxicity observed not a dose below\nMake the priors for the model more informative (if the priors are uninformative) this will allow lack of toxicity on lower doses reduce the predicted toxicity at higher, untested doses, bringing the probability of toxicity at the higher doses below the dose escalation threshold.\nMake the priors for the model predict lower levels of toxicity.\nLower the overdose control thresholds.\nShift the toxicity band bounds upwards.\nAdd prior toxicity data.\nDecrease the number of subjects before escalation.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#general-constraints-and-assumptions",
+    "href": "documentation/v71/userguides/2dcrm.html#general-constraints-and-assumptions",
+    "title": "2D-CRM",
+    "section": "General constraints and assumptions",
+    "text": "General constraints and assumptions\nThe design engine is limited to phase 1/2a designs with dichotomous endpoints toxicity/no-toxicity. There is no longitudinal modeling or analysis of covariates included. All results of a cohort are assumed to be available before the next cohort is treated.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#models-and-methods",
+    "href": "documentation/v71/userguides/2dcrm.html#models-and-methods",
+    "title": "2D-CRM",
+    "section": "Models and Methods",
+    "text": "Models and Methods\nFor a full description of the models and methods implemented in the 2D-CRM see the Software Specification document [Spec].\nIn the current prototype there is a single statistical model used to analyse the data – the 5 parameter Bayesian Logistic Regression Model as described in (Neuenschwander, Branson, and Gsponer 2008). The model is used to compute the posterior probability that the toxicity rate at each combination is in one of 4 toxicity bands – “underdosing”, “target toxicity”, “excess toxicity” and “unacceptable toxicity”. The boundaries between the bounds are settable by the user.\nThe posterior probability that the rate is in the target toxicity rate is used to target the dose allocation – the method attempts to allocate to the Maximum Target Toxicity (MTT). The posterior probability that the rate is in the “excess toxicity” and “unacceptable” or just the “unacceptable” bands can be used to enforce an “overdose control”. Combinations with a posterior probability that exceed the specified threshold are excluded from selection or allocation.\nThe dose combinations are explored in two phases:\n\nOptionally the trial may begin with a “small cohort run in” or the allocation of a single cohort to a specified combination. This phase ends when the sequence of combinations to explore is exhausted or excluded by combinations at which toxicities have been observed. There is no model fitting during this phase.\nThe trial then proceeds looking for the dose combination with the highest probability of having a toxicity rate in the target toxicity range using dose escalation, limited by dose escalation rules.\n\n\nRun-in methods\nThere are 4 run-in methods available:\nContour This explores the reverse diagonals, assuming that the expected toxicity at the dose increments of the two doses are roughly equal.\nRow by row This explores the doses of drug 1 at the first dose of drug 2, then increments drug 2, steps back a specified number of doses in drug 1 and then increments through the doses of drug 1 again. This method favours escalation of drug 1 over escalation of drug 2.\nTri-axial This explores the combinations on each axis and on the diagonal. For small numbers of dose increments it is similar to the Huang run-in. For larger numbers of dose increments it is more parsimonious.\nCustom This explores a specific sequence of combinations stopping when the first toxicity is observed or the sequence is completed.\nOr run-in can be skipped.\nFor more details see the Software Specification document [Spec].\n\n\nEscalation methods\nThere are 4 escalation methods available. They all work in the same basic framework:\n\nThe dose combinations where sufficient subjects have been tested and lesser dose combinations are found.\nThe dose combinations that can be escalated to beyond these are found.\nThe dose combinations where the overdose control limits are exceeded are removed.\nThe target dose combinations from the remaining set are selected according to the selected method.\n\nThe 4 methods are:\nContour This explores every MTT on every row and every column (frequently these overlap, but not necessarily).\nWalk This explores the MTT that is at or adjacent to the last combination tested (excluding the dose that is an increment in both drugs from the last combination tested).\nTri-axial This explores the MTT on each axis and on the diagonal. Once these have the required maximum subjects on MTT, any combinations off the axis and diagonal that are the MTT are explored.\nAllocate MTT This allocates to the combination that is the overall MTT of all the combinations that it is permitted to allocate to.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#outstanding-issues-absent-features",
+    "href": "documentation/v71/userguides/2dcrm.html#outstanding-issues-absent-features",
+    "title": "2D-CRM",
+    "section": "Outstanding Issues / Absent Features",
+    "text": "Outstanding Issues / Absent Features\nCurrently the most obvious absent features are:\n\nmodeling of additional endpoints such as efficacy or drug exposure\nthe modeling of ordinal toxicity\nthe simulation of open enrolment where subjects are allocated on subject by subject basis as they become available for enrolment, with a limit on the number of subjects who can being treated but for whom final endpoint has not been observed.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#the-file-menu",
+    "href": "documentation/v71/userguides/2dcrm.html#the-file-menu",
+    "title": "2D-CRM",
+    "section": "The ‘File’ Menu",
+    "text": "The ‘File’ Menu\nFACTS has a File menu with commands similar to those found in most Windows applications, but also some unique to FACTS. The commands are:\nNew Allows the user to select a trial design type and start a new design; if there are unsaved changes in the current design the user is prompted to save them first.\nOpen Allows the user to select an existing FACTS file and open it; if there are unsaved changes in the current design the user is prompted to save them first.\nSave Saves the current changes in the design to the currently open FACTS file.\nSave As Allows the current version of the design to be saved to a new FATCS file; this file is then the “currently open” FACTS file going forward.\nExport Project Creates a “Zip” archive containing the current FACTS file and all the simulation results, so these can be easily archived, emailed, saved, etc.\nRecent Projects Contains entries for the last ten FACTS files opened: selecting one re-opens it.\nRecent Folders Contains entries for the folders that contain the last ten FACTS files opened: selecting one opens a file browser window on that folder allowing a ‘.facts’ file in that folder to be selected (or allowing the user to navigate to some different folder and select a ‘.facts’ file there).\nExamples Contains example projects for the different design engines: selecting one opens it.\nClose Closes the current FACTS file, returning the user to the FACTS introduction screen.\nExit Closes FACTS altogether.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#facts-settings-menu",
+    "href": "documentation/v71/userguides/2dcrm.html#facts-settings-menu",
+    "title": "2D-CRM",
+    "section": "FACTS Settings Menu",
+    "text": "FACTS Settings Menu\nThe “Settings” command menu allows the user to do 2 things:\n\nSet various FACTS options.\nReset the options to the installation default (those in the configuration file)\nLoad options from a supplied configuration file.\nEnter a new or changed license key.\n\n\nOptions\nThe FACTS Options dialog allows the user to:\n\nTest the web-service connection to the compute grid or set the grid share directory\nConfigure the link to R\nSelect how gamma distributions are parameterized\n\n\nGrid Configuration\nFACTS access to the grid can be implemented using\n\nA Network Shared drive, or\nA bespoke FACTS Grid Web Service\n\nThe correct grid interface should be selected for your organization, depending on which grid interface has been implemented, if any.\nIf using a Network Shared drive, the following should be specified:\n\nThe location of the shared drive – this is usually a server name and folder name e.g. \\factsgrid\nWhether the grid is running the FACTS engines using Linux or Windows\nThe delay in seconds between each poll of the shared drive for simulation results once a job has been submitted.\n\nOnce the settings have been entered there is a button that initiates a test to see if the shared drive specified is accessible.\n\n\n\n\nNetwork Share configuration\n\n\n\nIf using a Web Service interface:\n\nThe location of the web service endpoint needs to be set.\nClicking on “Test Configuration” and FACTS will attempt to connect to the FACTS grid controller. The control will show which components of the connection are working up to the first that isn’t.\n\n\n: Webservice Configuration\n\n\nReset Options\nThis simply restores all option settings to the users saved values (in the “user.config” file in the FACTS folder in the users AppData directory).\n\n\nLoad Options\nThis allows the options settings to be loaded from a supplied file, and saved as the user’s saved values.\n\n\nR Configuration\nIn FACTS there are controls that make it simple to launch of R with simulation results loaded. To enable this to work the user must specify where the R executable is installed and (if there is more than one version of R installed) which version of R to use.\n\n\n\n\nR Configuration Dialog\n\n\n\nThe dialog allows the user to Add, Edit, Test and Remove links to versions of R.\n\n\n\n\nAdding a link to R\n\n\n\nClicking on “Add” opens a normal Windows directory browser window, the user must navigate to the location of an R installation (for example “C:Files.2”, select the file R.exe, and click “Open”. This adds a new entry on the R configuration dialog.\nClicking on “Edit” operates similarly to “Add” above, except the selected location replaces that currently selected entry on the R configuration dialog rather than adding a new one.\nClicking on “Test” checks whether the currently selected entry on the R configuration dialog is available, if it is not an error dialog is displayed:\n\nClicking on “Remove” removes the currently selected location on the R configuration dialog.\nThe version of R to use by default is selected by clicking on the ‘Active’ check box of the version to use.\n\n\nGamma Distribution Parameters\nIn FACTS a number of parameters require inverse gamma distributions to be specified as priors for the parameter value. There are two different parameterization of the inverse gamma provided so that the user can select the form they find the most intuitive.\n\n\n\n\n: The parameterisation of Inverse Gamma Distributions\n\n\n\nThe first form uses parameters that are the mean of the distribution and the equivalent weight in terms of the equivalent number of observations. The second form uses an ‘Alpha’ and ‘Beta’ parameterization that some statisticians are familiar with and will find natural to use.\n\n\n\nEnter a license key\nIf a new license key is required, this command can be used to enter one. There are two ways of entering a new license:\n\n\n\n\n: Enter FACTS License Key\n\n\n\nThe key can be entered directly, along with the associated Organization name (and for limited licenses the name of the system FACTS is installed on), or by selecting a supplied license file.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#the-help-menu",
+    "href": "documentation/v71/userguides/2dcrm.html#the-help-menu",
+    "title": "2D-CRM",
+    "section": "The Help Menu",
+    "text": "The Help Menu\nFACTS has a Help menu with commands to assist you with the use of FACTS, providing links to users guides, tutorial and training videos. The commands are:\nUser Guides Provides access to documents such as this one, with (mainly) one user guide to each design type within FACTS. Exceptions to this simple structure are:\n\nCore Design User Guide: A guide to the options under the ’Design” tab for FACTS Core for all endpoints.\nStaged Design User Guide: As the staged design allows the design of one FACTS Core stage followed by a second, most of the interface is common to the basic FACTS Core. This guide describes the differences and additional aspects for all endpoints.\nDose Escalation User Guide: This covers all the Dose Escalation engines except for N-CRM and 2D-CRM that have their own. It thus covers the 3+3, mTPI, CRM(Toxicity), CRM(Ordinal), CRM(Efficacy) and bCRM engines.\n\nTutorials Provides access to all the tutorial documents, which describes detailed examples of use of all the engines in FACTS and many of their options. The examples under the File &gt; Examples menu option largely correspond to the different tutorials described here.\nDesign Specifications These are technical documents that describe the mathematical models implemented in FACTS in detail.\nExecution Guides The FACTS GUI can be run in command line mode so simulations can be run/re-run from scripts. With the simulation command line flag, and passed a directory rather than a file, FACTS will run simulations for every “.facts” file in that directory – and recurse into any sub-directories and simulate any “.facts” files there too. A full guide to command line mode can be found here. The FACTS simulation engines are also available in “command line executable” form. There are guides here that document their command line parameters and how to use them to analyse a data set – e.g. to perform an interim analysis whilst executing a trial designed with FACTS.\nFACTS file XML Specs These guides describe the parameters in the “.facts” files, which are text files in XML format. For expert users understanding this format allows them to use scripts to generate versions of an initial “.facts” file with slight variations in the parameters such as stopping thresholds or priors. Modification of “.facts” files outside of FACTS needs to be done with care, errors may render the file unusable by FACTS.\nVideos Provides access to links to the introductory, training and webinar videos that Berry Consultants has recorded and makes available over the internet to FACTS users.\nView log… If an error has occurred in FACTS, often the FACTS log file can shed light on what is going wrong. The log file is hidden away in some unfashionable and hard to locate Windows folder; this command option provides easy access to it. Allowing you to email facts support with a description of what occurred, attaching a copy of this log file having saved it somewhere convenient such as your desktop.\nSupport Launch a simple editor for sending an email to our support account: facts@berryconsultants.net\nAbout Displays a simple “about box” that includes the detailed version number of FACTS.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#study-info",
+    "href": "documentation/v71/userguides/2dcrm.html#study-info",
+    "title": "2D-CRM",
+    "section": "Study Info",
+    "text": "Study Info\nOn the Study Info tab the user can\n\nSpecify the maximum trial size (in subjects not cohorts, as subjects tested in the run-on phase count to the overall total).\nSpecify the parameters of the target, the user specifies the boundaries between the different toxicity bands, and whether using overdose limits and if so which ones and what the overdosing thresholds are.\n\n\n\n\n\nFigure 7‑1 Study info tab: 2D-CRM",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#treatment-arms",
+    "href": "documentation/v71/userguides/2dcrm.html#treatment-arms",
+    "title": "2D-CRM",
+    "section": "Treatment Arms",
+    "text": "Treatment Arms\nOn the Treatment Arms tab the user specifies the names of the drugs, and the number, relative strength and names of the doses of each drug. The user can either click the ‘Add’ button the required number of times or use Auto generate doses, specifying the number of doses to create and initial dose level. Auto generate deletes all the pre-existing doses before generating the new ones.\nAfter creating the desired number of entries the user can edit the strengths and names of the doses.\nIt is up to the user to ensure that the dose strengths are in monotonically increasing order.\nIt is now (FACTS 6.4.1 and later) possible to enter dose strengths of 0, to create dose combinations that are monotherapies. This is particularly useful for enabling prior information from monotherapy trials to be included in this design.\n\n\n\n\nFigure 7‑2 Treatment Arms tab",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#exclude",
+    "href": "documentation/v71/userguides/2dcrm.html#exclude",
+    "title": "2D-CRM",
+    "section": "Exclude",
+    "text": "Exclude\nOn the Study &gt; Exclude tab the user can specify dose combinations that cannot be used in the trial. By clicking on any square on the grid the corresponding dose combination is cycled through the following states: ‘Toxic’, ‘Not Available’, ‘Ineffective’ and ‘Available’. The initial state is ‘Available’ for all combinations.\nIf a combination is specified as ‘Toxic’ then all the combinations where both drugs are at the same or higher strength are also excluded.\nIf a combination is specified as ‘Ineffective’ then all combinations where both drugs are at the same or lower strength are also excluded.\nIf a combination is specified as ‘Not Available’ then just that combination is excluded with no consequences for the combinations around it.\nIf there are any combinations where, after transformation of the dose strengths, both drugs have a dose strength of less than 0.001 this must be excluded from the trial (mark them “ineffective” or “not available”). Any toxicities occurring on such a combination would be data that the model would have difficulty fitting.\n\n\n\n\nFigure 7‑3 The Exclude tab",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#explicitly-defined",
+    "href": "documentation/v71/userguides/2dcrm.html#explicitly-defined",
+    "title": "2D-CRM",
+    "section": "Explicitly Defined",
+    "text": "Explicitly Defined\nOn the VSR &gt; Explicitly Defined tab, the user enters the toxicity rate to use when simulating subject responses, for every dose combination. The cells are colored according to the toxicity band coloring convention used in FACTS (under-dosing: blue, target: green, excess: orange, unacceptable: red) according to the toxicity rate entered.\n\n\n\n\nFigure 8‑1 VSR Explicitly Defined tab\n\n\n\n\nParametric\nOn the VSR &gt; Parametric tab, the user enters the parameters for a model that generates a toxicity rate to use when simulating subject responses, for every dose combination. The cells are colored using toxic band coloring according to the toxicity rate of that dose combination.\nThe model used is the 5 parameter BLRM model that is used as the Toxicity response model on the Design &gt; Response Model tab, but the user can specify different ‘effective dose strength’ models from those used in the analysis.\n\n\n\n\nFigure 8‑2 VSR &gt; Parametric tab\n\n\n\nFor each profile the user specifies:\n\nFor each drug the ‘effective dose strength’ model.\n\nThe reference dose (where the effective dose strength is 1 and the toxicity rate due to that drug is given by the Alpha parameter alone).\nWhether the effective dose strength is the ratio of dose strength to the reference dose or the exponential of the difference of the to dose strength from the reference dose.\n\nFor each drug the values of the coefficients of the single drug models entered as ln(alpha) and ln(Beta)\nThe value of Eta, the drug-drug interaction term – Eta is the log-odds ratio between the interaction and the non-interaction model at the reference dose combination.\n\nIt is perfectly reasonable to use the parametric models by simply varying the parameters using trial and error until the desired set of toxicity rates is achieved.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#start-up",
+    "href": "documentation/v71/userguides/2dcrm.html#start-up",
+    "title": "2D-CRM",
+    "section": "Start-up",
+    "text": "Start-up\nThe Start-up tab allows the user to specify what is commonly referred to as a single patient run-in, in the FACTS 2D-CRM it’s allowed to be a ’small cohort run in. (The paper (Ivanova et al. 2003) showed that smaller target toxicity rates benefited from larger cohort sizes in the run in).\nOn this tab the user can specify\n\nThe scheme to used for the run-in: “None”, “Contour”, “Row by Row”, “Tri-axial” or “Custom”. These are described above (2.3.1) and in [Spec].\n\nIf “None” is specified then the table for specifying specific dose combinations is used to specify the dose combination(s) to be assigned to the starting cohort(s). These will be the full sized cohorts used in the escalation phase.\n\nThe cohort size to use in the run-in. A size of ‘1’ yields a ‘single patient run in’, but other values are possible and may give better results, (see (Ivanova et al. 2003)).\nFor the ‘Row by row’ run-in scheme, the number of drug 1 dose increments to back-off each time drug 2 is incremented.\nThe range of the run-in. If the user does not want the run-in to possibly run all the way up to the maximum dose strengths, even if no toxicities have been observed, it is possible to specify a rectangular area of dose combinations for the run-in to include by specifying the starting combination (the lower left corner of the rectangle) and the stopping dose (the upper right corner combination). Note that as you would expect, regardless of whether this feature is used or not, dose combinations that have been excluded from the study on the Stud &gt; Exclude tab are excluded from the Run-in.\nThe dose allocation scheme: (only applies to the Contour and Tri-axial Run-in schemes):\n\nallocate a single cohort;\nallocate the cohort across the next possible dose combinations;\nor allocate a cohort to each of the next dose combinations and optionally specify a maximum number of cohorts / dose combinations that can be tested at a single step.\n\n\n\nThe Row by row and Custom run-ins only identify one dose combination to test next, and so use “single cohort” allocation regardless of the setting of this control.\n\n\nWhere to allocate after the end of the run-in it it ends due to observing toxicities, either:\n\nexpand the allocation at the combinations where toxicity has been observed,\nor at one dose increment below where toxicity has been observed.\n\n\n\nIf the run-in ends because it has reached the end of the combinations to be tested during Run-in without seeing a toxicity, then dose escalation starts by expanding at the allocation of the maximum dose combination(s).\n\n\nIf use of a Custom run-in has been specified, then the sequence of dose combinations is specified.\n\n\n\n\n\nFigure 9‑1 Design &gt; Start-up tab",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#dose-escalation",
+    "href": "documentation/v71/userguides/2dcrm.html#dose-escalation",
+    "title": "2D-CRM",
+    "section": "Dose Escalation",
+    "text": "Dose Escalation\nThe Dose Escalation tab allows the user to specify the dose escalation and early stopping rules to use during the Dose Escalation phase.\nOn this tab the user can specify:\n\nThe cohort size.\nThe minimum number of subjects: that must be have been tested at a combination before the trial can escalate to a higher dose combination (that is not excluded by the overdose control).\nThe maximum dose increment: in either drug that can be applied from a combination that has been tested, and where the minimum of subjects have been tested, to a higher dose combination.\nThe dose escalation scheme: “Contour”, “Walk”, “Tri-Axial” or “Allocate to MTT”. These are described in (2.3.2) and in [Spec].\nThe dose allocation scheme: (only applies to the “Contour” and “Tri-axial” schemes):\n\nallocate a single cohort;\nallocate the cohort across the next possible doses;\nor allocate a cohort to each of the next doses.\n\n\n\nThe “Walk” and “Allocate to MTT” escalation schemes only identify one next combination, and so use “single cohort” allocation regardless of the setting of this control.\nIf “Multiple simultaneous cohorts” is specified, then it is possible to set a limit on the maximum number of cohorts / dose combinations tested in the next step.\n\n\nMaximum subjects on MTT. This is the maximum number of subjects to allocate to a combination under Dose Escalation. In the “Contour”, “Walk”, “Tri-Axial” escalation schemes this is currently the only stopping rule. If all the targeted combinations have the maximum number of subjects on them, the trial stops.\n\n\n\n\n\nFigure 9‑2n Design &gt; Dose Escalation tab\n\n\n\nAll the escalation schemes stop if the maximum number of subjects has been allocated or all combinations are too toxic (the posterior probabilities of toxicity exceed the overdose threshold). The schemes other than “Allocate to MTT” can also stop when the maximum number of subjects on MTT is reached on all the target doses.\nIf the “Allocate to MTT” escalation scheme, is being used then additional stopping rules similar to those available in N-CRM can be enabled. If they are enabled, then the following may be specified:\n\nMinimum subjects on MTT: the trial can only stop with a combination selection if the combination to be allocated to have at least these number of subjects on them.\nStop when Posterior Probability of target Toxicity (MTT?) is at least: the trial can stop with a combination selection when the combination to be allocated to has a posterior probability that its toxicity rate is in the Target Toxicity band is at least the specified amount.\nMinimum cohort’s accrued: the trial can only stop with a combination selection if the specified minimum number of cohorts has been allocated and completed.\nMinimum toxicities: the trial can only stop for all combinations too toxic if the required minimum number of toxicities have been observed. Whilst all combinations are too toxic but this minimum number of toxicities havs not been observed, subjects are allocated to the lowest dose combination.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#response-model",
+    "href": "documentation/v71/userguides/2dcrm.html#response-model",
+    "title": "2D-CRM",
+    "section": "Response Model",
+    "text": "Response Model\nThe Response Model tab displays a description of the model and 4 other components:\n\nA panel where the prior distributions for the model parameters can be input. Unless prior toxicity information is also to be included, it is recommended that uninformative priors are not used as these tend to lead to a failure to re-escalate to a dose if just one toxicity has been observed there, due to overdose control.\n\n\nValues that represent weakly informative priors are recommended instead. The prior mean and SD for each Alpha should represent the prior expectation (in log-odds) of toxicity at the reference dose for that drug in isolation. Having set Alpha the prior for Beta should be set to allow gradients that are as steep as plausible, but if set too high, or too broad it may cause problems of not being able to escalate to high doses because of overdose control (even with few toxicities at low doses the uncertainty of the model at higher doses where there is currently no data may mean the posterior estimates of toxicity at these doses exceed the overdose control thresholds). This can be checked looking at example simulations or manually by entering test data on the Analysis tab. The prior for the correlation should usually be zero or slightly negative. A positive prior for Rho means that if the value for Alpha is estimated as low (due to low toxicity being observed near the reference dose) then the value of Beta will be estimated as being low – and this may lead to too low an estimate of toxicity at higher doses. A very strongly negative prior for Rho can lead to the same problems as a too high or broad prior for Beta.\n\n\nA panel where the transformations of the virtual dose strengths to values that can be used by the model is specified. This transformation is usually the dose ratio of each dose to the median dose of that drug. Options to use a linear transform and a different reference dose are available.\n\n\nThe recommended values for the reference dose are either the center of the dose range (the default “Median dose”) or the dose thought most likely to be in the middle of the target toxicity range for that drug alone.\n\n\nRe-scaling the response model. The model estimates rates between 0 and 1 and works best when the observed rates are asymptotically 0 or 1. If the observed toxicity is known to have different minimum and maximum rates (0.1 and 0.5 say) then the model fits is much, much better if these are specified as the asymptotes in place of 0 and 1.\n\n\nIf a dose combination of 0,0 is included in the design (even when excluded from be used in the trial, as it must be) the response model must be re-scaled with a minimum asymptote above 0, even if only very slightly (such as 0.0001).\n\n\nThe last panel displays the values of the model at the dose combinations using the specified parameters.\n\n\n\n\n\nFigure 9‑3 Design &gt; Response Model tab\n\n\n\nSpecifying the Priors: The priors for each pair of parameters (α,β) for the response model for each drug are specified via a bivariate normal distribution (as in the single drug N-CRM), with a separate mean and SD for α and β, and a correlation term ρ (Rho). The prior for the interaction term η (Eta) is the mean and Sd of a Normal distribution.\nSpecifying the dose transform: For both drugs the transformation of the dose strengths to a range of values suited to the model is specified. For each drug the transformations are relative to ‘reference’ dose, by default the median value in the dose range. The transformation can be linear log(d – d*) or the dose ratio ((d/d*))\nSpecifying the asymptotes: The model fits values in the range (0-1), asymptotically approaching either limit. If desired the range can be reduced by re-scaling so that it asymptotically approaches a specified lower limit &gt; 0 and upper limit &lt; 1.\nChecking the prior: The influence of the prior on the model can be checked by viewing the results of sampling of the model parameters from the specified prior. Options are to view a) 100 samples of the 1-dimensional model for drug 1 or drug 2, or b) 1,000 samples of the 2-dimensional model over both drugs showing the 10%-ile, median or 90%-ile toxicities at each dose combination.\n\n\n\n\nFigure 9‑4 Design &gt; Response Model showing individual drug prior\n\n\n\nThe individual drug graph plots the doses at the log of their transformed dose strength (“Log(X^)”), this enables the logits to be plotted linearly.\nIf there is a transformed dose strength of 0, this is plotted at some notional value that represents -infinity, and to see the plot at the other doses the “Plot excl. first dose” option should be checked.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#prior-toxicities",
+    "href": "documentation/v71/userguides/2dcrm.html#prior-toxicities",
+    "title": "2D-CRM",
+    "section": "Prior Toxicities",
+    "text": "Prior Toxicities\nThis tab allows prior information to be included with the data collected during the trial.\nThe user can specify, for any dose combinations a prior observed number of toxicities and number of observations. To allow the prior data to be down weighted, the user is allowed to enter fractional amounts.\nThe specified prior data is simply added to the observed data when fitting the model, but this is logically equivalent to fitting the model with the specified prior to the specified prior data and then using the resulting posterior estimate of the model parameters as the prior for fitting the model to the observed data.\nSome idea of the effect of the prior data can be gained by using the “Analysis” tab, and performing an analysis on a dataset without any additional subject data.\nIf there is a combination where the transformed dose strengths of both drugs are below 0.001, there can be no prior observed toxicities for that combination (it would be impossible for the model to fit them).\n\n\n\n\nFigure 9‑5 Design &gt; Prior Toxicities",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#to-run-simulations",
+    "href": "documentation/v71/userguides/2dcrm.html#to-run-simulations",
+    "title": "2D-CRM",
+    "section": "To run simulations",
+    "text": "To run simulations\nEven before simulations have been run, FACTS displays a row for each possible combination of the ‘profiles’ that have been specified: - baseline response, dose response, longitudinal response, accrual rate and dropout rate. Each such combination is a ‘simulation scenario’.\nThe user clicks on the check box for each scenario to be simulated, or simply clicks on “Select All”, then clicks on the “Simulate” button.\nDuring simulation, the user is prevented from modifying any parameters on any other tab of the application. This safeguard ensures that the simulation results reflect the parameters specified in the user interface.\nWhen simulations are started, FACTS saves all the study parameters into the current “.facts” file, and when the simulations are complete all the simulation results are saved in a “_results” folder in the same directory as the “.facts” file. Within the “_results” folder there are sub-folders that holds the results for each scenario.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#mcmc-settings",
+    "href": "documentation/v71/userguides/2dcrm.html#mcmc-settings",
+    "title": "2D-CRM",
+    "section": "MCMC Settings",
+    "text": "MCMC Settings\nThe first two values specify two standard MCMC parameters –\n\nThe length of burn-in is the number of the initial iterations whose results are discarded, to allow the sampled values to settle down.\nThe number of samples is the number of subsequent iterations whose results are recorded in order to give posterior estimates of the values of interest (in this case α and β).\n\nNumber of samples per imputation (not used in 2D-CRM, the model does not include imputation)\nIf the Number of MCMC samples to output value is set to N, where N &gt; 0, then all the sampled values at each interim in the first N simulations are output in a file per simulation, allowing the user to check convergence.\nThe MCMC output thinning parameter can be used to reduce the amount of data output to the MCMC file. It does not reduce the amount of MCMC samples used within the model fitting.\nTo obtain the MCMC sampled values for a particular simulation, keep the same Random number seed and use Start at simulation to specify the simulation in question and run just 1 simulation.\nFigure 11‑2 Simulations tab: MCMC Settings",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#how-many-simulations-to-run",
+    "href": "documentation/v71/userguides/2dcrm.html#how-many-simulations-to-run",
+    "title": "2D-CRM",
+    "section": "How many simulations to run?",
+    "text": "How many simulations to run?\n\nAfter first entering a design it is worth running just a small number of simulations such as 10 to check that the scenarios and design have been entered correctly. If all 10 simulations of a ‘null’ scenario are successful, or all 10 simulations of what was intended to be an effective drug scenario are futile, it is likely there has been a mistake or misunderstanding in the specification of the scenarios or the final evaluation or early stopping criteria.\nOnce the design and scenarios look broadly correct, it is usually worth quickly collecting rough estimates of the operating characteristics using around 100 simulations for each scenario. 100 simulations is enough to spot designs having very poor operating characteristics such as very high type-1 error, very poor power, a strong tendency to stop early for the wrong reason, or poor probability of selecting the correct target. 100 simulations is also usually sufficient to spot problems with the data analysis such as poor model fits and significant bias in the posterior estimates.\nTypically 1,000 simulations of each scenario of interest is required to get estimates of the operating characteristics precise enough to compare designs and tune the parameters. (Very roughly rates of 5% (such as type-1 error) can be estimated to about +/-1.5% and rates of around 80% (such as power) estimated +/- 2.5%)\nFinally around 10,000 simulations of the scenarios of interest is required to give confidence in operating characteristics of a design and possibly to select between the final shortlisted designs (Approximately rates of 5% can be estimated to about +/-0.5% and rates of around 80% estimated +/- 1%).\n\nThere may be many operating characteristics need to be compared over a number of scenarios, such as expected sample size, type-1 error, power, probability of selecting a good dose as the target and quality of estimation of the dose-response.\nHowever frequently these will be compared over a range of scenarios, it may not be necessary to run very large number of simulations for each scenario if a design shows a consistent advantage on the key operating characteristics over the majority of the scenarios.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#simulation-results",
+    "href": "documentation/v71/userguides/2dcrm.html#simulation-results",
+    "title": "2D-CRM",
+    "section": "Simulation results",
+    "text": "Simulation results\nIn the main screen the summary results that are usually of principal interest are displayed, the results summarised by scenario.\n\nShow other columns: Allows the user to open additional windows on the simulation results, the windows available are:\n\nAll: A window containing all the summary results columns\nHighlights: a separate window with the results shown on the main tab\nAllocation, Observed: summary results of the number of subjects allocated, the number allocated to each dose, the number of toxicities observed and the number of toxicities observed per dose\nFitted toxicity: summary results of the estimates of the model parameters and the dose-toxicity.\nPr(MTD) etc: summary results of the posterior probabilities of the properties of interest\nSimulation Results: a window displaying the individual simulation results for each simulation of the currently selected scenario\n\nView Graph: opens the FACTS built in graph utility displaying the results for the currently selected scenario. See Error! Reference source not found. below for a description of the graphs.\nAggregate: opens a control that allows the user create aggregated results files from all the scenarios. The user can select which scenarios to include, and whether the results should be pivoted by dose. The resulting files are stored in the simulation results folder.\nOpen in R: If aggregated files have been created then clicking this button on the simulations tab will open control that allows the user to select which aggregations to load into data frames as R is opened. Otherwise it will offer to open R using the files in the currently selected scenario.\nRight Click Menu: right clicking the mouse on a row of results in the simulation tab brings up a ‘local’ menu of options:\n\nOpen results folder: Opens a file browser in the results folder of the scenario, allowing swift access to any of the results files.\nSimulation results: Opens a window displaying the individual simulation results for each simulation of the currently selected scenario\nOpen in R: opens a control that will launch R, first loading the selected files in the results folder as data frames.\nShow Graphs: launches the graph viewer to view the results of the currently selected scenario.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#facts-grid-simulation-settings",
+    "href": "documentation/v71/userguides/2dcrm.html#facts-grid-simulation-settings",
+    "title": "2D-CRM",
+    "section": "FACTS Grid Simulation Settings",
+    "text": "FACTS Grid Simulation Settings\nIf you have access to a computational grid, you may choose to have your simulations run on the grid instead of running them locally. This frees your computer from the computationally intensive task of simulating so you can continue other work or even shutdown your PC or laptop. In order to run simulations on the grid, it must first be configured, this is normally done via a configuration file supplied with the FACTS installation by the IT group responsible for the FACTS installation.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#detailed-simulation-results",
+    "href": "documentation/v71/userguides/2dcrm.html#detailed-simulation-results",
+    "title": "2D-CRM",
+    "section": "Detailed Simulation Results",
+    "text": "Detailed Simulation Results\nAfter simulation has completed and simulation results have been loaded, the user may examine detailed results for any scenario with simulation data in the table by double-clicking on the row. A separate window (as in Figure 11‑4) shows the results simulation by simulation. Like the summary results – the initial window hold “highlights”, right clicking on the window displays a menu with options for viewing the “Fitted Toxicity”, “Observed Toxicity” or “All” Columns.\n\n\n\n\nFigure 11‑3 Detailed Simulation Results (Highlights)",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#cohort-simulation-results",
+    "href": "documentation/v71/userguides/2dcrm.html#cohort-simulation-results",
+    "title": "2D-CRM",
+    "section": "Cohort Simulation Results",
+    "text": "Cohort Simulation Results\nAfter viewing individual simulation results, the user may examine detailed results for any simulation with per-cohort data in the table by right-clicking on the row and selecting “Cohort Results”. A separate window opens, showing the result for the selected simulation cohort by cohort. Like the summary and simulation results the initial window displays “highlights” columns, right clicking on the window displays a menu with options for viewing the “Fitted Toxicity”, “Observed Toxicity” or “All” Columns.\n\n\n\n\nFigure 11‑4 Cohort Simulation Results (Highlights)",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#aggregation",
+    "href": "documentation/v71/userguides/2dcrm.html#aggregation",
+    "title": "2D-CRM",
+    "section": "Aggregation",
+    "text": "Aggregation\nAggregation combines the csv output from multiple scenarios into fewer csv files. The Aggregate… button displays a dialog which allows the user to select what to aggregate.\n\nThe default location for the aggregated files is the results directory for the study, but this can be changed.\nIn other design engines there is the option to pivot the results by dose, this is more complicated in 2D-CRM and the option is not available.\nThe default is to aggregate all scenarios, but any combination may be selected.\nPressing “Aggregate” generates the aggregated files.\nEach type of csv file is aggregated into a separate csv file whose name begins agg_, so agg_summary.csv will contain the rows from each of the summary.csv files, cohortsNNN.csv files are aggregated into a single agg_cohorts.csv file. Doses.csv is identical for all scenarios and so is not aggregated.\nEach aggregated file begins with the following extra columns, followed by the columns from the original csv file:\n\n\n\n\n\n\n\nColumn Name\nComments\n\n\n\n\nScenario ID\nIndex of the scenario\n\n\nToxicity Profile\nA series of columns containing the names of the various profiles used to construct the scenario. Columns that are never used are omitted (e.g External Subjects Profile if there are no external scenarios)\n\n\nExternal Subjects Profile\n\n\n\nAgg Timestamp\nDate and time when aggregation was performed\n\n\nSim\nSimulation number. Only present in the cohorts file.\n\n\nDose\nOnly present if pivoted",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#highlights",
+    "href": "documentation/v71/userguides/2dcrm.html#highlights",
+    "title": "2D-CRM",
+    "section": "Highlights",
+    "text": "Highlights\nThese are the columns displayed on the simulations tab after simulations are completed, the can also be displayed in the separate “Highlights” results window.\nThese results are in the ‘summar.csv’ files in each scenario results folder.\n\n\n\n\n\n\n\n\nColumn Title\nNumber of columns\nDescription\n\n\nSelect\n1\nNot an output column, this column contains check box to allow the user to select which scenario to simulate. The ‘Select All’ button causes them all to be checked.\n\n\nStatus\n1\nThis column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.\n\n\nScenario\n1\nThis gives the name of the scenario. In the N-CRM this is simply the name of the Toxicity response profile to be simulated (in other Design Engines the scenario may be a combination of a number of profiles – e.g. one for the toxicity response and one for the efficacy response).\n\n\nNum Sims\n1\nThe number of simulations that are being summarised\n\n\nMean subjects\n1\nThe mean number (over the simulations) of subjects randomized\n\n\nPpn Toxic\n1\nThe mean (over the simulations) proportion of the randomized subjects that had a toxic outcome\n\n\nSd Ppn Toxic\n1\nThe standard deviation (over the simulations) of the proportion of subjects that had a toxic outcome.\n\n\nMean true toxicity\n1\nThe mean (over the simulations) of the true probabilities of toxicity that subjects have been exposed to.\n\n\nDuration\n1\nThe mean duration of the simulations in weeks\n\n\nSd Duration\n1\nThe standard deviation of the durations of the simulations\n\n\nPpn All Toxic\n1\nThe proportion of the simulations that stopped because all combinations were judged too toxic (exceeded the overdose control limit).\n\n\nPpn Early Succ\n1\nThe proportion of the simulations that stopped because the stopping condition(s) had been satisfied.\n\n\nPpn Reached Cap\n1\nThe proportion of the simulations that stopped because the maximum nmber of subjects had been reached.\n\n\nPpn MTT Under\n1\nThe proportion of the dose combinations selected as MTT that actually had a toxicity rate in the “under-dosing” range.\n\n\nPpn MTT Target\n1\nThe proportion of the dose combinations selected as MTT that actually had a toxicity rate in the “target” range.\n\n\nPpn MTT Excess\n1\nThe proportion of the dose combinations selected as MTT that actually had a toxicity rate in the “excess” range.\n\n\nPpn MTT Unacceptable\n1\nThe proportion of the dose combinations selected as MTT that actually had a toxicity rate in the “unacceptable” range.\n\n\nPpn Correct Under\n1\nThe proportion of the dose combinations that have a true toxicity rate in the “under-dosing” band over all the simulations that are determined to be “under-dosing”. That is the posterior probability at the end of the simulation that the toxicity rate of that dose combination of being in the “under-dosing” band is greater than the probabilities of being in the “target” band or the combined “excess” and “unacceptable” toxicity bands, and the combination is not excluded by the overdose control conditions.\n\n\nPpn Correct Target\n1\nThe proportion of the dose combinations that have a true toxicity rate in the “target” band over all the simulations that are determined to be “target”. That is the posterior probability at the end of the simulation that the toxicity rate of that dose combination of being in the “target” band is greater than the probabilities of being in the “under-dosing” band or the combined “excess” and “unacceptable” toxicity bands, and the combination is not excluded by the overdose control conditions.\n\n\nPpn Excess+Unacc\n1\nThe proportion of the dose combinations that have a true toxicity rate in the “excess” or “unacceptable” bands over all the simulations that are determined to be “excess” or “unacceptable”. That is the posterior probability at the end of the simulation that the toxicity rate of that dose combination of being in the “excess” or “unacceptable” bands is greater than the probabilities of being in the “under-dosing” band or the “target band”, or the combination is excluded by the overdose control conditions.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#fitted-toxicity",
+    "href": "documentation/v71/userguides/2dcrm.html#fitted-toxicity",
+    "title": "2D-CRM",
+    "section": "Fitted Toxicity",
+    "text": "Fitted Toxicity\n\n\n\n\n\n\n\n\nColumn Title\nNumber of columns\nDescription\n\n\nStatus\n1\nThis column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.\n\n\nScenario\n1\nThis gives the name of the scenario. In the N-CRM this is simply the name of the Toxicity response profile to be simulated (in other Design Engines the scenario may be a combination of a number of profiles – e.g. one for the toxicity response and one for the efficacy response).\n\n\nMean Tox Coeffs\n5\nThe mean (over the simulations) of the estimate of the 5 parameters of the BLRM Dose-Toxicity model\n\n\nSd Tox Coeffs\n5\nThe standard deviation (over the simulations) of the estimate of the 5 parameters of the BLRM Dose-Toxicity model\n\n\nPr(Under): &lt;Dose&gt;, &lt;Dose&gt;\nI*J\nThe mean (over the simulations) of the posterior probability of being under the target toxicity at each dose combination.\n\n\nPr(Target): &lt;Dose&gt;, &lt;Dose&gt;\nI*J\nThe mean (over the simulations) of the posterior probability of being in the target toxicity band at each dose combination\n\n\nPr(Excess): &lt;Dose&gt;, &lt;Dose&gt;\nI*J\nThe mean (over the simulations) of the posterior probability of being in the excess toxicity band at each dose combination\n\n\nPr(Unacc): &lt;Dose&gt;, &lt;Dose&gt;\nI*J\nThe mean (over the simulation) of the posterior probability of being in the unacceptable toxicity band at each dose combination\n\n\nPr(Sel-MTT): &lt;Dose&gt;, &lt;Dose&gt;\nI*J\nThe proportion of times that each dose combination was selected as the combination with the MTT (Maximum Target Toxicity). Some methods may select more than one such combination so that these proportions sum to more than one for each scenario.\n\n\nMean Fitted Tox: &lt;Dose&gt;, &lt;Dose&gt;\nI*J\nThe mean (over the simulations) of the estimate of the toxicity rate at each dose combination.\n\n\nSd Fitted Tox: &lt;Dose&gt;, &lt;Dose&gt;\nI*J\nThe standard deviation (over the simulations) of the toxicity rate at each dose combination.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#observed-toxicity",
+    "href": "documentation/v71/userguides/2dcrm.html#observed-toxicity",
+    "title": "2D-CRM",
+    "section": "Observed Toxicity",
+    "text": "Observed Toxicity\n\n\n\n\n\n\n\n\nColumn Title\nNumber of columns\nDescription\n\n\nStatus\n1\nThis column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.\n\n\nScenario\n1\nThis gives the name of the scenario. In the N-CRM this is simply the name of the Toxicity response profile to be simulated (in other Design Engines the scenario may be a combination of a number of profiles – e.g. one for the toxicity response and one for the efficacy response).\n\n\nMean Subjects: &lt;Dose&gt;, &lt;Dose&gt;\nI*J\nThe mean (over the simulations) of the number of subjects allocated to each dose combination.\n\n\nSd Subjects: &lt;Dose&gt;, &lt;Dose&gt;\nI*J\nThe standard deviation (over the simulations) of the number of subjects allocated to each dose combination.\n\n\nMean Obs Tox: &lt;Dose&gt;, &lt;Dose&gt;\nI*J\nThe mean (over the simulations) of the number of observed toxicities at each dose combination.\n\n\nSd Obs Tox: &lt;Dose&gt;, &lt;Dose&gt;\nI*J\nThe standard deviation (over the simulations) of the number of observed toxicities at each dose combination.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#the-per-simulation-results",
+    "href": "documentation/v71/userguides/2dcrm.html#the-per-simulation-results",
+    "title": "2D-CRM",
+    "section": "The Per-Simulation Results",
+    "text": "The Per-Simulation Results\nDouble clicking on any row in the simulation results table, opens a window displaying the individual simulation results. This table shows the individual results that are averaged in the summary table.\nThese values are in the ‘simulations.csv’ for each scenario in the scenario results folder.\nLike the summary results, the per-simulation results are organized into ‘Highlights’, ‘Fitted Toxicity’ and ‘Observed Toxicity’ tables, with the corresponding columns.\nRight clicking on any summary results table brings up a menu that allows the user to:\n\nOpen the per-simulations results window with all columns\nOpen the per-simulations results window with the highlights columns\nOpen the per-simulations results window with the fitted toxicity columns\nOpen the per-simulations results window with the observed toxicity columns\nOpen the results folder for the scenario line that the cursor is on\nOpen the cohort results widow for the currently selected simulation.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#fitted-ppntoxicity",
+    "href": "documentation/v71/userguides/2dcrm.html#fitted-ppntoxicity",
+    "title": "2D-CRM",
+    "section": "Fitted Ppn(Toxicity)",
+    "text": "Fitted Ppn(Toxicity)\nThe Fitted Ppn(Toxicity) graph shows the average mean posterior estimate of the toxicity at each combination, with the cells colored in increasing intensity the higher the fitted toxicity. In addition in each cell the average number of observed toxicities and average total observations is reported.\nThe format is:\nFit: &lt;Average Mean estimate of toxicity&gt;\nObs: &lt;Mean toxicity observations&gt; / &lt;Mean total observations&gt;",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#ppntoxicity-bands",
+    "href": "documentation/v71/userguides/2dcrm.html#ppntoxicity-bands",
+    "title": "2D-CRM",
+    "section": "Ppn(Toxicity Bands)",
+    "text": "Ppn(Toxicity Bands)\nThe Ppn(Toxicity Bands) graph shows the average mean posterior estimate that the toxicity falls in one of the defined toxicity bands, with the cells colored from faint to intense the higher the probability. The color used depends on the band being displayed: blue for under-dosing, green for target, orange for excess and red for unacceptable.\nIn addition in each cell the average number of observed toxicities and average total observations is reported.\nThe format is:\nProb: &lt;Average Posterior Probability&gt;\nObs: &lt;Mean toxicity observations&gt; / &lt;Mean total observations&gt;",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#toxicity-summary-graph",
+    "href": "documentation/v71/userguides/2dcrm.html#toxicity-summary-graph",
+    "title": "2D-CRM",
+    "section": "Toxicity Summary Graph",
+    "text": "Toxicity Summary Graph\nThe Toxicity Summary Graph displays a small histogram for each dose combination. In each histogram it shows for that dose combination the posterior probability its toxicity rate is in each of the four toxicity bands.\nIf the posterior probabilities are such that the dose combination is excluded by the overdose control rules, then the background of the histogram is in pink to highlight it.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#mean-prselected-mtt",
+    "href": "documentation/v71/userguides/2dcrm.html#mean-prselected-mtt",
+    "title": "2D-CRM",
+    "section": "Mean Pr(Selected MTT)",
+    "text": "Mean Pr(Selected MTT)\nThe Mean Pr(Selected MTT) graph shows the average number of times each combination was selected as the, or one of the, combinations with Maximum Target Toxicity. The cells are colored more intensely the greater the Ppn of simulations that the dose combination was selected as MTT.\nThe ‘Selected as MTT’ dose combination is the one with the maximum posterior probability of having a toxicity rate in the target band and not excluded by overdose control. The ‘Walk’ and ‘Allocate to MTT’ dose escalation methods select a single MTT at the end of a trial, but the ‘Contour’ and ‘Tri-Axial’ can select multiple MTTs so when using these dose escalation methods these probabilities can sum to more than 1.\nThe format is:\n&lt;PPn of simulations this combination selected as MTT&gt;",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#mean-subject-allocation",
+    "href": "documentation/v71/userguides/2dcrm.html#mean-subject-allocation",
+    "title": "2D-CRM",
+    "section": "Mean Subject Allocation",
+    "text": "Mean Subject Allocation\nThe Mean Subject Allocation graph shows the average number of subjects allocated to each combination over all the simulations, with the cells colored from white to dark blue the greater the number allocated.\nThe format is:\n&lt;Number of subjects allocated to this combination&gt;",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#mean-observed-prtoxicity",
+    "href": "documentation/v71/userguides/2dcrm.html#mean-observed-prtoxicity",
+    "title": "2D-CRM",
+    "section": "Mean Observed Pr(Toxicity)",
+    "text": "Mean Observed Pr(Toxicity)\nThe Mean Observed Pr(Toxicity) graph shows the average number of observations and number of toxicities along with the mean fitted toxicity across all the simulations. The color intensity reflects the fraction of observations that resulted in toxicity, with the color more intense the closer that fraction gets to 1..\nThe format is:\nFit: &lt;Average Mean Estimate of Toxicity&gt;\nObs: &lt;Mean toxicity observations&gt; / &lt;Mean total observations&gt;",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#study-sizes-and-outcomes",
+    "href": "documentation/v71/userguides/2dcrm.html#study-sizes-and-outcomes",
+    "title": "2D-CRM",
+    "section": "Study Sizes and Outcomes",
+    "text": "Study Sizes and Outcomes\nThe Study Sizes and Outcomes graph plots a histogram, of the sample sizes of the simulations. The bars are colored to show why the simulated trial stopped:\n\nBecause all dose combinations were too toxic (barred by the overdose control rules)\nBecause defined stopping rule had been met.\nBecause the trial maximum sample size had been reached.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#fitted-prtoxicity-per-simulationper-cohort",
+    "href": "documentation/v71/userguides/2dcrm.html#fitted-prtoxicity-per-simulationper-cohort",
+    "title": "2D-CRM",
+    "section": "Fitted Pr(Toxicity) per simulation/per cohort",
+    "text": "Fitted Pr(Toxicity) per simulation/per cohort\nThe Fitted Ppn(Toxicity) graph shows the mean posterior estimate of the toxicity at each combination for each simulation, with the cells colored from beige to intense red the higher the toxicity. In addition in each cell the number of observed toxicities and total observations is reported.\nFor simulations for which a “cohortNNNN.csv” file was output, the graph can be viewed for the result of the analysis after each cohort – allowing the trial to be “stepped through” a cohort at a time.\nThe format is:\nFit: &lt;Mean estimate of toxicity&gt;\nObs: &lt; Toxicity observations&gt; / &lt;Total observations&gt;",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#prtoxicity-band-per-simulationper-cohort",
+    "href": "documentation/v71/userguides/2dcrm.html#prtoxicity-band-per-simulationper-cohort",
+    "title": "2D-CRM",
+    "section": "Pr(Toxicity Band) per simulation/per cohort",
+    "text": "Pr(Toxicity Band) per simulation/per cohort\nThe Ppn(Toxicity Bands) graph shows the posterior estimate that the toxicity falls in one of the defined toxicity bands for each simulation, with the cells colored from faint to intense the higher the probability. The color used depends on the band being displayed: blue for under-dosing, green for target, orange for excess and red for unacceptable.\nIn addition in each cell the number of observed toxicities and total observations is reported.\nFor simulations for which a “cohortNNNN.csv” file was output, the graph can also be viewed for the result of the analysis after each cohort – allowing the trial to be “stepped through” a cohort at a time.\nThe format is:\nProb: &lt;The Posterior Probability&gt;\nObs: &lt;The number toxicity observations&gt; / &lt;The number of total observations&gt;",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#summary-graph-per-simulationper-cohort",
+    "href": "documentation/v71/userguides/2dcrm.html#summary-graph-per-simulationper-cohort",
+    "title": "2D-CRM",
+    "section": "Summary Graph per simulation/per cohort",
+    "text": "Summary Graph per simulation/per cohort\nThe Summary graph shows the posterior estimate that the toxicity falls into each of the defined toxicity bands as a small histogram for each dose combination\nIn addition in the cells where the dose combination is excluded by the overdose rules are highlighted with a pink background.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#subject-allocation-per-simulationper-cohort",
+    "href": "documentation/v71/userguides/2dcrm.html#subject-allocation-per-simulationper-cohort",
+    "title": "2D-CRM",
+    "section": "Subject Allocation per simulation/per cohort",
+    "text": "Subject Allocation per simulation/per cohort\nThe Subject Allocation graph shows the number of subjects allocated to each combination in a particular simulation with the cells colored from white to dark blue the greater the number allocated.\nFor simulations for which a “cohortNNNN.csv” file was output, the graph can also be viewed for the subject allocation after each cohort – allowing the trial to be “stepped through” a cohort at a time.\nThe format is:\n&lt;Number of subjects allocated to this combination&gt;",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#observed-prtoxicity-per-simulationper-cohort",
+    "href": "documentation/v71/userguides/2dcrm.html#observed-prtoxicity-per-simulationper-cohort",
+    "title": "2D-CRM",
+    "section": "Observed Pr(Toxicity) per simulation/per cohort",
+    "text": "Observed Pr(Toxicity) per simulation/per cohort\nThe Observed Pr(Toxicity) graph shows the number of observations and number of toxicities for each combination, for each the simulation. The color intensity reflects the fraction of observations that resulted in toxicity, with the color more intense the closer that fraction gets to 1.The size of the colored square is proportional to the number of observations.\nFor simulations for which a “cohortNNNN.csv” file was output, the graph can also be viewed for the subject allocation after each cohort – allowing the trial to be “stepped through” a cohort at a time.\nThe format is:\n\nObs: &lt;Mean toxicity observations&gt; / &lt;Mean total observations&gt;\nsignifies the combination that is (one of) the combination(s) selected for allocation to for the next cohort. At the end of the simulation, these are the combinations that are selected as the MTT.\nCells excluded by the overdose control rules are marked with a “*”.",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#true-prtoxicity",
+    "href": "documentation/v71/userguides/2dcrm.html#true-prtoxicity",
+    "title": "2D-CRM",
+    "section": "True Pr(Toxicity)",
+    "text": "True Pr(Toxicity)\nThe True Ppn(Toxicity) graph shows the toxicity rate simulated at each combination for all the simulations, with the cells colored from beige to intense red the higher the toxicity.\nThe format is:\n&lt;Simulated toxicity rate&gt;",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
+  },
+  {
+    "objectID": "documentation/v71/userguides/2dcrm.html#analysis-tab-graphs",
+    "href": "documentation/v71/userguides/2dcrm.html#analysis-tab-graphs",
+    "title": "2D-CRM",
+    "section": "Analysis tab graphs",
+    "text": "Analysis tab graphs\nAfter the analysis the graph shown by default is the “Observed Toxicities” graphs (shown above).\nThe other three graphs available are similar to the “per cohort” graphs available for simulations, namely:\n\nFitted Pr(Toxicity)\nPr(Toxicity band)\nBand Summary Graph\n\n\nFitted Pr(Toxicity)\nThis graph shows the mean fitted toxicity rate at each combination, colored with increasing intensity the higher the rate, and a summary of the observed data:\n\n\n\nPr(Toxicity Band)\nThis graph shows the posterior probability of being in a particular toxicity band at each combination, colored with increasing intensity the higher the probability, and a summary of the observed data:\n\nThere is a control to select for which toxicity band the probabilities are shown.\n\n\nBand Summary Graph\nThis graph shows the posterior probability of being in each toxicity band at each combination as a simple histogram. Common y-axis range of 0-1 is used for all the histograms. The background of the histograms is white if the combination is within the overdose control rules and pink if the combination is excluded by the overdose control rules. At the top of each histogram is a summary of the observed data (toxicities / total observed):",
+    "crumbs": [
+      "Documentation",
+      "Version 7.1",
+      "User Guides",
+      "2D-CRM"
+    ]
   }
 ]
