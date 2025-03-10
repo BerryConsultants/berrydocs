@@ -13,7 +13,7 @@ format:
 The Simulation tab allows the user to execute simulations for each of
 the scenarios specified for the study. The user may choose the number of
 simulations, whether to execute locally or on the Grid, and modify the
-random number seeds, Figure 11‑1.
+random number seeds.
 
 ![The Simulation tab with complete simulation output in the table.](../coreUGattachments/continuous/media/image36.png){#fig-simoutput}
 
@@ -178,7 +178,8 @@ In addition to setting the seed, the user can choose whether they want the
 "Same seed for all scenarios" is selected, the subjects generated for each simulated
 trial will match for the different scenarios. This induces a correlation among the
 simulation output for different scenarios. This can be good if you're trying to compare
-operating characteristics for different scenarios. If "Different seed" is selected,
+operating characteristics for different scenarios, but it can also be misleading. To
+disable this option select the "Different Seed" option. If "Different seed" is selected,
 then each scenario has its own seed that samples a different set of subjects than any
 other scenario. This uncorrelates the simulation output across scenarios, which can
 be advantageous if the absolute value of the operating characteristics are more valuable
@@ -216,7 +217,7 @@ will be imputed, a value in the range 2 to 10 is recommended to
 avoid underestimating the uncertainty. A higher number should be
 used the greater the proportion of imputed data.
 
-The last two parameters concern the output of the MCMC samples to a
+The next parameter concerns the output of the MCMC samples to a
 file. It is possible to have the design engine output the sampled values
 from the MCMC in all of the interims of the first N simulated trials
 of each scenario by specifying the "Number of MCMC files to output" to be
@@ -288,7 +289,7 @@ installation by the IT group responsible for the FACTS installation.
 # Simulation Results
 
 In the center of the simulation tab, the summary simulation results are
-displayed. There are many columns of results, these are now organized
+displayed. There are many columns of results, these are organized
 into related groups of sub-windows, which can be displayed by clicking
 on the "Show More Columns" button.
 
@@ -296,36 +297,19 @@ on the "Show More Columns" button.
 
 These windows will show:
 
-All all the columns
-
-Highlights the columns shown on the main tab.
-
-Allocation the columns that report of subject recruitment and allocation
-
-Response the columns that report that estimate treatment response, the
-SD of the estimate, the estimate of the SD of the response, the true
-treatment response and the true SD of the response.
-
-Probabilities the proportion of times for each dose that it met the
-different target criteria (Max, EDx & MED) and the posterior
-probabilities for each dose that its treatment response is better than
-control, better than control by the CSD and better than the active
-comparator.
-
-Stopping Rules the proportion of times the different stopping criteria
-were met
-
-Model Parameters the columns that report the estimates of the values of
-the model parameters.
-
-Simulation Results | A window that displays the individual simulation
-results for the currently selected scenario.
-
-Frequentist results | If frequentist analysis is enabled, the summary
-results can be viewed, these are grouped by how missing data has been
-treated: Last Observation Carried Forward (LOCF), Baseline Observation
-Carried Forward (BOCF -- if baseline has been simulated), Per-Protocol
-(PP).
+| Name | Column Description |
+|-----|-------------|
+| All | All summary columns |
+| Highlights | Only the columns shown on the main tab |
+| Allocation | The columns that report on participant recruitment and allocation |
+| Response | The columns that report that estimate treatment response, the SD of the estimate, the estimate of the SD of the response, the true treatment response and the true SD of the response. |
+| Observed | The raw endpoint output and the dropout rates by arm and visit |
+| Probabilities | The final estimates for the QOIs that were computed for the trial.  |
+| Stopping Rules | The proportion of times the different stopping criteria were met |
+| Model Parameters | The columns that report the estimates of the values of the model parameters.  |
+| Simulation Results | A window that displays the individual simulation results for the currently selected scenario.  |
+| Simulation Duration | A window that displays how long each scenario took to simulate |
+| Frequentist results | If frequentist analysis is enabled, the summary results can be viewed, these are grouped by how missing data has been treated: Last Observation Carried Forward (LOCF), Baseline Observation Carried Forward (BOCF -- if baseline has been simulated), Per-Protocol (PP). |
 
 ## Right Click Menu
 
@@ -364,15 +348,12 @@ These will respectively:
 
 ## Open in R
 
-If aggregated results files have been created then the Open in R button
-will start R and load the aggregated '.csv' files.
+The "Open in R" button allows for the creation of an R script that has pre-populated code for loading in output files created by the FACTS simulations.
 
-If there are no aggregated files then the results files of the currently
-selected scenario are loaded. R can also be opened in this fashion by
-right clicking on a row in the simulation results table.
+By default, any/all of the simulation output files can be included in the created script. If "Aggregation" (see below) has been performed, then only the aggregated files will be available for being loaded in R.
 
-When FACTS starts R it writes out an R auto run startup script that
-loads the csv files into R as separate dataframes.
+When the button is clicked, FACTS will create an R script with the correct file paths to load in the data, as well as creating a function that will read the files in correctly. The file is then opened in the default R editor for the user. If there is no default program for opening a .R file, your operating system should ask how you
+want to open the file.
 
 ## Aggregation
 
@@ -460,7 +441,7 @@ This button becomes enabled once there are simulation results, it uses
 an R script and R libraries to generate a MS Word document describing
 the design.
 
-See the FACTS Design Report User Guide for details of what R packages
+See the [FACTS Design Report User Guide](./designReport.qmd) for details of what R packages
 need installing, how FACTS needs configuring to use the correct R
 instance, how the generate_report() function is run, and where the
 resulting report can be found.
