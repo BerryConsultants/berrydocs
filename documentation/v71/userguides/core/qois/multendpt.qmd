@@ -1,0 +1,52 @@
+---
+title: "Multiple Endpoint QOIs"
+subtitle: "Description of the differences in how to specify QOIs when simulating multiple endpoints."
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-title: "Table of Contents"
+    number-sections: false
+    number-depth: 4
+---
+
+The multiple endpoint engine allows the user to specify the quantities of interest
+for each endpoint in the same way that the continuous and dichotomous engines
+allow for specifications of QOIs.
+
+The QOI tab in the multiple endpoint engine has a set of sub-tabs that are
+not present in the single endpoint engines. All of the sub-tabs except the last
+correspond to one of the endpoints. These tabs create QOIs that are only calculated
+for a single endpoint.
+
+The last sub-tab on the multiple endpoint QOI page is the "Utility" tab. The utility
+tab exists so that decision making quantities can be calculated base on the
+distribution of the overall utility.
+
+![Execution > Quantities of Interest > Utility tab for multiple endpoints.](../coreUGattachments/multendpt/media/utilityQOI.png){#fig-utilQOIs}
+
+# Utility QOIs
+
+Since the utility of an arm has a distribution, as discussed [here](../study/multendpt.qmd#estimation-of-utility-in-facts),
+FACTS can calculate probabilistic quantities based on that utility. Examples
+of this include (among others):
+
+-   [Pr(U_d > 0)]{.fake-code-block} - The probability that an arm's combined utility is greater than 0
+
+-   [Pr(U_d - U_(Control) > 1)]{.fake-code-block} - The probability that an arm's conbined utility is greater than the control arm's
+    combined utility by at least 1 point.
+
+-   [Pr(UMax)]{.fake-code-block} - The probability that each arm has the highest utility among all arms.
+
+-   [Pr(UMin relative to Control: Delta=-1)]{.fake-code-block} - The probability that each dose is the dose with the smallest utility that is greater than the control utility minus 1.
+
+Predictive probabilities and p-values based on utilities are not supported.
+
+The Decision Quantities on the "Utility" tab operate in the same way as they
+do in the other core engines. In order to get a single value of a QOI, rather
+than a vector of QOIs, you must specify a decision QOI, which includes the method
+of selecting a scalar value from the vector QOI.
+
+The standard evaluation variables section of the QOI tab only contains an entry
+for the Clinically significant minimum utility (CSMU). This value only changes
+the value of the default posterior probability utility QOI that is created automatically.
