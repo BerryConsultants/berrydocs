@@ -24,7 +24,7 @@ interface.
 
 This document does not address the internal workings of the design
 engines or algorithms, which are addressed in the associated Design
-Engine Specification. It also does not address the use of FACTS Core
+Engine Specification. It also does not address the use of FACTS Core
 Designs or Enrichment Designs, which are covered in other User Guides.
 
 The screenshots provided are specific to a particular installation and
@@ -34,132 +34,9 @@ Windows 10. Different versions of Windows or the use of different
 Windows themes will introduce some differences in appearance. The
 contents of each tab, however, will be consistent with the software.
 
-## Context of this Issue
-
-This document is a guide to the version 7.0 release of Dose Escalation
-FACTS.
-
 ## Citing FACTS
 
-If writing in LaTex and using Bibtex, if you wish to cite FACTS (thank
-you!), can we suggest the following:
-
-## Definition of Terms
-
-The following acronyms and abbreviations are used in this document.
-
-Cap A limit on the number of subjects recruited. In FACTS N-CRM users
-can specify a cap on the overall number of subjects to be recruited in
-the trial (the ‘Overall Cap’) and specify stopping rules to define when
-the trial should stop before it reaches cap.
-
-Control Is the treatment arm with which the novel treatment(s) are
-principally being compared. Control may be placebo, or some existing
-standard of care, or therapy, against which the novel treatment has to
-be benchmarked in order to determine its likely usefulness.
-
-Core FACTS Core: A mode of FACTS for designing trials where multiple
-treatments, (possibly different doses of a novel treatment) are tested
-against a control and optionally an active comparator.
-
-CRM Continual Reassessment Method – a dose escalation design where the
-dose-toxicity is estimated using a simple Bayesian model, and the
-resulting estimates used to control the dose escalation and estimate the
-Maximum Tolerated Dose (MTD).
-
-DE Dose Escalation: a mode of FACTS where subjects are treated in
-cohorts and dose escalation is determined by the number of toxicities
-observed.
-
-ED Enrichment Designs: a mode of FACTS for designing trials where the
-same treatment is testing in different settings for example different
-sub-populations or different but related indications.
-
-Endpoint An endpoint is a measure of the subject’s health that is being
-analyzed in order to learn about the effects of the treatments being
-studied in the trial.
-
-FACTS Fixed and Adaptive Clinical Trial Simulator
-
-Final Endpoint The final value, or state, of a subject’s endpoint.
-
-GUI Graphical User Interface, the part of the FACTS application that the
-user interacts with.
-
-Method In the FACTS documentation we try to reserve the term ‘method’
-for the algorithms used in the simulation (as opposed to the analysis)
-part of the program. In the analysis part we use the term ‘Model’, see
-below.
-
-Model In the FACTS documentation we try to reserve the term ‘model’ for
-the statistical models used in the analysis of the trial data (in the
-‘design’ section of the FACTS user interface). Where mathematical
-algorithms are used for other purposes in FACTS (for instance in the
-generation of the simulated data) we try to use the term ‘method’. We
-have found that initially it is very easy for users to be confused
-between these two parts of FACTS and we feel that using distinct
-terminology may help to reduce this.
-
-MTD The dose most likely to be the Maximum Tolerated Dose (MTD) – the
-dose with the highest Pr(MTD).
-
-MTD+ The dose most likely to be the MTD+ – the dose with the highest
-Pr(MTD+).
-
-Pr(MTD) A dose’s probability of being MTD is the probability that it is
-the dose with the highest probability of having a toxicity rate in the
-acceptable toxicity band, and (if a threshold has been specified) does
-not have a probability of excess or unacceptable toxicity above the
-threshold. This estimate of MTD is constrained to select one of the
-available doses.
-
-Pr(MTD+) A doses probability of being the MTD+ is the probability that
-it is the dose with the highest probability of having a toxicity rate in
-the acceptable band, and (if a threshold has been specified) does not
-have a probability of excess or unacceptable toxicity above the
-threshold. Unlike Pr(MTD), Pr(MTD+) includes estimating whether a dose
-below or a dose above the range of those being tested is more likely to
-have a toxicity in the acceptable band than any of the doses in the
-range.
-
-Profile A profile is a specification of one aspect of a scenario. A
-scenario is made up of one profile of each of the required types for the
-type of trial being simulated. FACTS allows the user to specify multiple
-profiles of each type and then presents all the possible combinations of
-profiles as scenarios that can be used to drive simulations.
-
-Response The change in a subject’s endpoint compared to their baseline
-state.
-
-Scenario A scenario is the complete specification of the unknown
-external factors that determine the data observed on the trial and its
-timing. The exact factors depend on the type of trial being simulated
-but typically include:
-
-> the distribution of the final change from base line, or probability of
-> response or rate of events in the different treatment groups,
->
-> the properties of subjects’ early responses and the correlation with
-> their final outcome,
->
-> the rate at which subjects are recruited into the trial,
->
-> the rate at which subjects drop out of the trial.
-
-SPEC The Design Engine Specification, describes the system algorithms,
-and meaning of parameters.
-
-Subject Someone recruited onto a clinical trial for the purposes of
-learning about the properties of a treatment. Depending on the type of
-trial they might be patients or they might be healthy volunteers.
-
-Treatment Arm Subjects on entering the study are randomized to different
-‘treatment arms’. Subjects randomized to the same arm receive the same
-treatment and the responses of the subjects in the arm analyzed to
-determine the expected response to that treatment, allowing the expected
-responses to the different treatments to be compared.
-
-UG The User Guide, describes how to use the system.
+Please cite FACTS wherever applicable using [this citation](../../../introduction/citation.qmd). 
 
 # FACTS 2D-CRM Overview
 
@@ -392,24 +269,28 @@ The dose combinations are explored in two phases:
     highest probability of having a toxicity rate in the target toxicity
     range using dose escalation, limited by dose escalation rules.
 
-### Run-in methods
+### Run-in methods {#sec-runins}
 
 There are 4 run-in methods available:
 
-Contour This explores the reverse diagonals, assuming that the expected
+Contour 
+: This explores the reverse diagonals, assuming that the expected
 toxicity at the dose increments of the two doses are roughly equal.
 
-Row by row This explores the doses of drug 1 at the first dose of drug
+Row by row 
+: This explores the doses of drug 1 at the first dose of drug
 2, then increments drug 2, steps back a specified number of doses in
 drug 1 and then increments through the doses of drug 1 again. This
 method favours escalation of drug 1 over escalation of drug 2.
 
-Tri-axial This explores the combinations on each axis and on the
+Tri-axial 
+: This explores the combinations on each axis and on the
 diagonal. For small numbers of dose increments it is similar to the
 Huang run-in. For larger numbers of dose increments it is more
 parsimonious.
 
-Custom This explores a specific sequence of combinations stopping when
+Custom 
+: This explores a specific sequence of combinations stopping when
 the first toxicity is observed or the sequence is completed.
 
 Or run-in can be skipped.
@@ -435,18 +316,22 @@ basic framework:
 
 The 4 methods are:
 
-Contour This explores every MTT on every row and every column
+Contour 
+: This explores every MTT on every row and every column
 (frequently these overlap, but not necessarily).
 
-Walk This explores the MTT that is at or adjacent to the last
+Walk 
+: This explores the MTT that is at or adjacent to the last
 combination tested (excluding the dose that is an increment in both
 drugs from the last combination tested).
 
-Tri-axial This explores the MTT on each axis and on the diagonal. Once
+Tri-axial 
+: This explores the MTT on each axis and on the diagonal. Once
 these have the required maximum subjects on MTT, any combinations off
 the axis and diagonal that are the MTT are explored.
 
-Allocate MTT This allocates to the combination that is the overall MTT
+Allocate MTT 
+: This allocates to the combination that is the overall MTT
 of all the combinations that it is permitted to allocate to.
 
 ## Outstanding Issues / Absent Features
@@ -462,55 +347,10 @@ Currently the most obvious absent features are:
   a limit on the number of subjects who can being treated but for whom
   final endpoint has not been observed.
 
-# Starting FACTS
-
-FACTS is usually first started using the FACTS icon installed on the
-Windows desktop or from the Windows Start \> Programs menu.
-
-When the application opens, you are presented with the main introduction
-screen of FACTS (**Error! Reference source not found.**). From here you
-can start designing a 2D-CRM trial, by double clicking 2D-CRM in the
-list of available designs, or by selecting the 2D-CRM design option from
-the File \> New \> Dose Escalation menu.
-
-FACTS will also be associated the parameter files it writes out with a
-‘.facts’ file extension. Clicking on any one of these files will
-automatically start FACTS with that file opened.
-
-Note: Depending on your license, some design options may not be
-available.
-
-<figure>
-<img src="./2DCRM/media/image2.png"
-style="width:5.99892in;height:4.55514in"
-alt="Graphical user interface, text, application Description automatically generated" />
-<figcaption><p>Figure 3‑1 FACTS introduction screen</p></figcaption>
-</figure>
-
-From this screen a new design can be started by selecting the design
-type in the list and double clicking it or clicking on the ‘create new’
-button at the bottom of the list.
-
-In the ‘Recent Work’ panel, the use can select from the list of most
-recently opened FACTS files, or from the list of directories where those
-files were located, opening the folder and selecting a FACTS file from
-there.
-
-Once a FACTS design has been created, the appropriate FACTS design
-module can be launched by double clicking on the “.facts” file in
-Windows Explorer.
-
-FACTS information and displays are divided into various tabs (Figure
-4‑1). The Study Tab has sub-tabs for Study Information and Treatment
-Arms. The Virtual Subject Response, Execution, and Design tabs allow the
-user to set additional parameters for simulation. On the Simulation Tab,
-the user executes simulations and views the results.
-
 # The FACTS 2D-CRM GUI
 
 The FACTS 2D-CRM GUI conforms to the standard FACTS GUI layout, with
-information and displays divided across various standard tabs (Figure
-4‑1).
+information and displays divided across various standard tabs (@fig-fig3).
 
 - The Study Tab has sub-tabs for entering Study Information and
   specifying the Treatment Arms (doses) available in the study. This is
@@ -538,28 +378,16 @@ information and displays divided across various standard tabs (Figure
   data set and report the result of fitting the specified toxicity
   response model and the recommended dose for the next cohort.
 
-<figure>
-<img src="./2DCRM/media/image3.png"
-style="width:4.06065in;height:1.00819in" />
-<figcaption><p>Figure 4‑1 - Tab layout of FACTS</p></figcaption>
-</figure>
+![Tab layout of FACTS](2dcrmUGattachments/images/image3.png){#fig-fig3}
 
 Also on the menu bar, on the right hand side of the FACTS Window, is a
 button labeled “Notes”; clicking this button reveals a simple “notepad”
 window in which the user can maintain some simple notes that will be
 stored within the “.facts” file.
 
-<figure>
-<img src="./2DCRM/media/image4.png"
-style="width:1.78125in;height:0.83823in" />
-<figcaption><p>Figure 4‑2 - The 'Notes' button</p></figcaption>
-</figure>
+![The 'Notes' button](2dcrmUGattachments/images/image4.png){#fig-fig4}
 
-<figure>
-<img src="./2DCRM/media/image5.png"
-style="width:3.00046in;height:2.22155in" />
-<figcaption><p>Figure 4‑3 - Example design notes</p></figcaption>
-</figure>
+![Example design notes](2dcrmUGattachments/images/image5.png){#fig-fig5}
 
 The notepad window comes with two further buttons: one to change the
 window to a free floating one that can be moved away from the FACTCS
@@ -570,279 +398,6 @@ the file. Suggested uses are: to record the changes made in a particular
 version of a design and why; and to comment on the simulation results.
 This will help when coming back to work that has been set aside, to
 recall what gave rise to the different version of a design.  
-
-# The Standard FACTS Menus
-
-## The ‘File’ Menu
-
-FACTS has a File menu with commands similar to those found in most
-Windows applications, but also some unique to FACTS. The commands are:
-
-New Allows the user to select a trial design type and start a new
-design; if there are unsaved changes in the current design the user is
-prompted to save them first.
-
-Open Allows the user to select an existing FACTS file and open it; if
-there are unsaved changes in the current design the user is prompted to
-save them first.
-
-Save Saves the current changes in the design to the currently open FACTS
-file.
-
-Save As Allows the current version of the design to be saved to a new
-FATCS file; this file is then the “currently open” FACTS file going
-forward.
-
-Export Project Creates a “Zip” archive containing the current FACTS file
-and all the simulation results, so these can be easily archived,
-emailed, saved, etc.
-
-Recent Projects Contains entries for the last ten FACTS files opened:
-selecting one re-opens it.
-
-Recent Folders Contains entries for the folders that contain the last
-ten FACTS files opened: selecting one opens a file browser window on
-that folder allowing a ‘.facts’ file in that folder to be selected (or
-allowing the user to navigate to some different folder and select a
-‘.facts’ file there).
-
-Examples Contains example projects for the different design engines:
-selecting one opens it.
-
-Close Closes the current FACTS file, returning the user to the FACTS
-introduction screen.
-
-Exit Closes FACTS altogether.
-
-## FACTS Settings Menu
-
-The “Settings” command menu allows the user to do 2 things:
-
-- Set various FACTS options.
-
-- Reset the options to the installation default (those in the
-  configuration file)
-
-- Load options from a supplied configuration file.
-
-- Enter a new or changed license key.
-
-### Options
-
-The FACTS Options dialog allows the user to:
-
-- Test the web-service connection to the compute grid or set the grid
-  share directory
-
-- Configure the link to R
-
-- Select how gamma distributions are parameterized
-
-#### Grid Configuration
-
-FACTS access to the grid can be implemented using
-
-1.  A Network Shared drive, or
-
-2.  A bespoke FACTS Grid Web Service
-
-The correct grid interface should be selected for your organization,
-depending on which grid interface has been implemented, if any.
-
-If using a Network Shared drive, the following should be specified:
-
-- The location of the shared drive – this is usually a server name and
-  folder name e.g. [\\factsgrid\share](file://factsgrid/share)
-
-- Whether the grid is running the FACTS engines using Linux or Windows
-
-- The delay in seconds between each poll of the shared drive for
-  simulation results once a job has been submitted.
-
-Once the settings have been entered there is a button that initiates a
-test to see if the shared drive specified is accessible.
-
-<figure>
-<img src="./2DCRM/media/image6.png"
-style="width:2.998in;height:3.57426in"
-alt="Graphical user interface, text, application, email Description automatically generated" />
-<figcaption><p>Network Share configuration</p></figcaption>
-</figure>
-
-If using a Web Service interface:
-
-- The location of the web service endpoint needs to be set.
-
-- Clicking on “Test Configuration” and FACTS will attempt to connect to
-  the FACTS grid controller. The control will show which components of
-  the connection are working up to the first that isn’t.
-
-<img src="./2DCRM/media/image7.png"
-style="width:2.998in;height:3.57426in"
-alt="Graphical user interface, text, application Description automatically generated" />
-
-: Webservice Configuration
-
-#### Reset Options
-
-This simply restores all option settings to the users saved values (in
-the “user.config” file in the FACTS folder in the users AppData
-directory).
-
-#### Load Options
-
-This allows the options settings to be loaded from a supplied file, and
-saved as the user’s saved values.
-
-#### R Configuration
-
-In FACTS there are controls that make it simple to launch of R with
-simulation results loaded. To enable this to work the user must specify
-where the R executable is installed and (if there is more than one
-version of R installed) which version of R to use.
-
-<figure>
-<img src="./2DCRM/media/image8.png"
-style="width:3.33643in;height:4.31408in"
-alt="Graphical user interface, text, application Description automatically generated" />
-<figcaption><p>R Configuration Dialog</p></figcaption>
-</figure>
-
-The dialog allows the user to Add, Edit, Test and Remove links to
-versions of R.
-
-<figure>
-<img src="./2DCRM/media/image9.png"
-style="width:4.84059in;height:3.75973in"
-alt="Graphical user interface, text, application Description automatically generated" />
-<figcaption><p>Adding a link to R</p></figcaption>
-</figure>
-
-Clicking on “Add” opens a normal Windows directory browser window, the
-user must navigate to the location of an R installation (for example
-“C:\Program Files\R\R-2.15.2\bin”, select the file R.exe, and click
-“Open”. This adds a new entry on the R configuration dialog.
-
-Clicking on “Edit” operates similarly to “Add” above, except the
-selected location replaces that currently selected entry on the R
-configuration dialog rather than adding a new one.
-
-Clicking on “Test” checks whether the currently selected entry on the R
-configuration dialog is available, if it is not an error dialog is
-displayed:
-
-<img src="./2DCRM/media/image10.png"
-style="width:3.887in;height:1.44195in"
-alt="Graphical user interface, application Description automatically generated" />
-
-Clicking on “Remove” removes the currently selected location on the R
-configuration dialog.
-
-The version of R to use by default is selected by clicking on the
-‘Active’ check box of the version to use.
-
-#### Gamma Distribution Parameters
-
-In FACTS a number of parameters require inverse gamma distributions to
-be specified as priors for the parameter value. There are two different
-parameterization of the inverse gamma provided so that the user can
-select the form they find the most intuitive.
-
-<figure>
-<img src="./2DCRM/media/image11.png"
-style="width:2.98653in;height:3.86165in"
-alt="A picture containing text Description automatically generated" />
-<figcaption><p>: The parameterisation of Inverse Gamma
-Distributions</p></figcaption>
-</figure>
-
-The first form uses parameters that are the mean of the distribution and
-the equivalent weight in terms of the equivalent number of observations.
-The second form uses an ‘Alpha’ and ‘Beta’ parameterization that some
-statisticians are familiar with and will find natural to use.
-
-### Enter a license key
-
-If a new license key is required, this command can be used to enter one.
-There are two ways of entering a new license:
-
-<figure>
-<img src="./2DCRM/media/image12.png"
-style="width:3.14768in;height:1.51608in"
-alt="A screenshot of a cell phone Description automatically generated" />
-<figcaption><p>: Enter FACTS License Key</p></figcaption>
-</figure>
-
-The key can be entered directly, along with the associated Organization
-name (and for limited licenses the name of the system FACTS is installed
-on), or by selecting a supplied license file.
-
-## The Help Menu
-
-FACTS has a Help menu with commands to assist you with the use of FACTS,
-providing links to users guides, tutorial and training videos. The
-commands are:
-
-User Guides Provides access to documents such as this one, with (mainly)
-one user guide to each design type within FACTS. Exceptions to this
-simple structure are:
-
-- Core Design User Guide: A guide to the options under the ‘Design” tab
-  for FACTS Core for all endpoints.
-
-- Staged Design User Guide: As the staged design allows the design of
-  one FACTS Core stage followed by a second, most of the interface is
-  common to the basic FACTS Core. This guide describes the differences
-  and additional aspects for all endpoints.
-
-- Dose Escalation User Guide: This covers all the Dose Escalation
-  engines except for N-CRM and 2D-CRM that have their own. It thus
-  covers the 3+3, mTPI, CRM(Toxicity), CRM(Ordinal), CRM(Efficacy) and
-  bCRM engines.
-
-Tutorials Provides access to all the tutorial documents, which describes
-detailed examples of use of all the engines in FACTS and many of their
-options. The examples under the File \> Examples menu option largely
-correspond to the different tutorials described here.
-
-Design Specifications These are technical documents that describe the
-mathematical models implemented in FACTS in detail.
-
-Execution Guides The FACTS GUI can be run in command line mode so
-simulations can be run/re-run from scripts. With the simulation command
-line flag, and passed a directory rather than a file, FACTS will run
-simulations for every “.facts” file in that directory – and recurse into
-any sub-directories and simulate any “.facts” files there too. A full
-guide to command line mode can be found here. The FACTS simulation
-engines are also available in “command line executable” form. There are
-guides here that document their command line parameters and how to use
-them to analyse a data set – e.g. to perform an interim analysis whilst
-executing a trial designed with FACTS.
-
-FACTS file XML Specs These guides describe the parameters in the
-“.facts” files, which are text files in XML format. For expert users
-understanding this format allows them to use scripts to generate
-versions of an initial “.facts” file with slight variations in the
-parameters such as stopping thresholds or priors. Modification of
-“.facts” files outside of FACTS needs to be done with care, errors may
-render the file unusable by FACTS.
-
-Videos Provides access to links to the introductory, training and
-webinar videos that Berry Consultants has recorded and makes available
-over the internet to FACTS users.
-
-View log… If an error has occurred in FACTS, often the FACTS log file
-can shed light on what is going wrong. The log file is hidden away in
-some unfashionable and hard to locate Windows folder; this command
-option provides easy access to it. Allowing you to email facts support
-with a description of what occurred, attaching a copy of this log file
-having saved it somewhere convenient such as your desktop.
-
-Support Launch a simple editor for sending an email to our support
-account: facts@berryconsultants.net
-
-About Displays a simple “about box” that includes the detailed version
-number of FACTS.
 
 # The Study Tabs
 
@@ -858,11 +413,8 @@ On the Study Info tab the user can
   overdose limits and if so which ones and what the overdosing
   thresholds are.
 
-<figure>
-<img src="./2DCRM/media/image13.png"
-style="width:6.00046in;height:4.26954in" />
-<figcaption><p>Figure 7‑1 Study info tab: 2D-CRM</p></figcaption>
-</figure>
+
+![Study info tab: 2D-CRM](2dcrmUGattachments/images/image13.png){#fig-fig13}
 
 ## Treatment Arms
 
@@ -884,11 +436,7 @@ to create dose combinations that are monotherapies. This is particularly
 useful for enabling prior information from monotherapy trials to be
 included in this design.
 
-<figure>
-<img src="./2DCRM/media/image14.png"
-style="width:6.00046in;height:4.26954in" />
-<figcaption><p>Figure 7‑2 Treatment Arms tab</p></figcaption>
-</figure>
+![Treatment Arms tab](2dcrmUGattachments/images/image14.png){#fig-fig14}
 
 ## Exclude
 
@@ -914,11 +462,8 @@ be excluded from the trial (mark them “ineffective” or “not available”).
 Any toxicities occurring on such a combination would be data that the
 model would have difficulty fitting.
 
-<figure>
-<img src="./2DCRM/media/image15.png"
-style="width:6.00046in;height:4.26954in" />
-<figcaption><p>Figure 7‑3 The Exclude tab</p></figcaption>
-</figure>
+![The Exclude tab](2dcrmUGattachments/images/image15.png){#fig-fig15}
+
 
 # The Virtual Subject Response Tabs
 
@@ -945,11 +490,8 @@ The cells are colored according to the toxicity band coloring convention
 used in FACTS (under-dosing: blue, target: green, excess: orange,
 unacceptable: red) according to the toxicity rate entered.
 
-<figure>
-<img src="./2DCRM/media/image16.png"
-style="width:4.99542in;height:3.79196in" />
-<figcaption><p>Figure 8‑1 VSR Explicitly Defined tab</p></figcaption>
-</figure>
+![VSR Explicitly Defined tab](2dcrmUGattachments/images/image16.png){#fig-fig16}
+
 
 ### Parametric
 
@@ -963,12 +505,8 @@ Toxicity response model on the Design \> Response Model tab, but the
 user can specify different ‘effective dose strength’ models from those
 used in the analysis.
 
-<figure>
-<img src="./2DCRM/media/image17.png"
-style="width:6.04544in;height:4.59046in"
-alt="Graphical user interface, chart, table, treemap chart Description automatically generated" />
-<figcaption><p>Figure 8‑2 VSR &gt; Parametric tab</p></figcaption>
-</figure>
+![VSR Parametric tab](2dcrmUGattachments/images/image17.png){#fig-fig17}
+
 
 For each profile the user specifies:
 
@@ -1017,8 +555,8 @@ toxicity rates benefited from larger cohort sizes in the run in).
 
 On this tab the user can specify
 
-- The scheme to used for the run-in: “None”, “Contour”, “Row by Row”,
-  “Tri-axial” or “Custom”. These are described above (2.3.1) and in
+- The scheme to use for the run-in: “None”, “Contour”, “Row by Row”,
+  “Tri-axial” or “Custom”. These are described [above](#sec-runins) and in
   \[Spec\].
 
   - If “None” is specified then the table for specifying specific dose
@@ -1054,9 +592,12 @@ On this tab the user can specify
     optionally specify a maximum number of cohorts / dose combinations
     that can be tested at a single step.
 
-> The Row by row and Custom run-ins only identify one dose combination
-> to test next, and so use “single cohort” allocation regardless of the
-> setting of this control.
+::: {.callout-note}
+
+The Row by row and Custom run-ins only identify one dose combination
+to test next, and so use “single cohort” allocation regardless of the
+setting of this control.
+:::
 
 - Where to allocate after the end of the run-in it it ends due to
   observing toxicities, either:
@@ -1066,19 +607,17 @@ On this tab the user can specify
 
   - or at one dose increment below where toxicity has been observed.
 
-> If the run-in ends because it has reached the end of the combinations
-> to be tested during Run-in without seeing a toxicity, then dose
-> escalation starts by expanding at the allocation of the maximum dose
-> combination(s).
+::: {.callout-note}
+If the run-in ends because it has reached the end of the combinations
+to be tested during Run-in without seeing a toxicity, then dose
+escalation starts by expanding at the allocation of the maximum dose
+combination(s).
+:::
 
 - If use of a Custom run-in has been specified, then the sequence of
   dose combinations is specified.
 
-<figure>
-<img src="./2DCRM/media/image18.png"
-style="width:5.99542in;height:4.26472in" />
-<figcaption><p>Figure 9‑1 Design &gt; Start-up tab</p></figcaption>
-</figure>
+![Design Start-up tab](2dcrmUGattachments/images/image18.png){#fig-fig18}
 
 ## Dose Escalation
 
@@ -1109,13 +648,17 @@ On this tab the user can specify:
 
   - or allocate a cohort to each of the next doses.
 
-> The “Walk” and “Allocate to MTT” escalation schemes only identify one
-> next combination, and so use “single cohort” allocation regardless of
-> the setting of this control.
->
-> If “Multiple simultaneous cohorts” is specified, then it is possible
-> to set a limit on the maximum number of cohorts / dose combinations
-> tested in the next step.
+::: {.callout-note}
+The “Walk” and “Allocate to MTT” escalation schemes only identify one
+next combination, and so use “single cohort” allocation regardless of
+the setting of this control.
+:::
+
+::: {.callout-note}
+If “Multiple simultaneous cohorts” is specified, then it is possible
+to set a limit on the maximum number of cohorts / dose combinations
+tested in the next step.
+:::
 
 - Maximum subjects on MTT. This is the maximum number of subjects to
   allocate to a combination under Dose Escalation. In the “Contour”,
@@ -1123,12 +666,7 @@ On this tab the user can specify:
   stopping rule. If all the targeted combinations have the maximum
   number of subjects on them, the trial stops.
 
-<figure>
-<img src="./2DCRM/media/image19.png"
-style="width:5.99542in;height:4.26472in" />
-<figcaption><p>Figure 9‑2n Design &gt; Dose Escalation
-tab</p></figcaption>
-</figure>
+![Design Dose Escalation](2dcrmUGattachments/images/image19.png){#fig-fig19}
 
 All the escalation schemes stop if the maximum number of subjects has
 been allocated or all combinations are too toxic (the posterior
@@ -1170,24 +708,26 @@ components:
   lead to a failure to re-escalate to a dose if just one toxicity has
   been observed there, due to overdose control.
 
-> Values that represent weakly informative priors are recommended
-> instead. The prior mean and SD for each Alpha should represent the
-> prior expectation (in log-odds) of toxicity at the reference dose for
-> that drug in isolation. Having set Alpha the prior for Beta should be
-> set to allow gradients that are as steep as plausible, but if set too
-> high, or too broad it may cause problems of not being able to escalate
-> to high doses because of overdose control (even with few toxicities at
-> low doses the uncertainty of the model at higher doses where there is
-> currently no data may mean the posterior estimates of toxicity at
-> these doses exceed the overdose control thresholds). This can be
-> checked looking at example simulations or manually by entering test
-> data on the Analysis tab. The prior for the correlation should usually
-> be zero or slightly negative. A positive prior for Rho means that if
-> the value for Alpha is estimated as low (due to low toxicity being
-> observed near the reference dose) then the value of Beta will be
-> estimated as being low – and this may lead to too low an estimate of
-> toxicity at higher doses. A very strongly negative prior for Rho can
-> lead to the same problems as a too high or broad prior for Beta.
+::: {.callout-tip}
+Values that represent weakly informative priors are recommended
+instead. The prior mean and SD for each Alpha should represent the
+prior expectation (in log-odds) of toxicity at the reference dose for
+that drug in isolation. Having set Alpha the prior for Beta should be
+set to allow gradients that are as steep as plausible, but if set too
+high, or too broad it may cause problems of not being able to escalate
+to high doses because of overdose control (even with few toxicities at
+low doses the uncertainty of the model at higher doses where there is
+currently no data may mean the posterior estimates of toxicity at
+these doses exceed the overdose control thresholds). This can be
+checked looking at example simulations or manually by entering test
+data on the Analysis tab. The prior for the correlation should usually
+be zero or slightly negative. A positive prior for Rho means that if
+the value for Alpha is estimated as low (due to low toxicity being
+observed near the reference dose) then the value of Beta will be
+estimated as being low – and this may lead to too low an estimate of
+toxicity at higher doses. A very strongly negative prior for Rho can
+lead to the same problems as a too high or broad prior for Beta.
+:::
 
 - A panel where the transformations of the virtual dose strengths to
   values that can be used by the model is specified. This transformation
@@ -1195,10 +735,12 @@ components:
   drug. Options to use a linear transform and a different reference dose
   are available.
 
-> The recommended values for the reference dose are either the center of
-> the dose range (the default “Median dose”) or the dose thought most
-> likely to be in the middle of the target toxicity range for that drug
-> alone.
+::: {.callout-tip}
+The recommended values for the reference dose are either the center of
+the dose range (the default “Median dose”) or the dose thought most
+likely to be in the middle of the target toxicity range for that drug
+alone.
+:::
 
 - Re-scaling the response model. The model estimates rates between 0 and
   1 and works best when the observed rates are asymptotically 0 or 1. If
@@ -1206,21 +748,17 @@ components:
   rates (0.1 and 0.5 say) then the model fits is much, much better if
   these are specified as the asymptotes in place of 0 and 1.
 
-> **If a dose combination of 0,0 is included in the design (even when
-> excluded from be used in the trial, as it must be) the response model
-> must be re-scaled with a minimum asymptote above 0, even if only very
-> slightly (such as 0.0001).**
+::: {.callout-tip}
+If a dose combination of 0,0 is included in the design (even when
+excluded from be used in the trial, as it must be) the response model
+must be re-scaled with a minimum asymptote above 0, even if only very
+slightly (such as 0.0001).
+:::
 
 - The last panel displays the values of the model at the dose
   combinations using the specified parameters.
 
-<figure>
-<img src="./2DCRM/media/image20.png"
-style="width:6.04923in;height:4.59334in"
-alt="Table Description automatically generated" />
-<figcaption><p>Figure 9‑3 Design &gt; Response Model
-tab</p></figcaption>
-</figure>
+![Design Response Model](2dcrmUGattachments/images/image20.png){#fig-fig20}
 
 Specifying the Priors: The priors for each pair of parameters (α,β) for
 the response model for each drug are specified via a bivariate normal
@@ -1246,13 +784,7 @@ the specified prior. Options are to view a) 100 samples of the
 2-dimensional model over both drugs showing the 10%-ile, median or
 90%-ile toxicities at each dose combination.
 
-<figure>
-<img src="./2DCRM/media/image21.png"
-style="width:6.04517in;height:4.59025in"
-alt="Graphical user interface, application Description automatically generated" />
-<figcaption><p>Figure 9‑4 Design &gt; Response Model showing individual
-drug prior</p></figcaption>
-</figure>
+![Design Response Model showing individual drug prior](2dcrmUGattachments/images/image21.png){#fig-fig21}
 
 The individual drug graph plots the doses at the log of their
 transformed dose strength (“Log(X^)”), this enables the logits to be
@@ -1285,11 +817,8 @@ If there is a combination where the transformed dose strengths of both
 drugs are below 0.001, there can be no prior observed toxicities for
 that combination (it would be impossible for the model to fit them).
 
-<figure>
-<img src="./2DCRM/media/image22.png"
-style="width:5.00046in;height:3.4701in" />
-<figcaption><p>Figure 9‑5 Design &gt; Prior Toxicities</p></figcaption>
-</figure>
+![Design Prior Toxicities](2dcrmUGattachments/images/image22.png){#fig-fig22}
+
 
 # Simulation Tab
 
