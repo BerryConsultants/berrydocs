@@ -700,9 +700,24 @@ Y_i \sim \text{N}(\theta_{d_i}, \sigma^2)
 <p><span class="math display">\[\sigma^{2}\sim IG\left( \frac{\sigma_{n}}{2},\frac{\sigma_{\mu}^{2}\sigma_{n}}{2} \right)\]</span></p>
 <p>where <span class="math inline">\(\sigma_\mu\)</span> and <span class="math inline">\(\sigma_n\)</span> are specified on the Dose Response tab in FACTS under Error Parameters.</p>
 <p>The Simple NDLM is generally a good model to use when the shape of the likely dose response is unknown, but we would like to borrow information between a dose and its neighboring doses. No monotonicity or pre-determined shape is enforced by the Simple NDLM. The variance in dose response from dose to dose is updated based on the observed data, but as the number of doses in a trial is typically small, a moderately informative prior is often used.</p>
-<p>In a ‘null’ scenario where the response on all the doses is the same as control, the simple NDLM reduces type-1 error. The estimate of <span class="math inline">\(\tau^2\)</span> tends towards zero and the estimate of the dose response tends to a flat line. The smoothing of the estimates of the response reduces the random fluctuations in the estimates from dose to dose and is a very effective counter to the problem of type-1 error inflation due to the multiplicity of doses being tested. A small prior for the mean value of <span class="math inline">\(\tau\)</span> will accentuate this effect. The price to be paid for this benefit is a tendency to underestimate large changes in response or where there is a peak in the response. This over-smoothing can reduce power. A prior for the mean of <span class="math inline">\(\tau\)</span> centered at large values will minimize over-smoothing, and a very large prior would simply remove any smoothing effect at all. A standard prior for the mean of <span class="math inline">\(\tau\)</span> would be the expected average change in response from dose to dose, scaled to take into account the differences in the specified effective dose strengths.</p>
+<p>In a null scenario where the response on all the doses is the same as control, the simple NDLM reduces type-1 error. The estimate of <span class="math inline">\(\tau^2\)</span> tends towards zero and the estimate of the dose response tends to a flat line. The smoothing of the estimates of the response reduces the random fluctuations in the estimates from dose to dose and is a very effective counter to the problem of type-1 error inflation due to the multiplicity of doses being tested. A small prior for the mean value of <span class="math inline">\(\tau\)</span> will accentuate this effect. The price to be paid for this benefit is a tendency to underestimate large changes in response or where there is a peak in the response. This over-smoothing can reduce power. A prior for the mean of <span class="math inline">\(\tau\)</span> centered at large values will minimize over-smoothing, and a very large prior would simply remove any smoothing effect at all. A standard prior for the mean of <span class="math inline">\(\tau\)</span> would be the expected average change in response from dose to dose, scaled to take into account the differences in the specified effective dose strengths.</p>
 <p>Usually, the choice of prior for <span class="math inline">\(\tau^2\)</span> is tuned based on simulation results, trading off reducing type-1 error in the null case against loss of power and reduced estimate of maximum response in the effective scenario with the largest jump in response or steepest peak.</p>
-<p><strong>Aside</strong>: When using the NDLM model or any of its alternatives (2<span class="math inline">\(^{nd}\)</span> order or Monotonic NDLM), and including doses in a design that receive no subject allocation (ie. Allocation ratio set to 0), some important characteristics of the model should be considered in the interpretation of results. First, the NDLM model “borrows” information from neighboring doses, and therefore including unallocated intermediate doses will increase uncertainty in the fitted response. Information must “pass through” these intermediate doses, and uncertainty should be expected to increase as the number of intermediate unallocated doses between two allocated doses increases. Secondly, the NDLM model estimates the response at unallocated doses, but without subject data at these doses the uncertainty in the estimate can be considerably larger than doses with subject data. This high degree of uncertainty can lead to a vestigial probability that an unallocated dose is the target dose (<span class="fake-code-block">Pr(EDq)</span>, <span class="fake-code-block">Pr(MED)</span>, <span class="fake-code-block">Pr(Max)</span>) even though the mean response estimate and probabilities at neighboring doses with subject data would not suggest this to be the case.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note on the use of an NDLM with doses without subjects
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>When using the NDLM model or any of its alternatives (2<span class="math inline">\(^{nd}\)</span> order or Monotonic NDLM), and including doses in a design that receive no subject allocation (ie. Allocation ratio set to 0), some important characteristics of the model should be considered in the interpretation of results. First, the NDLM model “borrows” information from neighboring doses, and therefore including unallocated intermediate doses will increase uncertainty in the fitted response. Information must “pass through” these intermediate doses, and uncertainty should be expected to increase as the number of intermediate unallocated doses between two allocated doses increases. Secondly, the NDLM model estimates the response at unallocated doses, but without subject data at these doses the uncertainty in the estimate can be considerably larger than doses with subject data. This high degree of uncertainty can lead to a vestigial probability that an unallocated dose is the target dose (<span class="fake-code-block">Pr(EDq)</span>, <span class="fake-code-block">Pr(MED)</span>, <span class="fake-code-block">Pr(Max)</span>) even though the mean response estimate and probabilities at neighboring doses with subject data would not suggest this to be the case.</p>
+</div>
+</div>
+</div>
 </section>
 <section id="monotonic-ndlm" class="level2">
 <h2 class="anchored" data-anchor-id="monotonic-ndlm">Monotonic NDLM</h2>
@@ -721,19 +736,6 @@ Y_i \sim \text{N}(\theta_{d_i}, \sigma^2)
 </section>
 <section id="second-order-ndlm" class="level2">
 <h2 class="anchored" data-anchor-id="second-order-ndlm">Second Order NDLM</h2>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The second order NDLM described in this section is the version utilized in FACTS version 4.0 and later. The model labelled “Second Order NDLM” in versions before 4.0 is was maintained as the model labelled “Legacy 2nd Order NDLM” until the release of FACTS 7.1, at which time it was removed.</p>
-</div>
-</div>
 <p>The second order NDLM serves as a “smoother” similar to the NDLM, however it tends to smooth toward a linear fit with a slope (the NDLM itself tends to shrink each dose’s fit toward its neighbors, while the second order NDLM prefers any trend in the neighbors).</p>
 <p>Let doses <span class="math inline">\(d=d', \ldots, D\)</span> be doses in the dose response model and <span class="math inline">\(\theta_d\)</span> be the estimated dose response for dose <span class="math inline">\(d\)</span>. The initial dose <span class="math inline">\(d'=1\)</span> if there is no control arm or control is included in the dose response model, and <span class="math inline">\(d'=2\)</span> if the control arm is modelled separately. The initial dose <span class="math inline">\(d'\)</span> is modeled:</p>
 <p><span class="math display">\[\theta_{d'} \sim N\left(\mu_{0},\tau^2_{0}\right)\]</span></p>
@@ -750,11 +752,27 @@ Note
 <p>Note that that in this formulation, <span class="math inline">\(\tau_2^2\)</span> can be thought of as the deviation from linearity. The linear scaling of deviations thus leads to a conditional variance that scales as the square of the dose difference:</p>
 <p><span class="math display">\[\text{Var}[\theta_d \mid \theta_{d-1}, \theta_{d-2}]=\tau_2^2\cdot (\nu_d-\nu_{d-1})^2\]</span></p>
 <p>The second order NDLM, like the simple NDLM, is generally a good model to use when the shape of the likely dose response is unknown, but we would like to borrow information between a dose and its neighboring doses. No monotonicity or pre-determined shape is enforced by the Second Order NDLM. The variance in dose response from dose to dose is updated based on the observed data, but as the number of doses in a trial is typically small, a moderately informative prior is often used.</p>
-<p>In a ‘null’ scenario where the response on all the doses is the same as control the Second Order NDLM, like the Simple NDLM, tends to reduce type-1 error. As the estimate of <span class="math inline">\(\tau^2\)</span> tends to zero the estimate of the dose response tends to a line (with non-zero slope if appropriate).</p>
+<p>In a null scenario where the response on all the doses is the same as control the Second Order NDLM, like the Simple NDLM, tends to reduce type-1 error. As the estimate of <span class="math inline">\(\tau^2\)</span> tends to zero the estimate of the dose response tends to a line (with non-zero slope if appropriate).</p>
 <p>The second order NDLM has more power than the Simple NDLM when the dose response is smooth, but will tend to shrink estimates to the control by more than the Simple NDLM if there are marked peaks or steps in the response. Because it borrows from two neighboring doses, it is better at estimating a response for a dose where there is no data than the simple NDLM can, and can be used with burn-in’s where not all doses have been allocated to, but doesn’t cope well if there are consecutive doses where there is no data.</p>
 <p>However, unlike the simple NDLMs where the variance structure is preserved if doses are added to or dropped from the design, this is not true for the 2<sup>nd</sup> order NLDM. Thus, if using the 2<sup>nd</sup> order NDLM and the doses that are available to the model are changed, then the parameters for the prior for <span class="math inline">\(\tau_2^2\)</span> may need to be re-visited.</p>
 <p>The simple NDLM is likely to be preferred where there are fewer doses (4-5), and the second order NDLM is often preferred when there are 7 or more (it will depend on the expected smoothness of the response – the smoother it is the more useful the second order NDLM will be).</p>
 <p>As with the simple NDLM, the choice of prior for <span class="math inline">\(\tau_2^2\)</span> can be tuned based on simulation results: balancing having a smaller prior that limits type-1 error in the null case, against having a larger prior that yields more power and better estimate of maximum response in the effective scenarios with the large jumps in response or pronounced peaks.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note on the Second Order NDLM before FACTS 4.0
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The second order NDLM described in this section is the version utilized in FACTS version 4.0 and later. The model labelled “Second Order NDLM” in versions before 4.0 is was maintained as the model labelled “Legacy 2nd Order NDLM” until the release of FACTS 7.1, at which time it was removed.</p>
+</div>
+</div>
+</div>
 </section>
 <section id="parameter-logistic" class="level2">
 <h2 class="anchored" data-anchor-id="parameter-logistic">3-Parameter Logistic</h2>
@@ -780,10 +798,9 @@ the estimated ED50, the dose that has 50% of the dose response maximum (<span cl
 <p><span class="math display">\[a_1\sim \text{N}(\Lambda_1, \lambda_1^2)\]</span> <span class="math display">\[a_2\sim \text{N}(\Lambda_2, \lambda_2^2)\]</span> <span class="math display">\[a_3\sim \text{N}^+(\Lambda_3, \lambda_3^2)\]</span></p>
 <p>In the continuous case, the prior distribution for the error term in the 3-Parameter Logistic is Inverse Gamma:</p>
 <p><span class="math display">\[\sigma^{2}\sim IG\left( \frac{\sigma_{n}}{2},\frac{\sigma_{\mu}^{2}\sigma_{n}}{2} \right)\]</span></p>
-<p>An advantage of the 3-Parameter Logistic model is that it is has a small number of parameters that have defined, intuitive interpretations. Since there are few parameters it’s generally easy to estimate the parameters even on small amounts of data. Because of the limited flexibility of the logistic curve, the 3-parameter logistic model should only be used when there is evidence that it is appropriate. See the <a href="#hierlog">Hierarchical Logistic</a> and <a href="#sigmoid">Sigmoid</a> (E<sub>max</sub>) models for dose response models with a similar pattern, but slightly more flexibility in shape.</p>
-<p><a name="hierlog"></a></p><a name="hierlog">
-</a></section><a name="hierlog">
-</a><section id="hierarchical-logistic" class="level2"><a name="hierlog">
+<p>An advantage of the 3-Parameter Logistic model is that it is has a small number of parameters that have defined, intuitive interpretations. Since there are few parameters it’s generally easy to estimate the parameters even on small amounts of data. Because of the limited flexibility of the logistic curve, the 3-parameter logistic model should only be used when there is evidence that it is appropriate. See the <a href="#hierarchical-logistic">Hierarchical Logistic</a> and <a href="#sigmoid-model">Sigmoid</a> (E<sub>max</sub>) models for dose response models with a similar pattern, but slightly more flexibility in shape.</p>
+</section>
+<section id="hierarchical-logistic" class="level2">
 <h2 class="anchored" data-anchor-id="hierarchical-logistic">Hierarchical Logistic</h2>
 <p>The <span class="custom-tooltip"> hierarchical logistic model <span class="tooltip-text">Scott Berry’s favorite dose response model.</span> </span> is an extension of the 3-parameter logistic with the form:</p>
 <p><span class="math display">\[\theta_{d} = a_{1} + \frac{a_{2}v_{d}}{v_{d} + a_{3}} + \zeta_{d}\]</span></p>
@@ -807,7 +824,7 @@ Figure&nbsp;1: An example of a fit from the hierarchical logistic model averaged
 <p><span class="math display">\[a_{4}^{2}\sim IG\left( \frac{\Lambda_{n}}{2},\frac{\Lambda_{\mu}^{2}\Lambda_{n}}{2} \right)\]</span></p>
 <p>The following independent prior distributions are assumed:</p>
 <p><span class="math display">\[a_1\sim \text{N}(\Lambda_1, \lambda_1^2)\]</span> <span class="math display">\[a_2\sim \text{N}(\Lambda_2, \lambda_2^2)\]</span> <span class="math display">\[a_3\sim \text{N}^+(\Lambda_3, \lambda_3^2)\]</span></p>
-</a><p><a name="hierlog">A typical recommended value for the center of the prior distribution of <span class="math inline">\(\alpha_4\)</span> is the largest expected likely deviation in true response from the underlying logistic with a weight of 1. The effect of this prior is then checked through simulation of a range of plausible dose response profiles, with a range of designs to check the sensitivity of the final estimate of response to this prior. Additionally, </a><a href="../../../../../concepts/facts/InverseGammaDistribution.html" title="Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.">see here</a> for help with specifying an inverse gamma distribution with center and weight.</p>
+<p>A typical recommended value for the center of the prior distribution of <span class="math inline">\(\alpha_4\)</span> is the largest expected likely deviation in true response from the underlying logistic with a weight of 1. The effect of this prior is then checked through simulation of a range of plausible dose response profiles, with a range of designs to check the sensitivity of the final estimate of response to this prior. Additionally, <a href="../../../../../concepts/facts/InverseGammaDistribution.html" title="Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.">see here</a> for help with specifying an inverse gamma distribution with center and weight.</p>
 <p>In this model, compared to the ‘plain’ 3-parameter logistic above, it is important that the true ED50 lies within the expected dose range, and that the prior for the ED50, <span class="math inline">\(a_3\)</span>, has the majority of its probability mass in the available dose range. For example, if the range of the effective dose strengths is from 0 to <span class="math inline">\(\nu_D\)</span> then a typical ‘weakly informative’ prior for <span class="math inline">\(a_3\)</span> would be:</p>
 <p><span class="math display">\[a_{3}\sim N^{+}\left( \frac{\nu_{D}}{2},\left( \frac{\nu_{D}}{2} \right)^{2} \right)\]</span></p>
 <p>Using a weaker prior, such as <span class="math inline">\(\text{N}^+(\nu_D, \nu_D^2)\)</span> leads to a more linear fit. With just this change to the prior for <span class="math inline">\(a_3\)</span> the average of the estimated of the mean response changes from the graph above to:</p>
@@ -821,8 +838,7 @@ Figure&nbsp;2: An example of hierarchical logistic model fits using a prior that
 </figcaption>
 </figure>
 </div>
-<p><a name="sigmoid"></a></p><a name="sigmoid">
-</a></section><a name="sigmoid">
+</section>
 <section id="sigmoid-model" class="level2">
 <h2 class="anchored" data-anchor-id="sigmoid-model">Sigmoid Model</h2>
 <p>A sigmoid model (<span class="math inline">\(\text{E}_{\text{max}}\)</span>) provides a coherent parameterization of the dose response trend similar to the 3-parameter logistic, but with one extra shape parameter, <span class="math inline">\(a_4\)</span>.</p>
@@ -946,7 +962,7 @@ Figure&nbsp;6: Two different examples of 3-parameter exponential logistic model 
 </figure>
 </div>
 </section>
-</a><section id="hierarchical-model" class="level2"><a name="sigmoid">
+<section id="hierarchical-model" class="level2">
 <h2 class="anchored" data-anchor-id="hierarchical-model">Hierarchical Model</h2>
 <p>Like the Independent Dose Model, the hierarchical model treats the arms as if they are an unordered set of treatments, but unlike the Independent Dose Model the Hierarchical Model shares information between doses included in the model. The hierarchical model is a way of encouraging the estimates of arm responses to be similar, and the degree of this encouragement can be controlled using parameters of the prior distribution. The hierarchical model assumes that the arm parameters are drawn from the same normal distribution:</p>
 <p><span class="math display">\[\theta_d \sim \text{N}(\mu, \tau^2)\]</span></p>
@@ -954,7 +970,7 @@ Figure&nbsp;6: Two different examples of 3-parameter exponential logistic model 
 <p><span class="math inline">\(\mu \sim \text{N}(\Lambda_\mu, \lambda_\mu^2)\)</span></p>
 <p>and</p>
 <p><span class="math display">\[\tau^{2}\sim \text{IG}\left(\frac{\tau_{n}}{2},\frac{\tau_{\mu}^{2}\tau_{n}}{2} \right)\]</span></p>
-</a><p><a name="sigmoid">where <span class="math inline">\(\tau_\mu\)</span> is a central value for <span class="math inline">\(\tau\)</span>, and <span class="math inline">\(\tau_n\)</span> is the prior weight. <span class="math inline">\(\tau^2\)</span> governs the amount of information shared between doses in the model. The estimates of the dose parameters can be encouraged to be close together by choosing a small value for <span class="math inline">\(\tau_\mu\)</span> and a large value for <span class="math inline">\(\tau_n\)</span>. </a><a href="../../../../../concepts/facts/InverseGammaDistribution.html" title="Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.">See here</a> for a tool to help understand the inverse gamma distribution specified by center and weight parameters.</p>
+<p>where <span class="math inline">\(\tau_\mu\)</span> is a central value for <span class="math inline">\(\tau\)</span>, and <span class="math inline">\(\tau_n\)</span> is the prior weight. <span class="math inline">\(\tau^2\)</span> governs the amount of information shared between doses in the model. The estimates of the dose parameters can be encouraged to be close together by choosing a small value for <span class="math inline">\(\tau_\mu\)</span> and a large value for <span class="math inline">\(\tau_n\)</span>. <a href="../../../../../concepts/facts/InverseGammaDistribution.html" title="Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.">See here</a> for a tool to help understand the inverse gamma distribution specified by center and weight parameters.</p>
 <p>The control arm can be included in the hierarchical model if it is desired to encourage the experimental arms to be similar to the control arm, or excluded from it if the experimental arms are encouraged to be similar to each other but not necessarily to the control arm. This is not true with time-to-event data, when the control arm can only be excluded from the hierarchical model.</p>
 </section>
 <section id="linear-model" class="level2">

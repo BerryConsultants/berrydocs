@@ -43,6 +43,7 @@ any endpoint, the estimate of dose response model is called
 $\theta_d$ for a dose $d \in \{1, \ldots , D\}$.
 
 ::: {.panel-tabset}
+
 ## Continuous
 
 In the continuous dose response models the individual response or change from baseline (if it is being used) $Y_i$ of the $i^{th}$ subject allocated to dose $d_i$ is modeled:
@@ -84,6 +85,7 @@ $\left( \ln\left( \frac{\lambda_{s}e^{\theta_{d}}}{\lambda_{s}} \right) = \ln\le
 averaged over the observation time segments. This formulation
 implies a proportional treatment effect across the pieces of the
 piece-wise exponential.
+
 :::
 
 Each dose response model is parameterized in terms of $\theta_d$,
@@ -115,6 +117,7 @@ interpretation of $\theta_d$ depends on the nature of the
 endpoint:
 
 ::: {.panel-tabset}
+
 ## Continuous
 
 Where the response is continuous, $\theta_d$ is the estimate
@@ -125,6 +128,7 @@ is also estimated.
 The response on the control arm, $\theta_0$, is estimated either in the dose response model or modeled separately.
 
 ## Dichotomous
+
 Where the response is dichotomous, $\theta_d$ is the estimate
 of the log-odds of the probability of observing a response on the
 treatment arm $d$.
@@ -138,6 +142,7 @@ estimate of the log hazard ratio compared to the control arm on the
 treatment arm $d$.
 
 When the primary endpoint is time-to-event, the response rate on the control arm, $\lambda$, is estimated and $\theta_d$ for $d\in \{1,2,\ldots,D\}$ is the log hazard of the response rate of each treatment arm compared to the control arm, so $\theta_0\equiv 0$.
+
 :::
 
 Some, but not all, of the dose response models use the effective dose
@@ -252,7 +257,7 @@ dose response from dose to dose is updated based on the observed data,
 but as the number of doses in a trial is typically small, a moderately
 informative prior is often used.
 
-In a ‘null’ scenario where the response on all the doses is the same as
+In a null scenario where the response on all the doses is the same as
 control, the simple NDLM reduces type-1 error. The estimate of
 $\tau^2$ tends towards zero and the estimate of the dose response
 tends to a flat line. The smoothing of the estimates of the response
@@ -274,7 +279,11 @@ simulation results, trading off reducing type-1 error in the null case
 against loss of power and reduced estimate of maximum response in the
 effective scenario with the largest jump in response or steepest peak.
 
-**Aside**: When using the NDLM model or any of its alternatives
+:::{.callout-note collapse="true"}
+
+### Note on the use of an NDLM with doses without subjects
+
+When using the NDLM model or any of its alternatives
 (2$^{nd}$ order or Monotonic NDLM), and including doses in a
 design that receive no subject allocation (ie. Allocation ratio set to
 0), some important characteristics of the model should be considered in
@@ -291,6 +300,8 @@ uncertainty can lead to a vestigial probability that an unallocated dose
 is the target dose ([Pr(EDq)]{.fake-code-block}, [Pr(MED)]{.fake-code-block}, [Pr(Max)]{.fake-code-block}) even though
 the mean response estimate and probabilities at neighboring doses with
 subject data would not suggest this to be the case.
+
+:::
 
 ## Monotonic NDLM
 
@@ -339,12 +350,6 @@ monotonically decreasing, in that
 $\theta_d<\theta_{d-1}$.
 
 ## Second Order NDLM
-
-::: {.callout-tip}
-## Note
-
-The second order NDLM described in this section is the version utilized in FACTS version 4.0 and later. The model labelled “Second Order NDLM” in versions before 4.0 is was maintained as the model labelled “Legacy 2nd Order NDLM” until the release of FACTS 7.1, at which time it was removed.
-:::
 
 The second order NDLM serves as a “smoother” similar to the
 NDLM, however it tends to smooth toward a linear fit with a slope (the
@@ -404,7 +409,7 @@ doses. No monotonicity or pre-determined shape is enforced by the Second Order N
 based on the observed data, but as the number of doses in a trial is
 typically small, a moderately informative prior is often used.
 
-In a ‘null’ scenario where the response on all the doses is the same as
+In a null scenario where the response on all the doses is the same as
 control the Second Order NDLM, like the Simple NDLM, tends to reduce type-1
 error. As the estimate of $\tau^2$ tends to zero the estimate
 of the dose response tends to a line (with non-zero slope if
@@ -436,6 +441,14 @@ limits type-1 error in the null case, against having a larger prior that
 yields more power and better estimate of maximum response in the
 effective scenarios with the large jumps in response or pronounced
 peaks.
+
+:::{.callout-tip collapse="true"}
+
+## Note on the Second Order NDLM before FACTS 4.0
+
+The second order NDLM described in this section is the version utilized in FACTS version 4.0 and later. The model labelled “Second Order NDLM” in versions before 4.0 is was maintained as the model labelled “Legacy 2nd Order NDLM” until the release of FACTS 7.1, at which time it was removed.
+
+:::
 
 ## 3-Parameter Logistic
 
@@ -477,11 +490,9 @@ number of parameters that have defined, intuitive interpretations. Since
 there are few parameters it’s generally easy to estimate the parameters
 even on small amounts of data. Because of the limited flexibility of the
 logistic curve, the 3-parameter logistic model should only be used when
-there is evidence that it is appropriate. See the [Hierarchical Logistic](#hierlog)
-and [Sigmoid](#sigmoid) (E<sub>max</sub>) models for dose response models with a
+there is evidence that it is appropriate. See the [Hierarchical Logistic](#hierarchical-logistic)
+and [Sigmoid](#sigmoid-model) (E<sub>max</sub>) models for dose response models with a
 similar pattern, but slightly more flexibility in shape.
-
-<a name="hierlog"/>
 
 ## Hierarchical Logistic
 
@@ -541,8 +552,6 @@ Using a weaker prior, such as $\text{N}^+(\nu_D, \nu_D^2)$ leads to a more linea
 
 ![An example of hierarchical logistic model fits using a prior that results
 in a flatter dose response model fit.](../coreUGattachments/CoreUserGuide/media/image23.png){#fig-hierlog2}
-
-<a name="sigmoid"/>
 
 ## Sigmoid Model
 
