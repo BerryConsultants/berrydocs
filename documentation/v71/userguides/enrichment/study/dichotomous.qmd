@@ -1,6 +1,6 @@
 ---
-title: "Study Tab - Continuous Endpoint"
-subtitle: "Description of the Study tab and its sub-tabs in the Enrichment Continuous Engine."
+title: "Study Tab - Dichotomous Endpoint"
+subtitle: "Description of the Study tab and its sub-tabs in the Enrichment Dichotomous Engine."
 title-block-banner: '#125740'
 title-block-banner-color: white
 format:
@@ -12,6 +12,7 @@ format:
     number-depth: 4
 ---
 
+# The Study tab
 
 ## Study Info
 
@@ -19,7 +20,7 @@ The Study Info sub-tab provides parameters for specifying:
 
 - Study Information, selecting: whether there are control arms in each
   group as well as a treatment arm or only a treatment arm, whether a
-  higher or lower response represents patient improvement and whether
+  higher or lower response represents patient improvement, and whether
   the trial attempting to show the treatment’s superiority over the
   control, or its non-inferiority to it.
 
@@ -30,7 +31,7 @@ The Study Info sub-tab provides parameters for specifying:
 
 - Groups, defining the different groups to be studied.
 
-![The Study Info sub-tab](../EDCont/media/image15.png){#fig-fig15}
+![The Study Info sub-tab.](../EDDich/media/image15.png){#fig-fig15}
 
 - In ‘Study Information’ the following is specified:
 
@@ -38,7 +39,7 @@ The Study Info sub-tab provides parameters for specifying:
     arm or only a treatment arm (the analysis is to “Compare to an
     objective control”).
 
-    - If control arms are included, the analysis will be by the
+    - If control arms are included the analysis will be by the
       comparison of the results of the subjects on the treatment arm
       with that of the subjects on the control arm.
 
@@ -47,42 +48,46 @@ The Study Info sub-tab provides parameters for specifying:
       results of the subjects on the treatment arm with an assumed
       ‘historic’ or ‘objective’ control response.
 
-  - Whether higher response or lower response is subject improvement.
-    This determines the direction of the comparisons performed when
-    making decisions about the trial’s success or futility.
+  - Whether a response is subject improvement or subject worsening. This
+    determines the direction of the comparisons performed when making
+    decisions about the trial’s success or futility.
 
-    - If a higher response is subject improvement, then success criteria
-      will look for the mean change from baseline of subjects in the
-      treatment arm to be greater than that of the subjects in the
-      control arm (or of a specified mean change based on historical
-      data), or greater than control by some Target mean difference for
-      success (The Clinically Significant Difference, CSD, for
-      success).
+    - If a response indicates subject improvement, then success criteria
+      will look for the response rate of subjects in the treatment arm
+      to be greater than that of subjects in the control arm (or of a
+      specified rate based on historical data) by some Target Rate
+      Difference for Success (TRDS) (also called the Clinically Significant Difference           (CSD)). Futility criteria will look
+      for the response rate in the treatment arm failing to exceed the
+      response rate in the control arm by more than the Target Rate
+      Difference for Futility (TRDF).
 
-    - If a lower response is subject improvement, then success criteria
-      will look for the mean change from baseline of subjects in the
-      treatment arm to be less than that of the subjects in the control
-      arm (or of a specified mean change based on historical data), or
-      less than control by some Target Mean Difference for Futility (The
-      CSD for futility).
+    - If a response indicates subject worsening, then success criteria
+      will look for a response rate of subjects in the treatment arm to
+      be less than that of subjects in the control arm (or of a
+      specified rate based on historical data) by some Target Rate
+      Difference for Success (TRDS). Futility criteria will look for a
+      response rate in the treatment arm in failing to be less than the
+      response rate of the control arm less the Target Rate Difference
+      for Futility (TRDF).
 
-    - See @sec-group-info for more information
+    - See @sec-groups for more information.
 
   - Whether the aim of the study is to determine superiority or
     non-inferiority. If non-inferiority is specified, then on other
     tabs, instead of specifying a clinically significant difference, a
     non-inferiority margin is specified. Whereas in a superiority trial
     the target is to be ‘better’ than control by the specified margin,
-    in a non-inferiority trial the target is to be “not worse than”
+    in a non-inferiority trial the target is to be not worse than
     control by the specified margin.
 
 - Note that as a result of being able to specify whether a higher or
   lower response represents improvement, and whether the aim is
-  superiority or non-inferiority, the CSDs or the NI Margins will almost
-  always be positive values. FACTS will automatically determine which
+  superiority or non-inferiority, the CSD or the Margin will almost
+  always be a positive value. The user may specify clinically
+  significant differences, the engine will automatically determine which
   direction is appropriate (e.g. if lower values are subject
-  improvement, the engine will realize a CSD of 10 for success
-  corresponds to lowering the mean by 10”)
+  improvement, the engine will realize a CSD of 0.5 for success
+  corresponds to lowering the rate by 0.5”)
 
 - In ‘Design Options’ the following is specified, where the simpler
   options are taken, this allows the GUI to reduce the number of options
@@ -98,65 +103,56 @@ The Study Info sub-tab provides parameters for specifying:
     Response \> Longitudinal’ and ‘Design \> Longitudinal’ tabs are
     hidden as they are not required.
 
-  - To ‘Include baseline data’ or not. If baseline is included then
-    additional options are enabled to model subjects’ baselines and
-    their possible interaction with response. If baseline is included
-    response may be:
+- In ‘Special Longitudinal Features’ the user specifies whether to use
+  the restricted Markov model for longitudinal aspects of the design.
+  This special longitudinal model determines both the method used to
+  simulate subject response data as well as the model used in the design
+  analysis. See SPEC for more information about the model details.
 
-    - Change from baseline
+  - Within the restricted Markov model, the user must specify whether
+    subjects with a final assessment of “stable” should be counted as a
+    success or failure.
 
-    - Final endpoint value
-
-    Note that this setting changes both how responses are simulated *and*
-    how they are modelled, so for most purposes this choice of response
-    merely changes how things are labelled. The exceptions are ITP and
-    Baseline Carried Forward where the choice of ‘change from baseline’ or
-    ‘final endpoint value’ does affect behavior.
-
-![The Group Info sub-tab](../EDCont/media/image16.png){#fig-fig16}
+![Defining Groups.](../EDDich/media/image16.png){#fig-fig16}
 
 - Groups:
 
   - Groups can be added and deleted (clicking ‘Delete’ deletes the
     currently selected group).
 
-  - The groups’ names edited to something meaningful for the trial and
-    it is possible to specify whether there is a ‘cap’ on the number of
-    subjects that can be recruited into that group, if so then the
-    ‘Group size’ must be specified.
+  - Groups can be named and it is possible to specify whether there is a
+    ‘cap’ on the number of subjects that can be recruited into that
+    group, if so then the maximum ‘Group size’ must be specified.
 
   - If any groups do not have an individual group cap, then an overall
-    study cap (max sample size) must be specified. If all groups have a
-    cap it is still possible to specify an overall study cap (which to
-    have any effect, must be less than the sum of the individual group
-    caps).
+    cap (max sample size) must be specified. If all groups have a cap it
+    is still possible to specify an overall cap (which to have any
+    meaning, must be less than the sum of the individual group caps).
 
-## Group Info {#sec-group-info}
+## Group Info {#sec-groups}
 
-On this tab values that govern the analysis for each group are
-specified.
+On this tab values to define the analysis for each group are specified.
 
-### Trials to show Superiority {#sec-study-superiority}
+### Trials to show Superiority
 
-In a trial to show superiority, for each group the Target mean
-difference for success and Target mean difference for futility may be
-specified, these are referred to as the CSDs (Clinically Significant
-Differences). Optionally the parameters for a phase 3 may be to allow
-the predictive probability of subsequent success in such a phase 3 trial
-to be used as decision criteria.
+In a trial to show superiority, for each group the Target Clinically
+Significant Difference can be set). Optionally the parameters for a
+phase 3 may be specified to allow the predictive probability of
+subsequent success in such a phase 3 trial to be used as decision
+criteria.
 
-- With a continuous endpoint the Clinically Significant Difference is in
-  terms of Target Mean Difference – that is a difference between the
-  mean change from baseline in the treatment arm and the mean changed
-  from baseline in the control arm. Separate differences can be set for
+- With a dichotomous endpoint the Clinically Significant Difference is
+  in terms of Target Rate Difference – that is a difference between the
+  probability of response in the treatment arm and the probability of
+  response in the control arm. Separate differences can be set for
   determining success and futility, and separate differences can be set
   for each group and for the across groups analysis. Their use in
   practice is specified on the “Design \> Stopping Criteria” and “Design
   \> Evaluation Criteria” tabs.
 
-![The Group Info sub-tab](../EDCont/media/image17.png){#fig-fig17}
+![The Group Info sub-tab.](../EDDich/media/image17.png){#fig-fig17}
 
-- The phase 3 criteria are:
+- The phase 3 success criteria are:
 
   - Phase 3 total number of subjects per arm
 
@@ -169,7 +165,7 @@ to be used as decision criteria.
   - A super-superiority margin / non-inferiority margin (depending on
     whether the phase 3 trial is for superiority or non-inferiority),
     this margin is independent from any margins specified for the ED
-    trial.
+    trial itself.
 
 - Given these criteria FACTS calculates the predicted probability of
   success in such a trial for each treatment arm given the estimate of
@@ -180,63 +176,64 @@ to be used as decision criteria.
   can then be used in the stopping criteria and final evaluation
   criteria.
 
-Separate ‘Target Mean Differences’ can be set, specifying the TMD for
-success and TMD for futility. We use the terms Target Mean Difference
-here, as it makes it clearer that the value to be entered should be
-positive. Elsewhere (in column headings for instance) the more
-conventional term CSD is used.
+Separate ‘Target Rate Differences’ can be set for success and for
+futility, specifying the TRD for success and TRD for futility. We use
+the terms Target Rate Difference here as it makes it clearer that the
+value to be entered should be positive. Elsewhere (in column headings
+for instance) the more conventional term CSD may be used.
 
 - If the “Posterior probability” criteria is used for stopping a group
   for success or judging if a group is successful in the final
   evaluation, the criteria will test whether
-  $\Pr\left( \theta_{d} - \theta_{0} > CSD\ for\ success \right) > Success\ threshold$
+  $\Pr\left( \pi_{d} - \pi_{0} > CSD\ for\ success \right) > Success\ threshold$
 
   That is whether the posterior probability that the mean treatment
-  difference is greater than the target mean difference for success is
-  greater than a specified threshold (set on the Design tabs).
+  difference is greater than the target difference in rates or success
+  is greater than a specified threshold (set on the Design tabs).
 
 - If the “Posterior probability” criteria is used for stopping a group
   for futility or judging if a group is futile in the final evaluation,
   the criteria will test whether
-  $\Pr\left( \theta_{d} - \theta_{0} > CSD\ for\ futility \right) < Futility\ threshold$
+  $\Pr\left( \pi_{d} - \pi_{0} > CSD\ for\ futility \right) < Futility\ threshold$
 
   That is whether the posterior probability that the mean treatment
   difference is greater than the target mean difference for futility by
   is less than a specified threshold (set on the Design tabs).
 
-- If the endpoint is such that a *lower* response means improvement,
-  then the comparison is reversed (becomes $\theta_{0} - \theta_{d}$)
-  and if the trial is non-inferiority then the test for “being greater
-  than the CSD” is replaced with testing for “being less than the NIM”
-  (Non-Inferiority Margin). Thus the meaning of the user specified
-  Difference or Margin is interpreted taking into account both whether a
-  higher response means ‘better’ or ‘worse’ and whether the trial aim is
-  ‘superiority’ or ‘non-inferiority’. The result is that for normal
-  usage the value entered will be +ve, as the following diagrams should
-  make clear:
-  
-  ![](../EDCont/media/image94.png){#fig-fig94}
+- If the endpoint is such that a response means subject worsening, then
+  the comparison is reversed (the treatment difference becomes
+  $\pi_{0} - \pi_{d}$) and if the trial is non-inferiority then the
+  test for “being greater than the CSD” is replaced with testing for
+  “being less than the NIM” (Non-Inferiority Margin). Thus the meaning
+  of the user specified Difference or Margin is interpreted taking into
+  account both whether a response means ‘better’ or ‘worse’ and whether
+  the trial aim is ‘superiority’ or ‘non-inferiority’. The result is
+  that for normal usage the value entered will be +ve, as the following
+  diagrams should make clear:
 
-Note that in Superiority trials the required TMD for success will be
-greater than or equal to the TMD for futility, whereas in the
+   ![](../EDCont/media/image94.png){#fig-fig94}
+
+Note that in Superiority trials the required TRD for success will be
+greater than or equal to the TRD for futility, whereas in the
 Non-Inferiority trials the required NIM for futility will be greater
 than or equal to the NIM for success.
 
 ### Notes on setting Target Mean Differences
 
-A “standard” hypothesis test for demonstrating superiority to control
-uses an effective TMD, or CSD, of 0. Testing with a non-zero CSD is
-different, and the implications need to be carefully understood.
+Target Rate Differences (TRD) are also referred to as Clinically
+Significant Differences (CSD). A “standard” hypothesis test for
+demonstrating superiority to control uses a CSD of 0. Testing with a
+non-zero CSD is different, and the implications need to be carefully
+understood.
 
-The first mistake to avoid is setting the target mean difference for
+The first mistake to avoid is setting the target rate difference for
 success too large. The decisions for success are in terms of the
-estimated posterior probability that the mean difference between the
-response on the treatment arm and the response on the control arm is
-greater than the target. If the CSD is set to what might be the
-treatment difference in the “alternate hypothesis” in standard
-hypothesis test, we could only expect on average to have a posterior
-probability that the treatment difference is greater than the CSD of
-50%.
+estimated posterior probability that the rate difference of the response
+on the treatment arm from the response on the control arm is greater
+than the target. If the CSD is set to what might be the treatment
+difference in the “alternate hypothesis” of a standard hypothesis test,
+we could only expect on average to have a posterior probability that the
+treatment difference is greater than the CSD of 50%.
 
 To achieve posterior probabilities of \> 50%, we must set a CSD that we
 expect the treatment to exceed. To achieve the desired power by instead
@@ -248,41 +245,38 @@ what had been seen already, it would lead the threshold no longer being
 met. The posterior distribution would shrink so that there was no longer
 sufficient of the tail above the CSD.
 
-It is better therefore to use a target mean difference for success that,
+It is better therefore to use a target rate difference for success that,
 should the treatment have the value that it is hoped to achieve, we
 would expect to see some \>50% probability of being greater than it.
 Thus rather than using what might be termed ‘the target value’ for the
-CSD, it is better to use ‘the minimum acceptable value’.
+TRDS, it is better to use ‘the minimum acceptable value’.
 
 The same target difference can be used to decide futility, requiring a
-\<\< 50% confidence that the mean difference of the response on the
-treatment arm from response on the control arm is greater than the
+\<\< 50% confidence that the difference of the response rate on the
+treatment arm from response rate on the control arm is greater than the
 target. However, particularly if there are other endpoints not being
 explored in the simulation, or other properties of the treatment (such
 as convenience, compliance, cost, tolerability etc.) that might justify
 continued development even if it is not an outright winner on the
-primary endpoint, it may be that a lower target mean difference needs to
+primary endpoint, it may be that a lower target rate difference needs to
 be set as the threshold for determining futility – for example
 sufficient to demonstrate that development even on the basis of
 non-inferiority on the primary endpoint is likely to fail. Hence FACTS
 allows separate CSDs to be set for assessing success and futility.
 
-### Trials to show Non-inferiority
+### Non-inferiority
 
 In a trial to show non-inferiority, the tab is the same except that
-‘Target Mean Differences’ are now ‘Target Non-inferiority Margins’.
+‘Target Rate Differences’ are now ‘Target Non-inferiority Margins’.
 
-![Group Info tab, in a non-inferiority design](../EDCont/media/image18.png){#fig-fig18}
-
-As with trials to show Superiority, optionally the phase 3 criteria can
-be set (see @sec-study-superiority).
+![Group Info tab, in a non-inferiority design](../EDDich/media/image18.png){#fig-fig18}
 
 ## Visits
 
 If longitudinal modeling is not being used, then simply the time to the
 final visit is specified:
 
-![Time to endpoint](../EDCont/media/image19.png){#fig-fig19}
+![Time to endpoint](../EDDich/media/image19.png){#fig-fig19}
 
 Otherwise the visit schedule needs to be specified. The last visit in
 the schedule is taken to be when the final endpoint is observed. Visits
@@ -299,7 +293,7 @@ be changed. Should it be necessary to change the week of a visit, the
 incorrect visit must be deleted and a new one with the correct week
 number added.
 
-![Visit schedule](../EDCont/media/image20.png){#fig-fig20}
+![Visit schedule](../EDDich/media/image20.png){#fig-fig20}
 
 ## Variants
 
@@ -326,4 +320,4 @@ Response \> Explicitly Defined \> Group Response profiles which of the
 groups “Should succeed”, that is, it would constitute a ‘correct
 selection’ by the design in that scenario.
 
-![The Variants tab, specifying 5 variants](../EDCont/media/image21.png){#fig-fig21}
+![The Variants tab, specifying 3 variants](../EDDich/media/image21.png){#fig-fig21}
