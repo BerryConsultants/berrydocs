@@ -1,6 +1,6 @@
 ---
-title: "Study Tab - Time-to-Event Endpoint"
-subtitle: "Description of the Study tab and its sub-tabs in the Enrichment TTE Engine."
+title: "Simulation Tab - Time-to-Event Endpoint"
+subtitle: "Description of the Time-to-Event Endpoint specific elements of the Simulation Tab."
 title-block-banner: '#125740'
 title-block-banner-color: white
 format:
@@ -12,306 +12,442 @@ format:
     number-depth: 4
 ---
 
-# The Study tab
-
-## Study Info
-
-The Study Info sub-tab provides parameters for specifying:
-
-- Study Information, selecting: whether there are control arms in each
-  group as well as a treatment arm or only a treatment arm, whether an
-  event represents patient improvement or deterioration, whether the
-  trial is attempting to show the treatment’s superiority over the
-  control, or its non-inferiority to it, and the length of time subjects
-  are to be followed.
-
-- Design Options, selecting: whether the design is adaptive and there
-  are to be interims where the trial can be modified or not, and whether
-  the design will look at subject’s longitudinal results at interim
-  visits before their final visit.
-
-- Groups, defining the different groups to be studied.
-
-![The Study Info sub-tab.](../EDTTE/media/image15.png){#fig-fig15}
-
-- In ‘Study Information’ the following is specified:
-
-  - Whether there are control arms in each group as well as a treatment
-    arm or only a treatment arm (the analysis is to “Compare to an
-    objective control”).
-
-    - If control arms are included the analysis will be by the
-      comparison of the results of the subjects on the treatment arm
-      with that of the subjects on the control arm.
-
-    - If an objective control is used, there will be no control arm in
-      the trial and the analysis will be by the comparison of the
-      results of the subjects on the treatment arm with an assumed
-      ‘historic’ or ‘objective’ control response.
-
-  - Whether an event is subject improvement or subject deterioration.
-    This determines the direction of the comparisons performed when
-    making decisions about the trial’s success or futility.
-
-    - If an event indicates success (subject improvement), then success
-      criteria will estimate the probability that the hazard ratio of
-      the treatment arm to the control arm (or of a specified event rate
-      based on historical data) is greater than 1 by some Target Hazard
-      Ratio Difference for Success (THRDS) (also called the Clinically Significant               Difference (CSD)). Futility criteria will
-      estimate the probability that the hazard ratio of the treatment
-      arm to the control is greater than 1 by more than the Target
-      Hazard Ratio Difference for Futility (THRDF).
-
-    - If an event indicates failure (subject condition worsening), then
-      success criteria will estimate the probability that the hazard
-      ratio of the treatment arm to the control arm (or of a specified
-      event rate based on historical data) to be less than 1 by some
-      Target Hazard Ratio Difference for Success (TRDS). Futility
-      criteria will estimate the probability that the hazard ratio of
-      the treatment arm to the control is less than 1, by the Target
-      Hazard Ratio Difference for Futility (THRDF).
-
-    - See @sec-groups for more information.
-
-  - Whether the aim of the study is to determine superiority or
-    non-inferiority. If non-inferiority is specified, then on other
-    tabs, instead of specifying a clinically significant difference
-    (CSD), a non-inferiority margin is specified. Whereas in a
-    superiority trial the target is to be ‘better’ than control by the
-    specified margin, in a non-inferiority trial the target is to be not
-    worse than control by the specified margin.
-
-  - The limit on subject follow up, this can be either:
-
-    - The maximum follow-up time, no subject will be followed for longer
-      than this. If the study does not stop early it will stop when
-      every subject recruited has reached their maximum follow-up time
-      or has had an event.
-
-    - The follow-up time after full enrolment. If the study does not
-      stop early then it will stop the specified time after full
-      enrolment or when every subject has had an event.
-
-- Note that as a result of being able to specify whether a higher or
-  lower event rate represents improvement, and whether the aim is
-  superiority or non-inferiority, the CSD or the Margin will almost
-  always be a positive value. The user may specify clinically
-  significant differences, the engine will automatically determine which
-  direction is appropriate (e.g. if lower values are subject
-  improvement, the engine will realize a THRD of 0.3 for success
-  corresponds to a hazard ratio of 0.7”)
-
-- In ‘Design Options’ the following is specified, where the simpler
-  options are taken, this allows the GUI to reduce the number of options
-  presented to the user.
-
-  - Specify an Adaptive or Non-Adaptive design. If ‘Enable adaptive
-    features’ is selected the ’Design \> Interims’ and ‘Design
-    Success/Futility Criteria \> Interims tabs are now visible having
-    not been required for non-adaptive designs.
-
-    ![Defining Groups.](../EDTTE/media/image16.png){#fig-fig16}
-
-- Groups:
-
-  - Groups can be added and deleted (clicking ‘Delete’ deletes the
-    currently selected group).
-
-  - Groups can be named and it is possible to specify whether there is a
-    ‘cap’ on the number of subjects that can be recruited into that
-    group, if so then the maximum ‘Group size’ must be specified.
-
-  - If any groups do not have an individual group cap, then an overall
-    cap (max sample size) must be specified. If all groups have a cap it
-    is still possible to specify an overall cap (which to have any
-    meaning, must be less than the sum of the individual group caps).
-
-## Group Info {#sec-groups}
-
-On this tab values to define the analysis for each group are specified.
-
-In a trial to show superiority, for each group the Target Clinically
-Significant Difference can be set. Optionally the parameters for a phase
-3 may be specified to allow the predictive probability of subsequent
-success in such a phase 3 trial to be used as decision criteria.
-
-- With a time-to-event endpoint the Clinically Significant Difference is
-  in terms of Target Hazard Ratio Difference – that is a difference from
-  1 in the ratio of the hazard rate in the treatment arm and the hazard
-  rate in the control arm. Separate differences can be set for
-  determining success and futility, and separate differences can be set
-  for each group and for the across groups analysis. Their use in
-  practice is specified on the “Design \> Stopping Criteria” and “Design
-  \> Evaluation Criteria” tabs.
-
-- The phase 3 success criteria are:
-
-  - Phase 3 total number of subjects per arm
-
-  - The required one-sided alpha
-
-  - Whether the phase 3 is to use a test for superiority or
-    non-inferiority (set independently from whether the ED trial is for
-    superiority or non-inferiority)
-
-  - A super-superiority margin / non-inferiority margin (depending on
-    whether the phase 3 trial is for superiority or non-inferiority),
-    this margin is independent from any margins specified for the ED
-    trial.
-
-- Given these criteria FACTS calculates the predicted probability of
-  success in the subsequent phase 3, given the estimate of the hazard
-  ratio integrated over the uncertainty in that estimate. The
-  conventional expected power of the specified phase 3 is calculated for
-  the treatment effect in each MCMC sample and then averaged. The
-  resulting predicted probability of success in phase 3 can then be used
-  in the stopping criteria and final evaluation criteria.
-
-![The Group Info sub-tab.](../EDTTE/media/image17.png){#fig-fig17}
-
-Separate ‘Target Hazard Ratio Differences’ can be set for success and
-for futility, specifying the THRD for success and THRD for futility. We
-use the terms Target Hazard Rate Difference here as it makes it clearer
-that the value to be entered should be positive. Elsewhere (in column
-headings for instance) the more conventional term CSD may be used.
-
-- If used to decide to stop a group for success or judge whether the
-  group was successful in the final evaluation, the criteria will test
-  whether $PR(1 - HR > CSHRD\ for\ success) > Success\ threshold\ $.
-
-  That is, whether the posterior probability that the hazard ratio is
-  less than one by more than the target hazard ratio difference is
-  greater than a specified threshold (which is set on the Design tabs).
-
-- If used to decide to stop a group for futility or judge whether the
-  group was futile in the final evaluation, the criteria will test
-  whether $\Pr(1 - HR > CSHRD\ for\ futility) < Futility\ threshold$
-
-  That is, whether he posterior probability that the hazard ratio is
-  less than one by more than the target hazard ratio difference for
-  futility is less than a specified threshold (which is set on the
-  Design tabs).
-
-- If the endpoint is such that an event means subject improvement, then
-  the comparison is reversed (the treatment difference becomes
-  $HR - 1$ and if the trial is non-inferiority then the test for
-  “being greater than the CSD” is replaced with testing for “being less
-  than the NIM” (Non-Inferiority Margin). Thus the meaning of the user
-  specified Difference or Margin is interpreted taking into account both
-  whether a response means ‘better’ or ‘worse’ and whether the trial aim
-  is ‘superiority’ or ‘non-inferiority’. The result is that for normal
-  usage the value entered will be +ve, as the following diagrams should
-  make clear:
-  
-  ![](../EDCont/media/image94.png){#fig-fig94}
-
-Note that in Superiority trials the required THRD for success will be
-greater than or equal to the THRD for futility, whereas in the
-Non-Inferiority trials the required NIM for futility will be greater
-than or equal to the NIM for success.
-
-### Notes on setting Target Hazard Ratio Differences
-
-Target Hazard Ratio Differences (THRD) are also referred to as
-Clinically Significant Differences (CSD). A “standard” hypothesis test
-for demonstrating superiority to control uses a CSD of 0. Testing with a
-non-zero CSD is different, and the implications need to be carefully
-understood.
-
-The first mistake to avoid is setting the target hazard ratio difference
-for success too large. The decisions for success are in terms of the
-estimated posterior probability that the difference of the hazard ratio
-from 1 is greater than the target. If the CSD is set to what might be
-the treatment difference in the “alternate hypothesis” of a standard
-hypothesis test, we could only expect on average to have a posterior
-probability that the treatment difference is greater than the CSD of
-50%.
-
-To achieve posterior probabilities of \> 50%, the observed difference
-must be greater than the target difference. To achieve the desired power
-by lowering the required posterior probability would be a mistake, as
-posterior probability thresholds of \< 50% have the undesirable
-characteristic that the criteria can be met in circumstances where it
-can be seen that if further data was gathered consistent with what had
-been seen already, it would lead the threshold no longer being met. The
-posterior distribution would shrink so that there was no longer
-sufficient of the tail above the CSD.
-
-It is better therefore to use a target hazard ratio difference for
-success that, should the treatment have the value that it is hoped to
-achieve, we would expect to see some \>50% probability of being greater
-than it. Thus rather than using what might be termed ‘the target value’
-for the THRDS, it is better to use ‘the minimum acceptable value’.
-
-The same target difference can be used to decide futility, requiring a
-\<\< 50% confidence that the difference of the hazard ratio from 1 is
-greater than the target difference. However, particularly if there are
-other endpoints not being explored in the simulation, or other
-properties of the treatment (such as convenience, compliance, cost,
-tolerability etc.) that might justify continued development even if it
-is not an outright winner on the primary endpoint, it may be that a
-lower target hazard ration difference needs to be set as the threshold
-for determining futility – for example sufficient to demonstrate that
-development even on the basis of non-inferiority on the primary endpoint
-is likely to fail. Hence FACTS allows separate CSDs to be set for
-assessing success and futility.
-
-### Non-inferiority
-
-In a trial to show non-inferiority, the tab is the same except that
-‘Target Hazard Ratio Differences’ are now ‘Margin deltas’ to be set.
-
-![Group Info tab, in a non-inferiority design.](../EDTTE/media/image18.png){#fig-fig18}
-
-## Visits
-
-If events are observed at any time that they occur during follow up,
-then there is no need to specify a visit schedule, the length of follow
-up will be as it has been specified on the Study \> Study Info tab
-(above), leave the “Events Are Only Observed at Visits” check
-box unchecked:
-
-![Events Observed When They Occur.](../EDTTE/media/image19.png){#fig-fig19}
-
-If observation of event is to be only at visits, the visit schedule
-needs to be specified. There is an additional observation at the end of
-follow-up. Visits can be specified one at a time, by entering the
-required week value for the visit and then clicking ‘Add’, or by
-specifying a regularly spaced sequence: select ‘Auto-Generate’, enter
-the number of visits, the week of the first visit and the number of
-weeks between each visit and then click ‘Generate’.
-
-Individual visits can be deleted by selecting them in the list and
-clicking ‘Delete’. The default visit names can be edited by clicking the
-visit name and typing. The week and the index cannot be changed. Should
-it be necessary to change the week of a visit, the incorrect visit must
-be deleted and a new one with the correct week number added.
-
-![Observation of Events Restricted to Visits.](../EDTTE/media/image20.png){#fig-fig20}
-
-## Variants
-
-On this tab the user can specify that a number of design variants should
-be created. Currently the only design feature that can be changed is the
-sample size (maximum number of subjects).
-
-If “multiple variants” is checked then the user can specify that
-simulations setups should be created for each simulation scenario with
-versions of the design with a different maximum number of subjects.
-
-The user enters the number of variants they wish to create. Then in the
-resulting table, enter different maximum subjects for each group that
-has had a cap specified on the Study \> Study Info tab and maximum
-“Total Subjects” for each variant. On the simulations tab FACTS will
-then create a copy of all the scenarios to run with each variant.
-
-In FACTS Enrichment Designs, as well as trial Success and Failure rates,
-a major Operating Characteristic that we often wish to estimate is the
-ability of the design (if the trial is successful) to select the ‘right’
-groups, depending of course on the scenario being simulated. To enable
-FACTS to report this the user must specify on the Virtual Subject
-Response \> Explicitly Defined \> Group Response profiles which of the
-groups “Should succeed”, that is, it would constitute a ‘correct
-selection’ by the design in that scenario.
-
-![The Variants tab, specifying 3 variants.](../EDTTE/media/image21.png){#fig-fig21}
+# The Simulation Results Columns
+
+## Highlights
+
+These are the columns displayed on the simulations tab after simulations
+are completed, the can also be displayed in the separate “Highlights”
+results window.
+
+| Column Title | Number of columns | Description |
+|------|----|-------------------|
+| Select | 1 | Not an output column, this column contains check box to allow the user to select which scenario to simulate. The ‘Select All’ button causes them all to be checked. |
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario. It is constructed from the names of all the profiles that have been combined to create the scenario. |
+| Random Number Seed | 1 | Base random number seed used to perform the simulations. |
+| Num Sims | 1 | The number of simulations that were run to produce the displayed results. |
+| Mean Subj. | 1 | This is the mean (over the simulations) of the number of subjects recruited in this scenario. |
+| Ppn Success Criteria Met (Final): \<group\> | One per Group | The proportion of simulations that each groups success criteria have been after final evaluation – for early stopping this means that the Phase 3 and/or CSD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied. |
+| Ppn Study Success (Final) | 1 | The proportion of simulations where the study was a success after final evaluation. |
+| Ppn Futility Criteria Met (Final): \<group\> | One per Group | The proportion of simulations that each groups futility criteria have been met after final evaluation – for early stopping this means that the Phase 3 and/or CSD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied |
+| Ppn Study Futile (Final) | 1 | The proportion of simulations where the study was futile after final evaluation. |
+| Ppn Overall Success | 1 | This is the proportion of simulations that stopped for success, either early success or late success (as defined below). |
+| Ppn Early Success | 1 | This is the proportion of simulations that stopped early for success (and did not regress to futility in the final analysis – though they might have regressed to ‘inconclusive’). |
+| Ppn Late Success | 1 | This is the proportion of simulations that did not stop early but were successful in the final analysis. |
+| Ppn Overall Futility | 1 | This is the proportion of simulations that stopped for futility, either early futility or late futility (as defined below). |
+| Ppn Late Futility | 1 | This is the proportion of simulations that did not stop early but were futile in the final analysis. |
+| Ppn Early Futility | 1 | This is the proportion of simulations that stopped early for futility (and did not regress to success in the final analysis – though they might have regressed to ‘inconclusive’). |
+| Ppn Succ -\> Fut Flip Flop | 1 | This is the proportion of simulations that stopped early for success but regressed to futility in the final analysis. |
+| Ppn Fut -\> Succ Flip Flop | 1 | This is the proportion of simulations that stopped early for futility but regressed to success in the final analysis. |
+| Ppn Inconclusive | 1 | This is the proportion of simulations that did not stop early and were neither successful nor futile in the final analysis. |
+| Mean Accrual Duration | 1 | This is the mean (over the simulations) of the duration of the accrual period, from the start of the trial to last patient first visit |
+| Ppn Correct Groups | 1 | The proportion of simulations that met the success criteria and selected groups marked as “should succeed” on the Virtual Subject Response \> Explicitly Defined \> Dose Response tab. For each simulation the fraction of the total number of groups flagged as “Should succeed” is used. |
+| Ppn Incorrect Groups | 1 | The proportion of simulations that met the success criteria and selected the arms **not** marked as “should succeed” on the Virtual Subject Response \> Explicitly Defined \> Dose Response tab. For each simulation the fraction of the total number of groups **not** flagged as “Should succeed” is used |
+| Version | 1 | This the version number of the FACTS GUI that was used to create the parameters that were passed to the design engine that ran the simulations. |
+
+## Allocation, Observed
+
+| Column Title | Number of columns | Description |
+|------|----|-------------------|
+| Scenario | 1 | This column gives the name of the scenario. It is constructed from the names of all the profiles that have been combined to create the scenario. |
+| Mean Subj. | 1 | This is the mean (over the simulations) of the number of subjects recruited in this scenario. |
+| SD Subj. | 1 | This is the standard deviation across the simulations of the number of subjects recruited. |
+| Num Subj 80% | 1 | This is the eightieth percentile across the simulations of the number of subjects recruited into the trial. |
+| Mean Alloc.: \<Group\>, \<Arm\> | One for each arm in each group | This is the mean (over the simulations) of the number of subjects recruited into each arm in this scenario. |
+| Mean Accrual Duration | 1 | This is the mean (over the simulations) of the duration of the accrual period, from the start of the trial to last patient first visit |
+| Mean Events \<group\>, \<segment\>, \<arm\> | One per group \* segments \* arms | The mean (over the simulations) of the number of events observed in each arm in each hazard model time segment in each group. |
+| Mean Events Across groups, \<segement\>, \<arm\> | One per segments \* arms | The mean (over the simulations) of the number of events observed in each arm in each hazard model time segment. |
+| Mean Exposure \<group\>, \<segment\>, \<arm\> | One per group \* segments \* arms | The mean (over the simulations) of total exposure time in each arm in each hazard model time segment in each group. |
+| Mean Exposure Across groups, \<segment\>, \<arm\> | One per segments \* arms | The mean (over the simulations) of total exposure time in each arm in each hazard model time segment. |
+
+## Response
+
+| Column Title | Number of columns | Description |
+|------|----|-------------------|
+| Scenario | 1 | This column gives the name of the scenario. It is constructed from the names of all the profiles that have been combined to create the scenario. |
+| Mean Trt.: \<Group\> | One per group | This is the mean (over the simulations) of the hazard ratio on the treatment arms for each group. |
+| Mean Trt.: Across groups | 1 | This is the mean (over the simulations) of the average treatment hazard ratio across the groups. |
+| SD Trt : \<Group\> | One per group | This is the standard deviation (over the simulations) of the estimate of the treatment hazard ratio in each group. |
+| SD Trt : Across groups | 1 | This is the standard deviation (over the simulations) of the average of the estimates of the treatment hazard ratio across the groups. |
+| True Mean Trt Resp: \<Group\> | One per group | True mean treatment response for the scenario |
+| Mean Mu_theta | 1 | This is the mean (over the simulations) of the estimate of the mean of hierarchical distribution of the log hazard ratios of the treatment arms in the groups. |
+| SD Mu_theta | 1 | This is the standard deviation (across the simulations) of the estimate of the mean of the hierarchical distribution of the log hazard ratios in the groups. |
+| Mean Tau_theta | 1 | This is the mean (over the simulations) of the estimate of the standard deviation of the hierarchical distribution of the log hazard ratios each group. |
+| SD Tau_theta | 1 | This is the standard deviation (across the simulations) of the estimate of the standard deviation of the hierarchical distribution of the log hazard ratios in each group. |
+| Alpha: \<segment\> | One per segment | This is the mean (over the simulations) of the estimate of the alpha parameter to the gamma distribution for the hierarchical model over the control event rates in each hazard model time segment. |
+| SD Alpha: \<segment\> | One per segment | This is the standard deviation (over the simulations) of the estimate of the alpha parameter to the gamma distribution for the hierarchical model over the control event rates in each hazard model time segment. |
+| Beta: \<segment\> | One per segment | This is the mean (over the simulations) of the estimate of the beta parameter to the gamma distribution for the hierarchical model over the control event rates in each hazard model time segment. |
+| SD Beta: \<segment\> | One per segment | This is the standard deviation (over the simulations) of the estimate of the beta parameter to the gamma distribution for the hierarchical model over the control event rates in each hazard model time segment. |
+| Mean Lambda: \<group\> \<segment\> | One per group \* segments | This is the mean (over the simulations) of the estimate of the control event rate in each group over each hazard model time segment. |
+| True Lambda: \<group\> \<segment\> | One per group \* segments | This is the true mean control event rate for each group and each hazard time segment |
+
+## Probabilities
+
+| Column Title | Number of columns | Description |
+|------|----|-------------------|
+| Scenario | 1 | This column gives the name of the scenario. It is constructed from the names of all the profiles that have been combined to create the scenario. |
+| Prob. Phase III Success: \<Group\> | One per group | This is the average (over the simulations) of the probability of success in phase 3 for the study treatment in each group. |
+| Prob. Phase III Success: Across groups | 1 | This is the average (over the simulations) of the probability of success in phase 3 for the across groups effect. |
+| Prob. CSHRD (Success): \<Group\> | One per group | This is the average (over the simulations) of the probability of the hazard ratio being better than the CSHRD for that group for success. |
+| Prob. CSHRD (Success): Across groups | 1 | This is the average (over the simulations) of the probability of the across group hazard ratio being better than the across group CSHRD for success. |
+| Prob. CSHRD (Futility): \<Group\> | One per group | This is the average (over the simulations) of the probability of the hazard ratio being better than the CSHRD for that group for futility. |
+| Prob. CSHRD (Futility): Across groups | 1 | This is the average (over the simulations) of the probability of the across group hazard ratio being better than the across group CSHRD for futility. |
+
+## Stopping Rules
+
+| Column Title | Number of columns | Description |
+|------|----|-------------------|
+| Scenario | 1 | This column gives the name of the scenario. It is constructed from the names of all the profiles that have been combined to create the scenario. |
+| Ppn. CSHRD (Success) Met: \<Group\> | One per group | This is the proportion of simulations where each group met the CSHRD success criteria. |
+| Ppn. CSHRD (Success) Met: Across groups | 1 | This is the proportion of simulations where the across groups analysis met the CSHRD success criteria. |
+| Ppn. CSHRD (Futility) met: \<Group\> | One per group | This is the proportion of simulations where each group met the CSHRD futility criteria. |
+| Ppn. CSHRD (Futility) Met: Across groups | 1 | This is the proportion of simulations where across group analysis met the CSHRD futility criteria. |
+| Ppn. P3 (Futility) Met: \<Group\> | One per group | This is the proportion of simulations where each group met the probability of success in Phase 3 futility criteria. |
+| Ppn. P3 (Futility) Met: Across groups | 1 | This is the proportion of simulations where across group analysis met the probability of success in Phase 3 futility criteria. |
+| Ppn. P3 (Success) Met: \<Group\> | One per group | This is the proportion of simulations where each group met the probability of success in Phase 3 success criteria. |
+| Ppn. P3 (Success) Met: Across groups | 1 | This is the proportion of simulations where across group analysis met the probability of success in Phase 3 success criteria. |
+| Ppn CSD Success Met: \<Group\> | One per group | This is the proportion of simulations where each group met the CSD success criteria before the final analysis. |
+| Ppn Combined Success: \<Group\> | One per group | This is the proportion of simulations where each group met both the CSD success criteria and the probability of success in Phase 3 success criteria before the final analysis. |
+| Ppn Combined Success: Across groups | 1 | This is the proportion of simulations where the across groups analysis met both the CSD success criteria and the probability of success in Phase 3 success criteria before the final analysis. |
+| Ppn Combined Futility: \<Group\> | One per group | This is the proportion of simulations where each group met both the CSD futility criteria and the probability of success in Phase 3 futility criteria before the final analysis. |
+| Ppn Combined Futility: Across groups | 1 | This is the proportion of simulations where the across group analysis met both the CSD futility criteria and the probability of success in Phase 3 futility criteria before the final analysis. |
+| Ppn Success Criteria Met: \<Group\> | One per group | This is the proportion of simulations where each groups success criteria have been met before the final evaluation, this means that the Phase 3 and/or CSD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied. |
+| Ppn Study Success | 1 | This is the proportion of simulations where the across groups success criteria has been met before the final evaluation, this means that the Phase 3 and/or CSD criteria, and the minimum number of subjects to stop were all satisfied. |
+| Ppn Futility Criteria Met: \<Group\> | One per group | This is the proportion of simulations where the each groups futility criteria have been met before the final evaluation, this means that the Phase 3 and/or CSD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied. |
+| Ppn Study Futile | 1 | This is the proportion of simulations in which the study futility criteria were met |
+
+## Evaluation Rules
+
+| Column Title | Number of columns | Description |
+|------|----|-------------------|
+| Scenario | 1 | This column gives the name of the scenario. It is constructed from the names of all the profiles that have been combined to create the scenario. |
+| Ppn CSD Futility (Final): \<Group\> | One per group | This is the proportion of simulations where each group met the CSD futility criteria at the final analysis. |
+| Ppn CSD Futility (Final): Across Groups | 1 | This is the proportion of simulations where the across groups analysis met the CSD futility criteria at the final analysis. |
+| Ppn P3 Futility (Final): \<Group\> | One per group | This is the proportion of simulations where each group met the probability of success in Phase 3 futility criteria at the final analysis. |
+| Ppn P3 Futility (Final): Across Groups | 1 | This is the proportion of simulations where across group analysis met the probability of success in Phase 3 futility criteria at the final analysis. |
+| Ppn CSD Success (Final): \<Group\> | One per group | This is the proportion of simulations where each group met the CSD success criteria at the final analysis. |
+| Ppn CSD Success (Final): Across Groups | 1 | This is the proportion of simulations where the across groups analysis met the CSD success criteria at the final analysis. |
+| Ppn P3 Success (Final): \<Group\> | One per group | This is the proportion of simulations where each group met the probability of success in Phase 3 success criteria at the final analysis. |
+| Ppn P3 Success (Final): Across Groups | 1 | This is the proportion of simulations where across group analysis met the probability of success in Phase 3 success criteria at the final analysis. |
+| Ppn Combined Futility (Final): \<Group\> | One per group | This is the proportion of simulations where each group met both the CSD futility criteria and the probability of success in Phase 3 futility criteria at the final analysis. |
+| Ppn Combined Futility (Final): Across groups | 1 | This is the proportion of simulations where the across group analysis met both the CSD futility criteria and the probability of success in Phase 3 futility criteria at the final analysis. |
+| Ppn Combined Success (Final): \<Group\> | One per group | This is the proportion of simulations where each group met both the CSD success criteria and the probability of success in Phase 3 success criteria at the final analysis. |
+| Ppn Combined Success (Final): Across groups | 1 | This is the proportion of simulations where the across groups analysis met both the CSD success criteria and the probability of success in Phase 3 success criteria at the final analysis. |
+| Ppn Success Criteria Met (Final): \<Group\> | One per group | This is the proportion of simulations where each groups success criteria have been met at the final evaluation, this means that the Phase 3 and/or CSD criteria and any across groups criteria were all satisfied. |
+| Ppn Study Success (Final) | 1 | This is the proportion of simulations where the across groups success criteria has been met at the final evaluation, this means that the Phase 3 and/or CSD criteria were all satisfied. |
+| Ppn Futility Criteria Met (Final): \<Group\> | One per group | This is the proportion of simulations where the each groups futility criteria have been met at the final evaluation, this means that the Phase 3 and/or CSD criteria, and any across groups criteria were all satisfied. |
+| Ppn Study Futile (Final) | 1 | This is the proportion of simulations in which the study futility criteria were met at the final evaluation |
+
+## Hierarchical Prior Parameters
+
+| Column Title | Number of columns | Description |
+|------|----|-------------------|
+| Scenario | 1 | This column gives the name of the scenario. It is constructed from the names of all the profiles that have been combined to create the scenario. |
+| Mean BAC Mu: \<Group\> | One per group | This is the mean (over the simulations) of the mean estimate of the mean of the hierarchical distribution of the response on the control arm in the group and the response on the control arms in the specified historical studies. -9999 if BAC not used. |
+| SD BAC Mu: \<Group\> | One per group | This is the standard deviation (over the simulations) of the mean estimate of the mean of the hierarchical distribution of the response on the control arm in the group and the response on the control arms in the specified historical studies. -9999 if BAC not used. |
+| Mean Bac Tau: \<Group\> | One per group | This is the mean (over the simulations) of the mean estimate of the standard deviation of the hierarchical distribution of the response on the control arm in the group and the response on the control arms in the specified historical studies. -9999 if BAC not used. |
+| SD Bac Tau: \<Group\> | One per group | This is the standard deviation (over the simulations) of the mean estimate of the standard deviation of the hierarchical distribution of the response on the control arm in the group and the response on the control arms in the specified historical studies. -9999 if BAC not used. |
+
+## Simulation Results
+
+This is a display of the contents of the simulations.csv files, with
+windows available via the right click menu that show various relevant
+column groupings similar to the summary results.
+
+## Frequentist Results
+
+| Column Title | Number of columns | Description |
+|------|----|-------------------|
+| Scenario | 1 | This column gives the name of the scenario. It is constructed from the names of all the profiles that have been combined to create the scenario. |
+| Ppn Signif (Grp) | 1 | This is the proportion of simulations where the difference in response between groups was significant |
+| Mean Overall Trt Effect | 1 | This is the mean (over the simulations) of the frequentist estimate of the overall treatment effect |
+| SE Mean Overall Trt Effect | 1 | This is the Standard Error (over the simulations) of the frequentist estimate of the overall treatment effect |
+| Mean Trt Effect in Grp: \<Group\> | One per group | This is the mean (over the simulations) of the frequentist estimate of the treatment effect within each group. |
+| SE Trt Effect in Grp: \<Group\> | One per group | This is the SD (over the simulations) of the frequentist estimate of the treatment effect within each group. |
+| Ppn Signif (Trt) | 1 | This is the proportion of the simulations where the overall difference between treatment and control was significant |
+| Ppn Signif (Grp x Trt) | 1 | This is the proportion of the simulations where the treatment x group interaction term was significant. |
+| Mean Trt Effect: \<Group\> | One per group | This is the mean (over the simulations) of the frequentist estimate of the treatment effect within each group. |
+| SD Trt Effect: \<Group\> | One per group | This is the SD (over the simulations) of the frequentist estimate of the treatment effect within each group. |
+| Cox PPn Signif: \<Group\> | One per group | This is the proportion of the simulations where the Cox proportion hazard test between treatment and control in each group was significant. |
+| Log Rank Ppn Signif: \<Group\> | One per group | This is the proportion of the simulations where the Log Rank test between treatment and control in each group was significant |
+
+# Output Files
+
+FACTS stores the results of simulations as ‘.csv’ files under a Results
+folder. For each row in the simulations table, there is a folder named
+by the profiles that make up the scenario, which contains the
+corresponding ‘.csv’ files. Right-clicking on the row displays a context
+menu which includes the option to open explore in the corresponding
+folder.
+
+![](../EDTTE/media/image84.png){#fig-fig84tte}
+
+
+These files can be opened using Microsoft Excel, but versions of Excel
+before 2007 are restricted to 256 columns, which is too few to view some
+files in their entirety. The ‘Calc’ application in ‘OpenOffice’ will
+show all the columns (and will open two files that have the same name at
+the same time!). Because Excel takes out a file lock on any file it has
+open, while a file is open in Excel it cannot be deleted or modified by
+another application. The most common cause for an error to be reported
+when simulating trials in FACTS is because the user has one of the
+previous results files is still open in Excel.
+
+In the scenario directory there are the following types of results file:
+
+**Summary.csv** Contains a single row of data that summarizes the
+simulation results. This is the source of the shown on the simulations
+tab.
+
+**Summary_freq.csv** Contains a single row of data that that summarizes
+the frequentist analysis of the simulations.
+
+**Simulations.csv** Contains one row per simulation describing the final
+state of each simulation for every trial simulated.
+
+**Simulations_freq.csv** Contains one row per simulation describing the
+frequentist analysis of the final state of each simulation for every
+trial simulated.
+
+**MCMCNNNNN.csv** Contains one row per MCMC sample, where NNNNN is the
+number of the simulation. By default this file is written out only for
+the first simulation, but this can be changed vai the “MCMC Setting”
+button on the simulaitons tab.
+
+**PatientsNNNNN.csv** Contains one row per patient in simulation, where
+NNNNN is the number of the simulation. By default this file is written
+out only for the first simulation, but this can be changed via the
+simulations tab.
+
+**WeeksNNNNN.csv** Contains one row for each interim during a simulation
+where NNN is the number of the simulation. By default this file is
+written only for the first 100 simulations, but this can be changed via
+the advanced button on the simulation tab. The values in the last row of
+the “weeks” file will be the same as the final values for that
+simulation in the simulations file.
+
+**Weeks_freqNNNNN.csv** Contains one row for each interim during a
+simulation where NNN is the number of the simulation. By default this
+file is written only for the first simulation, but this can be changed
+via the advanced button on the simulation tab.
+
+## Contents of summary.csv
+
+| Column Title | Number of columns | Description |
+|------|----|-------------------|
+| \# Project | 1 | The name of the “.facts” file in the FACTS GUI that was used to generate the simulations. |
+| Scenario | 1 | The name of the scenario – this is the various profile names that make up the scenario, concatenated together. |
+| Timestamp | 1 | The date and time when the simulations started. |
+| Version | 1 | The version number of the FACTS GUI that ran the simulations. |
+| Nsim | 1 | The number of simulation runs. |
+| No. Subj | 1 | The mean, over the simulations, of the total number of subjects recruited in the trial. |
+| SE Subj. | 1 | The standard error of the total number of subjects recruited into the trials. |
+| 80-ile | 1 | The 80<sup>th</sup> percentile, over the simulations, of the total number of subjects recruited in the trial. |
+| Mean Alloc \<group\> \<arm\> | 2\*G | The mean number of subjects recruited into each arm in each group. If a control arm is not included the column is still present, with value ‘0’. |
+| Mean Trt Resp \<group\> | G | The mean of the estimates of hazard ratio on the study treatment arm in each group. |
+| Mean Trt Effect (Overall) | 1 | The mean of the estimate of the across groups treatment hazard ratio. |
+| SE Trt Resp \<group\> | G | The standard error, over the simulations, of the estimate of hazard ratio on the study treatment arm in each group. |
+| SE Trt Effect (Overall) | 1 | The standard error, over the simulations, of the estimate of the across groups treatment hazard ratio. |
+| True Mean Trt Resp \<Group\> | G | True mean treatment response for the scenario |
+| Mean Pr Ph3 Success \<group\> | G | The mean, over the simulations, of the mean probability of success in phase 3 of the study treatment in each group. |
+| Mean Pr Ph3 Success 99 | 1 | The mean, across the simulations, of the mean probability of success in phase 3 of the across groups treatment difference. |
+| Mean Pr CSD (Success) \<group\> | G | The mean, over the simulations, of the mean probability of the study treatment arm hazard ratio being better than the CSHRD for success in each group. |
+| Mean Pr CSD (Success) 99 | 1 | The mean, over the simulations, of the mean probability of the across groups hazard ratio being better than the CSHRD for success. |
+| Mean Pr CSD (Futility) \<group\> | G | The mean, over the simulations, of the mean probability of the study treatment arm hazard ratio being better than the CSHRD for futility in each group. |
+| Mean Pr CSD (Futility) 99 | 1 | The mean, over the simulations, of the mean probability of the across groups hazard ratio being better than the CSHRD for futility. |
+| Ppn CSD Futility \<group\> | G | The proportion of simulations in which the estimate of the response on the study treatment arm met its CSHRD futility criterion in each group. |
+| Ppn CSD Futility 99 | 1 | The proportion of simulations in which the across group treatment difference met its CSHRD futility criterion. |
+| Ppn Ph3 Futility \<group\> | G | The proportion of simulations in which the predicted probability of success in phase 3 of the response on the study treatment arm met its futility criterion in each group. |
+| Ppn Ph3 Futility 99 | 1 | The proportion of simulations in which the across group treatment difference met its probability of success in phase 3 futility criterion. |
+| Ppn CSD Success \<group\> | G | The proportion of simulations in which the estimate of the response on the study treatment arm met its CSHRD success criterion in each group. |
+| Ppn CSD Success 99 | 1 | The proportion of simulations in which the across group treatment difference met its CSHRD success criterion. |
+| Ppn Ph3 Success \<group\> | G | The proportion of simulations in which the predicted probability of success in phase 3 of the response on the study treatment arm met its success criterion in each group. |
+| Ppn Ph3 Success 99 | 1 | The proportion of simulations in which the across group treatment difference met its probability of success in phase 3 success criterion. |
+| Ppn Combined Futility \<group\> | G | The proportion of simulations where each group met both the CSHRD futility criteria and the probability of success in Phase 3 futility criteria. |
+| Ppn Combined Futility 99 | 1 | The proportion of simulations where the across groups treatment effect met both the CSHRD futility criteria and the probability of success in Phase 3 futility criteria. |
+| Ppn Combined Success \<group\> | G | The proportion of simulations that each group met both the CSHRD success criteria and the probability of success in Phase 3 success criteria. |
+| Ppn Combined Success 99 | 1 | The proportion of simulations where the across groups treatment effect met both the CSHRD success criteria and the probability of success in Phase 3 success criteria. |
+| Ppn Success Criteria Met \<group\> | G | The proportion of simulations where each groups success criteria have been met either for early stopping or final evaluation – for early stopping this means that the Phase 3 and/or CSHRD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied. |
+| Ppn Study Success | 1 | The proportion of simulations where the study was a success (whether stopping early or reaching full accrual). |
+| Ppn Futility Criteria Met \<group\> | G | The proportion of simulations where each groups futility criteria have been met either for early stopping or final evaluation – for early stopping this means that the Phase 3 and/or CSHRD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied |
+| Ppn Study Futile | 1 | The proportion of simulations where the study was futile (whether stopping early or reaching full accrual). |
+| Ppn CSD Futility (Final) \<group\> | G | The proportion of simulations in which the estimate after all the data has been collected of the response on the study treatment arm met its CSHRD futility criterion in each group. |
+| Ppn CSD Futility (Final) 99 | 1 | The proportion of simulations in which after all the data has been collected the across group treatment difference met its CSHRD futility criterion. |
+| Ppn Ph3 (Final) Futility \<group\> | G | The proportion of simulations in which the predicted probability after all the data has been collected of success in phase 3 of the response on the study treatment arm met its futility criterion in each group. |
+| Ppn Ph3 Futility (Final) 99 | 1 | The proportion of simulations in which after all the data has been collected the across group treatment difference met its probability of success in phase 3 futility criterion. |
+| Ppn CSD Success (Final) \<group\> | G | The proportion of simulations in which the estimate after all the data has been collected of the response on the study treatment arm met its CSHRD success criterion in each group. |
+| Ppn CSD Success (Final) 99 | 1 | The proportion of simulations in which after all the data has been collected the across group treatment difference met its CSHRD success criterion. |
+| Ppn Ph3 Success (Final) \<group\> | G | The proportion of simulations in which the predicted probability after all the data has been collected of success in phase 3 of the response on the study treatment arm met its success criterion in each group. |
+| Ppn Ph3 Success (Final) 99 | 1 | The proportion of simulations in which after all the data has been collected the across group treatment difference met its probability of success in phase 3 success criterion. |
+| Ppn Combined Futility (Final) \<group\> | G | The proportion of simulations where each group after all the data has been collected met both the CSHRD futility criteria and the probability of success in Phase 3 futility criteria. |
+| Ppn Combined Futility (Final) 99 | 1 | The proportion of simulations where the across groups treatment effect after all the data has been collected met both the CSHRD futility criteria and the probability of success in Phase 3 futility criteria. |
+| Ppn Combined Success (Final) \<group\> | G | The proportion of simulations where after all the data has been collected each group met both the CSHRD success criteria and the probability of success in Phase 3 success criteria. |
+| Ppn Combined Success (Final) 99 | 1 | The proportion of simulations where after all the data has been collected the across groups treatment effect met both the CSHRD success criteria and the probability of success in Phase 3 success criteria. |
+| Ppn Success Criteria Met (Final) \<group\> | G | The proportion of simulations where after all the data has been collected each groups success criteria have been met either for early stopping or final evaluation – for early stopping this means that the Phase 3 and/or CSHRD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied. |
+| Ppn Study Success (Final) | 1 | The proportion of simulations where after all the data has been collected the study was a success (whether stopping early or reaching full accrual). |
+| Ppn Futility Criteria Met (Final) \<group\> | G | The proportion of simulations where after all the data has been collected each groups futility criteria have been met either for early stopping or final evaluation – for early stopping this means that the Phase 3 and/or CSHRD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied |
+| Ppn Study Futile (Final) | 1 | The proportion of simulations where after all the data has been collected the study was futile (whether stopping early or reaching full accrual). |
+| Ppn Outcome 1 | 1 | The proportion of simulations that stopped early for success. |
+| Ppn Outcome 2 | 1 | The proportion of simulations that reached full accrual and declared success on final evaluation. |
+| Ppn Outcome 3 | 1 | The proportion of simulations that reached full accrual and declared futility on final evaluation. |
+| Ppn Outcome 4 | 1 | The proportion of simulations that stopped early for futility |
+| Ppn Outcome 5 | 1 | The proportion of simulations that stopped early for success but were deemed futile on final evaluation. |
+| Ppn Outcome 6 | 1 | The proportion of simulations that stopped early for futility but were deemed successful on final evaluation. |
+| Ppn Outcome 7 | 1 | The proportion of simulations that reached full accrual and were inconclusive. |
+| Mean Study Accrual Stop Week | 1 | The mean study duration of accrual – from start of accrual to last patient first visit. |
+| Mean Mu Theta | 1 | The mean, over the simulations, of the estimate of the mean of hierarchical distribution of the mean log hazard ratio in each group. |
+| SE Mu Theta | 1 | The standard error, over the simulations, of the estimate of the mean of the hierarchical distribution of the mean log hazard ratio in each group. |
+| Mean Tau Theta | 1 | The mean, over the simulations, of the estimate of the standard deviation of the hierarchical distribution of the mean log hazard ratio in each group. |
+| SE Tau Theta | 1 | The standard error, across the simulations, of the estimate of the standard deviation of the hierarchical distribution of the log hazard ratio in each group. |
+| Mean Alpha \<segment\> | S | This is the mean (over the simulations) of the estimate of the alpha parameter to the gamma distribution for the hierarchical model over the control event rates in each hazard model time segment. |
+| SE Alpha \<segment\> | S | This is the standard deviation (over the simulations) of the estimate of the alpha parameter to the gamma distribution for the hierarchical model over the control event rates in each hazard model time segment. |
+| Mean Beta \<segment\> | S | This is the mean (over the simulations) of the estimate of the beta parameter to the gamma distribution for the hierarchical model over the control event rates in each hazard model time segment. |
+| SE Beta \<segment\> | S | This is the standard deviation (over the simulations) of the estimate of the beta parameter to the gamma distribution for the hierarchical model over the control event rates in each hazard model time segment. |
+| Mean BAC Mu \<group\> | G | The mean, over the simulations, of the posterior mean of the Bayesian Augmented Control hierarchical distribution of the log hazard ratios of the historical studies for each group. |
+| SE BAC Mu \<group\> | G | The standard error, over the simulations, of the posterior mean of the Bayesian Augmented Control hierarchical distribution of the log hazard ratios of the historical studies for each group. |
+| Mean BAC Tau \<group\> | G | The mean, over the simulations, of the posterior standard deviation of the Bayesian Augmented Control hierarchical distribution of the log hazard ratios of the historical studies for each group. |
+| SE BAC Tau \<group\> | G | The standard error, over the simulations, of the posterior standard deviation of the Bayesian Augmented Control hierarchical distribution of the log hazard ratios of the historical studies for each group. |
+| Lambda \<group\> \<segment\> | G \* S | The mean, over the simulations, of the estimate of the event rate on the control arm in each group in each time segment of the hazard model. |
+| True Lambda \<group\> \<segment\> | G \* S | The true mean event rate on the control arm in each group in each time segment of the Control Hazard VSR profile. |
+| Mean Events \<group\> \<segment\> \<arm\> | G \* S \* A | The mean, over the simulations, of the number of events on each arm in each group in each time segment of the hazard model. |
+| Mean Events 99 \<segment\> \<arm\> | S \* A | The mean, over the simulations, of the number of events on each arm across all the groups in each time segment of the hazard model. |
+| Mean Exposure \<group\> \<segment\> \<arm\> | G \* S \*A | The mean, over the simulations, of the subject weeks exposure time on each arm in each group in each time segment of the hazard model. |
+| Mean Exposure 99 \<segment\> \<arm\> | S \* A | The mean, over the simulations, of the subject weeks exposure time on each arm across all groups in each time segment of the hazard model |
+
+## Contents of Summary_freq.csv
+
+| Column Title | Number of columns | Description |
+|------|----|-------------------|
+| Ppn Significant (Grp) | 1 | The proportion of simulations with a significant group effect. |
+| Mean Overall Trt Effect | 1 | This is the mean (over the simulations) of the frequentist estimate of the overall treatment effect |
+| SE Overal Trt Effect | 1 | This is the Standard Error (over the simulations) of the frequentist estimate of the overall treatment effect |
+| Mean Trt Effect in Grp \<group\> | G | The mean, over the simulations, of the estimate of the mean treatment effect in each group from the fit of an overall Cox model that includes a Group X Treatment interaction. |
+| SE Trt Effect in Grp \<group\> | G | The standard error, over the simulations, of the estimate of the mean treatment effect in each group from the fit of an overall Cox model that includes a Group X Treatment interaction. |
+| Ppn Significant (Trt) | 1 | The proportion of simulations in which the treatment effect was significant. |
+| Ppn Significnat Str. LogRank | 1 | The proportion of simulations significant by the stratified log rank test |
+| pSignificant (GrpxTrt) | 1 | The proportion of simulations with a significant group and treatment effect. |
+| Mean Trt Effect \<group\> | G | The mean treatment effect per group. |
+| SE Trt Effect \<group\> | G | The standard error of the treatment effect per group |
+| Cox ppn significant | G | The proportion of simulations with significant effect by Cox proportional hazards |
+| LogRank Significant \<group\> | G | The proportion of simulations with significant effect by the Log Rank test |
+
+## Contents of simulations.csv and weeksNNNNN.csv
+
+Most of the columns are common to the two file types, but the weeks file
+does not contain columns for the ‘final’ values of the evaluation
+criteria.
+
+| Column Title                              | Number of columns | In simulations file | In weeks file | Description |
+|------------------|-----------|-----------|----------|-------------------------|
+| #Sim                                      | 1                 | ✔                   |               | Simulation number |
+| # Weeks (Duration)                        | 1                 | ✔                   |               | The week of final analysis – the total duration of the simulation. |
+| #Week                                     | 1                 |                     | ✔             | Week |
+| No.Subj                                   | 1                 | ✔                   | ✔             | The number of subjects recruited in the simulation. |
+| Alloc \<group\> <arm>                        | 2 * G             | ✔                   | ✔             | The number of subjects allocated to each arm in each group. |
+| Mean Trt Resp (HR) \<group\>                 | G                 | ✔                   | ✔             | The estimated hazard ratio of the study treatment in the group. |
+| Trt Effect (HR) (Overall)                  | 1                 | ✔                   | ✔             | The estimated mean hazard ratio across the groups. |
+| SD Mean Trt Resp \<group\>                   | G                 | ✔                   | ✔             | The standard deviation of the estimate of the hazard ratio of the study treatment in the group. |
+| SD Trt Effect (Overall)                    | 1                 | ✔                   | ✔             | The standard deviation of the estimate of the hazard ratio difference across the groups. |
+| Mu Theta                                  | 1                 | ✔                   | ✔             | The mean of the hierarchical distribution of the hazard ratios over all the groups. |
+| Tau Theta                                 | 1                 | ✔                   | ✔             | The standard deviation of the hierarchical distribution of the hazard ratios over all the groups. |
+| Lambda \<group\> <segment>                   | S * G             | ✔                   | ✔             | The estimate of the control event rate in each group in each time segment of the hazard model |
+| Alpha <segment>                           | S                 | ✔                   | ✔             | The estimate of the alpha parameter of the hierarchical gamma distribution of the control event rates across the groups, in each time segment of the hazard model |
+| Beta <segment>                            | S                 | ✔                   | ✔             | The estimate of the alpha parameter of the hierarchical gamma distribution of the control event rates across the groups, in each time segment of the hazard model. |
+| True Lambda \<group\> <segment>              | G * S             | ✔                   | ✔             | The true control even rate in each group in each time segment of the Hazard Rate VSR profile |
+| Pr Ph3 Success \<group\>                     | G                 | ✔                   | ✔             | The probability of success in phase 3 of the study treatment for each group. |
+| Pr Ph3 Success 99                          | 1                 | ✔                   | ✔             | The probability of success in phase 3 of the across groups treatment difference. |
+| Pr CSD (Success) \<group\>                   | G                 | ✔                   | ✔             | The probability of being better than control by the success CSHRD (or as good as control by the success NIHRM) of the study treatment for each group. |
+| Pr CSD (Success) 99                        | 1                 | ✔                   | ✔             | The probability of being better than control by the success CSHRD (or as good as control by the NIHRM) of the across groups treatment difference. |
+| Pr CSD (Futility) \<group\>                  | G                 | ✔                   | ✔             | The probability of being better than control by the futility CSHRD (or as good as control by the futility NIHRM) of the study treatment for each group. |
+| Pr CSD (Futility) 99                       | 1                 | ✔                   | ✔             | The probability of being better than control by the futility CSHRD (or as good as control by the futility NIHRM) of the across groups treatment difference. |
+| CSD Futility \<group\>                       | G                 | ✔                   | ✔             | A flag: 1 = the posterior probability of being better than control by the futility CSHRD was below the threshold for early stopping for futility for each group, 0 = the posterior probability was above the threshold. |
+| CSD Futility 99                            | 1                 | ✔                   | ✔             | A flag: 1 = the posterior probability of being better than control by the futility CSHRD was below the threshold for early stopping for futility for the across groups analysis, 0 = the posterior probability was above the threshold. |
+| Ph3 Futility \<group\>                       | G                 | ✔                   | ✔             | A flag: 1 = the posterior probability of successful in a subsequent phase 3 trial was below the threshold for early stopping for futility for each group, 0 = the posterior probability was above the threshold. |
+| Ph3 Futility 99                            | 1                 | ✔                   | ✔             | A flag: 1 = the posterior probability of successful in a subsequent phase 3 trial was below the threshold for early stopping for futility in the across groups analysis, 0 = the posterior probability was above the threshold. |
+| CSD Success \<group\>                        | G                 | ✔                   | ✔             | A flag: 1 = the posterior probability of being better than control by the success CSHRD was above the threshold for early stopping for success for each group, 0 = the posterior probability was below the threshold. |
+| CSD Success 99                             | 1                 | ✔                   | ✔             | A flag: 1 = the posterior probability of being better than control by the success CSHRD was above the threshold for early stopping for success in the across groups analysis, 0 = the posterior probability was below the threshold. |
+| Ph3 Success \<group\>                        | G                 | ✔                   | ✔             | A flag: 1 = the posterior probability of successful in a subsequent phase 3 trial was above the threshold for early stopping for success for each group, 0 = the posterior probability was below the threshold. |
+| Ph3 Success 99                             | 1                 | ✔                   | ✔             | A flag: 1 = the posterior probability of successful in a subsequent phase 3 trial was above the threshold for early stopping for success in the across groups analysis, 0 = the posterior probability was below the threshold. |
+| Combined Futility \<group\>                  | G                 | ✔                   | ✔             | A flag: 1 = the required CSHRD, success in phase 3 and minimum sample size criteria are all met for early stopping for futility for each group, 0 = they are not all met. Whether the across group stopping condition is also met if required is not included in this flag. |
+| Combined Futility 99                       | 1                 | ✔                   | ✔             | A flag: 1 = the required CSHRD, success in phase 3 and minimum sample size criteria are all met for early stopping for futility in the across groups analysis, 0 = they are not all met. |
+| Combined Success \<group\>                   | G                 | ✔                   | ✔             | A flag: 1 = the required CSHRD, success in phase 3 and minimum sample size criteria are all met for early stopping for success for each group, 0 = they are not all met. Whether the across group stopping condition is also met if required is not included in this flag. |
+| Combined Success 99                        | 1                 | ✔                   | ✔             | A flag: 1 = the required CSHRD, success in phase 3 and minimum sample size criteria are all met for early stopping for success in the across groups analysis, 0 = they are not all met. |
+| Success Criteria Met \<group\>               | G                 | ✔                   | ✔             | A flag: 1 = the group’s success criteria were met for the final evaluation, 0 = otherwise. |
+| Success Criteria Met (Final) 99            | 1                 | ✔                   | ✔             | A flag: 1 = the Across Group success criteria were met for the final evaluation, 0 = otherwise |
+| Futility Criteria Met \<group\>              | G                 | ✔                   | ✔             | A flag: 1 = the group’s futility criteria were met for the final evaluation, 0 = otherwise. |
+| Futility Criteria Met (Final) 99           | 1                 | ✔                   | ✔             | A flag: 1 = the Across Group futility criteria were met for the final evaluation, 0 = otherwise |
+| Futile Study                               | 1                 | ✔                   | ✔             | A flag: 1 = the study was futile overall, 0 = otherwise. |
+| Successful Study                           | 1                 | ✔                   | ✔             | A flag: 1 = the study was successful overall, 0 = otherwise. |
+| Outcome                                    | 1                 | ✔                   | ✔             | A flag categorizing final study outcome: 1. Early success; 2. Late success; 3. Late futility; 4. Early futility; 5. Success to futility flip-flop; 6. Futility to success flip-flop; 7. Inconclusive |
+| Group Outcome \<group\>                      | G                 | ✔                   | ✔             | A flag categorizing final group outcome, using the same codes as for the study outcome (above) |
+| Group Stop Type \<group\>                    | G                 | ✔                   | ✔             | A flag categorizing the group outcome: 1. Success; 2. Group Cap; 3. Futility; 4. Other (group stopped because study stopped early); 5. Study cap |
+| Group Stop Week \<group\>                    | G                 | ✔                   | ✔             | The week the group stop decision was taken. There may be further follow-up time before the group analysis was completed. |
+| Study Stop Week                            | 1                 | ✔                   | ✔             | The week the study stop decision was taken. There may be further follow-up time before the study analysis was completed. |
+| BAC Mu \<group\>                             | G                 | ✔                   | ✔             | The estimated value of the mean of the Bayesian Augmented Control hierarchical distribution for each group. |
+| SD BAC Mu \<group\>                          | G                 | ✔                   | ✔             | The standard deviation of the estimate of the mean of the Bayesian Augmented Control hierarchical distribution for each group. |
+| BAC Tau \<group\>                            | G                 | ✔                   | ✔             | The estimated value of the standard deviation of the Bayesian Augmented Control hierarchical distribution for each group. |
+| SD BAC Tau \<group\>                         | G                 | ✔                   | ✔             | The standard deviation of the estimate of the standard deviation of the Bayesian Augmented Control hierarchical distribution for each group. |
+| Events \<group\> <segment> <arm>             | G * S * A         | ✔                   | ✔             | The number of events observed in each group, in each time segment of the hazard model, on each arm. |
+| Events 99 <segment> <arm>                  | S * A             | ✔                   | ✔             | The overall events observed over all the groups, in each time segment of the hazard model, on each arm. |
+| Exposure \<group\> <segment> <arm>           | G * S * A         | ✔                   | ✔             | The number of exposure in subject weeks in each group, in each time segment of the hazard model, on each arm. |
+| Exposure 99 <segment> <arm>                | S * A             | ✔                   | ✔             | The overall exposure in subject weeks over all the groups, in each time segment of the hazard model, on each arm. |
+
+
+## Contents of Simulations_freq.csv
+
+| Column Title | Number of columns | Description |
+|------|----|-------------------|
+| \# Trial | 1 | The number of the simulation. |
+| Overall Group p-value | 1 | The overall group effect p-vale |
+| Overall Trt Estimate | 1 | The overall treatment effect estimate (cox) |
+| Overall Trt SD | 1 | The SD of the overall treatment effect (Cox) |
+| Est Trt Effect \[exp(coeff)\] in Group \<group\> | G | The estimate of the group treatment effect from fitting the full Cox model with Group x Treatment interaction |
+| SD Trt Effect \[exp(SD)\] in Group \<group\> | G | The SD of the estimate of the group treatment effect from fitting the full Cox model with Group x Treatment interaction |
+| Overall Trt p-val | 1 | The overall treatment effect p-value (Cox) |
+| Str. LogRank Statistic | 1 | Stratified LogRank statistic |
+| Str. LogRank p-val | 1 | Stratified LogRank p-value |
+| Group x Trt p-value | 1 | Group \* Trt interaction p-value |
+| Est Trt Effect \<group\> | G | Estimated Trt Effect (Cox) or Exponential rate if control not included |
+| SD Trt Effect \<group\> | G | The SD of the estimated treatment effect |
+| Cox or Exponential MLE p-value \<group\> | G | Trt Effect (Cox) or rate if control not included – p-value |
+| LogRank p-value \<group\> | G | p-value based on log-rank test statistic |
+
+## Contents of PatientsNNNNN.csv
+
+| Column Title | Number of columns | Description |
+|------|----|-------------------|
+| \#Subject | 1 | The subject id number, starting at 1. |
+| Region | 1 | The accrual region index – where this subject was recruited. |
+| Date | 1 | The date, in weeks from the start of the trial, of the subject’s baseline visit and randomization. |
+| Group | 1 | The index number (1, …) of the group the subject belongs to. |
+| Arm | 1 | A flag indicating the arm the subject was randomized to: 0 = Control, 1 = Study Treatment. |
+| Duration | 1 | The time of observation of the subject (in weeks) |
+| Outcome | 1 | Whether an event was observed (1) or not (0) |
+
+## Exporting the Results
+
+Using the menu item File -\> Export Project, the .facts file and all the
+results files can be saved as a single zip file.
+
+## Contents of MCMCNNNNN.csv
+
+The MCMC file if requested for output by the user, contains all the MCMC
+samples for the fitted parameters in the design. There is one row per
+sample (including the burnin) and the samples from all the analyses in
+the simulation are included. The first two columns are the analysis
+index and the sample (within analysis) index. The remaining columns are
+the parameters whose sample values are being reported, the number and
+constituents of these columns are highly variable depending on design of
+the statistical analysis.
+
+| Column Title | Number of columns | Description |
+|------|----|-------------------|
+| Analysis | 1 | The index of the analysis (interim) in the simulation |
+| Sample | 1 | The index of the sample within the analysis |
+| HR | G | The estimate of the Hazard Ratio in each group |
+| Overall HR | 1 | The estimate of the overall Hazard Ratio |
+| Lambda \<group\> \<seg\> | G \* S | The estimate of the event rate in the control arm in each of the Hazard Model observation segments in each group |
+| Overall Lambda \<group\> | G | The estimate over all the observation segments of the event rate in the control arm in each group. |
+
+

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Study Tab - Time-to-Event Endpoint</title>
+<title>Simulation Tab - Time-to-Event Endpoint</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -100,35 +100,6 @@ background: #125740;
   gtag('config', 'G-WLMVE7GR4S');
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../../../../styles.css">
 </head>
@@ -197,8 +168,8 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Version 7.1</li><li class="breadcrumb-item"><a href="../../../../../documentation/v71/userguides/core/index.html">User Guides</a></li><li class="breadcrumb-item"><a href="../../../../../documentation/v71/userguides/enrichment/index.html">Enrichment Designs</a></li><li class="breadcrumb-item"><a href="../../../../../documentation/v71/userguides/enrichment/simulation/index.html">Simulation</a></li><li class="breadcrumb-item"><a href="../../../../../documentation/v71/userguides/enrichment/simulation/tte.html">Time-to-Event</a></li></ol></nav>
-      <h1 class="title">Study Tab - Time-to-Event Endpoint</h1>
-            <p class="subtitle lead">Description of the Study tab and its sub-tabs in the Enrichment TTE Engine.</p>
+      <h1 class="title">Simulation Tab - Time-to-Event Endpoint</h1>
+            <p class="subtitle lead">Description of the Time-to-Event Endpoint specific elements of the Simulation Tab.</p>
                       </div>
   </div>
     
@@ -545,6 +516,12 @@ window.Quarto = {
  <span class="menu-text">Execution</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/enrichment/design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Design</span></a>
+  </div>
+</li>
           <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../../../../documentation/v71/userguides/enrichment/simulation/index.html" class="sidebar-item-text sidebar-link">
@@ -786,16 +763,27 @@ window.Quarto = {
     <h2 id="toc-title">Table of Contents</h2>
    
   <ul>
-  <li><a href="#the-study-tab" id="toc-the-study-tab" class="nav-link active" data-scroll-target="#the-study-tab">The Study tab</a>
+  <li><a href="#the-simulation-results-columns" id="toc-the-simulation-results-columns" class="nav-link active" data-scroll-target="#the-simulation-results-columns">The Simulation Results Columns</a>
   <ul>
-  <li><a href="#study-info" id="toc-study-info" class="nav-link" data-scroll-target="#study-info">Study Info</a></li>
-  <li><a href="#sec-groups" id="toc-sec-groups" class="nav-link" data-scroll-target="#sec-groups">Group Info</a>
-  <ul class="collapse">
-  <li><a href="#notes-on-setting-target-hazard-ratio-differences" id="toc-notes-on-setting-target-hazard-ratio-differences" class="nav-link" data-scroll-target="#notes-on-setting-target-hazard-ratio-differences">Notes on setting Target Hazard Ratio Differences</a></li>
-  <li><a href="#non-inferiority" id="toc-non-inferiority" class="nav-link" data-scroll-target="#non-inferiority">Non-inferiority</a></li>
+  <li><a href="#highlights" id="toc-highlights" class="nav-link" data-scroll-target="#highlights">Highlights</a></li>
+  <li><a href="#allocation-observed" id="toc-allocation-observed" class="nav-link" data-scroll-target="#allocation-observed">Allocation, Observed</a></li>
+  <li><a href="#response" id="toc-response" class="nav-link" data-scroll-target="#response">Response</a></li>
+  <li><a href="#probabilities" id="toc-probabilities" class="nav-link" data-scroll-target="#probabilities">Probabilities</a></li>
+  <li><a href="#stopping-rules" id="toc-stopping-rules" class="nav-link" data-scroll-target="#stopping-rules">Stopping Rules</a></li>
+  <li><a href="#evaluation-rules" id="toc-evaluation-rules" class="nav-link" data-scroll-target="#evaluation-rules">Evaluation Rules</a></li>
+  <li><a href="#hierarchical-prior-parameters" id="toc-hierarchical-prior-parameters" class="nav-link" data-scroll-target="#hierarchical-prior-parameters">Hierarchical Prior Parameters</a></li>
+  <li><a href="#simulation-results" id="toc-simulation-results" class="nav-link" data-scroll-target="#simulation-results">Simulation Results</a></li>
+  <li><a href="#frequentist-results" id="toc-frequentist-results" class="nav-link" data-scroll-target="#frequentist-results">Frequentist Results</a></li>
   </ul></li>
-  <li><a href="#visits" id="toc-visits" class="nav-link" data-scroll-target="#visits">Visits</a></li>
-  <li><a href="#variants" id="toc-variants" class="nav-link" data-scroll-target="#variants">Variants</a></li>
+  <li><a href="#output-files" id="toc-output-files" class="nav-link" data-scroll-target="#output-files">Output Files</a>
+  <ul>
+  <li><a href="#contents-of-summary.csv" id="toc-contents-of-summary.csv" class="nav-link" data-scroll-target="#contents-of-summary.csv">Contents of summary.csv</a></li>
+  <li><a href="#contents-of-summary_freq.csv" id="toc-contents-of-summary_freq.csv" class="nav-link" data-scroll-target="#contents-of-summary_freq.csv">Contents of Summary_freq.csv</a></li>
+  <li><a href="#contents-of-simulations.csv-and-weeksnnnnn.csv" id="toc-contents-of-simulations.csv-and-weeksnnnnn.csv" class="nav-link" data-scroll-target="#contents-of-simulations.csv-and-weeksnnnnn.csv">Contents of simulations.csv and weeksNNNNN.csv</a></li>
+  <li><a href="#contents-of-simulations_freq.csv" id="toc-contents-of-simulations_freq.csv" class="nav-link" data-scroll-target="#contents-of-simulations_freq.csv">Contents of Simulations_freq.csv</a></li>
+  <li><a href="#contents-of-patientsnnnnn.csv" id="toc-contents-of-patientsnnnnn.csv" class="nav-link" data-scroll-target="#contents-of-patientsnnnnn.csv">Contents of PatientsNNNNN.csv</a></li>
+  <li><a href="#exporting-the-results" id="toc-exporting-the-results" class="nav-link" data-scroll-target="#exporting-the-results">Exporting the Results</a></li>
+  <li><a href="#contents-of-mcmcnnnnn.csv" id="toc-contents-of-mcmcnnnnn.csv" class="nav-link" data-scroll-target="#contents-of-mcmcnnnnn.csv">Contents of MCMCNNNNN.csv</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -807,179 +795,1801 @@ window.Quarto = {
 
 
 
-<section id="the-study-tab" class="level1">
-<h1>The Study tab</h1>
-<section id="study-info" class="level2">
-<h2 class="anchored" data-anchor-id="study-info">Study Info</h2>
-<p>The Study Info sub-tab provides parameters for specifying:</p>
-<ul>
-<li><p>Study Information, selecting: whether there are control arms in each group as well as a treatment arm or only a treatment arm, whether an event represents patient improvement or deterioration, whether the trial is attempting to show the treatment’s superiority over the control, or its non-inferiority to it, and the length of time subjects are to be followed.</p></li>
-<li><p>Design Options, selecting: whether the design is adaptive and there are to be interims where the trial can be modified or not, and whether the design will look at subject’s longitudinal results at interim visits before their final visit.</p></li>
-<li><p>Groups, defining the different groups to be studied.</p></li>
-</ul>
-<div id="fig-fig15" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-fig15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../EDTTE/media/image15.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: The Study Info sub-tab.
-</figcaption>
-</figure>
-</div>
-<ul>
-<li><p>In ‘Study Information’ the following is specified:</p>
-<ul>
-<li><p>Whether there are control arms in each group as well as a treatment arm or only a treatment arm (the analysis is to “Compare to an objective control”).</p>
-<ul>
-<li><p>If control arms are included the analysis will be by the comparison of the results of the subjects on the treatment arm with that of the subjects on the control arm.</p></li>
-<li><p>If an objective control is used, there will be no control arm in the trial and the analysis will be by the comparison of the results of the subjects on the treatment arm with an assumed ‘historic’ or ‘objective’ control response.</p></li>
-</ul></li>
-<li><p>Whether an event is subject improvement or subject deterioration. This determines the direction of the comparisons performed when making decisions about the trial’s success or futility.</p>
-<ul>
-<li><p>If an event indicates success (subject improvement), then success criteria will estimate the probability that the hazard ratio of the treatment arm to the control arm (or of a specified event rate based on historical data) is greater than 1 by some Target Hazard Ratio Difference for Success (THRDS) (also called the Clinically Significant Difference (CSD)). Futility criteria will estimate the probability that the hazard ratio of the treatment arm to the control is greater than 1 by more than the Target Hazard Ratio Difference for Futility (THRDF).</p></li>
-<li><p>If an event indicates failure (subject condition worsening), then success criteria will estimate the probability that the hazard ratio of the treatment arm to the control arm (or of a specified event rate based on historical data) to be less than 1 by some Target Hazard Ratio Difference for Success (TRDS). Futility criteria will estimate the probability that the hazard ratio of the treatment arm to the control is less than 1, by the Target Hazard Ratio Difference for Futility (THRDF).</p></li>
-<li><p>See <a href="#sec-groups" class="quarto-xref">Section&nbsp;1.2</a> for more information.</p></li>
-</ul></li>
-<li><p>Whether the aim of the study is to determine superiority or non-inferiority. If non-inferiority is specified, then on other tabs, instead of specifying a clinically significant difference (CSD), a non-inferiority margin is specified. Whereas in a superiority trial the target is to be ‘better’ than control by the specified margin, in a non-inferiority trial the target is to be not worse than control by the specified margin.</p></li>
-<li><p>The limit on subject follow up, this can be either:</p>
-<ul>
-<li><p>The maximum follow-up time, no subject will be followed for longer than this. If the study does not stop early it will stop when every subject recruited has reached their maximum follow-up time or has had an event.</p></li>
-<li><p>The follow-up time after full enrolment. If the study does not stop early then it will stop the specified time after full enrolment or when every subject has had an event.</p></li>
-</ul></li>
-</ul></li>
-<li><p>Note that as a result of being able to specify whether a higher or lower event rate represents improvement, and whether the aim is superiority or non-inferiority, the CSD or the Margin will almost always be a positive value. The user may specify clinically significant differences, the engine will automatically determine which direction is appropriate (e.g.&nbsp;if lower values are subject improvement, the engine will realize a THRD of 0.3 for success corresponds to a hazard ratio of 0.7”)</p></li>
-<li><p>In ‘Design Options’ the following is specified, where the simpler options are taken, this allows the GUI to reduce the number of options presented to the user.</p>
-<ul>
-<li><p>Specify an Adaptive or Non-Adaptive design. If ‘Enable adaptive features’ is selected the ’Design &gt; Interims’ and ’Design Success/Futility Criteria &gt; Interims tabs are now visible having not been required for non-adaptive designs.</p>
-<div id="fig-fig16" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-fig16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../EDTTE/media/image16.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Defining Groups.
-</figcaption>
-</figure>
-</div></li>
-</ul></li>
-<li><p>Groups:</p>
-<ul>
-<li><p>Groups can be added and deleted (clicking ‘Delete’ deletes the currently selected group).</p></li>
-<li><p>Groups can be named and it is possible to specify whether there is a ‘cap’ on the number of subjects that can be recruited into that group, if so then the maximum ‘Group size’ must be specified.</p></li>
-<li><p>If any groups do not have an individual group cap, then an overall cap (max sample size) must be specified. If all groups have a cap it is still possible to specify an overall cap (which to have any meaning, must be less than the sum of the individual group caps).</p></li>
-</ul></li>
-</ul>
+<section id="the-simulation-results-columns" class="level1">
+<h1>The Simulation Results Columns</h1>
+<section id="highlights" class="level2">
+<h2 class="anchored" data-anchor-id="highlights">Highlights</h2>
+<p>These are the columns displayed on the simulations tab after simulations are completed, the can also be displayed in the separate “Highlights” results window.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Select</td>
+<td>1</td>
+<td>Not an output column, this column contains check box to allow the user to select which scenario to simulate. The ‘Select All’ button causes them all to be checked.</td>
+</tr>
+<tr class="even">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="odd">
+<td>Scenario</td>
+<td>1</td>
+<td>This column gives the name of the scenario. It is constructed from the names of all the profiles that have been combined to create the scenario.</td>
+</tr>
+<tr class="even">
+<td>Random Number Seed</td>
+<td>1</td>
+<td>Base random number seed used to perform the simulations.</td>
+</tr>
+<tr class="odd">
+<td>Num Sims</td>
+<td>1</td>
+<td>The number of simulations that were run to produce the displayed results.</td>
+</tr>
+<tr class="even">
+<td>Mean Subj.</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the number of subjects recruited in this scenario.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Success Criteria Met (Final): &lt;group&gt;</td>
+<td>One per Group</td>
+<td>The proportion of simulations that each groups success criteria have been after final evaluation – for early stopping this means that the Phase 3 and/or CSD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied.</td>
+</tr>
+<tr class="even">
+<td>Ppn Study Success (Final)</td>
+<td>1</td>
+<td>The proportion of simulations where the study was a success after final evaluation.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Futility Criteria Met (Final): &lt;group&gt;</td>
+<td>One per Group</td>
+<td>The proportion of simulations that each groups futility criteria have been met after final evaluation – for early stopping this means that the Phase 3 and/or CSD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied</td>
+</tr>
+<tr class="even">
+<td>Ppn Study Futile (Final)</td>
+<td>1</td>
+<td>The proportion of simulations where the study was futile after final evaluation.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Overall Success</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped for success, either early success or late success (as defined below).</td>
+</tr>
+<tr class="even">
+<td>Ppn Early Success</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped early for success (and did not regress to futility in the final analysis – though they might have regressed to ‘inconclusive’).</td>
+</tr>
+<tr class="odd">
+<td>Ppn Late Success</td>
+<td>1</td>
+<td>This is the proportion of simulations that did not stop early but were successful in the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Ppn Overall Futility</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped for futility, either early futility or late futility (as defined below).</td>
+</tr>
+<tr class="odd">
+<td>Ppn Late Futility</td>
+<td>1</td>
+<td>This is the proportion of simulations that did not stop early but were futile in the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Ppn Early Futility</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped early for futility (and did not regress to success in the final analysis – though they might have regressed to ‘inconclusive’).</td>
+</tr>
+<tr class="odd">
+<td>Ppn Succ -&gt; Fut Flip Flop</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped early for success but regressed to futility in the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Ppn Fut -&gt; Succ Flip Flop</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped early for futility but regressed to success in the final analysis.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Inconclusive</td>
+<td>1</td>
+<td>This is the proportion of simulations that did not stop early and were neither successful nor futile in the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Mean Accrual Duration</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the duration of the accrual period, from the start of the trial to last patient first visit</td>
+</tr>
+<tr class="odd">
+<td>Ppn Correct Groups</td>
+<td>1</td>
+<td>The proportion of simulations that met the success criteria and selected groups marked as “should succeed” on the Virtual Subject Response &gt; Explicitly Defined &gt; Dose Response tab. For each simulation the fraction of the total number of groups flagged as “Should succeed” is used.</td>
+</tr>
+<tr class="even">
+<td>Ppn Incorrect Groups</td>
+<td>1</td>
+<td>The proportion of simulations that met the success criteria and selected the arms <strong>not</strong> marked as “should succeed” on the Virtual Subject Response &gt; Explicitly Defined &gt; Dose Response tab. For each simulation the fraction of the total number of groups <strong>not</strong> flagged as “Should succeed” is used</td>
+</tr>
+<tr class="odd">
+<td>Version</td>
+<td>1</td>
+<td>This the version number of the FACTS GUI that was used to create the parameters that were passed to the design engine that ran the simulations.</td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="sec-groups" class="level2">
-<h2 class="anchored" data-anchor-id="sec-groups">Group Info</h2>
-<p>On this tab values to define the analysis for each group are specified.</p>
-<p>In a trial to show superiority, for each group the Target Clinically Significant Difference can be set. Optionally the parameters for a phase 3 may be specified to allow the predictive probability of subsequent success in such a phase 3 trial to be used as decision criteria.</p>
-<ul>
-<li><p>With a time-to-event endpoint the Clinically Significant Difference is in terms of Target Hazard Ratio Difference – that is a difference from 1 in the ratio of the hazard rate in the treatment arm and the hazard rate in the control arm. Separate differences can be set for determining success and futility, and separate differences can be set for each group and for the across groups analysis. Their use in practice is specified on the “Design &gt; Stopping Criteria” and “Design &gt; Evaluation Criteria” tabs.</p></li>
-<li><p>The phase 3 success criteria are:</p>
-<ul>
-<li><p>Phase 3 total number of subjects per arm</p></li>
-<li><p>The required one-sided alpha</p></li>
-<li><p>Whether the phase 3 is to use a test for superiority or non-inferiority (set independently from whether the ED trial is for superiority or non-inferiority)</p></li>
-<li><p>A super-superiority margin / non-inferiority margin (depending on whether the phase 3 trial is for superiority or non-inferiority), this margin is independent from any margins specified for the ED trial.</p></li>
-</ul></li>
-<li><p>Given these criteria FACTS calculates the predicted probability of success in the subsequent phase 3, given the estimate of the hazard ratio integrated over the uncertainty in that estimate. The conventional expected power of the specified phase 3 is calculated for the treatment effect in each MCMC sample and then averaged. The resulting predicted probability of success in phase 3 can then be used in the stopping criteria and final evaluation criteria.</p></li>
-</ul>
-<div id="fig-fig17" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-fig17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../EDTTE/media/image17.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: The Group Info sub-tab.
-</figcaption>
-</figure>
-</div>
-<p>Separate ‘Target Hazard Ratio Differences’ can be set for success and for futility, specifying the THRD for success and THRD for futility. We use the terms Target Hazard Rate Difference here as it makes it clearer that the value to be entered should be positive. Elsewhere (in column headings for instance) the more conventional term CSD may be used.</p>
-<ul>
-<li><p>If used to decide to stop a group for success or judge whether the group was successful in the final evaluation, the criteria will test whether <span class="math inline">\(PR(1 - HR &gt; CSHRD\ for\ success) &gt; Success\ threshold\ \)</span>.</p>
-<p>That is, whether the posterior probability that the hazard ratio is less than one by more than the target hazard ratio difference is greater than a specified threshold (which is set on the Design tabs).</p></li>
-<li><p>If used to decide to stop a group for futility or judge whether the group was futile in the final evaluation, the criteria will test whether <span class="math inline">\(\Pr(1 - HR &gt; CSHRD\ for\ futility) &lt; Futility\ threshold\)</span></p>
-<p>That is, whether he posterior probability that the hazard ratio is less than one by more than the target hazard ratio difference for futility is less than a specified threshold (which is set on the Design tabs).</p></li>
-<li><p>If the endpoint is such that an event means subject improvement, then the comparison is reversed (the treatment difference becomes <span class="math inline">\(HR - 1\)</span> and if the trial is non-inferiority then the test for “being greater than the CSD” is replaced with testing for “being less than the NIM” (Non-Inferiority Margin). Thus the meaning of the user specified Difference or Margin is interpreted taking into account both whether a response means ‘better’ or ‘worse’ and whether the trial aim is ‘superiority’ or ‘non-inferiority’. The result is that for normal usage the value entered will be +ve, as the following diagrams should make clear:</p>
-<div id="fig-fig94" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-fig94-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../EDCont/media/image94.png" id="fig-fig94" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig94-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4
-</figcaption>
-</figure>
-</div></li>
-</ul>
-<p>Note that in Superiority trials the required THRD for success will be greater than or equal to the THRD for futility, whereas in the Non-Inferiority trials the required NIM for futility will be greater than or equal to the NIM for success.</p>
-<section id="notes-on-setting-target-hazard-ratio-differences" class="level3">
-<h3 class="anchored" data-anchor-id="notes-on-setting-target-hazard-ratio-differences">Notes on setting Target Hazard Ratio Differences</h3>
-<p>Target Hazard Ratio Differences (THRD) are also referred to as Clinically Significant Differences (CSD). A “standard” hypothesis test for demonstrating superiority to control uses a CSD of 0. Testing with a non-zero CSD is different, and the implications need to be carefully understood.</p>
-<p>The first mistake to avoid is setting the target hazard ratio difference for success too large. The decisions for success are in terms of the estimated posterior probability that the difference of the hazard ratio from 1 is greater than the target. If the CSD is set to what might be the treatment difference in the “alternate hypothesis” of a standard hypothesis test, we could only expect on average to have a posterior probability that the treatment difference is greater than the CSD of 50%.</p>
-<p>To achieve posterior probabilities of &gt; 50%, the observed difference must be greater than the target difference. To achieve the desired power by lowering the required posterior probability would be a mistake, as posterior probability thresholds of &lt; 50% have the undesirable characteristic that the criteria can be met in circumstances where it can be seen that if further data was gathered consistent with what had been seen already, it would lead the threshold no longer being met. The posterior distribution would shrink so that there was no longer sufficient of the tail above the CSD.</p>
-<p>It is better therefore to use a target hazard ratio difference for success that, should the treatment have the value that it is hoped to achieve, we would expect to see some &gt;50% probability of being greater than it. Thus rather than using what might be termed ‘the target value’ for the THRDS, it is better to use ‘the minimum acceptable value’.</p>
-<p>The same target difference can be used to decide futility, requiring a &lt;&lt; 50% confidence that the difference of the hazard ratio from 1 is greater than the target difference. However, particularly if there are other endpoints not being explored in the simulation, or other properties of the treatment (such as convenience, compliance, cost, tolerability etc.) that might justify continued development even if it is not an outright winner on the primary endpoint, it may be that a lower target hazard ration difference needs to be set as the threshold for determining futility – for example sufficient to demonstrate that development even on the basis of non-inferiority on the primary endpoint is likely to fail. Hence FACTS allows separate CSDs to be set for assessing success and futility.</p>
+<section id="allocation-observed" class="level2">
+<h2 class="anchored" data-anchor-id="allocation-observed">Allocation, Observed</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scenario</td>
+<td>1</td>
+<td>This column gives the name of the scenario. It is constructed from the names of all the profiles that have been combined to create the scenario.</td>
+</tr>
+<tr class="even">
+<td>Mean Subj.</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the number of subjects recruited in this scenario.</td>
+</tr>
+<tr class="odd">
+<td>SD Subj.</td>
+<td>1</td>
+<td>This is the standard deviation across the simulations of the number of subjects recruited.</td>
+</tr>
+<tr class="even">
+<td>Num Subj 80%</td>
+<td>1</td>
+<td>This is the eightieth percentile across the simulations of the number of subjects recruited into the trial.</td>
+</tr>
+<tr class="odd">
+<td>Mean Alloc.: &lt;Group&gt;, &lt;Arm&gt;</td>
+<td>One for each arm in each group</td>
+<td>This is the mean (over the simulations) of the number of subjects recruited into each arm in this scenario.</td>
+</tr>
+<tr class="even">
+<td>Mean Accrual Duration</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the duration of the accrual period, from the start of the trial to last patient first visit</td>
+</tr>
+<tr class="odd">
+<td>Mean Events &lt;group&gt;, &lt;segment&gt;, &lt;arm&gt;</td>
+<td>One per group * segments * arms</td>
+<td>The mean (over the simulations) of the number of events observed in each arm in each hazard model time segment in each group.</td>
+</tr>
+<tr class="even">
+<td>Mean Events Across groups, &lt;segement&gt;, &lt;arm&gt;</td>
+<td>One per segments * arms</td>
+<td>The mean (over the simulations) of the number of events observed in each arm in each hazard model time segment.</td>
+</tr>
+<tr class="odd">
+<td>Mean Exposure &lt;group&gt;, &lt;segment&gt;, &lt;arm&gt;</td>
+<td>One per group * segments * arms</td>
+<td>The mean (over the simulations) of total exposure time in each arm in each hazard model time segment in each group.</td>
+</tr>
+<tr class="even">
+<td>Mean Exposure Across groups, &lt;segment&gt;, &lt;arm&gt;</td>
+<td>One per segments * arms</td>
+<td>The mean (over the simulations) of total exposure time in each arm in each hazard model time segment.</td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="non-inferiority" class="level3">
-<h3 class="anchored" data-anchor-id="non-inferiority">Non-inferiority</h3>
-<p>In a trial to show non-inferiority, the tab is the same except that ‘Target Hazard Ratio Differences’ are now ‘Margin deltas’ to be set.</p>
-<div id="fig-fig18" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-fig18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../EDTTE/media/image18.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5: Group Info tab, in a non-inferiority design.
-</figcaption>
-</figure>
-</div>
+<section id="response" class="level2">
+<h2 class="anchored" data-anchor-id="response">Response</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scenario</td>
+<td>1</td>
+<td>This column gives the name of the scenario. It is constructed from the names of all the profiles that have been combined to create the scenario.</td>
+</tr>
+<tr class="even">
+<td>Mean Trt.: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the mean (over the simulations) of the hazard ratio on the treatment arms for each group.</td>
+</tr>
+<tr class="odd">
+<td>Mean Trt.: Across groups</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the average treatment hazard ratio across the groups.</td>
+</tr>
+<tr class="even">
+<td>SD Trt : &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the standard deviation (over the simulations) of the estimate of the treatment hazard ratio in each group.</td>
+</tr>
+<tr class="odd">
+<td>SD Trt : Across groups</td>
+<td>1</td>
+<td>This is the standard deviation (over the simulations) of the average of the estimates of the treatment hazard ratio across the groups.</td>
+</tr>
+<tr class="even">
+<td>True Mean Trt Resp: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>True mean treatment response for the scenario</td>
+</tr>
+<tr class="odd">
+<td>Mean Mu_theta</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the estimate of the mean of hierarchical distribution of the log hazard ratios of the treatment arms in the groups.</td>
+</tr>
+<tr class="even">
+<td>SD Mu_theta</td>
+<td>1</td>
+<td>This is the standard deviation (across the simulations) of the estimate of the mean of the hierarchical distribution of the log hazard ratios in the groups.</td>
+</tr>
+<tr class="odd">
+<td>Mean Tau_theta</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the estimate of the standard deviation of the hierarchical distribution of the log hazard ratios each group.</td>
+</tr>
+<tr class="even">
+<td>SD Tau_theta</td>
+<td>1</td>
+<td>This is the standard deviation (across the simulations) of the estimate of the standard deviation of the hierarchical distribution of the log hazard ratios in each group.</td>
+</tr>
+<tr class="odd">
+<td>Alpha: &lt;segment&gt;</td>
+<td>One per segment</td>
+<td>This is the mean (over the simulations) of the estimate of the alpha parameter to the gamma distribution for the hierarchical model over the control event rates in each hazard model time segment.</td>
+</tr>
+<tr class="even">
+<td>SD Alpha: &lt;segment&gt;</td>
+<td>One per segment</td>
+<td>This is the standard deviation (over the simulations) of the estimate of the alpha parameter to the gamma distribution for the hierarchical model over the control event rates in each hazard model time segment.</td>
+</tr>
+<tr class="odd">
+<td>Beta: &lt;segment&gt;</td>
+<td>One per segment</td>
+<td>This is the mean (over the simulations) of the estimate of the beta parameter to the gamma distribution for the hierarchical model over the control event rates in each hazard model time segment.</td>
+</tr>
+<tr class="even">
+<td>SD Beta: &lt;segment&gt;</td>
+<td>One per segment</td>
+<td>This is the standard deviation (over the simulations) of the estimate of the beta parameter to the gamma distribution for the hierarchical model over the control event rates in each hazard model time segment.</td>
+</tr>
+<tr class="odd">
+<td>Mean Lambda: &lt;group&gt; &lt;segment&gt;</td>
+<td>One per group * segments</td>
+<td>This is the mean (over the simulations) of the estimate of the control event rate in each group over each hazard model time segment.</td>
+</tr>
+<tr class="even">
+<td>True Lambda: &lt;group&gt; &lt;segment&gt;</td>
+<td>One per group * segments</td>
+<td>This is the true mean control event rate for each group and each hazard time segment</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="probabilities" class="level2">
+<h2 class="anchored" data-anchor-id="probabilities">Probabilities</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scenario</td>
+<td>1</td>
+<td>This column gives the name of the scenario. It is constructed from the names of all the profiles that have been combined to create the scenario.</td>
+</tr>
+<tr class="even">
+<td>Prob. Phase III Success: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the average (over the simulations) of the probability of success in phase 3 for the study treatment in each group.</td>
+</tr>
+<tr class="odd">
+<td>Prob. Phase III Success: Across groups</td>
+<td>1</td>
+<td>This is the average (over the simulations) of the probability of success in phase 3 for the across groups effect.</td>
+</tr>
+<tr class="even">
+<td>Prob. CSHRD (Success): &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the average (over the simulations) of the probability of the hazard ratio being better than the CSHRD for that group for success.</td>
+</tr>
+<tr class="odd">
+<td>Prob. CSHRD (Success): Across groups</td>
+<td>1</td>
+<td>This is the average (over the simulations) of the probability of the across group hazard ratio being better than the across group CSHRD for success.</td>
+</tr>
+<tr class="even">
+<td>Prob. CSHRD (Futility): &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the average (over the simulations) of the probability of the hazard ratio being better than the CSHRD for that group for futility.</td>
+</tr>
+<tr class="odd">
+<td>Prob. CSHRD (Futility): Across groups</td>
+<td>1</td>
+<td>This is the average (over the simulations) of the probability of the across group hazard ratio being better than the across group CSHRD for futility.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="stopping-rules" class="level2">
+<h2 class="anchored" data-anchor-id="stopping-rules">Stopping Rules</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scenario</td>
+<td>1</td>
+<td>This column gives the name of the scenario. It is constructed from the names of all the profiles that have been combined to create the scenario.</td>
+</tr>
+<tr class="even">
+<td>Ppn. CSHRD (Success) Met: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of simulations where each group met the CSHRD success criteria.</td>
+</tr>
+<tr class="odd">
+<td>Ppn. CSHRD (Success) Met: Across groups</td>
+<td>1</td>
+<td>This is the proportion of simulations where the across groups analysis met the CSHRD success criteria.</td>
+</tr>
+<tr class="even">
+<td>Ppn. CSHRD (Futility) met: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of simulations where each group met the CSHRD futility criteria.</td>
+</tr>
+<tr class="odd">
+<td>Ppn. CSHRD (Futility) Met: Across groups</td>
+<td>1</td>
+<td>This is the proportion of simulations where across group analysis met the CSHRD futility criteria.</td>
+</tr>
+<tr class="even">
+<td>Ppn. P3 (Futility) Met: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of simulations where each group met the probability of success in Phase 3 futility criteria.</td>
+</tr>
+<tr class="odd">
+<td>Ppn. P3 (Futility) Met: Across groups</td>
+<td>1</td>
+<td>This is the proportion of simulations where across group analysis met the probability of success in Phase 3 futility criteria.</td>
+</tr>
+<tr class="even">
+<td>Ppn. P3 (Success) Met: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of simulations where each group met the probability of success in Phase 3 success criteria.</td>
+</tr>
+<tr class="odd">
+<td>Ppn. P3 (Success) Met: Across groups</td>
+<td>1</td>
+<td>This is the proportion of simulations where across group analysis met the probability of success in Phase 3 success criteria.</td>
+</tr>
+<tr class="even">
+<td>Ppn CSD Success Met: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of simulations where each group met the CSD success criteria before the final analysis.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Combined Success: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of simulations where each group met both the CSD success criteria and the probability of success in Phase 3 success criteria before the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Ppn Combined Success: Across groups</td>
+<td>1</td>
+<td>This is the proportion of simulations where the across groups analysis met both the CSD success criteria and the probability of success in Phase 3 success criteria before the final analysis.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Combined Futility: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of simulations where each group met both the CSD futility criteria and the probability of success in Phase 3 futility criteria before the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Ppn Combined Futility: Across groups</td>
+<td>1</td>
+<td>This is the proportion of simulations where the across group analysis met both the CSD futility criteria and the probability of success in Phase 3 futility criteria before the final analysis.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Success Criteria Met: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of simulations where each groups success criteria have been met before the final evaluation, this means that the Phase 3 and/or CSD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied.</td>
+</tr>
+<tr class="even">
+<td>Ppn Study Success</td>
+<td>1</td>
+<td>This is the proportion of simulations where the across groups success criteria has been met before the final evaluation, this means that the Phase 3 and/or CSD criteria, and the minimum number of subjects to stop were all satisfied.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Futility Criteria Met: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of simulations where the each groups futility criteria have been met before the final evaluation, this means that the Phase 3 and/or CSD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied.</td>
+</tr>
+<tr class="even">
+<td>Ppn Study Futile</td>
+<td>1</td>
+<td>This is the proportion of simulations in which the study futility criteria were met</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="evaluation-rules" class="level2">
+<h2 class="anchored" data-anchor-id="evaluation-rules">Evaluation Rules</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scenario</td>
+<td>1</td>
+<td>This column gives the name of the scenario. It is constructed from the names of all the profiles that have been combined to create the scenario.</td>
+</tr>
+<tr class="even">
+<td>Ppn CSD Futility (Final): &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of simulations where each group met the CSD futility criteria at the final analysis.</td>
+</tr>
+<tr class="odd">
+<td>Ppn CSD Futility (Final): Across Groups</td>
+<td>1</td>
+<td>This is the proportion of simulations where the across groups analysis met the CSD futility criteria at the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Ppn P3 Futility (Final): &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of simulations where each group met the probability of success in Phase 3 futility criteria at the final analysis.</td>
+</tr>
+<tr class="odd">
+<td>Ppn P3 Futility (Final): Across Groups</td>
+<td>1</td>
+<td>This is the proportion of simulations where across group analysis met the probability of success in Phase 3 futility criteria at the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Ppn CSD Success (Final): &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of simulations where each group met the CSD success criteria at the final analysis.</td>
+</tr>
+<tr class="odd">
+<td>Ppn CSD Success (Final): Across Groups</td>
+<td>1</td>
+<td>This is the proportion of simulations where the across groups analysis met the CSD success criteria at the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Ppn P3 Success (Final): &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of simulations where each group met the probability of success in Phase 3 success criteria at the final analysis.</td>
+</tr>
+<tr class="odd">
+<td>Ppn P3 Success (Final): Across Groups</td>
+<td>1</td>
+<td>This is the proportion of simulations where across group analysis met the probability of success in Phase 3 success criteria at the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Ppn Combined Futility (Final): &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of simulations where each group met both the CSD futility criteria and the probability of success in Phase 3 futility criteria at the final analysis.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Combined Futility (Final): Across groups</td>
+<td>1</td>
+<td>This is the proportion of simulations where the across group analysis met both the CSD futility criteria and the probability of success in Phase 3 futility criteria at the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Ppn Combined Success (Final): &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of simulations where each group met both the CSD success criteria and the probability of success in Phase 3 success criteria at the final analysis.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Combined Success (Final): Across groups</td>
+<td>1</td>
+<td>This is the proportion of simulations where the across groups analysis met both the CSD success criteria and the probability of success in Phase 3 success criteria at the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Ppn Success Criteria Met (Final): &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of simulations where each groups success criteria have been met at the final evaluation, this means that the Phase 3 and/or CSD criteria and any across groups criteria were all satisfied.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Study Success (Final)</td>
+<td>1</td>
+<td>This is the proportion of simulations where the across groups success criteria has been met at the final evaluation, this means that the Phase 3 and/or CSD criteria were all satisfied.</td>
+</tr>
+<tr class="even">
+<td>Ppn Futility Criteria Met (Final): &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of simulations where the each groups futility criteria have been met at the final evaluation, this means that the Phase 3 and/or CSD criteria, and any across groups criteria were all satisfied.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Study Futile (Final)</td>
+<td>1</td>
+<td>This is the proportion of simulations in which the study futility criteria were met at the final evaluation</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="hierarchical-prior-parameters" class="level2">
+<h2 class="anchored" data-anchor-id="hierarchical-prior-parameters">Hierarchical Prior Parameters</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scenario</td>
+<td>1</td>
+<td>This column gives the name of the scenario. It is constructed from the names of all the profiles that have been combined to create the scenario.</td>
+</tr>
+<tr class="even">
+<td>Mean BAC Mu: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the mean (over the simulations) of the mean estimate of the mean of the hierarchical distribution of the response on the control arm in the group and the response on the control arms in the specified historical studies. -9999 if BAC not used.</td>
+</tr>
+<tr class="odd">
+<td>SD BAC Mu: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the standard deviation (over the simulations) of the mean estimate of the mean of the hierarchical distribution of the response on the control arm in the group and the response on the control arms in the specified historical studies. -9999 if BAC not used.</td>
+</tr>
+<tr class="even">
+<td>Mean Bac Tau: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the mean (over the simulations) of the mean estimate of the standard deviation of the hierarchical distribution of the response on the control arm in the group and the response on the control arms in the specified historical studies. -9999 if BAC not used.</td>
+</tr>
+<tr class="odd">
+<td>SD Bac Tau: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the standard deviation (over the simulations) of the mean estimate of the standard deviation of the hierarchical distribution of the response on the control arm in the group and the response on the control arms in the specified historical studies. -9999 if BAC not used.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="simulation-results" class="level2">
+<h2 class="anchored" data-anchor-id="simulation-results">Simulation Results</h2>
+<p>This is a display of the contents of the simulations.csv files, with windows available via the right click menu that show various relevant column groupings similar to the summary results.</p>
+</section>
+<section id="frequentist-results" class="level2">
+<h2 class="anchored" data-anchor-id="frequentist-results">Frequentist Results</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scenario</td>
+<td>1</td>
+<td>This column gives the name of the scenario. It is constructed from the names of all the profiles that have been combined to create the scenario.</td>
+</tr>
+<tr class="even">
+<td>Ppn Signif (Grp)</td>
+<td>1</td>
+<td>This is the proportion of simulations where the difference in response between groups was significant</td>
+</tr>
+<tr class="odd">
+<td>Mean Overall Trt Effect</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the frequentist estimate of the overall treatment effect</td>
+</tr>
+<tr class="even">
+<td>SE Mean Overall Trt Effect</td>
+<td>1</td>
+<td>This is the Standard Error (over the simulations) of the frequentist estimate of the overall treatment effect</td>
+</tr>
+<tr class="odd">
+<td>Mean Trt Effect in Grp: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the mean (over the simulations) of the frequentist estimate of the treatment effect within each group.</td>
+</tr>
+<tr class="even">
+<td>SE Trt Effect in Grp: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the SD (over the simulations) of the frequentist estimate of the treatment effect within each group.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Signif (Trt)</td>
+<td>1</td>
+<td>This is the proportion of the simulations where the overall difference between treatment and control was significant</td>
+</tr>
+<tr class="even">
+<td>Ppn Signif (Grp x Trt)</td>
+<td>1</td>
+<td>This is the proportion of the simulations where the treatment x group interaction term was significant.</td>
+</tr>
+<tr class="odd">
+<td>Mean Trt Effect: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the mean (over the simulations) of the frequentist estimate of the treatment effect within each group.</td>
+</tr>
+<tr class="even">
+<td>SD Trt Effect: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the SD (over the simulations) of the frequentist estimate of the treatment effect within each group.</td>
+</tr>
+<tr class="odd">
+<td>Cox PPn Signif: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of the simulations where the Cox proportion hazard test between treatment and control in each group was significant.</td>
+</tr>
+<tr class="even">
+<td>Log Rank Ppn Signif: &lt;Group&gt;</td>
+<td>One per group</td>
+<td>This is the proportion of the simulations where the Log Rank test between treatment and control in each group was significant</td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
-<section id="visits" class="level2">
-<h2 class="anchored" data-anchor-id="visits">Visits</h2>
-<p>If events are observed at any time that they occur during follow up, then there is no need to specify a visit schedule, the length of follow up will be as it has been specified on the Study &gt; Study Info tab (above), leave the “Events Are Only Observed at Visits” check box unchecked:</p>
-<div id="fig-fig19" class="quarto-float quarto-figure quarto-figure-center anchored">
+<section id="output-files" class="level1">
+<h1>Output Files</h1>
+<p>FACTS stores the results of simulations as ‘.csv’ files under a Results folder. For each row in the simulations table, there is a folder named by the profiles that make up the scenario, which contains the corresponding ‘.csv’ files. Right-clicking on the row displays a context menu which includes the option to open explore in the corresponding folder.</p>
+<div id="fig-fig84tte" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-fig19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../EDTTE/media/image19.png" class="img-fluid figure-img">
+<div aria-describedby="fig-fig84tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image84.png" id="fig-fig84tte" class="img-fluid figure-img">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6: Events Observed When They Occur.
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig84tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1
 </figcaption>
 </figure>
 </div>
-<p>If observation of event is to be only at visits, the visit schedule needs to be specified. There is an additional observation at the end of follow-up. Visits can be specified one at a time, by entering the required week value for the visit and then clicking ‘Add’, or by specifying a regularly spaced sequence: select ‘Auto-Generate’, enter the number of visits, the week of the first visit and the number of weeks between each visit and then click ‘Generate’.</p>
-<p>Individual visits can be deleted by selecting them in the list and clicking ‘Delete’. The default visit names can be edited by clicking the visit name and typing. The week and the index cannot be changed. Should it be necessary to change the week of a visit, the incorrect visit must be deleted and a new one with the correct week number added.</p>
-<div id="fig-fig20" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-fig20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../EDTTE/media/image20.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7: Observation of Events Restricted to Visits.
-</figcaption>
-</figure>
-</div>
+<p>These files can be opened using Microsoft Excel, but versions of Excel before 2007 are restricted to 256 columns, which is too few to view some files in their entirety. The ‘Calc’ application in ‘OpenOffice’ will show all the columns (and will open two files that have the same name at the same time!). Because Excel takes out a file lock on any file it has open, while a file is open in Excel it cannot be deleted or modified by another application. The most common cause for an error to be reported when simulating trials in FACTS is because the user has one of the previous results files is still open in Excel.</p>
+<p>In the scenario directory there are the following types of results file:</p>
+<p><strong>Summary.csv</strong> Contains a single row of data that summarizes the simulation results. This is the source of the shown on the simulations tab.</p>
+<p><strong>Summary_freq.csv</strong> Contains a single row of data that that summarizes the frequentist analysis of the simulations.</p>
+<p><strong>Simulations.csv</strong> Contains one row per simulation describing the final state of each simulation for every trial simulated.</p>
+<p><strong>Simulations_freq.csv</strong> Contains one row per simulation describing the frequentist analysis of the final state of each simulation for every trial simulated.</p>
+<p><strong>MCMCNNNNN.csv</strong> Contains one row per MCMC sample, where NNNNN is the number of the simulation. By default this file is written out only for the first simulation, but this can be changed vai the “MCMC Setting” button on the simulaitons tab.</p>
+<p><strong>PatientsNNNNN.csv</strong> Contains one row per patient in simulation, where NNNNN is the number of the simulation. By default this file is written out only for the first simulation, but this can be changed via the simulations tab.</p>
+<p><strong>WeeksNNNNN.csv</strong> Contains one row for each interim during a simulation where NNN is the number of the simulation. By default this file is written only for the first 100 simulations, but this can be changed via the advanced button on the simulation tab. The values in the last row of the “weeks” file will be the same as the final values for that simulation in the simulations file.</p>
+<p><strong>Weeks_freqNNNNN.csv</strong> Contains one row for each interim during a simulation where NNN is the number of the simulation. By default this file is written only for the first simulation, but this can be changed via the advanced button on the simulation tab.</p>
+<section id="contents-of-summary.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-summary.csv">Contents of summary.csv</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td># Project</td>
+<td>1</td>
+<td>The name of the “.facts” file in the FACTS GUI that was used to generate the simulations.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td>The name of the scenario – this is the various profile names that make up the scenario, concatenated together.</td>
+</tr>
+<tr class="odd">
+<td>Timestamp</td>
+<td>1</td>
+<td>The date and time when the simulations started.</td>
+</tr>
+<tr class="even">
+<td>Version</td>
+<td>1</td>
+<td>The version number of the FACTS GUI that ran the simulations.</td>
+</tr>
+<tr class="odd">
+<td>Nsim</td>
+<td>1</td>
+<td>The number of simulation runs.</td>
+</tr>
+<tr class="even">
+<td>No.&nbsp;Subj</td>
+<td>1</td>
+<td>The mean, over the simulations, of the total number of subjects recruited in the trial.</td>
+</tr>
+<tr class="odd">
+<td>SE Subj.</td>
+<td>1</td>
+<td>The standard error of the total number of subjects recruited into the trials.</td>
+</tr>
+<tr class="even">
+<td>80-ile</td>
+<td>1</td>
+<td>The 80<sup>th</sup> percentile, over the simulations, of the total number of subjects recruited in the trial.</td>
+</tr>
+<tr class="odd">
+<td>Mean Alloc &lt;group&gt; &lt;arm&gt;</td>
+<td>2*G</td>
+<td>The mean number of subjects recruited into each arm in each group. If a control arm is not included the column is still present, with value ‘0’.</td>
+</tr>
+<tr class="even">
+<td>Mean Trt Resp &lt;group&gt;</td>
+<td>G</td>
+<td>The mean of the estimates of hazard ratio on the study treatment arm in each group.</td>
+</tr>
+<tr class="odd">
+<td>Mean Trt Effect (Overall)</td>
+<td>1</td>
+<td>The mean of the estimate of the across groups treatment hazard ratio.</td>
+</tr>
+<tr class="even">
+<td>SE Trt Resp &lt;group&gt;</td>
+<td>G</td>
+<td>The standard error, over the simulations, of the estimate of hazard ratio on the study treatment arm in each group.</td>
+</tr>
+<tr class="odd">
+<td>SE Trt Effect (Overall)</td>
+<td>1</td>
+<td>The standard error, over the simulations, of the estimate of the across groups treatment hazard ratio.</td>
+</tr>
+<tr class="even">
+<td>True Mean Trt Resp &lt;Group&gt;</td>
+<td>G</td>
+<td>True mean treatment response for the scenario</td>
+</tr>
+<tr class="odd">
+<td>Mean Pr Ph3 Success &lt;group&gt;</td>
+<td>G</td>
+<td>The mean, over the simulations, of the mean probability of success in phase 3 of the study treatment in each group.</td>
+</tr>
+<tr class="even">
+<td>Mean Pr Ph3 Success 99</td>
+<td>1</td>
+<td>The mean, across the simulations, of the mean probability of success in phase 3 of the across groups treatment difference.</td>
+</tr>
+<tr class="odd">
+<td>Mean Pr CSD (Success) &lt;group&gt;</td>
+<td>G</td>
+<td>The mean, over the simulations, of the mean probability of the study treatment arm hazard ratio being better than the CSHRD for success in each group.</td>
+</tr>
+<tr class="even">
+<td>Mean Pr CSD (Success) 99</td>
+<td>1</td>
+<td>The mean, over the simulations, of the mean probability of the across groups hazard ratio being better than the CSHRD for success.</td>
+</tr>
+<tr class="odd">
+<td>Mean Pr CSD (Futility) &lt;group&gt;</td>
+<td>G</td>
+<td>The mean, over the simulations, of the mean probability of the study treatment arm hazard ratio being better than the CSHRD for futility in each group.</td>
+</tr>
+<tr class="even">
+<td>Mean Pr CSD (Futility) 99</td>
+<td>1</td>
+<td>The mean, over the simulations, of the mean probability of the across groups hazard ratio being better than the CSHRD for futility.</td>
+</tr>
+<tr class="odd">
+<td>Ppn CSD Futility &lt;group&gt;</td>
+<td>G</td>
+<td>The proportion of simulations in which the estimate of the response on the study treatment arm met its CSHRD futility criterion in each group.</td>
+</tr>
+<tr class="even">
+<td>Ppn CSD Futility 99</td>
+<td>1</td>
+<td>The proportion of simulations in which the across group treatment difference met its CSHRD futility criterion.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Ph3 Futility &lt;group&gt;</td>
+<td>G</td>
+<td>The proportion of simulations in which the predicted probability of success in phase 3 of the response on the study treatment arm met its futility criterion in each group.</td>
+</tr>
+<tr class="even">
+<td>Ppn Ph3 Futility 99</td>
+<td>1</td>
+<td>The proportion of simulations in which the across group treatment difference met its probability of success in phase 3 futility criterion.</td>
+</tr>
+<tr class="odd">
+<td>Ppn CSD Success &lt;group&gt;</td>
+<td>G</td>
+<td>The proportion of simulations in which the estimate of the response on the study treatment arm met its CSHRD success criterion in each group.</td>
+</tr>
+<tr class="even">
+<td>Ppn CSD Success 99</td>
+<td>1</td>
+<td>The proportion of simulations in which the across group treatment difference met its CSHRD success criterion.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Ph3 Success &lt;group&gt;</td>
+<td>G</td>
+<td>The proportion of simulations in which the predicted probability of success in phase 3 of the response on the study treatment arm met its success criterion in each group.</td>
+</tr>
+<tr class="even">
+<td>Ppn Ph3 Success 99</td>
+<td>1</td>
+<td>The proportion of simulations in which the across group treatment difference met its probability of success in phase 3 success criterion.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Combined Futility &lt;group&gt;</td>
+<td>G</td>
+<td>The proportion of simulations where each group met both the CSHRD futility criteria and the probability of success in Phase 3 futility criteria.</td>
+</tr>
+<tr class="even">
+<td>Ppn Combined Futility 99</td>
+<td>1</td>
+<td>The proportion of simulations where the across groups treatment effect met both the CSHRD futility criteria and the probability of success in Phase 3 futility criteria.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Combined Success &lt;group&gt;</td>
+<td>G</td>
+<td>The proportion of simulations that each group met both the CSHRD success criteria and the probability of success in Phase 3 success criteria.</td>
+</tr>
+<tr class="even">
+<td>Ppn Combined Success 99</td>
+<td>1</td>
+<td>The proportion of simulations where the across groups treatment effect met both the CSHRD success criteria and the probability of success in Phase 3 success criteria.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Success Criteria Met &lt;group&gt;</td>
+<td>G</td>
+<td>The proportion of simulations where each groups success criteria have been met either for early stopping or final evaluation – for early stopping this means that the Phase 3 and/or CSHRD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied.</td>
+</tr>
+<tr class="even">
+<td>Ppn Study Success</td>
+<td>1</td>
+<td>The proportion of simulations where the study was a success (whether stopping early or reaching full accrual).</td>
+</tr>
+<tr class="odd">
+<td>Ppn Futility Criteria Met &lt;group&gt;</td>
+<td>G</td>
+<td>The proportion of simulations where each groups futility criteria have been met either for early stopping or final evaluation – for early stopping this means that the Phase 3 and/or CSHRD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied</td>
+</tr>
+<tr class="even">
+<td>Ppn Study Futile</td>
+<td>1</td>
+<td>The proportion of simulations where the study was futile (whether stopping early or reaching full accrual).</td>
+</tr>
+<tr class="odd">
+<td>Ppn CSD Futility (Final) &lt;group&gt;</td>
+<td>G</td>
+<td>The proportion of simulations in which the estimate after all the data has been collected of the response on the study treatment arm met its CSHRD futility criterion in each group.</td>
+</tr>
+<tr class="even">
+<td>Ppn CSD Futility (Final) 99</td>
+<td>1</td>
+<td>The proportion of simulations in which after all the data has been collected the across group treatment difference met its CSHRD futility criterion.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Ph3 (Final) Futility &lt;group&gt;</td>
+<td>G</td>
+<td>The proportion of simulations in which the predicted probability after all the data has been collected of success in phase 3 of the response on the study treatment arm met its futility criterion in each group.</td>
+</tr>
+<tr class="even">
+<td>Ppn Ph3 Futility (Final) 99</td>
+<td>1</td>
+<td>The proportion of simulations in which after all the data has been collected the across group treatment difference met its probability of success in phase 3 futility criterion.</td>
+</tr>
+<tr class="odd">
+<td>Ppn CSD Success (Final) &lt;group&gt;</td>
+<td>G</td>
+<td>The proportion of simulations in which the estimate after all the data has been collected of the response on the study treatment arm met its CSHRD success criterion in each group.</td>
+</tr>
+<tr class="even">
+<td>Ppn CSD Success (Final) 99</td>
+<td>1</td>
+<td>The proportion of simulations in which after all the data has been collected the across group treatment difference met its CSHRD success criterion.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Ph3 Success (Final) &lt;group&gt;</td>
+<td>G</td>
+<td>The proportion of simulations in which the predicted probability after all the data has been collected of success in phase 3 of the response on the study treatment arm met its success criterion in each group.</td>
+</tr>
+<tr class="even">
+<td>Ppn Ph3 Success (Final) 99</td>
+<td>1</td>
+<td>The proportion of simulations in which after all the data has been collected the across group treatment difference met its probability of success in phase 3 success criterion.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Combined Futility (Final) &lt;group&gt;</td>
+<td>G</td>
+<td>The proportion of simulations where each group after all the data has been collected met both the CSHRD futility criteria and the probability of success in Phase 3 futility criteria.</td>
+</tr>
+<tr class="even">
+<td>Ppn Combined Futility (Final) 99</td>
+<td>1</td>
+<td>The proportion of simulations where the across groups treatment effect after all the data has been collected met both the CSHRD futility criteria and the probability of success in Phase 3 futility criteria.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Combined Success (Final) &lt;group&gt;</td>
+<td>G</td>
+<td>The proportion of simulations where after all the data has been collected each group met both the CSHRD success criteria and the probability of success in Phase 3 success criteria.</td>
+</tr>
+<tr class="even">
+<td>Ppn Combined Success (Final) 99</td>
+<td>1</td>
+<td>The proportion of simulations where after all the data has been collected the across groups treatment effect met both the CSHRD success criteria and the probability of success in Phase 3 success criteria.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Success Criteria Met (Final) &lt;group&gt;</td>
+<td>G</td>
+<td>The proportion of simulations where after all the data has been collected each groups success criteria have been met either for early stopping or final evaluation – for early stopping this means that the Phase 3 and/or CSHRD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied.</td>
+</tr>
+<tr class="even">
+<td>Ppn Study Success (Final)</td>
+<td>1</td>
+<td>The proportion of simulations where after all the data has been collected the study was a success (whether stopping early or reaching full accrual).</td>
+</tr>
+<tr class="odd">
+<td>Ppn Futility Criteria Met (Final) &lt;group&gt;</td>
+<td>G</td>
+<td>The proportion of simulations where after all the data has been collected each groups futility criteria have been met either for early stopping or final evaluation – for early stopping this means that the Phase 3 and/or CSHRD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied</td>
+</tr>
+<tr class="even">
+<td>Ppn Study Futile (Final)</td>
+<td>1</td>
+<td>The proportion of simulations where after all the data has been collected the study was futile (whether stopping early or reaching full accrual).</td>
+</tr>
+<tr class="odd">
+<td>Ppn Outcome 1</td>
+<td>1</td>
+<td>The proportion of simulations that stopped early for success.</td>
+</tr>
+<tr class="even">
+<td>Ppn Outcome 2</td>
+<td>1</td>
+<td>The proportion of simulations that reached full accrual and declared success on final evaluation.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Outcome 3</td>
+<td>1</td>
+<td>The proportion of simulations that reached full accrual and declared futility on final evaluation.</td>
+</tr>
+<tr class="even">
+<td>Ppn Outcome 4</td>
+<td>1</td>
+<td>The proportion of simulations that stopped early for futility</td>
+</tr>
+<tr class="odd">
+<td>Ppn Outcome 5</td>
+<td>1</td>
+<td>The proportion of simulations that stopped early for success but were deemed futile on final evaluation.</td>
+</tr>
+<tr class="even">
+<td>Ppn Outcome 6</td>
+<td>1</td>
+<td>The proportion of simulations that stopped early for futility but were deemed successful on final evaluation.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Outcome 7</td>
+<td>1</td>
+<td>The proportion of simulations that reached full accrual and were inconclusive.</td>
+</tr>
+<tr class="even">
+<td>Mean Study Accrual Stop Week</td>
+<td>1</td>
+<td>The mean study duration of accrual – from start of accrual to last patient first visit.</td>
+</tr>
+<tr class="odd">
+<td>Mean Mu Theta</td>
+<td>1</td>
+<td>The mean, over the simulations, of the estimate of the mean of hierarchical distribution of the mean log hazard ratio in each group.</td>
+</tr>
+<tr class="even">
+<td>SE Mu Theta</td>
+<td>1</td>
+<td>The standard error, over the simulations, of the estimate of the mean of the hierarchical distribution of the mean log hazard ratio in each group.</td>
+</tr>
+<tr class="odd">
+<td>Mean Tau Theta</td>
+<td>1</td>
+<td>The mean, over the simulations, of the estimate of the standard deviation of the hierarchical distribution of the mean log hazard ratio in each group.</td>
+</tr>
+<tr class="even">
+<td>SE Tau Theta</td>
+<td>1</td>
+<td>The standard error, across the simulations, of the estimate of the standard deviation of the hierarchical distribution of the log hazard ratio in each group.</td>
+</tr>
+<tr class="odd">
+<td>Mean Alpha &lt;segment&gt;</td>
+<td>S</td>
+<td>This is the mean (over the simulations) of the estimate of the alpha parameter to the gamma distribution for the hierarchical model over the control event rates in each hazard model time segment.</td>
+</tr>
+<tr class="even">
+<td>SE Alpha &lt;segment&gt;</td>
+<td>S</td>
+<td>This is the standard deviation (over the simulations) of the estimate of the alpha parameter to the gamma distribution for the hierarchical model over the control event rates in each hazard model time segment.</td>
+</tr>
+<tr class="odd">
+<td>Mean Beta &lt;segment&gt;</td>
+<td>S</td>
+<td>This is the mean (over the simulations) of the estimate of the beta parameter to the gamma distribution for the hierarchical model over the control event rates in each hazard model time segment.</td>
+</tr>
+<tr class="even">
+<td>SE Beta &lt;segment&gt;</td>
+<td>S</td>
+<td>This is the standard deviation (over the simulations) of the estimate of the beta parameter to the gamma distribution for the hierarchical model over the control event rates in each hazard model time segment.</td>
+</tr>
+<tr class="odd">
+<td>Mean BAC Mu &lt;group&gt;</td>
+<td>G</td>
+<td>The mean, over the simulations, of the posterior mean of the Bayesian Augmented Control hierarchical distribution of the log hazard ratios of the historical studies for each group.</td>
+</tr>
+<tr class="even">
+<td>SE BAC Mu &lt;group&gt;</td>
+<td>G</td>
+<td>The standard error, over the simulations, of the posterior mean of the Bayesian Augmented Control hierarchical distribution of the log hazard ratios of the historical studies for each group.</td>
+</tr>
+<tr class="odd">
+<td>Mean BAC Tau &lt;group&gt;</td>
+<td>G</td>
+<td>The mean, over the simulations, of the posterior standard deviation of the Bayesian Augmented Control hierarchical distribution of the log hazard ratios of the historical studies for each group.</td>
+</tr>
+<tr class="even">
+<td>SE BAC Tau &lt;group&gt;</td>
+<td>G</td>
+<td>The standard error, over the simulations, of the posterior standard deviation of the Bayesian Augmented Control hierarchical distribution of the log hazard ratios of the historical studies for each group.</td>
+</tr>
+<tr class="odd">
+<td>Lambda &lt;group&gt; &lt;segment&gt;</td>
+<td>G * S</td>
+<td>The mean, over the simulations, of the estimate of the event rate on the control arm in each group in each time segment of the hazard model.</td>
+</tr>
+<tr class="even">
+<td>True Lambda &lt;group&gt; &lt;segment&gt;</td>
+<td>G * S</td>
+<td>The true mean event rate on the control arm in each group in each time segment of the Control Hazard VSR profile.</td>
+</tr>
+<tr class="odd">
+<td>Mean Events &lt;group&gt; &lt;segment&gt; &lt;arm&gt;</td>
+<td>G * S * A</td>
+<td>The mean, over the simulations, of the number of events on each arm in each group in each time segment of the hazard model.</td>
+</tr>
+<tr class="even">
+<td>Mean Events 99 &lt;segment&gt; &lt;arm&gt;</td>
+<td>S * A</td>
+<td>The mean, over the simulations, of the number of events on each arm across all the groups in each time segment of the hazard model.</td>
+</tr>
+<tr class="odd">
+<td>Mean Exposure &lt;group&gt; &lt;segment&gt; &lt;arm&gt;</td>
+<td>G * S *A</td>
+<td>The mean, over the simulations, of the subject weeks exposure time on each arm in each group in each time segment of the hazard model.</td>
+</tr>
+<tr class="even">
+<td>Mean Exposure 99 &lt;segment&gt; &lt;arm&gt;</td>
+<td>S * A</td>
+<td>The mean, over the simulations, of the subject weeks exposure time on each arm across all groups in each time segment of the hazard model</td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="variants" class="level2">
-<h2 class="anchored" data-anchor-id="variants">Variants</h2>
-<p>On this tab the user can specify that a number of design variants should be created. Currently the only design feature that can be changed is the sample size (maximum number of subjects).</p>
-<p>If “multiple variants” is checked then the user can specify that simulations setups should be created for each simulation scenario with versions of the design with a different maximum number of subjects.</p>
-<p>The user enters the number of variants they wish to create. Then in the resulting table, enter different maximum subjects for each group that has had a cap specified on the Study &gt; Study Info tab and maximum “Total Subjects” for each variant. On the simulations tab FACTS will then create a copy of all the scenarios to run with each variant.</p>
-<p>In FACTS Enrichment Designs, as well as trial Success and Failure rates, a major Operating Characteristic that we often wish to estimate is the ability of the design (if the trial is successful) to select the ‘right’ groups, depending of course on the scenario being simulated. To enable FACTS to report this the user must specify on the Virtual Subject Response &gt; Explicitly Defined &gt; Group Response profiles which of the groups “Should succeed”, that is, it would constitute a ‘correct selection’ by the design in that scenario.</p>
-<div id="fig-fig21" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-fig21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../EDTTE/media/image21.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8: The Variants tab, specifying 3 variants.
-</figcaption>
-</figure>
-</div>
+<section id="contents-of-summary_freq.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-summary_freq.csv">Contents of Summary_freq.csv</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ppn Significant (Grp)</td>
+<td>1</td>
+<td>The proportion of simulations with a significant group effect.</td>
+</tr>
+<tr class="even">
+<td>Mean Overall Trt Effect</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the frequentist estimate of the overall treatment effect</td>
+</tr>
+<tr class="odd">
+<td>SE Overal Trt Effect</td>
+<td>1</td>
+<td>This is the Standard Error (over the simulations) of the frequentist estimate of the overall treatment effect</td>
+</tr>
+<tr class="even">
+<td>Mean Trt Effect in Grp &lt;group&gt;</td>
+<td>G</td>
+<td>The mean, over the simulations, of the estimate of the mean treatment effect in each group from the fit of an overall Cox model that includes a Group X Treatment interaction.</td>
+</tr>
+<tr class="odd">
+<td>SE Trt Effect in Grp &lt;group&gt;</td>
+<td>G</td>
+<td>The standard error, over the simulations, of the estimate of the mean treatment effect in each group from the fit of an overall Cox model that includes a Group X Treatment interaction.</td>
+</tr>
+<tr class="even">
+<td>Ppn Significant (Trt)</td>
+<td>1</td>
+<td>The proportion of simulations in which the treatment effect was significant.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Significnat Str. LogRank</td>
+<td>1</td>
+<td>The proportion of simulations significant by the stratified log rank test</td>
+</tr>
+<tr class="even">
+<td>pSignificant (GrpxTrt)</td>
+<td>1</td>
+<td>The proportion of simulations with a significant group and treatment effect.</td>
+</tr>
+<tr class="odd">
+<td>Mean Trt Effect &lt;group&gt;</td>
+<td>G</td>
+<td>The mean treatment effect per group.</td>
+</tr>
+<tr class="even">
+<td>SE Trt Effect &lt;group&gt;</td>
+<td>G</td>
+<td>The standard error of the treatment effect per group</td>
+</tr>
+<tr class="odd">
+<td>Cox ppn significant</td>
+<td>G</td>
+<td>The proportion of simulations with significant effect by Cox proportional hazards</td>
+</tr>
+<tr class="even">
+<td>LogRank Significant &lt;group&gt;</td>
+<td>G</td>
+<td>The proportion of simulations with significant effect by the Log Rank test</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="contents-of-simulations.csv-and-weeksnnnnn.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-simulations.csv-and-weeksnnnnn.csv">Contents of simulations.csv and weeksNNNNN.csv</h2>
+<p>Most of the columns are common to the two file types, but the weeks file does not contain columns for the ‘final’ values of the evaluation criteria.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 13%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>In simulations file</th>
+<th>In weeks file</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>#Sim</td>
+<td>1</td>
+<td>✔</td>
+<td></td>
+<td>Simulation number</td>
+</tr>
+<tr class="even">
+<td># Weeks (Duration)</td>
+<td>1</td>
+<td>✔</td>
+<td></td>
+<td>The week of final analysis – the total duration of the simulation.</td>
+</tr>
+<tr class="odd">
+<td>#Week</td>
+<td>1</td>
+<td></td>
+<td>✔</td>
+<td>Week</td>
+</tr>
+<tr class="even">
+<td>No.Subj</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The number of subjects recruited in the simulation.</td>
+</tr>
+<tr class="odd">
+<td>Alloc &lt;group&gt; <arm></arm></td>
+<td>2 * G</td>
+<td>✔</td>
+<td>✔</td>
+<td>The number of subjects allocated to each arm in each group.</td>
+</tr>
+<tr class="even">
+<td>Mean Trt Resp (HR) &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>The estimated hazard ratio of the study treatment in the group.</td>
+</tr>
+<tr class="odd">
+<td>Trt Effect (HR) (Overall)</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The estimated mean hazard ratio across the groups.</td>
+</tr>
+<tr class="even">
+<td>SD Mean Trt Resp &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>The standard deviation of the estimate of the hazard ratio of the study treatment in the group.</td>
+</tr>
+<tr class="odd">
+<td>SD Trt Effect (Overall)</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The standard deviation of the estimate of the hazard ratio difference across the groups.</td>
+</tr>
+<tr class="even">
+<td>Mu Theta</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The mean of the hierarchical distribution of the hazard ratios over all the groups.</td>
+</tr>
+<tr class="odd">
+<td>Tau Theta</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The standard deviation of the hierarchical distribution of the hazard ratios over all the groups.</td>
+</tr>
+<tr class="even">
+<td>Lambda &lt;group&gt; <segment></segment></td>
+<td>S * G</td>
+<td>✔</td>
+<td>✔</td>
+<td>The estimate of the control event rate in each group in each time segment of the hazard model</td>
+</tr>
+<tr class="odd">
+<td>Alpha <segment></segment></td>
+<td>S</td>
+<td>✔</td>
+<td>✔</td>
+<td>The estimate of the alpha parameter of the hierarchical gamma distribution of the control event rates across the groups, in each time segment of the hazard model</td>
+</tr>
+<tr class="even">
+<td>Beta <segment></segment></td>
+<td>S</td>
+<td>✔</td>
+<td>✔</td>
+<td>The estimate of the alpha parameter of the hierarchical gamma distribution of the control event rates across the groups, in each time segment of the hazard model.</td>
+</tr>
+<tr class="odd">
+<td>True Lambda &lt;group&gt; <segment></segment></td>
+<td>G * S</td>
+<td>✔</td>
+<td>✔</td>
+<td>The true control even rate in each group in each time segment of the Hazard Rate VSR profile</td>
+</tr>
+<tr class="even">
+<td>Pr Ph3 Success &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>The probability of success in phase 3 of the study treatment for each group.</td>
+</tr>
+<tr class="odd">
+<td>Pr Ph3 Success 99</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The probability of success in phase 3 of the across groups treatment difference.</td>
+</tr>
+<tr class="even">
+<td>Pr CSD (Success) &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>The probability of being better than control by the success CSHRD (or as good as control by the success NIHRM) of the study treatment for each group.</td>
+</tr>
+<tr class="odd">
+<td>Pr CSD (Success) 99</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The probability of being better than control by the success CSHRD (or as good as control by the NIHRM) of the across groups treatment difference.</td>
+</tr>
+<tr class="even">
+<td>Pr CSD (Futility) &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>The probability of being better than control by the futility CSHRD (or as good as control by the futility NIHRM) of the study treatment for each group.</td>
+</tr>
+<tr class="odd">
+<td>Pr CSD (Futility) 99</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The probability of being better than control by the futility CSHRD (or as good as control by the futility NIHRM) of the across groups treatment difference.</td>
+</tr>
+<tr class="even">
+<td>CSD Futility &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the posterior probability of being better than control by the futility CSHRD was below the threshold for early stopping for futility for each group, 0 = the posterior probability was above the threshold.</td>
+</tr>
+<tr class="odd">
+<td>CSD Futility 99</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the posterior probability of being better than control by the futility CSHRD was below the threshold for early stopping for futility for the across groups analysis, 0 = the posterior probability was above the threshold.</td>
+</tr>
+<tr class="even">
+<td>Ph3 Futility &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the posterior probability of successful in a subsequent phase 3 trial was below the threshold for early stopping for futility for each group, 0 = the posterior probability was above the threshold.</td>
+</tr>
+<tr class="odd">
+<td>Ph3 Futility 99</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the posterior probability of successful in a subsequent phase 3 trial was below the threshold for early stopping for futility in the across groups analysis, 0 = the posterior probability was above the threshold.</td>
+</tr>
+<tr class="even">
+<td>CSD Success &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the posterior probability of being better than control by the success CSHRD was above the threshold for early stopping for success for each group, 0 = the posterior probability was below the threshold.</td>
+</tr>
+<tr class="odd">
+<td>CSD Success 99</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the posterior probability of being better than control by the success CSHRD was above the threshold for early stopping for success in the across groups analysis, 0 = the posterior probability was below the threshold.</td>
+</tr>
+<tr class="even">
+<td>Ph3 Success &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the posterior probability of successful in a subsequent phase 3 trial was above the threshold for early stopping for success for each group, 0 = the posterior probability was below the threshold.</td>
+</tr>
+<tr class="odd">
+<td>Ph3 Success 99</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the posterior probability of successful in a subsequent phase 3 trial was above the threshold for early stopping for success in the across groups analysis, 0 = the posterior probability was below the threshold.</td>
+</tr>
+<tr class="even">
+<td>Combined Futility &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the required CSHRD, success in phase 3 and minimum sample size criteria are all met for early stopping for futility for each group, 0 = they are not all met. Whether the across group stopping condition is also met if required is not included in this flag.</td>
+</tr>
+<tr class="odd">
+<td>Combined Futility 99</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the required CSHRD, success in phase 3 and minimum sample size criteria are all met for early stopping for futility in the across groups analysis, 0 = they are not all met.</td>
+</tr>
+<tr class="even">
+<td>Combined Success &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the required CSHRD, success in phase 3 and minimum sample size criteria are all met for early stopping for success for each group, 0 = they are not all met. Whether the across group stopping condition is also met if required is not included in this flag.</td>
+</tr>
+<tr class="odd">
+<td>Combined Success 99</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the required CSHRD, success in phase 3 and minimum sample size criteria are all met for early stopping for success in the across groups analysis, 0 = they are not all met.</td>
+</tr>
+<tr class="even">
+<td>Success Criteria Met &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the group’s success criteria were met for the final evaluation, 0 = otherwise.</td>
+</tr>
+<tr class="odd">
+<td>Success Criteria Met (Final) 99</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the Across Group success criteria were met for the final evaluation, 0 = otherwise</td>
+</tr>
+<tr class="even">
+<td>Futility Criteria Met &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the group’s futility criteria were met for the final evaluation, 0 = otherwise.</td>
+</tr>
+<tr class="odd">
+<td>Futility Criteria Met (Final) 99</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the Across Group futility criteria were met for the final evaluation, 0 = otherwise</td>
+</tr>
+<tr class="even">
+<td>Futile Study</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the study was futile overall, 0 = otherwise.</td>
+</tr>
+<tr class="odd">
+<td>Successful Study</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag: 1 = the study was successful overall, 0 = otherwise.</td>
+</tr>
+<tr class="even">
+<td>Outcome</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag categorizing final study outcome: 1. Early success; 2. Late success; 3. Late futility; 4. Early futility; 5. Success to futility flip-flop; 6. Futility to success flip-flop; 7. Inconclusive</td>
+</tr>
+<tr class="odd">
+<td>Group Outcome &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag categorizing final group outcome, using the same codes as for the study outcome (above)</td>
+</tr>
+<tr class="even">
+<td>Group Stop Type &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>A flag categorizing the group outcome: 1. Success; 2. Group Cap; 3. Futility; 4. Other (group stopped because study stopped early); 5. Study cap</td>
+</tr>
+<tr class="odd">
+<td>Group Stop Week &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>The week the group stop decision was taken. There may be further follow-up time before the group analysis was completed.</td>
+</tr>
+<tr class="even">
+<td>Study Stop Week</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The week the study stop decision was taken. There may be further follow-up time before the study analysis was completed.</td>
+</tr>
+<tr class="odd">
+<td>BAC Mu &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>The estimated value of the mean of the Bayesian Augmented Control hierarchical distribution for each group.</td>
+</tr>
+<tr class="even">
+<td>SD BAC Mu &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>The standard deviation of the estimate of the mean of the Bayesian Augmented Control hierarchical distribution for each group.</td>
+</tr>
+<tr class="odd">
+<td>BAC Tau &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>The estimated value of the standard deviation of the Bayesian Augmented Control hierarchical distribution for each group.</td>
+</tr>
+<tr class="even">
+<td>SD BAC Tau &lt;group&gt;</td>
+<td>G</td>
+<td>✔</td>
+<td>✔</td>
+<td>The standard deviation of the estimate of the standard deviation of the Bayesian Augmented Control hierarchical distribution for each group.</td>
+</tr>
+<tr class="odd">
+<td>Events &lt;group&gt; <segment> <arm></arm></segment></td>
+<td>G * S * A</td>
+<td>✔</td>
+<td>✔</td>
+<td>The number of events observed in each group, in each time segment of the hazard model, on each arm.</td>
+</tr>
+<tr class="even">
+<td>Events 99 <segment> <arm></arm></segment></td>
+<td>S * A</td>
+<td>✔</td>
+<td>✔</td>
+<td>The overall events observed over all the groups, in each time segment of the hazard model, on each arm.</td>
+</tr>
+<tr class="odd">
+<td>Exposure &lt;group&gt; <segment> <arm></arm></segment></td>
+<td>G * S * A</td>
+<td>✔</td>
+<td>✔</td>
+<td>The number of exposure in subject weeks in each group, in each time segment of the hazard model, on each arm.</td>
+</tr>
+<tr class="even">
+<td>Exposure 99 <segment> <arm></arm></segment></td>
+<td>S * A</td>
+<td>✔</td>
+<td>✔</td>
+<td>The overall exposure in subject weeks over all the groups, in each time segment of the hazard model, on each arm.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="contents-of-simulations_freq.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-simulations_freq.csv">Contents of Simulations_freq.csv</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td># Trial</td>
+<td>1</td>
+<td>The number of the simulation.</td>
+</tr>
+<tr class="even">
+<td>Overall Group p-value</td>
+<td>1</td>
+<td>The overall group effect p-vale</td>
+</tr>
+<tr class="odd">
+<td>Overall Trt Estimate</td>
+<td>1</td>
+<td>The overall treatment effect estimate (cox)</td>
+</tr>
+<tr class="even">
+<td>Overall Trt SD</td>
+<td>1</td>
+<td>The SD of the overall treatment effect (Cox)</td>
+</tr>
+<tr class="odd">
+<td>Est Trt Effect [exp(coeff)] in Group &lt;group&gt;</td>
+<td>G</td>
+<td>The estimate of the group treatment effect from fitting the full Cox model with Group x Treatment interaction</td>
+</tr>
+<tr class="even">
+<td>SD Trt Effect [exp(SD)] in Group &lt;group&gt;</td>
+<td>G</td>
+<td>The SD of the estimate of the group treatment effect from fitting the full Cox model with Group x Treatment interaction</td>
+</tr>
+<tr class="odd">
+<td>Overall Trt p-val</td>
+<td>1</td>
+<td>The overall treatment effect p-value (Cox)</td>
+</tr>
+<tr class="even">
+<td>Str. LogRank Statistic</td>
+<td>1</td>
+<td>Stratified LogRank statistic</td>
+</tr>
+<tr class="odd">
+<td>Str. LogRank p-val</td>
+<td>1</td>
+<td>Stratified LogRank p-value</td>
+</tr>
+<tr class="even">
+<td>Group x Trt p-value</td>
+<td>1</td>
+<td>Group * Trt interaction p-value</td>
+</tr>
+<tr class="odd">
+<td>Est Trt Effect &lt;group&gt;</td>
+<td>G</td>
+<td>Estimated Trt Effect (Cox) or Exponential rate if control not included</td>
+</tr>
+<tr class="even">
+<td>SD Trt Effect &lt;group&gt;</td>
+<td>G</td>
+<td>The SD of the estimated treatment effect</td>
+</tr>
+<tr class="odd">
+<td>Cox or Exponential MLE p-value &lt;group&gt;</td>
+<td>G</td>
+<td>Trt Effect (Cox) or rate if control not included – p-value</td>
+</tr>
+<tr class="even">
+<td>LogRank p-value &lt;group&gt;</td>
+<td>G</td>
+<td>p-value based on log-rank test statistic</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="contents-of-patientsnnnnn.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-patientsnnnnn.csv">Contents of PatientsNNNNN.csv</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>#Subject</td>
+<td>1</td>
+<td>The subject id number, starting at 1.</td>
+</tr>
+<tr class="even">
+<td>Region</td>
+<td>1</td>
+<td>The accrual region index – where this subject was recruited.</td>
+</tr>
+<tr class="odd">
+<td>Date</td>
+<td>1</td>
+<td>The date, in weeks from the start of the trial, of the subject’s baseline visit and randomization.</td>
+</tr>
+<tr class="even">
+<td>Group</td>
+<td>1</td>
+<td>The index number (1, …) of the group the subject belongs to.</td>
+</tr>
+<tr class="odd">
+<td>Arm</td>
+<td>1</td>
+<td>A flag indicating the arm the subject was randomized to: 0 = Control, 1 = Study Treatment.</td>
+</tr>
+<tr class="even">
+<td>Duration</td>
+<td>1</td>
+<td>The time of observation of the subject (in weeks)</td>
+</tr>
+<tr class="odd">
+<td>Outcome</td>
+<td>1</td>
+<td>Whether an event was observed (1) or not (0)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="exporting-the-results" class="level2">
+<h2 class="anchored" data-anchor-id="exporting-the-results">Exporting the Results</h2>
+<p>Using the menu item File -&gt; Export Project, the .facts file and all the results files can be saved as a single zip file.</p>
+</section>
+<section id="contents-of-mcmcnnnnn.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-mcmcnnnnn.csv">Contents of MCMCNNNNN.csv</h2>
+<p>The MCMC file if requested for output by the user, contains all the MCMC samples for the fitted parameters in the design. There is one row per sample (including the burnin) and the samples from all the analyses in the simulation are included. The first two columns are the analysis index and the sample (within analysis) index. The remaining columns are the parameters whose sample values are being reported, the number and constituents of these columns are highly variable depending on design of the statistical analysis.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Analysis</td>
+<td>1</td>
+<td>The index of the analysis (interim) in the simulation</td>
+</tr>
+<tr class="even">
+<td>Sample</td>
+<td>1</td>
+<td>The index of the sample within the analysis</td>
+</tr>
+<tr class="odd">
+<td>HR</td>
+<td>G</td>
+<td>The estimate of the Hazard Ratio in each group</td>
+</tr>
+<tr class="even">
+<td>Overall HR</td>
+<td>1</td>
+<td>The estimate of the overall Hazard Ratio</td>
+</tr>
+<tr class="odd">
+<td>Lambda &lt;group&gt; &lt;seg&gt;</td>
+<td>G * S</td>
+<td>The estimate of the event rate in the control arm in each of the Hazard Model observation segments in each group</td>
+</tr>
+<tr class="even">
+<td>Overall Lambda &lt;group&gt;</td>
+<td>G</td>
+<td>The estimate over all the observation segments of the event rate in the control arm in each group.</td>
+</tr>
+</tbody>
+</table>
 
 
 </section>
