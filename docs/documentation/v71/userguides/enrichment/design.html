@@ -83,36 +83,21 @@ background: #125740;
       }
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 
-
-
 <!-- Roboto Serif -->
-
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
 
-
-
 <!-- Roboto Sans -->
-
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
 <!-- Google tag (gtag.js) -->
-
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
-
 <script>
-
   window.dataLayer = window.dataLayer || [];
-
   function gtag(){dataLayer.push(arguments);}
-
   gtag('js', new Date());
 
-
-
   gtag('config', 'G-WLMVE7GR4S');
-
 </script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
@@ -144,7 +129,6 @@ window.Quarto = {
   typesetMath
 };
 </script>
-
 
 <link rel="stylesheet" href="../../../../styles.css">
 </head>
@@ -810,6 +794,13 @@ window.Quarto = {
   <ul>
   <li><a href="#control-model-harzard-model" id="toc-control-model-harzard-model" class="nav-link active" data-scroll-target="#control-model-harzard-model">Control Model / Harzard Model</a></li>
   <li><a href="#treatment-model" id="toc-treatment-model" class="nav-link" data-scroll-target="#treatment-model">Treatment Model</a></li>
+  <li><a href="#frequentist-analysis" id="toc-frequentist-analysis" class="nav-link" data-scroll-target="#frequentist-analysis">Frequentist Analysis</a></li>
+  <li><a href="#longitudinal-model" id="toc-longitudinal-model" class="nav-link" data-scroll-target="#longitudinal-model">Longitudinal model</a>
+  <ul>
+  <li><a href="#allocation" id="toc-allocation" class="nav-link" data-scroll-target="#allocation">Allocation</a></li>
+  </ul></li>
+  <li><a href="#interims" id="toc-interims" class="nav-link" data-scroll-target="#interims">Interims</a></li>
+  <li><a href="#successfutility-criteria" id="toc-successfutility-criteria" class="nav-link" data-scroll-target="#successfutility-criteria">Success/Futility Criteria</a></li>
   </ul>
 </nav>
     </div>
@@ -1214,17 +1205,21 @@ Setting the priors for Hierarchical model hyper parameters
 <section id="treatment-model" class="level1">
 <h1>Treatment Model</h1>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Dichotomous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false">Time-to-Event</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true">Continuous/Dichotomous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false">Time-to-Event</a></li></ul>
 <div class="tab-content">
-<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
 <section id="groups-modeled-separately" class="level3">
 <h3 class="anchored" data-anchor-id="groups-modeled-separately">Groups modeled separately</h3>
-<p>If the treatment arms in different groups are to be modeled separately, then the treatment arm in each group has its own prior which is specified as a mean and standard deviation for a Normally distributed prior for the difference in mean response between the treatment arm and the control (whether a historic mean or from a control arm).</p>
+<p>If the treatment arms in different groups are to be modeled separately, then the treatment arm in each group has its own prior which is specified as a mean and standard deviation for a Normally distributed prior for the difference in mean response (continuous endpoint) or in log-odds between the response rate (dichotomous endpoint) between the treatment arm and the control (whether a historic mean or from a control arm).</p>
 <p>In addition the user specifies</p>
 <ul>
 <li><p>A prior mean and standard deviation for a Normally distributed prior for the across groups analysis: the estimate of an common treatment difference from control (whether historic means or observed means) across all groups.</p></li>
 <li><p>A prior mean for the estimate of sigma, the SD of the subject responses (across all arms and groups) and the weight of that prior in terms of equivalent number of observations. This prior is an inverse gamma distribution for sigma squared. Thus what the user enters is only approximately a prior expectation for sigma; it is actually an expectation for the precision: <span class="math inline">\(E\left( \frac{1}{\sigma^{2}} \right) = \frac{1}{{\acute{\sigma}}^{2}}\)</span> where <span class="math inline">\(\acute{\sigma}\)</span> is the ‘sigma prior mean’.</p></li>
 </ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Dichotomous</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
 <div id="fig-fig38cont" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-fig38cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1234,6 +1229,21 @@ Setting the priors for Hierarchical model hyper parameters
 Figure&nbsp;13: Treatment model - groups modeled separately
 </figcaption>
 </figure>
+</div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div id="fig-fig35dich" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig35dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDDich/media/image35.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig35dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14: Treatment model - groups modeled separately
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </div>
 </section>
 <section id="hierarchical-model-across-groups-2" class="level3">
@@ -1247,6 +1257,35 @@ Figure&nbsp;13: Treatment model - groups modeled separately
 <ul>
 <li>A prior mean and standard deviation for a Normally distributed prior for the across groups analysis – this is a pooled analysis of an overall difference from control (whether historic means or observed means). In this analysis, all groups are assumed to have the same treatment effect. This analysis is conducted separately, reported separately, and is used only as an OPTION in stopping. Filling in these priors does NOT constitute assuming equal treatment effects.</li>
 </ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Dichotomous</a></li></ul>
+<div class="tab-content">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<div id="fig-fig95cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig95cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDCont/media/image95.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig95cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15: Treatment model - hierarchical model across groups
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<div id="fig-fig35dich" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig35dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDDich/media/image35.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig35dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16: Treatment model - hierarchical model across groups
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -1262,17 +1301,16 @@ Setting the priors for Hierarchical model hyper parameters
 <p>Unless the intent is to add information that is not observed in the study, the hyper parameters can and should be set so that they are ‘weak’ priors, centered on the expected values.</p>
 <p>In this case the following would be reasonable:</p>
 <ul>
-<li>Set the prior mean value for Mu as the expected mean control response<br>
-</li>
-<li>Set the prior SD for Mu equal to at least the largest reasonably expected difference from the across groups mean for a one control arm in any group.<br>
+<li>Set the prior mean value for Mu as the expected mean control response (continuous endpoint) or log odds of the treatment difference from control (dichotomous endpoint)</li>
+<li>Set the prior SD for Mu equal to at least the largest reasonably expected difference from the across groups mean for a one control arm in any group (contiuous endpoint) or the largest reasonably expected difference between the log odds of the treatment differences across the groups (dichotomous endpoint).<br>
 </li>
 <li>Set the mean for tau to the same value as the prior SD for Mu.<br>
 </li>
 <li>Set the weight for tau to be &lt; 1.</li>
 </ul>
-<p>To force borrowing (near pooling of data) between the groups, set a small prior mean of tau and a weight greater than the number of groups, combined with a weakly informative prior for mu; the group means will come together near the sample weighted average of the sample means.</p>
+<p>To force borrowing (near pooling of data) between the groups, set a small prior mean of tau and a weight greater than the number of groups, combined with a weakly informative prior for mu; the group means (contiuous endpoint) or log odds (dichotomous endpoint) will come together near the sample weighted average of the sample means (continuous endpoint) or log odds (dichotomous endpoint).</p>
 <p>To limit the borrowing between the groups, set a large tau and a weight equal to the number of groups or more. This can be used if, with a weak prior for tau, the borrowing across groups when there is some variation seems too great. However, achieving the desired balance will require simulation of a number of scenarios and trial and error.</p>
-<p>To use hierarchical modeling and include a prior expectation for the treatment difference, set the mean for Mu to the expected mean treatment difference, set small values for the SD of Mu <strong>and</strong> mean of tau, and give the prior for tau a weight equal to the number of groups or more. Again, achieving the desired balance will require simulation of a number of scenarios and trial and error.</p>
+<p>To use hierarchical modeling and include a prior expectation for the treatment difference (continuous endpoint) or log odds of the treatment difference (dichotomous endpoint), set the mean for Mu to the expected mean treatment difference (continuous endpoint) or expected log odds of the treatment difference (dichotomous endpoint), set small values for the SD of Mu <strong>and</strong> mean of tau, and give the prior for tau a weight equal to the number of groups or more. Again, achieving the desired balance will require simulation of a number of scenarios and trial and error.</p>
 </div>
 </div>
 </div>
@@ -1282,15 +1320,34 @@ Setting the priors for Hierarchical model hyper parameters
 <p>After selecting “Hierarchical model across groups”, if “Use Clustering” is also checked then the specified prior is a prior for an arbitrary number of distributions each providing a hierarchical prior to an arbitrary selection of the groups. As with the hierarchical model, the smaller and stronger the prior is on tau the greater the borrowing, (closer to pooling) and the larger and stronger the prior is on tau the weaker the borrowing (closer to separate analysis). The weaker the prior on tau, the more the posterior value of tau is determined by the spread of the control means in that cluster.</p>
 <p>The “Dp scale parameter” is the Dirichlet Process parameter ‘α’ in the description of the model in the Enrichment Design Specification document. The larger the value of ‘α’ the more process tends to place groups in new clusters – so there is less borrowing, in experiments using values of ‘α’ from 1 to twice the number of groups, this was a much smaller effect than varying tau from 25% of the expected treatment difference to 200% of the expected treatment difference.</p>
 <p>We are still learning about how best to specify priors for this model and will supply more guidance once we have a better understanding. In the meantime like us you have the ability to run simulations with different priors and explore the impact on the operating characteristics in the setting of interest.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">Dichotomous</a></li></ul>
+<div class="tab-content">
+<div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
 <div id="fig-fig39cont" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-fig39cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="./EDCont/media/image39.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig39cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;14: Treatment Model - using clustering
+Figure&nbsp;17: Treatment Model - using clustering
 </figcaption>
 </figure>
+</div>
+</div>
+<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
+<div id="fig-fig36dich" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig36dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDDich/media/image36.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig36dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18: Treatment Model - using clustering
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </div>
 </section>
 <section id="baseline-adjustment" class="level3">
@@ -1312,49 +1369,461 @@ Y\sim N\left( \gamma_{g} + \theta_{g} + \beta Z,\ \sigma^{2} \right)
 <p>NB Setting BOCF or LOCF here does not affect the longitudinal model used for incomplete subjects.</p>
 </section>
 </div>
-<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
-
+<div id="tabset-8-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-2-tab">
+<section id="groups-modeled-separately-1" class="level3">
+<h3 class="anchored" data-anchor-id="groups-modeled-separately-1">Groups modeled separately</h3>
+<p>If the treatment arms in different groups are to be modeled separately, then the treatment arm in each group has its own prior which specified as:</p>
+<ul>
+<li><p>If control arms are present, a mean and standard deviation for a Normally distributed prior for the log hazard ratio of the event rate on the study treatment arm compared to the estimated event rate on the control arm.</p></li>
+<li><p>If comparing with historical control response values, a mean and standard deviation for a Normally distributed prior for the log hazard ratio of the event rate on the study treatment arm compared to the historic event rate for control.</p></li>
+</ul>
+<p>In addition the user specifies</p>
+<ul>
+<li>A prior mean and standard deviation for a Normally distributed prior for a common hazard ratio (but still relative to the control rate within each group) across all groups.</li>
+</ul>
+<div id="fig-fig39tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig39tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDTTE/media/image39.png" class="img-fluid figure-img">
 </div>
-<div id="tabset-5-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-3-tab">
-
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig39tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;19: Treatment model - groups modeled separately
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="hierarchical-model-across-groups-3" class="level3">
+<h3 class="anchored" data-anchor-id="hierarchical-model-across-groups-3">Hierarchical model across groups</h3>
+<p>If the event rates on the study treatment arms in the different groups are to be modeled with a hierarchical structure, then the user enters the hyper-parameters for the hierarchical model. The hierarchical model is a Normal distribution for the log hazard ratios for the different study treatment arms. The user specifies the hyper priors for this model - the prior distributions for each of the parameters of the hierarchical model:</p>
+<ul>
+<li><p>the mean and standard deviation for a Normally distributed prior for the mean of the hierarchical model,</p></li>
+<li><p>and the parameters for an Inverse-Gamma distributed prior for the variance of the hierarchical model. As with all Inverse-Gamma priors these can be specified as a mean and a weight or more conventional Alpha and Beta parameters.</p></li>
+</ul>
+<p>In addition the user specifies</p>
+<ul>
+<li>A prior mean and standard deviation for a Normally distributed prior for the across groups analysis – this is a pooled analysis of an overall log hazard ratio relative to control (whether historic or observed control event rates). In this analysis, all groups are assumed to have the hazard ratio. This analysis is conducted separately, reported separately, and is used only as an OPTION in stopping. Filling in these priors does NOT constitute assuming equal treatment effects.</li>
+</ul>
+<div id="fig-fig40tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig40tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDTTE/media/image40.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig40tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;20: Treatment Model - hierarchical model across all groups
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Setting the priors for Hierarchical model hyper parameters
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Unless the intent is to add information that is not observed in the study, the hyper parameters can and should be set so that they are ‘weak’ priors, centered on the expected values.</p>
+<p>In this case the following would be reasonable:</p>
+<ul>
+<li>Set the prior mean value for Mu as the expected log hazard ratio of the response on the treatment arms.<br>
+</li>
+<li>Set the prior SD for Mu equal to at least the largest reasonably expected difference between the log hazard ratios across the groups.<br>
+</li>
+<li>Set the mean for tau to the same value as the prior SD for Mu.<br>
+</li>
+<li>Set the weight for tau to be &lt; 1.</li>
+</ul>
+<p>To force borrowing (near pooling of data) between the groups, set a smaller prior mean of tau and a weight greater than the number of groups, combined with a weakly informative prior for Mu; the group log hazard ratios will come together near the sample weighted average of the sample log hazard ratios.</p>
+<p>To limit the borrowing between the groups, set a larger tau and a weight equal to the number of groups or more. This can be used if, with a weak prior for tau, the borrowing across groups when there is some variation seems too great. However, achieving the desired balance will require simulation of a number of scenarios and trial and error.</p>
+<p>To use hierarchical modeling and include a prior expectation for the log hazard ratio, set the mean for Mu to the expected log hazard ratio, set small values for the SD of Mu <strong>and</strong> the mean of tau, and give the prior for tau a weight equal to the number of groups or more. Again, achieving the desired balance will require simulation of a number of scenarios and trial and error.</p>
 </div>
 </div>
 </div>
+</section>
+<section id="hierarchical-model-plus-clustering-2" class="level3">
+<h3 class="anchored" data-anchor-id="hierarchical-model-plus-clustering-2">Hierarchical Model plus Clustering</h3>
+<p>After selecting “Hierarchical model across groups”, if “Use Clustering” is also checked then the specified prior is a prior for an arbitrary number of distributions each providing a hierarchical prior to an arbitrary selection of the groups. As with the hierarchical model, the smaller and stronger the prior is on tau the greater the borrowing, (closer to pooling) and the larger and stronger the prior is on tau the weaker the borrowing (closer to separate analysis). The weaker the prior on tau, the more the posterior value of tau is determined by the spread of the control means in that cluster.</p>
+<p>The “Dp scale parameter” is the Dirichlet Process parameter ‘α’ in the description of the model in the Enrichment Design Specification document. The larger the value of ‘α’ the more process tends to place groups in new clusters – so there is less borrowing, in experiments using values of ‘α’ from 1 to twice the number of groups, this was a much smaller effect than varying tau from 25% of the expected treatment difference to 200% of the expected treatment difference.</p>
+<p>We are still learning about how best to specify priors for this model and will supply more guidance once we have a better understanding. In the meantime like us you have the ability to run simulations with different priors and explore the impact on the operating characteristics in the setting of interest.</p>
+<div id="fig-fig41tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig41tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDTTE/media/image41.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig41tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;21: Hierarchical Model plus Clustering
+</figcaption>
+</figure>
+</div>
+</section>
+</div>
+</div>
+</div>
+</section>
+<section id="frequentist-analysis" class="level1">
+<h1>Frequentist Analysis</h1>
+<p>If frequentist analysis is enabled on this tab, the alpha levels can be set for the various end-of-trial frequentist analyses. These are output in separate results files, and are not available for use within the simulations (e.g.&nbsp;for early stopping decisions). Frequentist analysis is enabled by default, it increases the computational overhead of simulations only slightly.</p>
+<div id="fig-fig38tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig38tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDTTE/media/image38.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig38tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;22: Frequentist test parameters
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="longitudinal-model" class="level1">
+<h1>Longitudinal model</h1>
+<p>This section is only relevant for the continuous and dichotomous endpoint engines.</p>
+<p>With all the longitudinal models available, it is possible to specify how many separate longitudinal models to use.</p>
+<div id="fig-fig41cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig41cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDCont/media/image41.png" id="fig-fig41cont" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig41cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;23
+</figcaption>
+</figure>
+</div>
+<ul>
+<li><p>Single model for all groups – there is a single model; longitudinal data is pooled across all arms and groups to estimate the parameters of the model.</p></li>
+<li><p>Model arms separately – there are two models; one for all subjects in control arms and one for all subjects in treatment arms and the parameters for each model are estimated independently.</p></li>
+<li><p>Model groups separately – there are separate models for each group; longitudinal data within the group is pooled for the subjects in either the control or treatment arm in that group.</p></li>
+<li><p>Model groups and arms separately - there are separate models for each treatment arm in each group.</p></li>
+</ul>
+<p>The use of the longitudinal models is to impute final endpoint response for subjects who at that point in time have not reached their final endpoint (and if “Bayesian multiple imputation from post baseline” has been selected on the Design &gt; Treatment model tab, also for those subjects who have dropped out and who’s final endpoint response will never be observed).</p>
+<p>The multiple imputation process means that during the MCMC sampling, the subjects who’s final endpoints are to be imputed have them sampled from the distribution of their predicted endpoint given the subjects’ observed intermediate responses and the parameters of the longitudinal model. Imputed endpoints thus have a distribution unlike an observed endpoint which will have the same value in each MCMC sample. A distribution estimated in this way captures both the uncertainty in the estimate of the parameters of the longitudinal model and the uncertainty of the prediction of the endpoint given particular parameter values.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" role="tab" aria-controls="tabset-9-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-2" role="tab" aria-controls="tabset-9-2" aria-selected="false">Dichotomous</a></li></ul>
+<div class="tab-content">
+<div id="tabset-9-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-9-1-tab">
+<p>There are five options for handling longitudinal modeling with a continuous endpoint:</p>
+<ol type="1">
+<li><p>Last Observation carried Forward (LOCF)</p></li>
+<li><p>Linear Regression</p></li>
+<li><p>Time course hierarchical</p></li>
+<li><p>Kernel Density</p></li>
+<li><p>ITP</p></li>
+</ol>
+<p>These are the same as available for longitudinal modeling in Dose Finding with a continuous endpoint. See the FACTS DF Design User Guide section on longitudinal models for a slightly fuller discussion of the models available.</p>
+<section id="last-observation-carried-forward-locf" class="level3">
+<h3 class="anchored" data-anchor-id="last-observation-carried-forward-locf">Last Observation Carried Forward (LOCF)</h3>
+<p>This is not a model. For each subject their final endpoint is assumed to be the same as the last observation of that patient at an interim visit.</p>
+</section>
+<section id="linear-regression" class="level3">
+<h3 class="anchored" data-anchor-id="linear-regression">Linear Regression</h3>
+<p>This uses simple linear regression to model the relationship between endpoint values at each visit and the final endpoint value. The user specifies:</p>
+<ul>
+<li><p>A prior mean and standard deviation for a Normally distributed prior for alpha, the intercept or fixed expected response.</p></li>
+<li><p>A prior mean and standard deviation for a Normally distributed prior for beta, the slope or the coefficient of further improvement as a multiple of the response observed at the visit.</p></li>
+<li><p>A prior mean for the estimate of lambda, the SD of the error in the forecast of the final endpoint and the weight of that prior in terms of equivalent number of operations. This prior is an inverse gamma distribution for lambda squared. (thus <span class="math inline">\(E\left( \frac{1}{\lambda^{2}} \right) = \frac{1}{{\acute{\lambda}}^{2}}\)</span> where <span class="math inline">\(\acute{\lambda\ }\)</span> is the lambda prior mean)</p></li>
+</ul>
+<div id="fig-fig42cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig42cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDCont/media/image42.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig42cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;24: Longitudinal model - linear regression
+</figcaption>
+</figure>
+</div>
+<p>If “Specify priors per visit” is selected then the priors are entered as a grid:</p>
+<div id="fig-fig43cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig43cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDCont/media/image43.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig43cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;25: Longitudinal model - separate priors per visit
+</figcaption>
+</figure>
+</div>
+<p>If “Specify priors per model instance and visit is specified then there is an additional control to select the model whose priors are currently displayed in the grid. To set the priors the user must ensure that they are set for each model in turn.</p>
+<div id="fig-fig44cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig44cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDCont/media/image44.png" id="fig-fig44cont" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig44cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;26
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="time-course-hierarchical" class="level3">
+<h3 class="anchored" data-anchor-id="time-course-hierarchical">Time Course Hierarchical</h3>
+<p>This model models the relationship between all the subject’s intermediate endpoints and their final endpoint value. The model has a per-subject random effect (delta), and an exponential coefficient (alpha), relating the final mean response and per-subject variation to the observed response at a visit.</p>
+<p>The user specifies:</p>
+<ul>
+<li><p>A prior mean and standard deviation for a Normally distributed prior for alpha the exponential coefficient (optionally distinct priors for each visit),</p></li>
+<li><p>A prior mean and weight for the estimate of tau, the SD for delta, the inter-subject variability. This prior is an inverse gamma distribution for tau squared (thus <span class="math inline">\(E\left( \frac{1}{\tau^{2}} \right) = \frac{1}{{\acute{\tau}}^{2}}\)</span> where <span class="math inline">\(\acute{\tau\ }\)</span> is the tau prior mean).</p></li>
+<li><p>A prior mean for the estimate of lambda, the SD of the error in the forecast of the final endpoint and the weight of that prior in terms of equivalent number of operations. This prior is an inverse gamma distribution for lambda squared (thus <span class="math inline">\(E\left( \frac{1}{\lambda^{2}} \right) = \frac{1}{{\acute{\lambda}}^{2}}\)</span> where <span class="math inline">\(\acute{\lambda\ }\)</span> is the lambda prior mean).</p></li>
+</ul>
+<div id="fig-fig45cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig45cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDCont/media/image45.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig45cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;27: Longitudinal model - time course hierarchical
+</figcaption>
+</figure>
+</div>
+<p>If “Same priors across all model instances” is selected the screen is simpler as there is no group selector list.</p>
+</section>
+<section id="kernel-density" class="level3">
+<h3 class="anchored" data-anchor-id="kernel-density">Kernel Density</h3>
+<p>This method is a non-parametric re-sampling approach that is ideal for circumstances where the relationship between the interim time and the final endpoint is not known or not canonical.</p>
+<p>In this method existing subjects with known final endpoint data are sampled to provide an estimate of the final endpoint for a subject for whose final endpoint value has not been observed. The probability of selecting a subject when sampling is determined using a Normal probability density centered on the observed interim endpoint value of the subject whose final endpoint we wish to impute. This Normal probability density has SD: h<sub>x</sub>. The value imputed for the subject is sampled from a Normal distribution centered on the selected subject’s final endpoint value with SD: h<sub>y</sub>. Weak initial values for h<sub>x</sub> and h<sub>y</sub> would be the expected SD of the observations at the visit and the expected final SD of the endpoint observations. Smaller h<sub>x</sub> would more strongly select values of X close to the observed interim for which a final value is being imputed; smaller h<sub>y</sub> would reflect an expected conditional variance of the final visit given the interim value.</p>
+<p>The parameters are the</p>
+<ul>
+<li><p>Initial value for h<sub>y</sub>, the ‘noise’ added to the sampled endpoint value</p></li>
+<li><p>Kernel minimum number of subjects – the minimum number of subjects in the model who must have final endpoint data before the h<sub>x</sub> and h<sub>y</sub> are updated based on the observed variances and correlation.</p></li>
+<li><p>Initial value for h<sub>x</sub>, the ‘width’ of the normal kernel used for sampling</p></li>
+</ul>
+<div id="fig-fig46cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig46cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDCont/media/image46.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig46cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;28: Longitudinal model - kernel density
+</figcaption>
+</figure>
+</div>
+<p>If “Same priors across all model instances” is selected the screen is simpler as there is no group selector list.</p>
+</section>
+<section id="itp" class="level3">
+<h3 class="anchored" data-anchor-id="itp">ITP</h3>
+<p>This model fits the responses at all the visits with a curve whose shape is controlled by a single parameter <em>k</em>. It also has per subject and per visit random effect variables which are scaled by the same curve, so they are smaller at earlier visits.</p>
+<p>The user specifies:</p>
+<ul>
+<li><p>A prior mean and standard deviation for a Normally distributed prior for <em>k</em>.</p></li>
+<li><p>A prior mean and weight for the estimate of tau, the SD for <em>s</em>, the inter-subject variability. This prior is an inverse gamma distribution for tau squared (thus <span class="math inline">\(E\left( \frac{1}{\tau^{2}} \right) = \frac{1}{{\acute{\tau}}^{2}}\)</span> where <span class="math inline">\(\acute{\tau\ }\)</span> is the tau prior mean).</p></li>
+<li><p>A prior mean for the estimate of lambda, the SD of the error in the forecast of the final endpoint and the weight of that prior in terms of equivalent number of operations. This prior is an inverse gamma distribution for lambda squared (thus <span class="math inline">\(E\left( \frac{1}{\lambda^{2}} \right) = \frac{1}{{\acute{\lambda}}^{2}}\)</span> where <span class="math inline">\(\acute{\lambda\ }\)</span> is the lambda prior mean).</p></li>
+</ul>
+<div id="fig-fig47cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig47cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDCont/media/image47.png" id="fig-fig47cont" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig47cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;29
+</figcaption>
+</figure>
+</div>
+<p>If “Same priors across all model instances” is selected the screen is simpler as there is no group selector list.</p>
+</section>
+</div>
+<div id="tabset-9-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-2-tab">
+<p>There are three options for handling longitudinal modeling with a dichotomous endpoint:</p>
+<ol type="1">
+<li><p>Last Observation carried Forward (LOCF)</p></li>
+<li><p>Beta binomial</p></li>
+<li><p>Logistic Regression</p></li>
+</ol>
+<p>These are the same as available for longitudinal modeling in Dose Finding with a continuous endpoint. See the FACTS DF Design User Guide section on longitudinal models for a slightly fuller discussion of the models available.</p>
+<p>If the special Restricted Markov model is being used then this has its own longitudinal model.</p>
+<section id="last-observation-carried-forward-locf-1" class="level3">
+<h3 class="anchored" data-anchor-id="last-observation-carried-forward-locf-1">Last Observation Carried Forward (LOCF)</h3>
+<p>This is not a model. For each subject their final endpoint is assumed to be the same as the last observation of that patient at an interim visit.</p>
+</section>
+<section id="beta-binomial" class="level3">
+<h3 class="anchored" data-anchor-id="beta-binomial">Beta binomial</h3>
+<p>This uses simple a beta binomial to model the probability that subjects will ultimately have a response at the final endpoint. The user specifies:</p>
+<ul>
+<li>Beta binomial parameters <span class="math inline">\(\left( \alpha_{\mu 1},\beta_{\mu 1} \right)\)</span> for the probability that a subject observed as a responder at the last visit will finish as a responder and beta binomial parameters <span class="math inline">\(\left( \alpha_{\mu 0},\beta_{\mu 0} \right)\)</span> for the probability that a subject observed as a non-responder at their last visit will finish as a responder.</li>
+</ul>
+<p>9‑9: Longitudinal model - beta binomial</p>
+<p>The prior values for the beta binomial can be thought of in terms of ‘prior observations’ of interim values and final outcomes.</p>
+<p>α<sub>µ1</sub> observations of a response at the visit, where the final endpoint result was a response</p>
+<p>β<sub>µ1</sub> observations of a response at the visit, where the final endpoint result was <strong>not</strong> a response</p>
+<p>α<sub>µ0</sub> observations of <strong>no</strong> response at the visit, where the final endpoint result was a response</p>
+<p>β<sub>µ0</sub> observations of <strong>no</strong> response at the visit, where the final endpoint result was <strong>not</strong> a response</p>
+<p>If “Specify priors per visit” is selected then the priors are entered as a grid:</p>
+<div id="fig-fig40dich" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig40dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDDich/media/image40.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig40dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;30: Longitudinal model - separate priors per visit
+</figcaption>
+</figure>
+</div>
+<p>If “Specify priors per model instance and visit is specified then there is an additional control to select the model whose priors are currently displayed in the grid. To set the priors the user must ensure that they are set for each model in turn.</p>
+<div id="fig-fig41dich" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig41dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDDich/media/image41.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig41dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;31: Beta Binomial Longitudinal Design - priors per model and visit
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="logistic-regression" class="level3">
+<h3 class="anchored" data-anchor-id="logistic-regression">Logistic Regression</h3>
+<p>This model models the relationship between all the subject’s intermediate endpoints and their final endpoint value as the log-odds of the probability of being a final responder based on the current response. The prior for the logit is specified as normally distributed.</p>
+<p>The user specifies:</p>
+<ul>
+<li>The mean and SD of the log-odds probability that a subject will be a final responder given that they are currently: a non-responder <span class="math inline">\(\left( \mu_{0},\sigma_{0} \right)\)</span>, or a responder <span class="math inline">\(\left( \mu_{1},\sigma_{1} \right)\)</span>.</li>
+</ul>
+<div id="fig-fig42dich" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig42dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDDich/media/image42.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig42dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;32: Longitudinal model - logistic regression
+</figcaption>
+</figure>
+</div>
+<p>If “Same priors across all model instances” is selected the screen is simpler as there is no group selector list.</p>
+</section>
+<section id="restricted-markov" class="level3">
+<h3 class="anchored" data-anchor-id="restricted-markov">Restricted Markov</h3>
+<p>If on the “Study &gt; Study Info” tab the special longitudinal feature of a “Restricted Markov” model has been selected, then a “Restricted Markov” longitudinal model must be used in the design to analyse subject data. The Restricted Markov model is similar to the Beta Binomial model except it uses a Dirichlet prior that models the probability of one of a number of outcomes for each subject at each visit – in this case three: Success, Stable and Failure.</p>
+<p>Like the other models, the user can select how many distinct instances of the model are fitted, and whether there is a common set of values for the priors for each instance or individually specified priors for each instance.</p>
+<p>The priors for the model are the equivalent number of prior observations for each outcomes at each visit.</p>
+<div id="fig-fig43dich" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig43dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDDich/media/image43.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig43dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;33: Restricted Markov Longitudinal Model
+</figcaption>
+</figure>
+</div>
+</section>
+</div>
+</div>
+</div>
+<section id="allocation" class="level2">
+<h2 class="anchored" data-anchor-id="allocation">Allocation</h2>
+<p>On the allocation tab:</p>
+<ul>
+<li><p>If there are control arms included in the trial - the user specifies the relative proportion of subjects allocated to each arm in each group. The proportions are only relative within a group, not across groups. The relative proportion of subjects between groups depends on the relative accrual rates into the different groups and the points at which each group stops accruing.</p></li>
+<li><p>If no Control Arm is included in the trial this tab is not displayed.</p></li>
+</ul>
+<div id="fig-fig44dich" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig44dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDDich/media/image44.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig44dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;34: Design - Allocation tab
+</figcaption>
+</figure>
+</div>
+<p>In the example screenshot above, 2:2 randomizations has been specified for all groups, giving them 1:1 allocation with a block size of 4.</p>
+</section>
+</section>
+<section id="interims" class="level1">
+<h1>Interims</h1>
+<p>If the trial is adaptive, there is an Interims tab, where the user specifies when interims occur. Interims can either be specified with calendar frequency, occurring every specified number of weeks, or specified to occur after a specified amount of information has been collected.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-10-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-10-1" role="tab" aria-controls="tabset-10-1" aria-selected="true">Continuous/Dichotomous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-10-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-10-2" role="tab" aria-controls="tabset-10-2" aria-selected="false">Time-to-Event</a></li></ul>
+<div class="tab-content">
+<div id="tabset-10-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-10-1-tab">
+<p>Information can be defined in terms of:</p>
+<ul>
+<li><p>number of subjects that have been recruited</p></li>
+<li><p>the number of subjects who have had the opportunity to complete a specified visit (that is subjects who have completed the visit and subjects that dropped-out before the visit but who would have completed the visit if they hadn’t dropped out)</p></li>
+<li><p>the number of subjects who have actually completed a specified visit</p></li>
+</ul>
+<div id="fig-fig49cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig49cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDCont/media/image49.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig49cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;35: Design Interim tab
+</figcaption>
+</figure>
+</div>
+<p>If defining interims by time, these are defined by frequency (number of weeks between interim) – fractions of weeks can be used for very frequent interims! The first interim is defined in terms of an information threshold, with the type of information selected above.</p>
+<p>If the accrual completes before the first interim threshold is reached, and the first interim was defined in terms of the number of subjects enrolled, then the interims by time start at full accrual. If the first interim is defined in any other terms (subjects complete or subjects with opportunity to complete) then interims only start when this is reached (which might be never).</p>
+<p>If defining interims by information, then each interim is defined individually, by number of patients/observations and if information is interms of completers, then the week of the visit that is being used to define “complete”. Successive interims must be in terms of the same or more observations at the same or later visit, and either the visit or the number of observations needs to be greater than the previous interim.</p>
+<div id="fig-fig50cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig50cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDCont/media/image50.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig50cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;36: Specifying Interims by Information
+</figcaption>
+</figure>
+</div>
+<p>In addition in this section there are options that allow user to specify whether to continue to follow-up subjects if a group or the whole study stops early, and (if interims are governed by time, completers or events) whether interims should continue after full accrual.</p>
+<p>In ED adaptation is limited to stopping groups and stopping the whole trial, thus while it is sensible to ensure that first interims decisions are not taken until sufficient early subjects have completed, there are conditions that can be specified (minimum number of subjects recruited in the trial and minimum number subjects recruited in a group) on the ‘Design &gt; Stopping Criteria’ tab that can be used to prevent interims being acted on too early within specific groups.</p>
+</div>
+<div id="tabset-10-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-10-2-tab">
+<p>Information can be defined in terms of:</p>
+<ul>
+<li><p>number of subjects that have been recruited,</p></li>
+<li><p>the number of events.</p></li>
+</ul>
+<div id="fig-fig43tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig43tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDTTE/media/image43.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig43tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;37: Design Interims tab
+</figcaption>
+</figure>
+</div>
+<p>If defining interims by time, these are defined by frequency (number of weeks between interim) – fractions of weeks can be used for very frequent interims! The first interim is defined in terms of an information threshold, with the type of information selected above.</p>
+<p>If the accrual completes before the first interim threshold is reached, and the first interim was defined in terms of the number of subjects enrolled, then the interims by time start at full accrual. If the first interim is defined in by events, then interims only start when this is reached (which might be never).</p>
+<p>If defining interims by information, then each interim is defined individually, by number of patients/observations and if information is interms of completers, then the week of the visit that is being used to define “complete”. Successive interims must be in terms of the same or more observations at the same or later visit, and either the visit or the number of observations needs to be greater than the previous interim.</p>
+<div id="fig-fig44tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig44tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDTTE/media/image44.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig44tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;38: Specifying interims by event
+</figcaption>
+</figure>
+</div>
+<p>In addition in this section there are options that allow user to specify whether to continue to follow-up subjects if a group or the whole study stops early, and (if interims are governed by time, completers or events) whether interims should continue after full accrual.</p>
+<p>In ED adaptation is limited to stopping groups and stopping the whole trial, thus while it is sensible to ensure that first interim decisions are not taken until sufficient early subjects have completed, there are conditions that can be specified (minimum number of subjects recruited in the trial and minimum number subjects recruited in a group) on the ‘Design &gt; Stopping Criteria’ tab that can be used to prevent interims being acted on too early within specific groups.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="successfutility-criteria" class="level1">
+<h1>Success/Futility Criteria</h1>
 
 
 </section>
 
 </main> <!-- /main -->
 <footer style="display: flex; justify-content: space-between; align-items: center;">
-
   <!-- Left side: Copyright -->
-
   <p style="margin: 0;">
-
     © <span id="year"></span>
-
     <a href="https://www.berryconsultants.com">Berry Consultants</a>
-
   </p>
-
-
 
   <!-- Right side: Relative link -->
-
   <p style="margin: 0;">
-
     <a href="../../../../introduction/citation.html">How to Cite</a>
-
   </p>
-
 </footer>
 
-
-
 <script>
-
   document.getElementById('year').textContent = new Date().getFullYear();
-
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {

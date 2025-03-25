@@ -390,7 +390,19 @@ In addition the user specifies
   $E\left( \frac{1}{\sigma^{2}} \right) = \frac{1}{{\acute{\sigma}}^{2}}$
   where $\acute{\sigma}$ is the ‘sigma prior mean’.
 
+:::{.panel-tabset}
+
+### Continuous
+
 ![Treatment model - groups modeled separately](./EDCont/media/image38.png){#fig-fig38cont}
+
+### Dichotomous
+
+![Treatment model - groups modeled separately](./EDDich/media/image35.png){#fig-fig35dich}
+
+:::
+
+
 
 ### Hierarchical model across groups
 
@@ -416,6 +428,19 @@ In addition the user specifies
   treatment effect. This analysis is conducted separately, reported
   separately, and is used only as an OPTION in stopping. Filling in
   these priors does NOT constitute assuming equal treatment effects.
+
+:::{.panel-tabset}
+
+### Continuous
+
+![Treatment model - hierarchical model across groups](./EDCont/media/image95.png){#fig-fig95cont}
+
+### Dichotomous
+
+![Treatment model - hierarchical model across groups](./EDDich/media/image35.png){#fig-fig35dich}
+
+:::
+
 
 ::: {.callout-tip collapse="true"}
 ### Setting the priors for Hierarchical model hyper parameters
@@ -464,7 +489,19 @@ the meantime like us you have the ability to run simulations with
 different priors and explore the impact on the operating characteristics
 in the setting of interest.
 
+:::{.panel-tabset}
+
+### Continuous
+
 ![Treatment Model - using clustering](./EDCont/media/image39.png){#fig-fig39cont}
+
+### Dichotomous
+
+![Treatment Model - using clustering](./EDDich/media/image36.png){#fig-fig36dich}
+
+:::
+
+
 
 ### Baseline adjustment
 
@@ -507,4 +544,563 @@ for incomplete subjects.
 
 ## Time-to-Event
 
+### Groups modeled separately
+
+If the treatment arms in different groups are to be modeled separately,
+then the treatment arm in each group has its own prior which specified
+as:
+
+- If control arms are present, a mean and standard deviation for a
+  Normally distributed prior for the log hazard ratio of the event rate
+  on the study treatment arm compared to the estimated event rate on the
+  control arm.
+
+- If comparing with historical control response values, a mean and
+  standard deviation for a Normally distributed prior for the log hazard
+  ratio of the event rate on the study treatment arm compared to the
+  historic event rate for control.
+
+In addition the user specifies
+
+- A prior mean and standard deviation for a Normally distributed prior
+  for a common hazard ratio (but still relative to the control rate
+  within each group) across all groups.
+
+![Treatment model - groups modeled separately](./EDTTE/media/image39.png){#fig-fig39tte}
+
+### Hierarchical model across groups
+
+If the event rates on the study treatment arms in the different groups
+are to be modeled with a hierarchical structure, then the user enters
+the hyper-parameters for the hierarchical model. The hierarchical model
+is a Normal distribution for the log hazard ratios for the different
+study treatment arms. The user specifies the hyper priors for this
+model - the prior distributions for each of the parameters of the
+hierarchical model:
+
+- the mean and standard deviation for a Normally distributed prior for
+  the mean of the hierarchical model,
+
+- and the parameters for an Inverse-Gamma distributed prior for the
+  variance of the hierarchical model. As with all Inverse-Gamma priors
+  these can be specified as a mean and a weight or more conventional
+  Alpha and Beta parameters.
+
+In addition the user specifies
+
+- A prior mean and standard deviation for a Normally distributed prior
+  for the across groups analysis – this is a pooled analysis of an
+  overall log hazard ratio relative to control (whether historic or
+  observed control event rates). In this analysis, all groups are
+  assumed to have the hazard ratio. This analysis is conducted
+  separately, reported separately, and is used only as an OPTION in
+  stopping. Filling in these priors does NOT constitute assuming equal
+  treatment effects.
+
+![Treatment Model - hierarchical model across all groups](./EDTTE/media/image40.png){#fig-fig40tte}
+
+::: {.callout-tip collapse="true"}
+### Setting the priors for Hierarchical model hyper parameters
+
+Unless the intent is to add information that is not observed in the study, the hyper parameters can and should be set so that they are ‘weak’ priors, centered on the expected values.
+
+In this case the following would be reasonable:
+
+- Set the prior mean value for Mu as the expected log hazard ratio of the response on the treatment arms.  
+- Set the prior SD for Mu equal to at least the largest reasonably expected difference between the log hazard ratios across the groups.  
+- Set the mean for tau to the same value as the prior SD for Mu.  
+- Set the weight for tau to be < 1.  
+
+To force borrowing (near pooling of data) between the groups, set a smaller prior mean of tau and a weight greater than the number of groups, combined with a weakly informative prior for Mu; the group log hazard ratios will come together near the sample weighted average of the sample log hazard ratios.
+
+To limit the borrowing between the groups, set a larger tau and a weight equal to the number of groups or more. This can be used if, with a weak prior for tau, the borrowing across groups when there is some variation seems too great. However, achieving the desired balance will require simulation of a number of scenarios and trial and error.
+
+To use hierarchical modeling and include a prior expectation for the log hazard ratio, set the mean for Mu to the expected log hazard ratio, set small values for the SD of Mu **and** the mean of tau, and give the prior for tau a weight equal to the number of groups or more. Again, achieving the desired balance will require simulation of a number of scenarios and trial and error.
+
+
 :::
+
+### Hierarchical Model plus Clustering
+
+After selecting “Hierarchical model across groups”, if “Use Clustering”
+is also checked then the specified prior is a prior for an arbitrary
+number of distributions each providing a hierarchical prior to an
+arbitrary selection of the groups. As with the hierarchical model, the
+smaller and stronger the prior is on tau the greater the borrowing,
+(closer to pooling) and the larger and stronger the prior is on tau the
+weaker the borrowing (closer to separate analysis). The weaker the prior
+on tau, the more the posterior value of tau is determined by the spread
+of the control means in that cluster.
+
+The “Dp scale parameter” is the Dirichlet Process parameter ‘α’ in the
+description of the model in the Enrichment Design Specification
+document. The larger the value of ‘α’ the more process tends to place
+groups in new clusters – so there is less borrowing, in experiments
+using values of ‘α’ from 1 to twice the number of groups, this was a
+much smaller effect than varying tau from 25% of the expected treatment
+difference to 200% of the expected treatment difference.
+
+We are still learning about how best to specify priors for this model
+and will supply more guidance once we have a better understanding. In
+the meantime like us you have the ability to run simulations with
+different priors and explore the impact on the operating characteristics
+in the setting of interest.
+
+![Hierarchical Model plus Clustering](./EDTTE/media/image41.png){#fig-fig41tte}
+
+:::
+
+# Frequentist Analysis
+
+If frequentist analysis is enabled on this tab, the alpha levels can be
+set for the various end-of-trial frequentist analyses. These are output
+in separate results files, and are not available for use within the
+simulations (e.g. for early stopping decisions). Frequentist analysis is
+enabled by default, it increases the computational overhead of
+simulations only slightly.
+
+![Frequentist test parameters](./EDTTE/media/image38.png){#fig-fig38tte}
+
+# Longitudinal model
+
+This section is only relevant for the continuous and dichotomous endpoint engines. 
+
+With all the longitudinal models available, it is possible to specify
+how many separate longitudinal models to use.
+
+![](./EDCont/media/image41.png){#fig-fig41cont}
+
+- Single model for all groups – there is a single model; longitudinal
+  data is pooled across all arms and groups to estimate the parameters
+  of the model.
+
+- Model arms separately – there are two models; one for all subjects in
+  control arms and one for all subjects in treatment arms and the
+  parameters for each model are estimated independently.
+
+- Model groups separately – there are separate models for each group;
+  longitudinal data within the group is pooled for the subjects in
+  either the control or treatment arm in that group.
+
+- Model groups and arms separately - there are separate models for each
+  treatment arm in each group.
+
+The use of the longitudinal models is to impute final endpoint response
+for subjects who at that point in time have not reached their final
+endpoint (and if “Bayesian multiple imputation from post baseline” has
+been selected on the Design \> Treatment model tab, also for those
+subjects who have dropped out and who’s final endpoint response will
+never be observed).
+
+The multiple imputation process means that during the MCMC sampling, the
+subjects who’s final endpoints are to be imputed have them sampled from
+the distribution of their predicted endpoint given the subjects’
+observed intermediate responses and the parameters of the longitudinal
+model. Imputed endpoints thus have a distribution unlike an observed
+endpoint which will have the same value in each MCMC sample. A
+distribution estimated in this way captures both the uncertainty in the
+estimate of the parameters of the longitudinal model and the uncertainty
+of the prediction of the endpoint given particular parameter values.
+
+:::{.panel-tabset}
+
+## Continuous
+
+There are five options for handling longitudinal modeling with a continuous endpoint:
+
+1.  Last Observation carried Forward (LOCF)
+
+2.  Linear Regression
+
+3.  Time course hierarchical
+
+4.  Kernel Density
+
+5.  ITP
+
+These are the same as available for longitudinal modeling in Dose
+Finding with a continuous endpoint. See the FACTS DF Design User Guide
+section on longitudinal models for a slightly fuller discussion of the
+models available.
+
+### Last Observation Carried Forward (LOCF)
+
+This is not a model. For each subject their final endpoint is assumed to
+be the same as the last observation of that patient at an interim visit.
+
+### Linear Regression
+
+This uses simple linear regression to model the relationship between
+endpoint values at each visit and the final endpoint value. The user
+specifies:
+
+- A prior mean and standard deviation for a Normally distributed prior
+  for alpha, the intercept or fixed expected response.
+
+- A prior mean and standard deviation for a Normally distributed prior
+  for beta, the slope or the coefficient of further improvement as a
+  multiple of the response observed at the visit.
+
+- A prior mean for the estimate of lambda, the SD of the error in the
+  forecast of the final endpoint and the weight of that prior in terms
+  of equivalent number of operations. This prior is an inverse gamma
+  distribution for lambda squared. (thus
+  $E\left( \frac{1}{\lambda^{2}} \right) = \frac{1}{{\acute{\lambda}}^{2}}$
+  where $\acute{\lambda\ }$ is the lambda prior mean)
+
+![Longitudinal model - linear regression](./EDCont/media/image42.png){#fig-fig42cont}
+
+
+If “Specify priors per visit” is selected then the priors are entered as
+a grid:
+
+![Longitudinal model - separate priors per visit](./EDCont/media/image43.png){#fig-fig43cont}
+
+
+If “Specify priors per model instance and visit is specified then there
+is an additional control to select the model whose priors are currently
+displayed in the grid. To set the priors the user must ensure that they
+are set for each model in turn.
+
+![](./EDCont/media/image44.png){#fig-fig44cont}
+
+
+###  Time Course Hierarchical
+
+This model models the relationship between all the subject’s
+intermediate endpoints and their final endpoint value. The model has a
+per-subject random effect (delta), and an exponential coefficient
+(alpha), relating the final mean response and per-subject variation to
+the observed response at a visit.
+
+The user specifies:
+
+- A prior mean and standard deviation for a Normally distributed prior
+  for alpha the exponential coefficient (optionally distinct priors for
+  each visit),
+
+- A prior mean and weight for the estimate of tau, the SD for delta, the
+  inter-subject variability. This prior is an inverse gamma distribution
+  for tau squared (thus
+  $E\left( \frac{1}{\tau^{2}} \right) = \frac{1}{{\acute{\tau}}^{2}}$
+  where $\acute{\tau\ }$ is the tau prior mean).
+
+- A prior mean for the estimate of lambda, the SD of the error in the
+  forecast of the final endpoint and the weight of that prior in terms
+  of equivalent number of operations. This prior is an inverse gamma
+  distribution for lambda squared (thus
+  $E\left( \frac{1}{\lambda^{2}} \right) = \frac{1}{{\acute{\lambda}}^{2}}$
+  where $\acute{\lambda\ }$ is the lambda prior mean).
+
+![Longitudinal model - time course hierarchical](./EDCont/media/image45.png){#fig-fig45cont}
+
+
+If “Same priors across all model instances” is selected the screen is
+simpler as there is no group selector list.
+
+### Kernel Density
+
+This method is a non-parametric re-sampling approach that is ideal for
+circumstances where the relationship between the interim time and the
+final endpoint is not known or not canonical.
+
+In this method existing subjects with known final endpoint data are
+sampled to provide an estimate of the final endpoint for a subject for
+whose final endpoint value has not been observed. The probability of
+selecting a subject when sampling is determined using a Normal
+probability density centered on the observed interim endpoint value of
+the subject whose final endpoint we wish to impute. This Normal
+probability density has SD: h<sub>x</sub>. The value imputed for the
+subject is sampled from a Normal distribution centered on the selected
+subject’s final endpoint value with SD: h<sub>y</sub>. Weak initial
+values for h<sub>x</sub> and h<sub>y</sub> would be the expected SD of
+the observations at the visit and the expected final SD of the endpoint
+observations. Smaller h<sub>x</sub> would more strongly select values of
+X close to the observed interim for which a final value is being
+imputed; smaller h<sub>y</sub> would reflect an expected conditional
+variance of the final visit given the interim value.
+
+The parameters are the
+
+- Initial value for h<sub>y</sub>, the ‘noise’ added to the sampled
+  endpoint value
+
+- Kernel minimum number of subjects – the minimum number of subjects in
+  the model who must have final endpoint data before the h<sub>x</sub>
+  and h<sub>y</sub> are updated based on the observed variances and
+  correlation.
+
+- Initial value for h<sub>x</sub>, the ‘width’ of the normal kernel used
+  for sampling
+
+![Longitudinal model - kernel density](./EDCont/media/image46.png){#fig-fig46cont}
+
+If “Same priors across all model instances” is selected the screen is
+simpler as there is no group selector list.
+
+### ITP
+
+This model fits the responses at all the visits with a curve whose shape
+is controlled by a single parameter *k*. It also has per subject and per
+visit random effect variables which are scaled by the same curve, so
+they are smaller at earlier visits.
+
+The user specifies:
+
+- A prior mean and standard deviation for a Normally distributed prior
+  for *k*.
+
+- A prior mean and weight for the estimate of tau, the SD for *s*, the
+  inter-subject variability. This prior is an inverse gamma distribution
+  for tau squared (thus
+  $E\left( \frac{1}{\tau^{2}} \right) = \frac{1}{{\acute{\tau}}^{2}}$
+  where $\acute{\tau\ }$ is the tau prior mean).
+
+- A prior mean for the estimate of lambda, the SD of the error in the
+  forecast of the final endpoint and the weight of that prior in terms
+  of equivalent number of operations. This prior is an inverse gamma
+  distribution for lambda squared (thus
+  $E\left( \frac{1}{\lambda^{2}} \right) = \frac{1}{{\acute{\lambda}}^{2}}$
+  where $\acute{\lambda\ }$ is the lambda prior mean).
+
+![](./EDCont/media/image47.png){#fig-fig47cont}
+
+If “Same priors across all model instances” is selected the screen is
+simpler as there is no group selector list.
+
+## Dichotomous
+
+There are three options for handling longitudinal modeling with a
+dichotomous endpoint:
+
+1.  Last Observation carried Forward (LOCF)
+
+2.  Beta binomial
+
+3.  Logistic Regression
+
+These are the same as available for longitudinal modeling in Dose
+Finding with a continuous endpoint. See the FACTS DF Design User Guide
+section on longitudinal models for a slightly fuller discussion of the
+models available.
+
+If the special Restricted Markov model is being used then this has its
+own longitudinal model.
+
+### Last Observation Carried Forward (LOCF)
+
+This is not a model. For each subject their final endpoint is assumed to
+be the same as the last observation of that patient at an interim visit.
+
+### Beta binomial
+
+This uses simple a beta binomial to model the probability that subjects
+will ultimately have a response at the final endpoint. The user
+specifies:
+
+- Beta binomial parameters
+  $\left( \alpha_{\mu 1},\beta_{\mu 1} \right)$ for the probability
+  that a subject observed as a responder at the last visit will finish
+  as a responder and beta binomial parameters
+  $\left( \alpha_{\mu 0},\beta_{\mu 0} \right)$ for the probability
+  that a subject observed as a non-responder at their last visit will
+  finish as a responder.
+
+9‑9: Longitudinal model - beta binomial
+
+The prior values for the beta binomial can be thought of in terms of
+‘prior observations’ of interim values and final outcomes.
+
+α<sub>µ1</sub> observations of a response at the visit, where the final
+endpoint result was a response
+
+β<sub>µ1</sub> observations of a response at the visit, where the final
+endpoint result was **not** a response
+
+α<sub>µ0</sub> observations of **no** response at the visit, where the
+final endpoint result was a response
+
+β<sub>µ0</sub> observations of **no** response at the visit, where the
+final endpoint result was **not** a response
+
+If “Specify priors per visit” is selected then the priors are entered as
+a grid:
+
+![Longitudinal model - separate priors per visit](./EDDich/media/image40.png){#fig-fig40dich}
+
+If “Specify priors per model instance and visit is specified then there
+is an additional control to select the model whose priors are currently
+displayed in the grid. To set the priors the user must ensure that they
+are set for each model in turn.
+
+![Beta Binomial Longitudinal Design - priors per model and visit](./EDDich/media/image41.png){#fig-fig41dich}
+
+### Logistic Regression
+
+This model models the relationship between all the subject’s
+intermediate endpoints and their final endpoint value as the log-odds of
+the probability of being a final responder based on the current
+response. The prior for the logit is specified as normally distributed.
+
+The user specifies:
+
+- The mean and SD of the log-odds probability that a subject will be a
+  final responder given that they are currently: a non-responder
+  $\left( \mu_{0},\sigma_{0} \right)$, or a responder
+  $\left( \mu_{1},\sigma_{1} \right)$.
+
+![Longitudinal model - logistic regression](./EDDich/media/image42.png){#fig-fig42dich}
+
+If “Same priors across all model instances” is selected the screen is
+simpler as there is no group selector list.
+
+### Restricted Markov
+
+If on the “Study \> Study Info” tab the special longitudinal feature of
+a “Restricted Markov” model has been selected, then a “Restricted
+Markov” longitudinal model must be used in the design to analyse subject
+data. The Restricted Markov model is similar to the Beta Binomial model
+except it uses a Dirichlet prior that models the probability of one of a
+number of outcomes for each subject at each visit – in this case three:
+Success, Stable and Failure.
+
+Like the other models, the user can select how many distinct instances
+of the model are fitted, and whether there is a common set of values for
+the priors for each instance or individually specified priors for each
+instance.
+
+The priors for the model are the equivalent number of prior observations
+for each outcomes at each visit.
+
+![Restricted Markov Longitudinal Model](./EDDich/media/image43.png){#fig-fig43dich}
+
+:::
+
+
+## Allocation
+
+On the allocation tab:
+
+- If there are control arms included in the trial - the user specifies
+  the relative proportion of subjects allocated to each arm in each
+  group. The proportions are only relative within a group, not across
+  groups. The relative proportion of subjects between groups depends on
+  the relative accrual rates into the different groups and the points at
+  which each group stops accruing.
+
+- If no Control Arm is included in the trial this tab is not displayed.
+
+![Design - Allocation tab](./EDDich/media/image44.png){#fig-fig44dich}
+
+In the example screenshot above, 2:2 randomizations has been specified
+for all groups, giving them 1:1 allocation with a block size of 4.
+
+
+# Interims
+
+If the trial is adaptive, there is an Interims tab, where the user
+specifies when interims occur. Interims can either be specified with
+calendar frequency, occurring every specified number of weeks, or
+specified to occur after a specified amount of information has been
+collected.
+
+:::{.panel-tabset}
+
+## Continuous/Dichotomous
+
+Information can be defined in terms of:
+
+- number of subjects that have been recruited
+
+- the number of subjects who have had the opportunity to complete a
+  specified visit (that is subjects who have completed the visit and
+  subjects that dropped-out before the visit but who would have
+  completed the visit if they hadn’t dropped out)
+
+- the number of subjects who have actually completed a specified visit
+
+![Design Interim tab](./EDCont/media/image49.png){#fig-fig49cont}
+
+
+If defining interims by time, these are defined by frequency (number of
+weeks between interim) – fractions of weeks can be used for very
+frequent interims! The first interim is defined in terms of an
+information threshold, with the type of information selected above.
+
+If the accrual completes before the first interim threshold is reached,
+and the first interim was defined in terms of the number of subjects
+enrolled, then the interims by time start at full accrual. If the first
+interim is defined in any other terms (subjects complete or subjects
+with opportunity to complete) then interims only start when this is
+reached (which might be never).
+
+If defining interims by information, then each interim is defined
+individually, by number of patients/observations and if information is
+interms of completers, then the week of the visit that is being used to
+define “complete”. Successive interims must be in terms of the same or
+more observations at the same or later visit, and either the visit or
+the number of observations needs to be greater than the previous
+interim.
+
+![Specifying Interims by Information](./EDCont/media/image50.png){#fig-fig50cont}
+
+In addition in this section there are options that allow user to specify
+whether to continue to follow-up subjects if a group or the whole study
+stops early, and (if interims are governed by time, completers or
+events) whether interims should continue after full accrual.
+
+In ED adaptation is limited to stopping groups and stopping the whole
+trial, thus while it is sensible to ensure that first interims decisions
+are not taken until sufficient early subjects have completed, there are
+conditions that can be specified (minimum number of subjects recruited
+in the trial and minimum number subjects recruited in a group) on the
+‘Design \> Stopping Criteria’ tab that can be used to prevent interims
+being acted on too early within specific groups.
+
+## Time-to-Event
+
+Information can be defined in terms of:
+
+- number of subjects that have been recruited,
+
+- the number of events.
+
+![Design Interims tab](./EDTTE/media/image43.png){#fig-fig43tte}
+
+If defining interims by time, these are defined by frequency (number of
+weeks between interim) – fractions of weeks can be used for very
+frequent interims! The first interim is defined in terms of an
+information threshold, with the type of information selected above.
+
+If the accrual completes before the first interim threshold is reached,
+and the first interim was defined in terms of the number of subjects
+enrolled, then the interims by time start at full accrual. If the first
+interim is defined in by events, then interims only start when this is
+reached (which might be never).
+
+If defining interims by information, then each interim is defined
+individually, by number of patients/observations and if information is
+interms of completers, then the week of the visit that is being used to
+define “complete”. Successive interims must be in terms of the same or
+more observations at the same or later visit, and either the visit or
+the number of observations needs to be greater than the previous
+interim.
+
+![Specifying interims by event](./EDTTE/media/image44.png){#fig-fig44tte}
+
+In addition in this section there are options that allow user to specify
+whether to continue to follow-up subjects if a group or the whole study
+stops early, and (if interims are governed by time, completers or
+events) whether interims should continue after full accrual.
+
+In ED adaptation is limited to stopping groups and stopping the whole
+trial, thus while it is sensible to ensure that first interim decisions
+are not taken until sufficient early subjects have completed, there are
+conditions that can be specified (minimum number of subjects recruited
+in the trial and minimum number subjects recruited in a group) on the
+‘Design \> Stopping Criteria’ tab that can be used to prevent interims
+being acted on too early within specific groups.
+
+:::
+
+# Success/Futility Criteria
