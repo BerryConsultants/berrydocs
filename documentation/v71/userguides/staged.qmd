@@ -905,6 +905,84 @@ to Stage 2. The decision criteria are checked in the order: 'Futility',
 on. Note that deciding that Stage 1 is a Success or is Futile prevents
 Stage 2 from running, Success or Futility is a trial level decision.
 
+### Stage 1 Decisions
+
+The possible outcomes for Stage 1, called "Outcome" in the Stage 1 output files, can be divided into 13 possible distinct decisions. Each simulated staged design makes a stage 1 decision that falls into exactly one of these categories. The outcomes reported for stage 1 do not depend on the decision made in Stage 2. They are fixed an known at the time of
+initiation of the second stage of the trial. The possible decisions are as follows:
+
+#### Trials that stopped in Stage 1
+
+1\. Stage 1 Early Success
+: Stage 1 Early Success is achieved if and only if the trial meets the success condition
+at an interim analysis during Stage 1, and does not meet the futility criteria at the Stage 1 final analysis.
+The final analysis futility criteria must not be met whether or not subjects were selected
+to follow-up after an early success decision in Stage 1.
+
+2\. Stage 1 Late Success
+: Stage 1 Late Success is achieved if and only if the trial enrolls to the maximum Stage 1 sample
+size, collects full follow-up on Stage 1 subjects, and then meets the Stage 1 final analysis success criteria.
+
+3\. Stage 1 Late Futility
+: Stage 1 Late Futility is achieved if and only if the trial enrolls to the maximum Stage 1 sample
+size, collects full follow-up on Stage 1 subjects, and then meets the Stage 1 final analysis futility criteria.
+Stage 1 Late Futility is not the complement of Stage 1 Late Success since the decision made if neither Late Success nor Late Futility are achieved at the Stage 1 final analysis is to graduate to Stage 2.
+
+4\. Stage 1 Early Futility
+: Stage 1 Early Futility is achieved if and only if the trial meets the futility condition
+at an interim analysis during Stage 1, and does not meet the success criteria at the Stage 1 final analysis.
+The final analysis success criteria must not be met whether or not subjects were selected
+to follow-up after an early futility decision in Stage 1.
+
+5\. Stage 1 Success to Futility Flip-Flop
+: Stage 1 Success to Futility Flip-Flop is achieved if and only if the trial meets the
+success condition at an interim analysis in Stage 1, but meets the futility condition at the Stage 1
+final analysis. Success to Futility Flip-Flops can be achieved whether or not
+subjects are followed up after the early success decision in Stage 1.
+
+6\. Stage 1 Futility to Success Flip-Flop
+: Stage 1 Futility to Success Flip-Flop is achieved if and only if the trial meets the
+futility condition at an interim analysis in Stage 1, but meets the success condition at the Stage 1
+final analysis. Futility to Success Flip-Flops can be achieved whether or not
+subjects are followed up after the early futility decision in Stage 1.
+
+#### Trials that graduated in Stage 1
+
+8\. Early Graduation
+: Early Graduation is achieved if and only if the trial graduates at an interim
+analysis in Stage 1 and successfully chooses at least 1 active arm to carry forward into Stage 2.
+
+9\. Late Graduation
+: Late Graduation is achieved if and only if the trial enrolls to the maximum Stage 1 sample size, collects full follow-up on all Stage 1 subjects, graduates at the Stage 1 final analysis, and successfully chooses at least 1 active arm to carry forward into Stage 2.
+
+10\. Early Graduation, None Selected
+: Early Graduation, None Selected is achieved if and only if the trial graduates at an interim
+analysis in Stage 1, but no active arms meet the criteria for moving to Stage 2. In this case, Stage 2 is considered "Null" and is not performed.
+
+11\. Late Graduation, None Selected
+: Early Graduation, None Selected is achieved if and only if the trial enrolls to the maximum Stage 1 sample size, collects full follow-up on all Stage 1 subjects, graduates at the Stage 1 final analysis, but no active arms meet the criteria for moving to Stage 2. In this case, Stage 2 is considered "Null" and is not performed.
+
+#### Outcomes Specific to the Complete Data Analysis
+
+If the option to "Perform Stage 1 complete data analysis" is checked in the Stage 1 Design > Interims tab, then after an early graduation decision is made in Stage 1, the complete data analysis is conducted after full information is collected on all subjects enrolled during Stage 1. The complete data analysis row is recorded in the Stage 1 weeks files in the row with Interim Number equal to 1000. This row is distinct from the rest of the trial operation, and is not truly an interim analysis at which a trial decision can be made.
+
+The special decisions, beyond the first 6 decisions that can be made for a trial that stops early in Stage 1, are:
+
+15\. Early Graduation, Complete Data Analysis Futility
+: Early Graduation, Complete Data Analysis Futility is achieved if and only if the trial graduates at an interim
+analysis in Stage 1, and meets Stage 1 final futility criteria at the complete data analysis after full follow-up on subjects accrued during Stage 1 is collected.
+
+16\. Early Graduation, Complete Data Analysis Success
+: Early Graduation, Complete Data Analysis Success is achieved if and only if the trial graduates at an interim
+analysis in Stage 1, and meets Stage 1 final futility criteria at the complete data analysis after full follow-up on subjects accrued during Stage 1 is collected.
+
+17\. Early Graduation, Complete Data Analysis Inconclusive
+: Early Graduation, Complete Data Analysis Inconclusive is achieved if and only if the trial graduates at an interim
+analysis in Stage 1, and does not meet the Stage 1 final futility or Stage 1 final success criteria at the complete data analysis after full follow-up on subjects accrued during Stage 1 is collected.
+
+Decisions 15, 16, and 17 are unique to the complete data analysis, and cannot occur at a regular interim analysis or a final analysis.
+
+### Creating Decision Criteria
+
 As in FACTS Core, each decision can be specified in the following
 manner:
 
@@ -1434,12 +1512,140 @@ handled as follows:
 
 ## Success/Futility Criteria
 
-In Stage 2 the "Success/Futility Criteria" tab is [the same as in FACTS Core](./core/design/successfutility.qmd),
-and differs from the Stage 1 Design \> Success/Futility/Graduation Criteria
+In Stage 2 the "Success/Futility Criteria" tab is laid out [as in FACTS Core.](./core/design/successfutility.qmd) It differs from the Stage 1 Design \> Success/Futility/Graduation Criteria
 tab in not having any graduation criteria conditions.
 
-See the [Stage 2 Interims tab description](#interims) for some details on Success/Futility
-rules if interims are unattainable or already attained at the start of Stage 2.
+See the [Stage 2 Interims tab description](#interims) for specific details on Success/Futility
+rule assessment if interims are unattainable or already attained at the start of Stage 2.
+
+### The Staged Design Decisions for Stage 1 and Stage 2 Combined
+
+The decisions that can be made in staged designs, called Comb. Outcome in the output files,  are expanded to accomodate
+the two stages. Instead of the 7 possible outcomes in a single stage FACTS Core design, there are more available
+in the staged engine. Every possible combination decision that can be made in a FACTS Staged designs falls into exactly one of 23 possible decisions. They are as follows:
+
+#### Trials that stopped in Stage 1
+
+1\. Stage 1 Early Success
+: Stage 1 Early Success is achieved if and only if the trial meets the success condition
+at an interim analysis during Stage 1, and does not meet the futility criteria at the Stage 1 final analysis.
+The final analysis futility criteria must not be met whether or not subjects were selected
+to follow-up after an early success decision in Stage 1.
+
+2\. Stage 1 Late Success
+: Stage 1 Late Success is achieved if and only if the trial enrolls to the maximum Stage 1 sample
+size, collects full follow-up on Stage 1 subjects, and then meets the Stage 1 final analysis success criteria.
+
+3\. Stage 1 Late Futility
+: Stage 1 Late Futility is achieved if and only if the trial enrolls to the maximum Stage 1 sample
+size, collects full follow-up on Stage 1 subjects, and then meets the Stage 1 final analysis futility criteria.
+Stage 1 Late Futility is not the complement of Stage 1 Late Success since the decision made if neither Late Success nor Late Futility are achieved at the Stage 1 final analysis is to graduate to Stage 2.
+
+4\. Stage 1 Early Futility
+: Stage 1 Early Futility is achieved if and only if the trial meets the futility condition
+at an interim analysis during Stage 1, and does not meet the success criteria at the Stage 1 final analysis.
+The final analysis success criteria must not be met whether or not subjects were selected
+to follow-up after an early futility decision in Stage 1.
+
+5\. Stage 1 Success to Futility Flip-Flop
+: Stage 1 Success to Futility Flip-Flop is achieved if and only if the trial meets the
+success condition at an interim analysis in Stage 1, but meets the futility condition at the Stage 1
+final analysis. Success to Futility Flip-Flops can be achieved whether or not
+subjects are followed up after the early success decision in Stage 1.
+
+6\. Stage 1 Futility to Success Flip-Flop
+: Stage 1 Futility to Success Flip-Flop is achieved if and only if the trial meets the
+futility condition at an interim analysis in Stage 1, but meets the success condition at the Stage 1
+final analysis. Futility to Success Flip-Flops can be achieved whether or not
+subjects are followed up after the early futility decision in Stage 1.
+
+#### Trials that graduated early from Stage 1
+
+21\. Stage 1 Early Graduation, Stage 2 Early Success
+: Stage 1 Early Graduation, Stage 2 Early Success is achieved if and only if the trial graduates at an interim
+analysis in Stage 1, meets the success criteria at an interim analysis during Stage 2, and does not meet the
+futility criteria at the Stage 2 final analysis. The Stage 2 final analysis futility criteria must not be met whether or not subjects were selected
+to follow-up after an early success decision in Stage 2.
+
+22\. Stage 1 Early Graduation, Stage 2 Late Success
+: Stage 1 Early Graduation, Stage 2 Late Success is achieved if and only if the trial graduates at an interim
+analysis in Stage 1, enrolls to the maximum allowed Stage 2 sample size, collects full follow-up on all Stage 2 subjects,
+and then meets the Stage 2 final analysis success criteria.
+
+23\. Stage 1 Early Graduation, Stage 2 Late Futility
+: Stage 1 Early Graduation, Stage 2 Late Futility is achieved if and only if the trial graduates at an interim
+analysis in Stage 1, enrolls to the maximum allowed Stage 2 sample size, collects full follow-up on all Stage 2 subjects,
+and then meets the Stage 2 final analysis futility criteria. Stage 2 Late futility is not automatically the complement of Stage 2 Late Success; the Stage 2 final analysis futility rule must be specified as the complement of the success rule to make it true.
+
+24\. Stage 1 Early Graduation, Stage 2 Early Futility
+: Stage 1 Early Graduation, Stage 2 Early Futility is achieved if and only if the trial graduates at an interim
+analysis in Stage 1, meets the futility criteria at an interim analysis during Stage 2, and does not meet the
+success criteria at the Stage 2 final analysis. The Stage 2 final analysis success criteria must not be met whether or not subjects were selected
+to follow-up after an early futility decision in Stage 2.
+
+25\. Stage 1 Early Graduation, Stage 2 Success to Futility Flip-Flop
+: Stage 1 Early Graduation, Stage 2 Success to Futility Flip-Flop is achieved if and only if the trial graduates at an interim
+analysis in Stage 1, meets the success condition at an interim analysis in Stage 2, but meets the futility condition at the Stage 2
+final analysis. Stage 2 Success to Futility Flip-Flops can be achieved whether or not
+subjects are followed up after the early success decision in Stage 2.
+
+26\. Stage 1 Early Graduation, Stage 2 Futility to Success Flip-Flop
+: Stage 1 Early Graduation, Stage 2 Futility to Success Flip-Flop is achieved if and only if the trial graduates at an interim
+analysis in Stage 1, meets the futility condition at an interim analysis in Stage 2, but meets the success condition at the Stage 2
+final analysis. Stage 2 Futility to Success Flip-Flops can be achieved whether or not
+subjects are followed up after the early futility decision in Stage 2.
+
+27\. Stage 1 Early Graduation, Stage 2 Inconclusive
+: Stage 1 Early Graduation, Stage 2 Inconclusive is achieved if and only if the trial graduates at an interim
+analysis in Stage 1, enrolls to the maximum allowed Stage 2 sample size, collects full follow-up on all Stage 2 subjects,
+and then does not meet the Stage 2 final success or final futility criteria.
+
+#### Trials that graduated at the Stage 1 final analysis
+
+31\. Stage 1 Late Graduation, Stage 2 Early Success
+: Stage 1 Late Graduation, Stage 2 Early Success is achieved if and only if the trial enrolls to the maximum Stage 1 sample size, collects full follow-up on all Stage 1 subjects, graduates at the Stage 1 final analysis, meets the success criteria at an interim analysis during Stage 2, and does not meet the
+futility criteria at the Stage 2 final analysis. The Stage 2 final analysis futility criteria must not be met whether or not subjects were selected
+to follow-up after an early success decision in Stage 2.
+
+32\. Stage 1 Late Graduation, Stage 2 Late Success
+: Stage 1 Late Graduation, Stage 2 Late Success is achieved if and only if the trial enrolls to the maximum Stage 1 sample size, collects full follow-up on all Stage 1 subjects, graduates at the Stage 1 final analysis, enrolls to the maximum allowed Stage 2 sample size, collects full follow-up on all Stage 2 subjects,
+and then meets the Stage 2 final analysis success criteria.
+
+33\. Stage 1 Late Graduation, Stage 2 Late Futility
+: Stage 1 Late Graduation, Stage 2 Late Futility is achieved if and only if the trial enrolls to the maximum Stage 1 sample size, collects full follow-up on all Stage 1 subjects, graduates at the Stage 1 final analysis, enrolls to the maximum allowed Stage 2 sample size, collects full follow-up on all Stage 2 subjects,
+and then meets the Stage 2 final analysis futility criteria. Stage 2 Late futility is not automatically the complement of Stage 2 Late Success; the Stage 2 final analysis futility rule must be specified as the complement of the success rule to make it true.
+
+34\. Stage 1 Late Graduation, Stage 2 Early Futility
+: Stage 1 Late Graduation, Stage 2 Early Futility is achieved if and only if the trial enrolls to the maximum Stage 1 sample size, collects full follow-up on all Stage 1 subjects, graduates at the Stage 1 final analysis, meets the futility criteria at an interim analysis during Stage 2, and does not meet the
+success criteria at the Stage 2 final analysis. The Stage 2 final analysis success criteria must not be met whether or not subjects were selected
+to follow-up after an early futility decision in Stage 2.
+
+35\. Stage 1 Late Graduation, Stage 2 Success to Futility Flip-Flop
+: Stage 1 Late Graduation, Stage 2 Success to Futility Flip-Flop is achieved if and only if the trial enrolls to the maximum Stage 1 sample size, collects full follow-up on all Stage 1 subjects, graduates at the Stage 1 final analysis, meets the success condition at an interim analysis in Stage 2, but meets the futility condition at the Stage 2
+final analysis. Stage 2 Success to Futility Flip-Flops can be achieved whether or not
+subjects are followed up after the early success decision in Stage 2.
+
+36\. Stage 1 Late Graduation, Stage 2 Futility to Success Flip-Flop
+: Stage 1 Late Graduation, Stage 2 Futility to Success Flip-Flop is achieved if and only if the trial enrolls to the maximum Stage 1 sample size, collects full follow-up on all Stage 1 subjects, graduates at the Stage 1 final analysis, meets the futility condition at an interim analysis in Stage 2, but meets the success condition at the Stage 2
+final analysis. Stage 2 Futility to Success Flip-Flops can be achieved whether or not
+subjects are followed up after the early futility decision in Stage 2.
+
+37\. Stage 1 Late Graduation, Stage 2 Inconclusive
+: Stage 1 Late Graduation, Stage 2 Inconclusive is achieved if and only if the trial enrolls to the maximum Stage 1 sample size, collects full follow-up on all Stage 1 subjects, graduates at the Stage 1 final analysis, enrolls to the maximum allowed Stage 2 sample size, collects full follow-up on all Stage 2 subjects,
+and then does not meet the Stage 2 final success or final futility criteria.
+
+
+#### Other
+
+10\. Stage 1 Early Graduation, Dose Selection Unsuccessful
+: Stage 1 Early Graduation, Dose Selection Unsuccessful is achieved if and only if the trial graduates at an interim
+analysis in Stage 1, but when selecting treatments to carry forward into Stage 2, no treatment arms satisfy the required Transition criteria. In this case, Stage 2 is considered "Null" and is not performed.
+
+11\. Stage 1 Late Graduation, Dose Selection Unsuccessful
+: Stage 1 Early Graduation, Dose Selection Unsuccessful is achieved if and only if the the trial enrolls to the maximum Stage 1 sample size, collects full follow-up on all Stage 1 subjects, graduates at the Stage 1 final analysis, but when selecting treatments to carry forward into Stage 2, no treatment arms satisfy the required Transition criteria. In this case, Stage 2 is considered "Null" and is not performed.
+
+40\. Stage 1 Graduation, Max sample size reached
+: Stage 1 Graduation, Max sample size reached is achieved if and only if the trial graduates at a Stage 1 analysis, but the calculated Stage 2 sample size is 0. In this case, Stage 2 is considered "Null" and is not performed.
 
 # Simulation
 
