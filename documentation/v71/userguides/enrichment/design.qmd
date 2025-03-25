@@ -1,0 +1,360 @@
+---
+title: "Design Overview"
+subtitle: "Description of what the design tab of the Enrichment engines."
+title-block-banner: '#125740'
+title-block-banner-color: white
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-title: "Table of Contents"
+    number-sections: false
+    number-depth: 4
+---
+
+The Design Tab allows the user to specify how control responses,
+treatment responses and longitudinal responses are modeled, how subjects
+are allocation, the timing of interims, and the criteria for stopping
+groups or the study for early success or futility, and the criteria for
+judging final success or futility of each group and the study. Wherever applicable, this user guide is separated by type of endpoint used (continuous/dichotomous or time-to-event).
+
+# Control Model / Harzard Model
+
+:::{.panel-tabset}
+
+## Continuous/Dichotomous
+
+If no control arm is present then comparison is with historical mean
+responses.
+
+If control arms are present they can be modeled either:
+
+- Separately with a simple Normal prior for the response (continuous endpoint) or the log odds of the rate of response (dichotomous endpoint) on the control arm,
+
+- separately with the use of a ‘Hierarchical Prior’, where data from
+  prior studies is incorporated via a hierarchical model,
+
+- or jointly in a hierarchical model.
+
+### Historical Control
+
+If on the Study \> Study Info tab, ‘include historical control’ has been
+selected then the control model is simply the specified fixed mean
+response on control in each group.
+
+:::{.panel-tabset}
+
+### Continuous
+
+![Historical Control.](./EDCont/media/image34.png){#fig-fig34cont}
+
+### Dichotomous
+
+![Historical Control.](./EDDich/media/image31.png){#fig-fig31dich}
+
+:::
+
+
+
+### Controls modeled separately
+
+If on the Study \> Study Info tab, ‘include control treatment arm’ has
+been selected then the control model can be separate models or a
+hierarchical model across the groups.
+
+If controls are modeled separately then the control arm in each group
+has its own prior, which can be either:
+
+- A mean and standard deviation for a Normally distributed prior for the
+  response (continuous endpoint) or the log-odds response (dichotomous endpoint) on the control 
+
+- A Hierarchical Prior (BAC).
+
+:::{.panel-tabset}
+
+### Continuous
+
+![Controls Modeled Separately.](./EDCont/media/image35.png){#fig-fig35cont}
+
+![Hierarchical Prior for Controls.](./EDCont/media/image36.png){#fig-fig36cont}
+
+### Dichotomous
+
+![Controls Modeled Separately.](./EDDich/media/image31.png){#fig-fig32dich}
+
+![Hierarchical Prior for Controls.](./EDDich/media/image32.png){#fig-fig33dich}
+
+:::
+
+If a Hierarchical Prior for a control arm (Bayesian Augmented Control)
+is specified for the control arm in a group then the user specifies:
+
+- The sufficient statistics for each historic study to be included,
+  these are: the observed mean response of the control group, the number
+  of subjects in the control group and the SD of the responses across
+  the group. This data can be ‘down-weighted’ by reducing the number of
+  subjects entered relative to the number in the actual study.
+
+- The hyper-parameters for the hierarchical model. These are the mean
+  and standard deviation for a Normally distributed prior for the mean
+  of the hierarchical model and the parameters for an Inverse-Gamma
+  distributed prior for the variance of the hierarchical model. As with
+  all Inverse-Gamma priors these can be specified as a mean and a weight
+  or more conventional Alpha and Beta parameters.
+
+
+::: {.callout-tip collapse="true"}
+### Setting the priors for Hierarchical model hyper parameters
+
+Unless the intent is to add information that is not included in the historic studies, the hyper parameters can and should be set so that they are ‘weak’ priors, centered on the expected values.  
+
+In this case the following would be reasonable:
+
+- Set the prior mean value for Mu as the unweighted mean of the means (continuous endpoint) or log-odds (dichotomous endpoint) of the historic studies  
+- Set the prior SD for Mu equal to at least the largest difference between the mean (continuous endpoint) or log-odds (dichotomous endpoint) for any historic study and the unweighted mean (continuous endpoint) or log-odds (dichotomous endpoint) of all the historic studies.  
+- Set the mean for tau to the same value as the prior SD for Mu.  
+- Set the weight for tau to be < 1.  
+
+One can traverse the spectrum from ‘complete pooling of data’ to ‘completely separate analyses’ through the prior for tau. If the weight of the prior for tau is small (relative to the number of studies), then (unless set to a very extreme value) the mean of the prior for tau will have little impact and the degree of borrowing will depend on the observed data.
+
+To give some prior preference towards either pooling or separate analysis the *weight* for tau has to be significant > the number of historic studies. Then to have a design that is like pooling all the historic studies the *mean* for tau needs to be small (say 10% or less of the value suggested above). Alternatively, to have a design that is like separate analyses with no borrowing from the historic studies, the value for tau needs to be large (say 10x or more the value suggested above).
+
+The best way to understand the impact of the priors is to try different values and run simulations. The advantage of a Hierarchical Prior is that it can, through the pooling effect, improve the precision of the estimate of the response on control – possibly allowing a reduced sample size allocated to the control arm. The disadvantage is that if the observed response on control is different from that in the historic studies, a degree of bias towards the rate in the historic studies will be observed in the posterior estimate. The art of using a Hierarchical Prior is to determine the degree of bias that would be acceptable and find the degree of pooling that corresponds to that.
+
+:::
+
+
+### Hierarchical model across groups
+
+This is similar to a Hierarchical prior except that there is only one
+hierarchical model (with Hierarchical Priors there is one per group) and
+instead of modeling the results from the current study and past studies
+it models the results from the different groups in the current study
+only. This borrows information across the results of the control arms in
+the different groups – borrowing more the more the results look similar,
+borrowing less the more they diverge.
+
+
+:::{.panel-tabset}
+
+### Continuous
+
+![Hierarchical Prior for Controls.](./EDCont/media/image37.png){#fig-fig37cont}
+
+### Dichotomous
+
+![Hierarchical Prior for Controls.](./EDDich/media/image33.png){#fig-fig33dich}
+
+:::
+
+The hierarchical model is a normal distribution of the mean responses (continuous endpoint) or log-odds of the rates (dichotomous endpoint) on the control arms in all the groups. The user enters the priors for the
+hyper-parameters of the hierarchical model. These are the mean and
+standard deviation of a Normally distributed prior for the mean of the
+hierarchical model and the parameters for an Inverse-Gamma distributed
+prior for the variance of the hierarchical model. As with all
+Inverse-Gamma priors these can be specified as a mean and a weight or
+more conventional Alpha and Beta parameters.
+
+::: {.callout-tip collapse="true"}
+### Setting the priors for Hierarchical model hyper parameters
+
+Unless the intent is to add information that is not observed in the study, the hyper parameters can and should be set so that they are ‘weak’ priors, centered on the expected values.
+
+In this case the following would be reasonable:
+
+- Set the prior mean value for Mu as the expected mean control response (continuous endpoint) or log-odds of the response (dichotomous endpoint) 
+- Set the prior SD for Mu equal to at least the largest reasonably expected difference in mean response (continuous endpoint) or log-odds of the response (dichotomous endpoint) of the control arms across the groups.  
+- Set the mean for tau to the same value as the prior SD for Mu.  
+- Set the weight for tau to be < 1.  
+
+To force borrowing (near pooling of data) between the groups, set a small prior mean of tau and a weight greater than the number of groups, combined with a weakly informative prior for mu; the group means will come together near the sample weighted average of the sample means.
+
+To limit the borrowing between the groups, set a large tau and a weight equal to the number of groups or more. This can be used if, with a weak prior for tau, the borrowing across groups seems too great. However, achieving the desired balance will require simulation of a number of scenarios and trial and error.
+
+If some borrowing can be accepted, this can result in greater precision in the estimates for the control – reducing the error in the estimate of the treatment difference and allowing the option of unbalancing the allocation between control and treatment.
+
+If it’s required that there be no borrowing of data across the groups in the estimation of the response on the control arms then the best option is to model controls separately.
+
+To use hierarchical modeling and include a prior expectation for the response on control, set the mean for Mu to the prior expectation, set small values for the SD of Mu **and** the mean of tau, and give the prior for tau a weight equal to the number of groups or more. Again, achieving the desired balance will require simulation of a number of scenarios and trial and error. 
+
+
+:::
+
+### Hierarchical Model plus Clustering
+
+After selecting “Hierarchical model across groups”, if “Use Clustering”
+is also checked then the specified prior is a prior for an arbitrary
+number of distributions each providing a hierarchical prior to an
+arbitrary selection of the groups. As with the hierarchical model, the
+smaller and stronger the prior is on tau the greater the borrowing,
+(closer to pooling) and the larger and stronger the prior is on tau the
+weaker the borrowing (closer to separate analysis). The weaker the prior
+on tau, the more the posterior value of tau is determined by the spread
+of the control means in that cluster.
+
+The “Dp scale parameter” is the Dirichlet Process parameter ‘α’ in the
+description of the model in the Enrichment Design Specification
+document. The larger the value of ‘α’ the more process tends to place
+groups in new clusters – so there is less borrowing, in experiments
+using values of ‘α’ from 1 to twice the number of groups, this was a
+much smaller effect than varying tau from 25% of the expected treatment
+difference to 200% of the expected treatment difference.
+
+We are still learning about how best to specify priors for this model
+and will supply more guidance once we have a better understanding. In
+the meantime like us you have the ability to run simulations with
+different priors and explore the impact on the operating characteristics
+in the setting of interest.
+
+
+## Time-to-Event
+
+If no control arm is present then comparison is with historical rates.
+
+If control arms are present they can be modeled either:
+
+- Separately using a piecewise exponential model, specifying the
+  junctions of the different model segments and the parameters for the
+  Gamma prior for the hazard rate in each segment.
+
+- Separately with the use of ‘Bayesian Augmented Control’ (BAC) where
+  data from prior studies is incorporated via a hierarchical model,
+
+- Jointly in a hierarchical model,
+
+- or using the Cox proportional hazard model.
+
+### Historical Control
+
+If on the Study \> Study Info tab, ‘include historical control’ has been
+selected then the control model is simply the hazard rate on control in
+each group. Different time segments can be specified for the hazard
+rates independently from time segments used elsewhere such as on the
+Virtual Subject Response \> Control Hazard Rates, Dropout or Treatment
+Model tabs. And then the hazard rate must be specified for each time
+segment for each group.
+
+\[Note that currently, unlike the Virtual Subject Response \> Control
+Hazard tab, the time units used for the rates on this tab cannot be
+specified, they must be entered as rate per week\].
+
+![Historical Control.](./EDTTE/media/image29.png){#fig-fig29tte}
+
+### Controls modeled separately
+
+If on the Study \> Study Info tab, ‘include control treatment arm’ has
+been selected then the control model can be separate models or a
+hierarchical model across the groups.
+
+If controls are modeled separately then the control arm in each group
+has its own prior which is a gamma distribution for the hazard rate for
+each time segment. The user specifies:
+
+- The segment intervals for the control model (across all groups)
+
+- A mean (in events per weeks) and weight (in subjects) for the prior
+  gamma distribution for the control hazard rate for each group and
+  segment.
+
+- Optionally supplemented by a Hierarchical Prior (BAC)
+
+![Hazard model - fixed priors tab.](./EDTTE/media/image30.png){#fig-fig30tte} 
+
+If Hierarchical Prior for Control is specified for the control arm in a
+group, then in addition to the segment intervals (common across all
+groups) and the parameters of the Gamma prior distribution, then on a
+separate “Hierarchical Prior” tab the user specifies:
+
+- The sufficient statistics to be included from each historic study for
+  each segment, these are: the observed number of events in the control
+  group and the exposure time in subject weeks. The information from the
+  prior study can be ‘down-weighted’ by reducing, pro-rata, the number
+  of events and exposure time.
+
+- The hyper-parameters for the hierarchical model. These are the mean
+  and standard deviation for a Normally distributed prior for the log
+  hazard ratios of the event rates of the historical studies. The prior
+  for the mean is the mean and standard deviation of a Normal
+  distribution and prior for the standard deviation is an Inverse-Gamma
+  distributed prior for the variance of the hierarchical model. As with
+  all Inverse-Gamma priors these can be specified as a mean and a weight
+  or more conventional Alpha and Beta parameters.
+
+![Hazard model – Hierarchical Prior.](./EDTTE/media/image31.png){#fig-fig31tte} 
+
+::: {.callout-tip collapse="true"}
+### Setting the priors for Hierarchical model hyper parameters
+
+Unless the intent is to add information that is not included in the historic studies, the hyper parameters can and should be set so that they are ‘weak’ priors, centered on the expected values.
+
+In this case the following would be reasonable: 
+
+- Set the prior mean value for Mu as the mean of the log-hazard ratios of the event rates of the control arm and the historic studies (usually this will be 0)  
+- Set the prior SD for Mu equal to at least the largest log hazard ratio of the event rates for the historic studies.  
+- Set the mean for tau to the same value as the prior SD for Mu.  
+- Set the weight for tau to be < 1.  
+
+One can traverse the spectrum from ‘complete pooling of data’ to ‘completely separate analyses’ through the prior for tau. If the weight of the prior for tau is small (relative to the number of studies), then (unless set to a very extreme value) the mean of the prior for tau will have little impact and the degree of borrowing will depend on the observed data.  
+
+To give some prior preference towards pooling or separate analysis the **weight** for tau has to be large (relative to the number of historic studies) – to have a design that is like pooling all the historic studies the **mean** for tau needs to be small (say 10% or less of the value suggested above). For there to be no borrowing from the historic studies the value for tau needs to be large (say 10x or more the value suggested above).  
+
+The best way to understand the impact of the priors is to try different values and run simulations. The advantage of a Hierarchical Prior is that it can, through the pooling effect, improve the precision of the estimate of the response on control – possibly allowing a reduced sample size allocated to the control arm. The disadvantage is that if the observed response on control is different from that in the historic studies a degree of bias towards the rate in the historic studies will be observed in the posterior estimate. The art of using a Hierarchical Prior is to determine the degree of bias that would be acceptable and find the degree of pooling that corresponds to that. 
+
+:::
+
+### Hierarchical model across groups
+
+This is similar to a Hierarchical Prior except that there is only one
+hierarchical model (with Hierarchical Priors there is one per group) and
+instead of modeling the results from the current study and past studies,
+it models the results from the different groups in the current study.
+This borrows information across the results of the control arms in the
+different groups – borrowing more the more the results look similar,
+borrowing less the more they diverge.
+
+![Hazard Model - hierarchical model across groups](./EDTTE/media/image32.png){#fig-fig32tte}
+
+The hierarchical model is a gamma distribution for the event rate on the
+control arms in each time segment. The priors are in turn gamma
+distributions for each parameter of the gamma distribution. The user
+enters the hyper-parameters for the hierarchical model.
+
+
+::: {.callout-tip collapse="true"}
+### Setting the priors for Hierarchical model hyper parameters
+
+Unless the intent is to add information that is not observed in the study, the hyper parameters can and should be set so that they are ‘weak’ priors, centered on the expected values.
+
+In this case the following would be reasonable:
+
+- For each segment decide the appropriate Gamma distribution for the event rates on the control arms across the groups. This gives the prior values for α and β in each segment. Note that this model is always parameterized with “Alpha and Beta” parameters, while the Gamma distributions that serve as priors for each of Alpha and Beta are always defined in terms of the mean and weight. This presentation does not vary (unlike many specifications of Gamma distribution priors) regardless of the Gamma Distribution Parameters setting in the Options tab under the Settings menu.  
+- Setting the parameters for the priors for each α and β:  
+  - Set the mean to be the value of the parameter decided above  
+  - Set the weight—relative to the number of groups—depending on how much the prior 
+
+Gamma distribution for the event rates should be updated to follow the observed rates during the trial. A small value (<1) for the weight will result in the hierarchical Gamma distribution being estimated largely based on the observed data, whereas a large value (> the number of groups) will result in the hierarchical distribution being driven primarily by the prior.  
+
+For example: a weakly informative prior for an expected rate of 0.025 could be Gamma(5, 200). When considering how different that distribution (mean of 0.025, effective weight of 5) is from Gamma(6, 150) or Gamma(4, 250)—which have means of 0.04 and 0.016 respectively—it can be seen that the priors for the *hyper* parameters could be set with weights of about 50 so that the hierarchical prior is not overly strong.
+
+**Nested Table 1: Gamma Distributions**
+
+| Gamma(α=4, β=250)               | Gamma(α=5, β=200)               | Gamma(α=6, β=150)               |
+|---------------------------------|---------------------------------|---------------------------------|
+| ![](./EDTTE/media/image33.png){#fig-fig336tte}  | ![](./EDTTE/media/image34.png){#fig-fig34tte}  | ![](./EDTTE/media/image35.png){#fig-fig35tte}  |
+
+**Nested Table 2: Priors for α and β**
+
+| Prior for α = Gamma(μ=5, wt=50)   | Prior for β = Gamma(μ=200, wt=50)   |
+|----------------------------------|-------------------------------------|
+| ![](./EDTTE/media/image36.png){#fig-fig36tte}   | ![](./EDTTE/media/image37.png){#fig-fig37tte}      | |
+
+:::
+
+
+### Cox proportional hazard model
+
+When using the Cox proportional hazard mode the control hazard rate is
+not modeled but instead cancels from the calculation, so there are no
+parameters to enter.
+
+:::
