@@ -1,6 +1,6 @@
 ---
 title: "Design Overview"
-subtitle: "Description of what the design tab of the Enrichment engines."
+subtitle: "Description of the design tab of the Enrichment engines."
 title-block-banner: '#125740'
 title-block-banner-color: white
 format:
@@ -356,5 +356,155 @@ For example: a weakly informative prior for an expected rate of 0.025 could be G
 When using the Cox proportional hazard mode the control hazard rate is
 not modeled but instead cancels from the calculation, so there are no
 parameters to enter.
+
+:::
+
+
+# Treatment Model
+
+:::{.panel-tabset}
+
+## Continuous/Dichotomous
+
+### Groups modeled separately
+
+If the treatment arms in different groups are to be modeled separately,
+then the treatment arm in each group has its own prior which is
+specified as a mean and standard deviation for a Normally distributed
+prior for the difference in mean response (continuous endpoint) or in log-odds between the response rate (dichotomous endpoint) between the treatment arm and
+the control (whether a historic mean or from a control arm).
+
+In addition the user specifies
+
+- A prior mean and standard deviation for a Normally distributed prior
+  for the across groups analysis: the estimate of an common treatment
+  difference from control (whether historic means or observed means)
+  across all groups.
+
+- A prior mean for the estimate of sigma, the SD of the subject
+  responses (across all arms and groups) and the weight of that prior in
+  terms of equivalent number of observations. This prior is an inverse
+  gamma distribution for sigma squared. Thus what the user enters is
+  only approximately a prior expectation for sigma; it is actually an
+  expectation for the precision:
+  $E\left( \frac{1}{\sigma^{2}} \right) = \frac{1}{{\acute{\sigma}}^{2}}$
+  where $\acute{\sigma}$ is the ‘sigma prior mean’.
+
+![Treatment model - groups modeled separately](./EDCont/media/image38.png){#fig-fig38cont}
+
+### Hierarchical model across groups
+
+If the treatment arms in different groups are to be modeled with a
+hierarchical structure, then the user enters the hyper-parameters for
+the hierarchical model (similar to the hierarchical model for the
+control arms – see section 0 above). These are
+
+- the mean and standard deviation for a Normally distributed prior for
+  the mean of the hierarchical model
+
+- and the parameters for an Inverse-Gamma distributed prior for the
+  variance of the hierarchical model. As with all Inverse-Gamma priors
+  these can be specified as a mean and a weight or more conventional
+  Alpha and Beta parameters.
+
+In addition the user specifies
+
+- A prior mean and standard deviation for a Normally distributed prior
+  for the across groups analysis – this is a pooled analysis of an
+  overall difference from control (whether historic means or observed
+  means). In this analysis, all groups are assumed to have the same
+  treatment effect. This analysis is conducted separately, reported
+  separately, and is used only as an OPTION in stopping. Filling in
+  these priors does NOT constitute assuming equal treatment effects.
+
+::: {.callout-tip collapse="true"}
+### Setting the priors for Hierarchical model hyper parameters
+
+Unless the intent is to add information that is not observed in the study, the hyper parameters can and should be set so that they are ‘weak’ priors, centered on the expected values.
+
+In this case the following would be reasonable:
+
+- Set the prior mean value for Mu as the expected mean control response (continuous endpoint) or log odds of the treatment difference from control (dichotomous endpoint)
+- Set the prior SD for Mu equal to at least the largest reasonably expected difference from the across groups mean for a one control arm in any group (contiuous endpoint) or the largest reasonably expected difference between the log odds of the treatment differences across the groups (dichotomous endpoint).  
+- Set the mean for tau to the same value as the prior SD for Mu.  
+- Set the weight for tau to be < 1.  
+
+To force borrowing (near pooling of data) between the groups, set a small prior mean of tau and a weight greater than the number of groups, combined with a weakly informative prior for mu; the group means (contiuous endpoint) or log odds (dichotomous endpoint) will come together near the sample weighted average of the sample means (continuous endpoint) or log odds (dichotomous endpoint).
+
+To limit the borrowing between the groups, set a large tau and a weight equal to the number of groups or more. This can be used if, with a weak prior for tau, the borrowing across groups when there is some variation seems too great. However, achieving the desired balance will require simulation of a number of scenarios and trial and error.
+
+To use hierarchical modeling and include a prior expectation for the treatment difference (continuous endpoint) or log odds of the treatment difference (dichotomous endpoint), set the mean for Mu to the expected mean treatment difference (continuous endpoint) or expected log odds of the treatment difference (dichotomous endpoint), set small values for the SD of Mu **and** mean of tau, and give the prior for tau a weight equal to the number of groups or more. Again, achieving the desired balance will require simulation of a number of scenarios and trial and error.
+
+:::
+
+
+### Hierarchical Model plus Clustering
+
+After selecting “Hierarchical model across groups”, if “Use Clustering”
+is also checked then the specified prior is a prior for an arbitrary
+number of distributions each providing a hierarchical prior to an
+arbitrary selection of the groups. As with the hierarchical model, the
+smaller and stronger the prior is on tau the greater the borrowing,
+(closer to pooling) and the larger and stronger the prior is on tau the
+weaker the borrowing (closer to separate analysis). The weaker the prior
+on tau, the more the posterior value of tau is determined by the spread
+of the control means in that cluster.
+
+The “Dp scale parameter” is the Dirichlet Process parameter ‘α’ in the
+description of the model in the Enrichment Design Specification
+document. The larger the value of ‘α’ the more process tends to place
+groups in new clusters – so there is less borrowing, in experiments
+using values of ‘α’ from 1 to twice the number of groups, this was a
+much smaller effect than varying tau from 25% of the expected treatment
+difference to 200% of the expected treatment difference.
+
+We are still learning about how best to specify priors for this model
+and will supply more guidance once we have a better understanding. In
+the meantime like us you have the ability to run simulations with
+different priors and explore the impact on the operating characteristics
+in the setting of interest.
+
+![Treatment Model - using clustering](./EDCont/media/image39.png){#fig-fig39cont}
+
+### Baseline adjustment
+
+If baseline is included, the model may be baseline adjusted. This means
+that the baseline is treated as a covariate and an extra term is added
+to the response model so it becomes:
+
+$$
+Y\sim N\left( \gamma_{g} + \theta_{g} + \beta Z,\ \sigma^{2} \right)
+$$
+
+Where $\gamma_{g}$ is the mean response on control in group g,
+$\theta_{g}$ is the mean difference in response of the treatment arm
+compared to the control arm in group g and $\beta Z$ is the adjustment
+for baseline, where Z is standardized baseline score and $\beta$ the
+estimated parameter. The prior for $\beta$ is a Normal distribution
+with user specified mean and standard deviation.
+
+### Handling of Missing Data Due to Dropouts
+
+There are three options here:
+
+- Bayesian multiple imputation from post baseline – This is the default
+  and treats dropouts in exactly the same way as subjects which have not
+  yet completed. If subjects have no intermediate visits in the design
+  (“Use longitudinal modeling” is unchecked on the Study \> Study Info
+  tab), then this is the only option, it has the effect that a subject
+  that drops out is included in subject randomization counts but
+  excluded from the frequentist analysis and makes no net contribution
+  to the Bayesian modelling.
+
+- BOCF – This treats each subject who drops out as having a final
+  response which is the same as their baseline value (i.e. final
+  response is zero if response is change from baseline).
+
+- LOCF – This sets the final response equal to the last observed value.
+
+NB Setting BOCF or LOCF here does not affect the longitudinal model used
+for incomplete subjects.
+
+## Time-to-Event
 
 :::

@@ -100,6 +100,35 @@ background: #125740;
   gtag('config', 'G-WLMVE7GR4S');
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../../../styles.css">
 </head>
@@ -169,7 +198,7 @@ background: #125740;
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Version 7.1</li><li class="breadcrumb-item"><a href="../../../../documentation/v71/userguides/core/index.html">User Guides</a></li><li class="breadcrumb-item"><a href="../../../../documentation/v71/userguides/enrichment/index.html">Enrichment Designs</a></li><li class="breadcrumb-item"><a href="../../../../documentation/v71/userguides/enrichment/design.html">Design</a></li></ol></nav>
       <h1 class="title">Design Overview</h1>
-            <p class="subtitle lead">Description of what the design tab of the Enrichment engines.</p>
+            <p class="subtitle lead">Description of the design tab of the Enrichment engines.</p>
                       </div>
   </div>
     
@@ -764,6 +793,7 @@ background: #125740;
    
   <ul>
   <li><a href="#control-model-harzard-model" id="toc-control-model-harzard-model" class="nav-link active" data-scroll-target="#control-model-harzard-model">Control Model / Harzard Model</a></li>
+  <li><a href="#treatment-model" id="toc-treatment-model" class="nav-link" data-scroll-target="#treatment-model">Treatment Model</a></li>
   </ul>
 </nav>
     </div>
@@ -1161,6 +1191,116 @@ Setting the priors for Hierarchical model hyper parameters
 <h3 class="anchored" data-anchor-id="cox-proportional-hazard-model">Cox proportional hazard model</h3>
 <p>When using the Cox proportional hazard mode the control hazard rate is not modeled but instead cancels from the calculation, so there are no parameters to enter.</p>
 </section>
+</div>
+</div>
+</div>
+</section>
+<section id="treatment-model" class="level1">
+<h1>Treatment Model</h1>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Dichotomous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false">Time-to-Event</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<section id="groups-modeled-separately" class="level3">
+<h3 class="anchored" data-anchor-id="groups-modeled-separately">Groups modeled separately</h3>
+<p>If the treatment arms in different groups are to be modeled separately, then the treatment arm in each group has its own prior which is specified as a mean and standard deviation for a Normally distributed prior for the difference in mean response between the treatment arm and the control (whether a historic mean or from a control arm).</p>
+<p>In addition the user specifies</p>
+<ul>
+<li><p>A prior mean and standard deviation for a Normally distributed prior for the across groups analysis: the estimate of an common treatment difference from control (whether historic means or observed means) across all groups.</p></li>
+<li><p>A prior mean for the estimate of sigma, the SD of the subject responses (across all arms and groups) and the weight of that prior in terms of equivalent number of observations. This prior is an inverse gamma distribution for sigma squared. Thus what the user enters is only approximately a prior expectation for sigma; it is actually an expectation for the precision: <span class="math inline">\(E\left( \frac{1}{\sigma^{2}} \right) = \frac{1}{{\acute{\sigma}}^{2}}\)</span> where <span class="math inline">\(\acute{\sigma}\)</span> is the ‘sigma prior mean’.</p></li>
+</ul>
+<div id="fig-fig38cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig38cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDCont/media/image38.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig38cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;13: Treatment model - groups modeled separately
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="hierarchical-model-across-groups-2" class="level3">
+<h3 class="anchored" data-anchor-id="hierarchical-model-across-groups-2">Hierarchical model across groups</h3>
+<p>If the treatment arms in different groups are to be modeled with a hierarchical structure, then the user enters the hyper-parameters for the hierarchical model (similar to the hierarchical model for the control arms – see section 0 above). These are</p>
+<ul>
+<li><p>the mean and standard deviation for a Normally distributed prior for the mean of the hierarchical model</p></li>
+<li><p>and the parameters for an Inverse-Gamma distributed prior for the variance of the hierarchical model. As with all Inverse-Gamma priors these can be specified as a mean and a weight or more conventional Alpha and Beta parameters.</p></li>
+</ul>
+<p>In addition the user specifies</p>
+<ul>
+<li>A prior mean and standard deviation for a Normally distributed prior for the across groups analysis – this is a pooled analysis of an overall difference from control (whether historic means or observed means). In this analysis, all groups are assumed to have the same treatment effect. This analysis is conducted separately, reported separately, and is used only as an OPTION in stopping. Filling in these priors does NOT constitute assuming equal treatment effects.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Setting the priors for Hierarchical model hyper parameters
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Unless the intent is to add information that is not observed in the study, the hyper parameters can and should be set so that they are ‘weak’ priors, centered on the expected values.</p>
+<p>In this case the following would be reasonable:</p>
+<ul>
+<li>Set the prior mean value for Mu as the expected mean control response<br>
+</li>
+<li>Set the prior SD for Mu equal to at least the largest reasonably expected difference from the across groups mean for a one control arm in any group.<br>
+</li>
+<li>Set the mean for tau to the same value as the prior SD for Mu.<br>
+</li>
+<li>Set the weight for tau to be &lt; 1.</li>
+</ul>
+<p>To force borrowing (near pooling of data) between the groups, set a small prior mean of tau and a weight greater than the number of groups, combined with a weakly informative prior for mu; the group means will come together near the sample weighted average of the sample means.</p>
+<p>To limit the borrowing between the groups, set a large tau and a weight equal to the number of groups or more. This can be used if, with a weak prior for tau, the borrowing across groups when there is some variation seems too great. However, achieving the desired balance will require simulation of a number of scenarios and trial and error.</p>
+<p>To use hierarchical modeling and include a prior expectation for the treatment difference, set the mean for Mu to the expected mean treatment difference, set small values for the SD of Mu <strong>and</strong> mean of tau, and give the prior for tau a weight equal to the number of groups or more. Again, achieving the desired balance will require simulation of a number of scenarios and trial and error.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="hierarchical-model-plus-clustering-1" class="level3">
+<h3 class="anchored" data-anchor-id="hierarchical-model-plus-clustering-1">Hierarchical Model plus Clustering</h3>
+<p>After selecting “Hierarchical model across groups”, if “Use Clustering” is also checked then the specified prior is a prior for an arbitrary number of distributions each providing a hierarchical prior to an arbitrary selection of the groups. As with the hierarchical model, the smaller and stronger the prior is on tau the greater the borrowing, (closer to pooling) and the larger and stronger the prior is on tau the weaker the borrowing (closer to separate analysis). The weaker the prior on tau, the more the posterior value of tau is determined by the spread of the control means in that cluster.</p>
+<p>The “Dp scale parameter” is the Dirichlet Process parameter ‘α’ in the description of the model in the Enrichment Design Specification document. The larger the value of ‘α’ the more process tends to place groups in new clusters – so there is less borrowing, in experiments using values of ‘α’ from 1 to twice the number of groups, this was a much smaller effect than varying tau from 25% of the expected treatment difference to 200% of the expected treatment difference.</p>
+<p>We are still learning about how best to specify priors for this model and will supply more guidance once we have a better understanding. In the meantime like us you have the ability to run simulations with different priors and explore the impact on the operating characteristics in the setting of interest.</p>
+<div id="fig-fig39cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig39cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDCont/media/image39.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig39cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14: Treatment Model - using clustering
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="baseline-adjustment" class="level3">
+<h3 class="anchored" data-anchor-id="baseline-adjustment">Baseline adjustment</h3>
+<p>If baseline is included, the model may be baseline adjusted. This means that the baseline is treated as a covariate and an extra term is added to the response model so it becomes:</p>
+<p><span class="math display">\[
+Y\sim N\left( \gamma_{g} + \theta_{g} + \beta Z,\ \sigma^{2} \right)
+\]</span></p>
+<p>Where <span class="math inline">\(\gamma_{g}\)</span> is the mean response on control in group g, <span class="math inline">\(\theta_{g}\)</span> is the mean difference in response of the treatment arm compared to the control arm in group g and <span class="math inline">\(\beta Z\)</span> is the adjustment for baseline, where Z is standardized baseline score and <span class="math inline">\(\beta\)</span> the estimated parameter. The prior for <span class="math inline">\(\beta\)</span> is a Normal distribution with user specified mean and standard deviation.</p>
+</section>
+<section id="handling-of-missing-data-due-to-dropouts" class="level3">
+<h3 class="anchored" data-anchor-id="handling-of-missing-data-due-to-dropouts">Handling of Missing Data Due to Dropouts</h3>
+<p>There are three options here:</p>
+<ul>
+<li><p>Bayesian multiple imputation from post baseline – This is the default and treats dropouts in exactly the same way as subjects which have not yet completed. If subjects have no intermediate visits in the design (“Use longitudinal modeling” is unchecked on the Study &gt; Study Info tab), then this is the only option, it has the effect that a subject that drops out is included in subject randomization counts but excluded from the frequentist analysis and makes no net contribution to the Bayesian modelling.</p></li>
+<li><p>BOCF – This treats each subject who drops out as having a final response which is the same as their baseline value (i.e.&nbsp;final response is zero if response is change from baseline).</p></li>
+<li><p>LOCF – This sets the final response equal to the last observed value.</p></li>
+</ul>
+<p>NB Setting BOCF or LOCF here does not affect the longitudinal model used for incomplete subjects.</p>
+</section>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+
+</div>
+<div id="tabset-5-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-3-tab">
+
 </div>
 </div>
 </div>
