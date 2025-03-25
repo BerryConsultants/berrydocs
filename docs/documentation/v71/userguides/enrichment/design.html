@@ -800,7 +800,12 @@ window.Quarto = {
   <li><a href="#allocation" id="toc-allocation" class="nav-link" data-scroll-target="#allocation">Allocation</a></li>
   </ul></li>
   <li><a href="#interims" id="toc-interims" class="nav-link" data-scroll-target="#interims">Interims</a></li>
-  <li><a href="#successfutility-criteria" id="toc-successfutility-criteria" class="nav-link" data-scroll-target="#successfutility-criteria">Success/Futility Criteria</a></li>
+  <li><a href="#successfutility-criteria" id="toc-successfutility-criteria" class="nav-link" data-scroll-target="#successfutility-criteria">Success/Futility Criteria</a>
+  <ul>
+  <li><a href="#stopping-criteria-at-subsequent-interims" id="toc-stopping-criteria-at-subsequent-interims" class="nav-link" data-scroll-target="#stopping-criteria-at-subsequent-interims">Stopping Criteria at subsequent interims</a></li>
+  <li><a href="#examples-of-stopping-criteria" id="toc-examples-of-stopping-criteria" class="nav-link" data-scroll-target="#examples-of-stopping-criteria">Examples of stopping criteria</a></li>
+  <li><a href="#final-evaluation-criteria" id="toc-final-evaluation-criteria" class="nav-link" data-scroll-target="#final-evaluation-criteria">Final Evaluation Criteria</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -1804,8 +1809,229 @@ Figure&nbsp;38: Specifying interims by event
 </section>
 <section id="successfutility-criteria" class="level1">
 <h1>Success/Futility Criteria</h1>
+<p>On the success/futility criteria page the user can specify rules for judging the study for futility or success at an interim and at the final evaluation. If the trial has no interims there will be just a tab for the Final Evaluation criteria. If the trial has interims then there can be tabs that define different early success/futility criteria at the different interims.</p>
+<p>At the top of the main tab is a control to allow tabs to be created for different interims. In a newly created adaptive design, FACTS will create a tab for interim 1 as well as Final Evaluation.</p>
+<p>If early success/futility criteria are specified for an interim, then they will be taken to apply to all subsequent interims until the next one for which criteria are supplied, then those criteria will apply until the next interim for which criteria are applied and so on.</p>
+<p>The stopping criteria available are:</p>
+<ul>
+<li><p>For each group:</p>
+<ul>
+<li><p>Early success or futility can be decided based on the posterior probability of the treatment effect being better than control by the Success CSD or worse than control by the Futility CSD.</p></li>
+<li><p>In addition there can be a required minimum information on the group before it can stop where information is the number of subjects enrolled or events observed. (If interim timing is defined by events, then minimum information can only be by events).</p></li>
+<li><p>For each group stopping can be decided only on that group’s results or (if Across Groups is enabled for early stopping) the Across Groups analysis can also be taken in to account – and the user can select that either the group criteria AND the Across Groups criteria must be met for a group to stop, or the group criteria OR the Across Groups criteria must be met for the group to stop.</p></li>
+</ul></li>
+<li><p>It is also possible to specify criteria to stop the whole study based on</p>
+<ul>
+<li><p>Which groups have stopped – the Study stopping rule can be defined using “AND”, meaning all the specified groups have to have stopped for the whole study to stop, or “OR”, meaning that if any one of the specified groups has stopped then the whole study stops. For the purpose of this rule the “Across Groups” criteria can be included as a “group”.</p></li>
+<li><p>A minimum information across the whole study can be specified and the study will not stop until that amount of information has been collected.</p></li>
+</ul></li>
+</ul>
+<p>Note:</p>
+<ol type="1">
+<li><p>Early stopping of accrual into individual groups or of the whole study for success/futility only occurs at interims.</p></li>
+<li><p>There will be no stopping for success or futility until the first interim for which early stopping criteria have been defined.</p></li>
+<li><p>It is left to the user to ensure that the early stopping criteria at any interim are mutually exclusive and it is not possible for groups or the study stop for both success and futility at the same time. The FACTS design engines will stop the accrual into the group or study but there is not guarantee on how the outcome is recorded. It is not considered good practice to have success and futility rules that could both be true, so FACTS does not guarantee a “tie break” rule.</p></li>
+<li><p>In the output files there are columns labeled “CSD/Ph3 Success” and “CSD/Ph3 Futile” for each group indicating whether any decision criteria became true, and “Success Criteria Met” and “Futility Criteria Met” for each group indicating if all the criteria for a success or futility determination have been met. If both sets of criteria are met simultaneously, FACTS will only flag one of “Success Combined” and “Futile Combined” as being met, corresponding to how the outcome of the trial has been flagged.</p></li>
+</ol>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-11-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-1" role="tab" aria-controls="tabset-11-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-11-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-2" role="tab" aria-controls="tabset-11-2" aria-selected="false">Dichotomous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-11-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-3" role="tab" aria-controls="tabset-11-3" aria-selected="false">Time-to-Event</a></li></ul>
+<div class="tab-content">
+<div id="tabset-11-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-11-1-tab">
+<div id="fig-fig51cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig51cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDCont/media/image51.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig51cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;39: Futility/Success Criteria
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-11-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-11-2-tab">
+<div id="fig-fig47dich" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig47dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDDich/media/image47.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig47dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;40: Futility/Success Criteria
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-11-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-11-3-tab">
+<div id="fig-fig45tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig45tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDTTE/media/image45.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig45tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;41: Futility/Success Criteria
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<ul>
+<li><p>Enable Futility/Success Criteria, these check boxes allow early stopping for either success and/or futility to be easily disabled.</p></li>
+<li><p>Futility Criteria</p>
+<ul>
+<li><p>“Criteria types”: the evaluation criteria available are the posterior probability of being better than control by the futility CSD/CSHRD, and/or by the posterior probability of success in a subsequent phase 3 trial. Whether one, the other or both criteria are to be used is specified using the two check boxes on the left of the tab. If both are selected then for futility, the results of testing the criteria are OR’d together.</p></li>
+<li><p>“Study stopping rules combined by”: Study early stopping is determined by whether user specified groups stop. If AND is specified the study will stop for futility if <strong>all</strong> the selected groups stop for futility, if OR is specified the study will stop for futility if <strong>any</strong> of the selected groups stop for futility. To select a group to be one of those that determines study stopping the user must first select “Enable early stopping..” for that group and then select “Study to stop if …” for it using the respective check boxes in the row in the table for that group..</p></li>
+<li><p>“Minimum total subjects”: allows the user to specify an overall minimum number of subjects that must be accrued before the study can stop for futility (only available if information is defined by subjects enrolled on the Interim tab).</p></li>
+<li><p>“Minimum total events”: allows the user to specify an overall minimum number of events that must be observed before the study can stop for futility.</p></li>
+<li><p>The group table has a row per group, plus a row for across groups. The columns included / enabled in the table depend on the selections made in the first two parameters above.</p></li>
+<li><p>Table columns:</p>
+<ul>
+<li><p>“Enable early stopping”: If checked the stopping rules for this group are to be evaluated, if not checked the group will not stop early. It will only stop when it reaches its group cap, the study reaches the study cap, or the study stops early.</p></li>
+<li><p>“Pr()&gt; CSD/CSHRD for futility &lt;” or “Pr() &lt; NIM/NIHRM for futility &lt;”: If “Posterior probability” has been set as a criteria type and “Early stopping” enabled for the group, then the threshold for early stopping by this criteria must be set. The criteria will be met if</p>
+<ul>
+<li><p>For superiority: the posterior probability of the response on the treatment arm being better than the control response plus the futility CSD is below this threshold (continuous or dichotomous endpoint) or the posterior probability that the treatment arm hazard ratio is better than the futility CSHRD, is below this threshold (time-to-event endpoint).</p></li>
+<li><p>For non-inferiority: the posterior probability of the response on the treatment arm being better than the control response less the NIM for futility is below this threshold (continuous or dichotomous endpoint) or the posterior probability that the treatment arm hazard ratio is better than the NIHRM for futility is below this threshold (time-to-event endpoint).</p></li>
+</ul></li>
+<li><p>“Pr(Success Phase III) &lt;”: This column is only displayed if ‘Phase 3 Criteria’ has been enabled on the ‘Study &gt; Group Info’ tab and if “Phase III CSD” has been set as a criteria type. If “Early stopping” is enabled for the group, then the threshold for early stopping by this criteria must be set. This criterion will be met if the posterior probability of success in the specified phase 3 trial is below this threshold.</p></li>
+<li><p>“Group Stopping Rule”: If “Early stopping” has been enabled for this group and for “Across groups”, and “Across groups” is not selected to stop the study, then the group stopping rule can take the across group criteria into account. The group stopping can depend on</p>
+<ul>
+<li><p>solely on the group’s stopping criteria being met,</p></li>
+<li><p>or on either the group or the across group criteria being met</p></li>
+<li><p>or on both the group and the across group criteria being met.</p></li>
+</ul></li>
+<li><p>“Study to stop if …“: By default the study stops only when the constituent groups stop or reach their maximum sample size or the whole study reaches its maximum sample size, this setting allows the study to be stopped if any one of the selected groups stops for futility (“Study stopping rules combined by OR”) or if all of the selected groups stop for futility (“Study stopping rules combined by AND”). One of these groups can be the ‘across groups’ analysis.</p></li>
+<li><p>“Min subj in group before stopping”: The minimum number of subjects that must have been accrued in the group before the stopping criteria for that group are evaluated. (Only available if information on the Interim tab is defined by subjects enrolled.)</p></li>
+<li><p>“Min events in group before stopping”: The minimum number of events that must have been observed in the group before the stopping criteria for that group are evaluated.</p></li>
+</ul></li>
+</ul></li>
+<li><p>The Success Criteria parameters are all similar to their futility criteria counterparts. There are three differences:</p>
+<ul>
+<li><p>If both “Posterior probability” and “Phase III CSD” criteria are selected for stopping for success then both must be met for the group to stop for success.</p></li>
+<li><p>For the “Pr()&gt; CSD/CSHRD for success &lt;” and “Pr(Success Phase III) &lt;” criteria, the posterior probability must exceed the specified thresholds for the group’s stopping for success criteria to be met.</p></li>
+<li><p>The CSD/CSHRD is the CSD/CSHRD for success or the NIM/NIHRM is the NIM/NIHRM for success, rather than for futility.</p></li>
+</ul></li>
+</ul>
+<section id="stopping-criteria-at-subsequent-interims" class="level3">
+<h3 class="anchored" data-anchor-id="stopping-criteria-at-subsequent-interims">Stopping Criteria at subsequent interims</h3>
+<p>The stopping criteria can be changed at subsequent interims, but only in terms of the threshold to test against, the selection of the stopping logic and the minimum information requirements cannot be changed.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-12-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-12-1" role="tab" aria-controls="tabset-12-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-12-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-12-2" role="tab" aria-controls="tabset-12-2" aria-selected="false">Dichotomous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-12-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-12-3" role="tab" aria-controls="tabset-12-3" aria-selected="false">Time-to-Event</a></li></ul>
+<div class="tab-content">
+<div id="tabset-12-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-12-1-tab">
+<div id="fig-fig52cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig52cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDCont/media/image52.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig52cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;42: Success/Futility at later interims
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-12-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-12-2-tab">
+<div id="fig-fig48dich" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig48dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDDich/media/image48.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig48dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;43: Success/Futility at later interims
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-12-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-12-3-tab">
+<div id="fig-fig46tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig46tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDTTE/media/image46.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig46tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;44: Success/Futility at later interims
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="examples-of-stopping-criteria" class="level3">
+<h3 class="anchored" data-anchor-id="examples-of-stopping-criteria">Examples of stopping criteria</h3>
+<p>The stopping rules in ED are flexible and potentially quite complex. It is not expected that complex conditions will be required very often, what is expected is that there will be ED trials with quite different goals and the flexibility in the stopping conditions are there to allow stopping rules appropriate to these different goals to be entered.</p>
+<p>For example:</p>
+<ul>
+<li><p>To identify in which sub-groups the treatment is sufficiently effective to justify a further development and further development to proceed if any of the groups are successful and the development will use the ‘signature’ of the combined successful groups to define the target population:</p>
+<ul>
+<li><p>Testing the posterior probability of better response compared to control (possibly with CSD delta’s specified)</p></li>
+<li><p>Enabling early stopping for futility for all groups (not across groups), for each group setting the required minimum number of subjects and futility stopping threshold</p></li>
+<li><p>Stopping the whole study for futility combining decisions with “AND”, selecting every group so the study stops early for futility only if all groups stop</p></li>
+<li><p>Similarly for success</p></li>
+</ul></li>
+<li><p>To only perform further development if there is broad efficacy across the whole population tested, but to drop any groups where efficacy is poor</p>
+<ul>
+<li><p>Testing the posterior probability of better response compared to control (possibly with CSD delta’s specified) for stopping groups and testing “Phase 3 CSD” for across groups</p></li>
+<li><p>Enabling early stopping for futility for all groups and across groups. For each group setting the required minimum number of subjects and CSD futility stopping threshold for dropping that group (the “Pr(Success in Phase 3)” thresholds being set very low so that they don’t trigger). For “across groups” setting the minimum number of subjects and “Pr(Success in phase 3)” futility stopping threshold for stopping the whole trial for futility (with the “Posterior probability” threshold set very low so that it doesn’t trigger).</p></li>
+<li><p>Stopping the whole study for futility combining decisions with “AND”, marking only “across groups” so the study stops early for futility only if “across groups” stops.</p></li>
+<li><p>For success early stopping, this is only enabled for “across groups” and only uses Phase 3 CSD. For “across groups” the minimum number of subjects and Pr(Success in phase 3) success stopping threshold are set for stopping the whole trial for success.</p></li>
+</ul></li>
+<li><p>To only perform further development if there is efficacy in both of two specific subgroups (probably the largest in proportion of overall population) and determine which other groups to also include in the ‘signature’ of the target population going forward.</p>
+<ul>
+<li><p>Testing the posterior probability of better response compared to control (possibly with CSD delta’s specified).</p></li>
+<li><p>Enabling early stopping for futility for all groups (not across groups), for each group setting the required minimum number of subjects and CSD futility stopping threshold for dropping that group.</p></li>
+<li><p>Stopping the whole study for futility combining decisions with “OR”, marking only the two critical groups so if either stops for futility then the study stops early for futility.</p></li>
+<li><p>For success early stopping, only mark the two critical groups for early stopping, for each group setting the required minimum number of subjects and CSD futility stopping threshold for dropping that group.</p></li>
+<li><p>Stopping the whole study for success combining decisions with “AND”, marking both critical groups so that if both stop for success then the study stops early for success.</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="final-evaluation-criteria" class="level3">
+<h3 class="anchored" data-anchor-id="final-evaluation-criteria">Final Evaluation Criteria</h3>
+<p>On the Final Evaluation tab of the Success/Futility Criteria tab page the user specifies the rules for judging whether individual groups and the overall study were futile or a success should they not stop early.</p>
+<p>This tab is similar to the Success/Futility Criteria bad for interims, except that there is no option to specify the minimum information requirements – these rules are evaluated when all information has been gathered.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-13-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-13-1" role="tab" aria-controls="tabset-13-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-13-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-13-2" role="tab" aria-controls="tabset-13-2" aria-selected="false">Dichotomous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-13-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-13-3" role="tab" aria-controls="tabset-13-3" aria-selected="false">Time-to-Event</a></li></ul>
+<div class="tab-content">
+<div id="tabset-13-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-13-1-tab">
+<div id="fig-fig53cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig53cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDCont/media/image53.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig53cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;45: Design Evaluation Criteria
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-13-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-13-2-tab">
+<div id="fig-fig49dich" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig49dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDDich/media/image49.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig49dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;46: Design Evaluation Criteria
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-13-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-13-3-tab">
+<div id="fig-fig47tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig47tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./EDTTE/media/image47.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig47tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;47: Design Evaluation Criteria
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

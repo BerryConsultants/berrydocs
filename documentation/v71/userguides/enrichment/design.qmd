@@ -1104,3 +1104,338 @@ being acted on too early within specific groups.
 :::
 
 # Success/Futility Criteria
+
+On the success/futility criteria page the user can specify rules for
+judging the study for futility or success at an interim and at the final
+evaluation. If the trial has no interims there will be just a tab for
+the Final Evaluation criteria. If the trial has interims then there can
+be tabs that define different early success/futility criteria at the
+different interims.
+
+At the top of the main tab is a control to allow tabs to be created for
+different interims. In a newly created adaptive design, FACTS will
+create a tab for interim 1 as well as Final Evaluation.
+
+If early success/futility criteria are specified for an interim, then
+they will be taken to apply to all subsequent interims until the next
+one for which criteria are supplied, then those criteria will apply
+until the next interim for which criteria are applied and so on.
+
+The stopping criteria available are:
+
+- For each group:
+
+  - Early success or futility can be decided based on the posterior
+    probability of the treatment effect being better than control by the
+    Success CSD or worse than control by the Futility CSD.
+
+  - In addition there can be a required minimum information on the group
+    before it can stop where information is the number of subjects
+    enrolled or events observed. (If interim timing is defined by
+    events, then minimum information can only be by events).
+
+  - For each group stopping can be decided only on that group’s results
+    or (if Across Groups is enabled for early stopping) the Across
+    Groups analysis can also be taken in to account – and the user can
+    select that either the group criteria AND the Across Groups criteria
+    must be met for a group to stop, or the group criteria OR the Across
+    Groups criteria must be met for the group to stop.
+
+- It is also possible to specify criteria to stop the whole study based
+  on
+
+  - Which groups have stopped – the Study stopping rule can be defined
+    using “AND”, meaning all the specified groups have to have stopped
+    for the whole study to stop, or “OR”, meaning that if any one of the
+    specified groups has stopped then the whole study stops. For the
+    purpose of this rule the “Across Groups” criteria can be included as
+    a “group”.
+
+  - A minimum information across the whole study can be specified and
+    the study will not stop until that amount of information has been
+    collected.
+
+Note:
+
+1.  Early stopping of accrual into individual groups or of the whole
+    study for success/futility only occurs at interims.
+
+2.  There will be no stopping for success or futility until the first
+    interim for which early stopping criteria have been defined.
+
+3.  It is left to the user to ensure that the early stopping criteria at
+    any interim are mutually exclusive and it is not possible for groups
+    or the study stop for both success and futility at the same time.
+    The FACTS design engines will stop the accrual into the group or
+    study but there is not guarantee on how the outcome is recorded. It
+    is not considered good practice to have success and futility rules
+    that could both be true, so FACTS does not guarantee a “tie break”
+    rule.
+
+4.  In the output files there are columns labeled “CSD/Ph3 Success” and
+    “CSD/Ph3 Futile” for each group indicating whether any decision
+    criteria became true, and “Success Criteria Met” and “Futility
+    Criteria Met” for each group indicating if all the criteria for a
+    success or futility determination have been met. If both sets of
+    criteria are met simultaneously, FACTS will only flag one of
+    “Success Combined” and “Futile Combined” as being met, corresponding
+    to how the outcome of the trial has been flagged.
+
+:::{.panel-tabset}
+
+### Continuous
+
+![Futility/Success Criteria](./EDCont/media/image51.png){#fig-fig51cont}
+
+### Dichotomous
+
+![Futility/Success Criteria](./EDDich/media/image47.png){#fig-fig47dich}
+
+### Time-to-Event
+
+![Futility/Success Criteria](./EDTTE/media/image45.png){#fig-fig45tte}
+
+:::
+
+- Enable Futility/Success Criteria, these check boxes allow early
+  stopping for either success and/or futility to be easily disabled.
+
+- Futility Criteria
+
+  - “Criteria types”: the evaluation criteria available are the
+    posterior probability of being better than control by the futility
+    CSD/CSHRD, and/or by the posterior probability of success in a
+    subsequent phase 3 trial. Whether one, the other or both criteria
+    are to be used is specified using the two check boxes on the left of
+    the tab. If both are selected then for futility, the results of
+    testing the criteria are OR’d together.
+
+  - “Study stopping rules combined by”: Study early stopping is
+    determined by whether user specified groups stop. If AND is
+    specified the study will stop for futility if **all** the selected
+    groups stop for futility, if OR is specified the study will stop for
+    futility if **any** of the selected groups stop for futility. To
+    select a group to be one of those that determines study stopping the
+    user must first select “Enable early stopping..” for that group and
+    then select “Study to stop if …” for it using the respective check
+    boxes in the row in the table for that group..
+
+  - “Minimum total subjects”: allows the user to specify an overall
+    minimum number of subjects that must be accrued before the study can
+    stop for futility (only available if information is defined by
+    subjects enrolled on the Interim tab).
+
+  - “Minimum total events”: allows the user to specify an overall
+    minimum number of events that must be observed before the study can
+    stop for futility.
+
+  - The group table has a row per group, plus a row for across groups.
+    The columns included / enabled in the table depend on the selections
+    made in the first two parameters above.
+
+  - Table columns:
+
+    - “Enable early stopping”: If checked the stopping rules for this
+      group are to be evaluated, if not checked the group will not stop
+      early. It will only stop when it reaches its group cap, the study
+      reaches the study cap, or the study stops early.
+
+    - “Pr()\> CSD/CSHRD for futility \<” or “Pr() \< NIM/NIHRM for futility \<”: If “Posterior probability” has been set as a criteria type and
+      “Early stopping” enabled for the group, then the threshold for
+      early stopping by this criteria must be set. The criteria will be
+      met if
+
+      - For superiority: the posterior probability of the response on
+        the treatment arm being better than the control response plus
+        the futility CSD is below this threshold (continuous or dichotomous endpoint)         or the posterior probability that the treatment
+        arm hazard ratio is better than the futility CSHRD, is below
+        this threshold (time-to-event endpoint).
+
+      - For non-inferiority: the posterior probability of the response
+        on the treatment arm being better than the control response less
+        the NIM for futility is below this threshold (continuous or dichotomous       endpoint) or the posterior probability that the
+        treatment arm hazard ratio is better than the NIHRM for futility
+        is below this threshold (time-to-event endpoint).
+
+    - “Pr(Success Phase III) \<”: This column is only displayed if
+      ‘Phase 3 Criteria’ has been enabled on the ‘Study \> Group Info’
+      tab and if “Phase III CSD” has been set as a criteria type. If
+      “Early stopping” is enabled for the group, then the threshold for
+      early stopping by this criteria must be set. This criterion will
+      be met if the posterior probability of success in the specified
+      phase 3 trial is below this threshold.
+
+    - “Group Stopping Rule”: If “Early stopping” has been enabled for
+      this group and for “Across groups”, and “Across groups” is not
+      selected to stop the study, then the group stopping rule can take
+      the across group criteria into account. The group stopping can
+      depend on
+
+      - solely on the group’s stopping criteria being met,
+
+      - or on either the group or the across group criteria being met
+
+      - or on both the group and the across group criteria being met.
+
+    - “Study to stop if …“: By default the study stops only when the
+      constituent groups stop or reach their maximum sample size or the
+      whole study reaches its maximum sample size, this setting allows
+      the study to be stopped if any one of the selected groups stops
+      for futility (“Study stopping rules combined by OR”) or if all of
+      the selected groups stop for futility (“Study stopping rules
+      combined by AND”). One of these groups can be the ‘across groups’
+      analysis.
+
+    - “Min subj in group before stopping”: The minimum number of
+      subjects that must have been accrued in the group before the
+      stopping criteria for that group are evaluated. (Only available if
+      information on the Interim tab is defined by subjects enrolled.)
+
+    - “Min events in group before stopping”: The minimum number of
+      events that must have been observed in the group before the
+      stopping criteria for that group are evaluated.
+
+- The Success Criteria parameters are all similar to their futility
+  criteria counterparts. There are three differences:
+
+  - If both “Posterior probability” and “Phase III CSD” criteria are
+    selected for stopping for success then both must be met for the
+    group to stop for success.
+
+  - For the “Pr()\> CSD/CSHRD for success \<” and “Pr(Success Phase III) \<”
+    criteria, the posterior probability must exceed the specified
+    thresholds for the group’s stopping for success criteria to be met.
+
+  - The CSD/CSHRD is the CSD/CSHRD for success or the NIM/NIHRM is the NIM/NIHRM for
+    success, rather than for futility.
+
+### Stopping Criteria at subsequent interims
+
+The stopping criteria can be changed at subsequent interims, but only in
+terms of the threshold to test against, the selection of the stopping
+logic and the minimum information requirements cannot be changed.
+
+:::{.panel-tabset}
+
+### Continuous
+
+![Success/Futility at later interims](./EDCont/media/image52.png){#fig-fig52cont}
+
+### Dichotomous
+
+![Success/Futility at later interims](./EDDich/media/image48.png){#fig-fig48dich}
+
+### Time-to-Event
+
+![Success/Futility at later interims](./EDTTE/media/image46.png){#fig-fig46tte}
+
+:::
+
+
+### Examples of stopping criteria
+
+The stopping rules in ED are flexible and potentially quite complex. It
+is not expected that complex conditions will be required very often,
+what is expected is that there will be ED trials with quite different
+goals and the flexibility in the stopping conditions are there to allow
+stopping rules appropriate to these different goals to be entered.
+
+For example:
+
+- To identify in which sub-groups the treatment is sufficiently
+  effective to justify a further development and further development to
+  proceed if any of the groups are successful and the development will
+  use the ‘signature’ of the combined successful groups to define the
+  target population:
+
+  - Testing the posterior probability of better response compared to
+    control (possibly with CSD delta’s specified)
+
+  - Enabling early stopping for futility for all groups (not across
+    groups), for each group setting the required minimum number of
+    subjects and futility stopping threshold
+
+  - Stopping the whole study for futility combining decisions with
+    “AND”, selecting every group so the study stops early for futility
+    only if all groups stop
+
+  - Similarly for success
+
+- To only perform further development if there is broad efficacy across
+  the whole population tested, but to drop any groups where efficacy is
+  poor
+
+  - Testing the posterior probability of better response compared to
+    control (possibly with CSD delta’s specified) for stopping groups
+    and testing “Phase 3 CSD” for across groups
+
+  - Enabling early stopping for futility for all groups and across
+    groups. For each group setting the required minimum number of
+    subjects and CSD futility stopping threshold for dropping that group
+    (the “Pr(Success in Phase 3)” thresholds being set very low so that
+    they don’t trigger). For “across groups” setting the minimum number
+    of subjects and “Pr(Success in phase 3)” futility stopping threshold
+    for stopping the whole trial for futility (with the “Posterior
+    probability” threshold set very low so that it doesn’t trigger).
+
+  - Stopping the whole study for futility combining decisions with
+    “AND”, marking only “across groups” so the study stops early for
+    futility only if “across groups” stops.
+
+  - For success early stopping, this is only enabled for “across groups”
+    and only uses Phase 3 CSD. For “across groups” the minimum number of
+    subjects and Pr(Success in phase 3) success stopping threshold are
+    set for stopping the whole trial for success.
+
+- To only perform further development if there is efficacy in both of
+  two specific subgroups (probably the largest in proportion of overall
+  population) and determine which other groups to also include in the
+  ‘signature’ of the target population going forward.
+
+  - Testing the posterior probability of better response compared to
+    control (possibly with CSD delta’s specified).
+
+  - Enabling early stopping for futility for all groups (not across
+    groups), for each group setting the required minimum number of
+    subjects and CSD futility stopping threshold for dropping that
+    group.
+
+  - Stopping the whole study for futility combining decisions with “OR”,
+    marking only the two critical groups so if either stops for futility
+    then the study stops early for futility.
+
+  - For success early stopping, only mark the two critical groups for
+    early stopping, for each group setting the required minimum number
+    of subjects and CSD futility stopping threshold for dropping that
+    group.
+
+  - Stopping the whole study for success combining decisions with “AND”,
+    marking both critical groups so that if both stop for success then
+    the study stops early for success.
+
+### Final Evaluation Criteria
+
+On the Final Evaluation tab of the Success/Futility Criteria tab page
+the user specifies the rules for judging whether individual groups and
+the overall study were futile or a success should they not stop early.
+
+This tab is similar to the Success/Futility Criteria bad for interims,
+except that there is no option to specify the minimum information
+requirements – these rules are evaluated when all information has been
+gathered.
+
+:::{.panel-tabset}
+
+### Continuous
+
+![Design Evaluation Criteria](./EDCont/media/image53.png){#fig-fig53cont}
+
+### Dichotomous
+
+![Design Evaluation Criteria](./EDDich/media/image49.png){#fig-fig49dich}
+
+### Time-to-Event
+
+![Design Evaluation Criteria](./EDTTE/media/image47.png){#fig-fig47tte}
+
+:::
