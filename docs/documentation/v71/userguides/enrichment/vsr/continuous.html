@@ -792,10 +792,8 @@ window.Quarto = {
     <h2 id="toc-title">Table of Contents</h2>
    
   <ul>
-  <li><a href="#virtual-subject-response" id="toc-virtual-subject-response" class="nav-link active" data-scroll-target="#virtual-subject-response">Virtual Subject Response</a>
+  <li><a href="#explicitly-defined" id="toc-explicitly-defined" class="nav-link active" data-scroll-target="#explicitly-defined">Explicitly Defined</a>
   <ul>
-  <li><a href="#explicitly-defined" id="toc-explicitly-defined" class="nav-link" data-scroll-target="#explicitly-defined">Explicitly Defined</a>
-  <ul class="collapse">
   <li><a href="#baseline" id="toc-baseline" class="nav-link" data-scroll-target="#baseline">Baseline</a></li>
   <li><a href="#group-response" id="toc-group-response" class="nav-link" data-scroll-target="#group-response">Group Response</a></li>
   <li><a href="#load-scenario-means-from-file" id="toc-load-scenario-means-from-file" class="nav-link" data-scroll-target="#load-scenario-means-from-file">Load Scenario Means From File</a></li>
@@ -807,9 +805,8 @@ window.Quarto = {
   </ul></li>
   </ul></li>
   <li><a href="#external" id="toc-external" class="nav-link" data-scroll-target="#external">External</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#required-format-of-externally-simulated-detail" id="toc-required-format-of-externally-simulated-detail" class="nav-link" data-scroll-target="#required-format-of-externally-simulated-detail">Required Format of Externally Simulated Detail</a></li>
-  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -821,8 +818,6 @@ window.Quarto = {
 
 
 
-<section id="virtual-subject-response" class="level1">
-<h1>Virtual Subject Response</h1>
 <p>The Virtual Subject Response tab allows the user to explicitly define virtual subject response profiles, and/or to import virtual subject responses generated from an external response model.</p>
 <section id="explicitly-defined" class="level2">
 <h2 class="anchored" data-anchor-id="explicitly-defined">Explicitly Defined</h2>
@@ -952,6 +947,7 @@ Figure&nbsp;5: Virtual Subject Response - Loading group response means from an e
 </ul>
 <p>All methods allow the fraction of the final response and the fraction of the final variance observed at each visit to be specified.</p>
 <p>Both methods can be parameterized across the whole trial or separately parameterized for each group.</p>
+<p><a href="../../../../../documentation/v71/userguides/core/longitudinalmodels/continuous.html">Click here</a> for an overview of longitudinal models for continuous endpoints in the FACTS Core engine.</p>
 <section id="correlated-method" class="level4">
 <h4 class="anchored" data-anchor-id="correlated-method">Correlated Method</h4>
 <p>This method is defined by 3 values for each visit:</p>
@@ -974,8 +970,8 @@ Figure&nbsp;6: Simulated Longitudinal Results - correlated method
 <p>The equations currently use a subscript of ‘1’ for the first visit, corresponding to the values shown for the index of each visit shown in the table where the values are entered.</p>
 <p>For the first visit, for a subject in group <em>g</em>, treatment arm <em>a</em>, the mean response is given by: <span class="math inline">\(\mu_{g,\ a,1} = f_{1}\mu_{g,a}\)</span>,</p>
 <p>and the observed variance by <span class="math inline">\(\sigma_{g,a,1}^{2} = \varphi_{1}^{2}\sigma_{g,a}^{2}\)</span></p>
-<p>thus the expected response <span class="math inline">\(y_{g,a,1}\)</span> for a subject is <span class="math inline">\(\sim\mu_{g,a,1} + N\left( 0,\sigma_{g,a,1}^{2} \right)\)</span></p>
-<p>Where the final mean <span class="math inline">\(`\mu_{g,a}`\)</span>, and variance <span class="math inline">\(`\sigma_{g,a}`\)</span>, are as defined on the group response tab.</p>
+<p>thus the expected response <span class="math inline">\(y_{g,a,1}\)</span> for a subject is <span class="math inline">\(y_{g,a,1} \sim\mu_{g,a,1} + N\left( 0,\sigma_{g,a,1}^{2} \right)\)</span></p>
+<p>Where the final mean <span class="math inline">\(\mu_{g,a}\)</span>, and variance <span class="math inline">\(\sigma_{g,a}\)</span>, are as defined on the group response tab.</p>
 <p>For the second visit, the mean response is given by: <span class="math inline">\(\mu_{g,a,2} = f_{2}\mu_{g,a}\)</span>,</p>
 <p>and the observed variance by <span class="math inline">\({\rho_{g,1}\left( y_{i,1} - \mu_{g,a,1} \right)\frac{\sigma_{g,a,2}^{2}}{\sigma_{g,a,1}^{2}} + \sqrt{1 - \rho_{g,2}^{2}}N\left( 0,\sigma_{g,a,2}^{2} \right)}_{}^{}\)</span></p>
 <p>(where <span class="math inline">\(y_{i,1}\)</span> is the observed response at the i<sup>th</sup> subject’s first visit response) thus the variance is <span class="math inline">\(\sigma_{g,a,2}^{2} = \varphi_{2}^{2}\sigma_{g,a}^{2}\)</span> but made up of a component that has already been observed at the previous visit, scaled by the correlation factor and relative variance at the second visit compared to the first, plus a new suitably scaled random component.</p>
@@ -1000,7 +996,7 @@ Figure&nbsp;7: Simulated Longitudinal Results - hierarchical method
 </figure>
 </div>
 <p>For the visit <em>t</em>, for subject <em>i</em>, in group <em>g</em>, treatment arm <em>a</em></p>
-<p>the expected response <span class="math inline">\(y_{g,a,t}\)</span> for a subject is <span class="math inline">\(\sim f_{g,t}\left( \mu_{g,a} + \delta_{i} \right) + N\left( 0,\kappa_{g,a,t}^{2} \right)\)</span></p>
+<p>the expected response <span class="math inline">\(y_{g,a,t}\)</span> for a subject is <span class="math inline">\(y_{g,a,t} \sim f_{g,t}\left( \mu_{g,a} + \delta_{i} \right) + N\left( 0,\kappa_{g,a,t}^{2} \right)\)</span></p>
 <p>where <span class="math inline">\(\delta_{i}\sim N\left( 0,\tau_{g,a}^{2} \right)\)</span></p>
 <p>and <span class="math inline">\(\tau_{g}^{2} = \upsilon_{g}\sigma_{g,a}^{2}\)</span>,</p>
 <p>the variance of <span class="math inline">\(y_{g,a,t}\)</span> will be <span class="math inline">\(\kappa_{g,a}^{2} + {f_{g,t}^{2}\tau}_{g}^{2}\)</span>, and <span class="math inline">\(\kappa_{g,a}^{2}\)</span>, will be set so that this <span class="math inline">\(= \varphi_{t}^{2}\sigma_{g,a}^{2}\)</span></p>
@@ -1027,7 +1023,7 @@ Figure&nbsp;8
 <p>The subject variability <em>σ<sup>2</sup></em> as specified on the Group Response tab is divided into a per subject component, <em>νσ<sup>2</sup></em> and a component which varies between visits <em>(1-ν)σ<sup>2</sup></em>.</p>
 <p>The response for each subject (including both noise terms and any baseline adjustment term) is scaled at each visit as:</p>
 <p><span class="math display">\[
-\propto \left( \frac{1 - \exp\left( kv_{t} \right)}{1 - \exp\left( kv_{T} \right)} \right)
+y_{g,a,1} \propto \left( \frac{1 - \exp\left( kv_{t} \right)}{1 - \exp\left( kv_{T} \right)} \right)
 \]</span></p>
 <p>where <em>v<sub>t</sub></em> is the week of visit <em>t</em> and <em>T</em> is the final visit. The effect of some k values are shown below:</p>
 <table class="caption-top table">
@@ -1135,7 +1131,6 @@ Figure&nbsp;9: External Data
 3, 2, 1, 4, 7.4</code></pre>
 
 
-</section>
 </section>
 </section>
 
