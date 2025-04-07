@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Virtual Subject Response - Time-to-Event Endpoint</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../../">
+<link href="../../../../../media/FACTS_icon.png" rel="icon" type="image/png">
+<script src="../../../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<!-- Roboto Serif -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
+
+<!-- Roboto Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WLMVE7GR4S');
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../../../media/FACTSLogo.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../introduction/index.html"> 
+<span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../documentation/index.html"> 
+<span class="menu-text">Documentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../get/index.html"> 
+<span class="menu-text">Get FACTS</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../contact/index.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Virtual Subject Response - Time-to-Event Endpoint</h1>
+            <p class="subtitle lead">Description of how to specify the virtual subject response for time-to-event endpoints.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#specifying-vsr-with-no-predictor" id="toc-specifying-vsr-with-no-predictor" class="nav-link active" data-scroll-target="#specifying-vsr-with-no-predictor">Specifying VSR with no predictor</a>
+  <ul>
+  <li><a href="#explicitly-defined" id="toc-explicitly-defined" class="nav-link" data-scroll-target="#explicitly-defined">Explicitly Defined</a>
+  <ul class="collapse">
+  <li><a href="#control-hazard-rates" id="toc-control-hazard-rates" class="nav-link" data-scroll-target="#control-hazard-rates">Control Hazard Rates</a></li>
+  <li><a href="#dose-response" id="toc-dose-response" class="nav-link" data-scroll-target="#dose-response">Dose Response</a></li>
+  <li><a href="#loading-scenario-control-hazard-rates-and-scenario-hazard-ratios-from-file" id="toc-loading-scenario-control-hazard-rates-and-scenario-hazard-ratios-from-file" class="nav-link" data-scroll-target="#loading-scenario-control-hazard-rates-and-scenario-hazard-ratios-from-file">Loading Scenario Control Hazard Rates and Scenario Hazard Ratios from file</a></li>
+  </ul></li>
+  <li><a href="#external-files" id="toc-external-files" class="nav-link" data-scroll-target="#external-files">External Files</a>
+  <ul class="collapse">
+  <li><a href="#required-format-of-externally-simulated-data" id="toc-required-format-of-externally-simulated-data" class="nav-link" data-scroll-target="#required-format-of-externally-simulated-data">Required Format of Externally Simulated Data</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#specifying-vsr-with-a-predictor" id="toc-specifying-vsr-with-a-predictor" class="nav-link" data-scroll-target="#specifying-vsr-with-a-predictor">Specifying VSR with a predictor</a>
+  <ul>
+  <li><a href="#explicitly-defined-event-rate-predictor" id="toc-explicitly-defined-event-rate-predictor" class="nav-link" data-scroll-target="#explicitly-defined-event-rate-predictor">Explicitly Defined (Event Rate | Predictor)</a>
+  <ul class="collapse">
+  <li><a href="#continuous-predictor" id="toc-continuous-predictor" class="nav-link" data-scroll-target="#continuous-predictor">Continuous Predictor</a>
+  <ul class="collapse">
+  <li><a href="#predictor" id="toc-predictor" class="nav-link" data-scroll-target="#predictor">Predictor</a></li>
+  <li><a href="#control-hazard-rates-1" id="toc-control-hazard-rates-1" class="nav-link" data-scroll-target="#control-hazard-rates-1">Control Hazard Rates</a></li>
+  <li><a href="#dose-response-1" id="toc-dose-response-1" class="nav-link" data-scroll-target="#dose-response-1">Dose Response</a></li>
+  </ul></li>
+  <li><a href="#dichotomous-predictor" id="toc-dichotomous-predictor" class="nav-link" data-scroll-target="#dichotomous-predictor">Dichotomous Predictor</a>
+  <ul class="collapse">
+  <li><a href="#control-hazard-rate-with-dichotomous-predictor" id="toc-control-hazard-rate-with-dichotomous-predictor" class="nav-link" data-scroll-target="#control-hazard-rate-with-dichotomous-predictor">Control Hazard Rate with Dichotomous Predictor</a></li>
+  <li><a href="#dose-response-with-a-dichotomous-predictor" id="toc-dose-response-with-a-dichotomous-predictor" class="nav-link" data-scroll-target="#dose-response-with-a-dichotomous-predictor">Dose Response with a Dichotomous Predictor</a></li>
+  </ul></li>
+  <li><a href="#time-to-event-predictor" id="toc-time-to-event-predictor" class="nav-link" data-scroll-target="#time-to-event-predictor">Time-to-Event Predictor</a>
+  <ul class="collapse">
+  <li><a href="#predictor-1" id="toc-predictor-1" class="nav-link" data-scroll-target="#predictor-1">Predictor</a></li>
+  <li><a href="#control-hazard-rates-2" id="toc-control-hazard-rates-2" class="nav-link" data-scroll-target="#control-hazard-rates-2">Control Hazard Rates</a></li>
+  <li><a href="#dose-response-2" id="toc-dose-response-2" class="nav-link" data-scroll-target="#dose-response-2">Dose Response</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#explicitly-defined-predictor-event-rate" id="toc-explicitly-defined-predictor-event-rate" class="nav-link" data-scroll-target="#explicitly-defined-predictor-event-rate">Explicitly Defined (Predictor | Event Rate)</a>
+  <ul class="collapse">
+  <li><a href="#dichotomous" id="toc-dichotomous" class="nav-link" data-scroll-target="#dichotomous">Dichotomous</a>
+  <ul class="collapse">
+  <li><a href="#predictor-2" id="toc-predictor-2" class="nav-link" data-scroll-target="#predictor-2">Predictor</a></li>
+  </ul></li>
+  <li><a href="#time-to-event" id="toc-time-to-event" class="nav-link" data-scroll-target="#time-to-event">Time-to-Event</a>
+  <ul class="collapse">
+  <li><a href="#predictor-3" id="toc-predictor-3" class="nav-link" data-scroll-target="#predictor-3">Predictor</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#external" id="toc-external" class="nav-link" data-scroll-target="#external">External</a>
+  <ul class="collapse">
+  <li><a href="#required-format-of-externally-simulated-detail" id="toc-required-format-of-externally-simulated-detail" class="nav-link" data-scroll-target="#required-format-of-externally-simulated-detail">Required Format of Externally Simulated Detail</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+
+
+
+
+
+<p>The Virtual Subject Response tab allows the user to explicitly define virtual subject response profiles, and/or to import virtual externally simulated patient responses. When simulations are executed, they will be executed for a specific scenario – where a scenario is a combination of one each of predictor VSR, control hazard rate, dose response VSR, accrual rate, and dropout rate. If an external file is used to specify the subject responses to be simulated, this effectively replaces the predictor, control hazard and dose response profiles in a scenario.</p>
+<p>Unlike other endpoints where just a response (mean change from base line or rate) is specified, specification of subject responses for a time-to-event endpoint is done by first specifying a piecewise exponential event rate for the control population and then hazard ratios for the treatment arms. For simplicity, this means of specifying the simulated event rates is also used when no control arm is present and the comparison is with historic control rates.</p>
+<p>In FACTS Core TTE, there is also the ability to include the simulation of a ‘predictor’ endpoint. Predictor endpoints can be a continuous measure, dichotomous outcome, or a precursor event. The interface for specifying how the predictor endpoint data is to be simulated is different in each case.</p>
+<section id="specifying-vsr-with-no-predictor" class="level1">
+<h1>Specifying VSR with no predictor</h1>
+<section id="explicitly-defined" class="level2">
+<h2 class="anchored" data-anchor-id="explicitly-defined">Explicitly Defined</h2>
+<p>With no predictor, there are two screens for defining virtual subject responses; the first is used to define the control hazard rate and the second to define the hazard ratio of the events on each arm to control.</p>
+<section id="control-hazard-rates" class="level3">
+<h3 class="anchored" data-anchor-id="control-hazard-rates">Control Hazard Rates</h3>
+<p>The user may create a number of different control hazard rate profiles to simulate from. The different profiles will be used to define different simulation scenarios in combination with other profiles defining the other properties that have to be simulated.</p>
+<p>The hazard rate to simulate in a profile is specified as a piecewise exponential. The follow-up time can be divided into different time segments and a different event rate simulated in each segment.</p>
+<p>Segment boundaries and hazard rates are always entered using “weeks” as the time unit. While this might not always be the most convenient, it allows FACTS to use the same time unit everywhere.</p>
+<p>Different segments in the follow-up period are specified by adding segment ends. Adding a ‘segment end’ adds a segment interval to the list to allow the event rate for that interval to be specified. To delete an interval, select the interval starting with the breakpoint to be deleted and click the “Delete” button.</p>
+<p>The graph can show the hazard rate, the cumulative probability of not having an event or the probability of not having seen an event over time, using the event rates specified. This is useful for checking that the segments and event rates have been entered correctly.</p>
+<div id="fig-ctrlhaz" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ctrlhaz-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image18.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ctrlhaz-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: The tab for specifying the control arm hazard rate for an explicitly defined VSR.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="dose-response" class="level3">
+<h3 class="anchored" data-anchor-id="dose-response">Dose Response</h3>
+<p>The user may create a number of different dose response profiles to simulate from. The different profiles will be used to define different simulation scenarios in combination with other profiles defining the other properties that have to be simulated.</p>
+<p>Within each profile the user specifies:</p>
+<ol type="1">
+<li><p>The hazard ratio compared to control for each treatment arm (except control itself, where of course the ratio is 1).</p></li>
+<li><p>A check box that allows the user to specify whether a specific arm “should succeed” in that scenario: so that FACTS can report on the proportion of simulations that were successful <strong>and</strong> a ‘good’ treatment arm selected.</p></li>
+</ol>
+<p>On the graph the different hazard ratios for the profile are plotted, along with the ‘target’ – this is the default CSHRD or NIHRD offset from the QOI tab, the direction of the offset is dependent on whether events are ‘good’ or ‘bad’ and whether the aim of the trial is to show superiority on non-inferiority.</p>
+<div id="fig-ttehr" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ttehr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image19.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ttehr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Specify the hazard ratio per dose
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="loading-scenario-control-hazard-rates-and-scenario-hazard-ratios-from-file" class="level3">
+<h3 class="anchored" data-anchor-id="loading-scenario-control-hazard-rates-and-scenario-hazard-ratios-from-file">Loading Scenario Control Hazard Rates and Scenario Hazard Ratios from file</h3>
+<p>If the “Load scenario hazard rates from a file” option is selected then in scenarios using this profile the simulations will use a range of dose responses across the simulations.</p>
+<p>Each individual simulation uses one set of responses from the supplied file, each row being used in an equal number of simulations. The summary results are thus averaged over all the VSRs in the file. The use of this form of simulation is somewhat different from simulations using a single rate or single external virtual subject response file. When all the simulations are simulated from a single version of the ‘truth’ then the purpose of the simulations is to analyse the performance of the design under that specific circumstance. When the simulations are based on a range of ‘truths’ loaded from an ‘.mvsr’ file then the summary results show the expected probability of the different outcomes for the trial over that range of possible circumstances. Note that to give different VSRs different weights of expectation, the more likely VSRs should be repeated within the file.</p>
+<p>For a TTE endpoint the user must supply 2 files – one for the Control Hazard Rates and one for the Hazard Ratios in each group. MVSR hazard rates are only combined with MVSR control hazard rates. The lines from each file are paired up for each simulation, so the first control hazard rate is used with the first dose response hazard ratio, the second control hazard rate is used with the second dose response hazard ratio and so on. There must be the same number of lines in each file.</p>
+<div id="fig-extctrlhaz" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-extctrlhaz-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image20.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-extctrlhaz-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Load a scenario’s control hazard rates from an external file.
+</figcaption>
+</figure>
+</div>
+<p>After selecting the “.mvsr” file the graph shows the different control hazard rates over time.</p>
+<div id="fig-exttrthr" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-exttrthr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image21.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-exttrthr-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Load a scenario’s treatment hazard ratios from an external file.
+</figcaption>
+</figure>
+</div>
+<p>After selecting the “.mvsr” file the graph shows the different individual hazard ratios for each dose.</p>
+<p>The VSR parameters are provided in two separate files, (the number of lines in the files should be the same for the two files). The formats are:</p>
+<ul>
+<li><p>Control Hazard Rate File: Each line should contain columns [L<sub>1</sub>, L<sub>2</sub>, … , L<sub>S</sub>] giving the true control hazard rates (<span class="math inline">\(\lambda\)</span>) for each of the S segments. (Note: FACTS will treat the hazard rate as per week).:</p></li>
+<li><p>Hazard Ratio File: Each line should contain columns [HR<sub>1</sub>, HR<sub>2</sub>, … , HR<sub>D</sub>] giving the true Mean Hazard Ratios for each of the D dose arms. (Note: HR<sub>1</sub> = 1 by definition, but the column of 1’s to be included here for completeness.)</p></li>
+</ul>
+<p>The use of MVSR files has not been extended to the case where a predictor is being used.</p>
+</section>
+</section>
+<section id="external-files" class="level2">
+<h2 class="anchored" data-anchor-id="external-files">External Files</h2>
+<p>As well as simulating subject responses within FACTS they can be simulated externally and imported into FACTS where the supplied responses are sampled from when simulating the trial. The specification of a file containing subject response data can be done from the External Files sub-tab depicted in <a href="#fig-externalfiles" class="quarto-xref">Figure&nbsp;5</a> below.</p>
+<p>To import an external file, the user must first add a profile to the table. After adding the profile, the user must click “Browse” to locate the file of externally simulated data. The user will then be prompted to locate the external file on their computer with a dialog box.</p>
+<div id="fig-externalfiles" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-externalfiles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image32.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-externalfiles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: The external files sub-tab for uploading patient data to be sampled from.
+</figcaption>
+</figure>
+</div>
+<section id="required-format-of-externally-simulated-data" class="level3">
+<h3 class="anchored" data-anchor-id="required-format-of-externally-simulated-data">Required Format of Externally Simulated Data</h3>
+<p>The supplied data should have the following columns:</p>
+<ol type="1">
+<li><p>Patient id, these must be positive integers and unique</p></li>
+<li><p>Arm Index (1 = Control, 2 = Treatment1, 3 = Treatment2, …)</p></li>
+<li><p>Uncensored time to event in weeks</p></li>
+<li><p>This column is a placeholder for predictor data. It may be filled out or empty when there is no predictor. It will be ignored.</p></li>
+</ol>
+<p><strong>The GUI requires that the file name has a “.dat” suffix. The file need not have column headers, but if it does the first column name must start with a pound sign (#) which tells FACTS to ignore that row.</strong></p>
+<p>The following shows values from an example file with a dichotomous predictor. Unlike other endpoints there is only one line per subject, as there is no need to record the subject’s state at interim visits.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>#Patient ID</th>
+<th>Dose Index</th>
+<th>Uncensored Time to Event (weeks)</th>
+<th>Optional Predictor value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+<td>8.87</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>1</td>
+<td>9.34</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>2</td>
+<td>6.78</td>
+<td>-9999</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>2</td>
+<td>10.23</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>2</td>
+<td>9.96</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>2</td>
+<td>5.6</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>1</td>
+<td>37.01</td>
+<td>20.36</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>1</td>
+<td>28.67</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>1</td>
+<td>39.70</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>In the above, column headers have been included to make it clearer to read but they are not required.</p>
+<p>Simulated subjects will be drawn from this supplied list, with replacement, to provide the simulated response values.</p>
+</section>
+</section>
+</section>
+<section id="specifying-vsr-with-a-predictor" class="level1">
+<h1>Specifying VSR with a predictor</h1>
+<p>FACTS supports the specification of the simulation of events and predictors in two ways:</p>
+<ol type="1">
+<li><p>Specification of the predictor and then specification of the subject’s time-to-event dependent on the predictor</p></li>
+<li><p>Specification of the subject’s event rate and then specification of the predictor dependent on the event rate simulated</p></li>
+</ol>
+<section id="explicitly-defined-event-rate-predictor" class="level2">
+<h2 class="anchored" data-anchor-id="explicitly-defined-event-rate-predictor">Explicitly Defined (Event Rate | Predictor)</h2>
+<p>The first method (described in this section) may in some circumstances be the more natural way to think of the data (we might want to simulate for instance that subjects with a reduction in tumor size have a longer survival time), however it gives rise to data which does not have an exponential distribution. To retain an exponential distribution in the simulated event rate it is necessary to use the second method where the control rate and treatment arm hazard ratios are specified first and then the probability of the observed predictor derived from that (described in the next section).</p>
+<section id="continuous-predictor" class="level3">
+<h3 class="anchored" data-anchor-id="continuous-predictor">Continuous Predictor</h3>
+<p>If a predictor with a continuous endpoint is being used then there is a new tab in the VSR section to allow the specification of profiles that define how the predictor endpoint is to be simulated.</p>
+<section id="predictor" class="level4">
+<h4 class="anchored" data-anchor-id="predictor">Predictor</h4>
+<p>Firstly, the predictor endpoint to be simulated is specified in the same way as a FACTS Core continuous endpoint. A number of profiles can be specified, in each one the mean change from baseline of the predictor for each treatment arm is specified, along with the variability in the change. The variability is specified as the SD of a Normal error in the observed change, a single value can be specified for all arms, or separate values for each arm.</p>
+<p>The mean hazard rate for the simulated subjects now depends on the value of the predictor <span class="math inline">\(Z\)</span>, the baseline hazard rate for the time segment <span class="math inline">\(\mu_{s}\)</span>, the log hazard ratio for the dose <span class="math inline">\(\theta_{d}\)</span>, and with parameters <span class="math inline">\(b_{Zd}\)</span>, <em>center</em> and <em>scale</em> for the predictor:</p>
+<p><span class="math display">\[h_{sdZ} = \mu_{s}exp\left( \theta_{d} \right)\exp\left( b_{Zd}\frac{Z - center}{scale} \right)\]</span></p>
+<p>Note that in this form of the predictor, the observed event rate is affected by the predictor, it will not be the same as specified in the dose-response profile, also the observed times to event will not be exponentially distributed. The impact of this is best understood by simulating the patient responses and performing rough analyses (e.g.&nbsp;in R).</p>
+<p>For example, with a control hazard rate of 0.01, and dose response hazard ratio of 1, when a continuous predictor is added with SD 2, and mean response of 1 on control and 3 on the treatment arm, with center specified at 2, scale at 3 and <span class="math inline">\(b_{z}\)</span> at 0.2, simulations of 1000 subjects’ times-to-events on each of control and treatment arm give (ignoring censoring) a HR of between 1.05 and 1.21.</p>
+<p>Note that if events are bad and higher predictor scores indicate subject improvement (lower hazard rate) then the <span class="math inline">\(b_{z}\)</span> coefficients need to be negative. The same is true if events are good and lower predictor scores indicate subject improvement.</p>
+<div id="fig-contpredVSR" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-contpredVSR-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image22.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-contpredVSR-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Specifying the continuous predictor’s VSR and how it effects the hazard rate for an arm.
+</figcaption>
+</figure>
+</div>
+<p>On the graph showing the predictor response to be simulated, the ‘target’ line shows the offset of the predictor CSD from the predictor response on the Control arm.</p>
+</section>
+<section id="control-hazard-rates-1" class="level4">
+<h4 class="anchored" data-anchor-id="control-hazard-rates-1">Control Hazard Rates</h4>
+<p>With a continuous predictor, the control hazard rate tab does not change. It’s the same as <a href="#control-hazard-rates">the non-predictor tab</a>.</p>
+</section>
+<section id="dose-response-1" class="level4">
+<h4 class="anchored" data-anchor-id="dose-response-1">Dose Response</h4>
+<p>The manner of specifying the dose response does not change – multiple profiles may be specified and in each profile the hazard ratio for each treatment arm is specified. However, the overall hazard ratio simulated will depend on the combination of the control hazard rate, the dose response hazard ratio and the effect of the predictor on the final event rate.</p>
+<p>This leads to two different ways for the predictor to be brought into the simulation. First, the hazard ratios <span class="math inline">\(\theta_{d}\)</span> may all be 1, while the mean of the predictor may change across doses. This would indicate that dose makes no difference given a fixed value of the predictor, but that the different doses achieve their effect by changing the distribution of the predictor values themselves. If the <span class="math inline">\(\theta_{d}\)</span> values differ from 1, then this indicates that there is a dose effect even conditional on a fixed value of the predictor (thus, for example, a control subject with Z=1 has a different hazard than a treatment subject with Z=1).</p>
+<p>The resulting hazard ratio is plotted in the graph at the bottom of the tab. The predictor profile and control hazard rate profile to use in generating the graph can be selected in the controls to the right of the graph.</p>
+<div id="fig-contpreddoseresponse" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-contpreddoseresponse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image23.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-contpreddoseresponse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Specify the hazard ratio per arm. The true simulated hazard ratio will be a combination of this value and the values provided in the predictor tab.
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="dichotomous-predictor" class="level3">
+<h3 class="anchored" data-anchor-id="dichotomous-predictor">Dichotomous Predictor</h3>
+<p>When simulating the event rate conditional on the predictor, the predictor endpoint to be simulated is specified in the same way as a for a simple dichotomous endpoint, the control hazard rate is specified separately for each dichotomous predictor value, and the Dose Response for the time-to-event endpoint has a hazard ratio that depends on the dichotomous predictor’s value.</p>
+<p>So, the effect of the predictor on the background event rate is seen on the control hazard rate tab, and on the treatment arm hazard ratios on the dose response tab.</p>
+<p>On those tabs the user specifies</p>
+<ul>
+<li><p>separate control hazard rates for subjects who have a predictor response and those who do not</p></li>
+<li><p>separate hazard ratios for each dose for subjects who have a predictor response and those who do not.</p></li>
+</ul>
+<p>The hazard rates and ratios apply from the moment a subject is recruited (they do not change after the dichotomous predictor is assessed) and do not depend on the predictor being observed (which could be prevented if the event happens first).</p>
+<div id="fig-dichpred" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dichpred-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image24.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dichpred-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Specifying the dichotomous predictor’s probability of response for each arm.
+</figcaption>
+</figure>
+</div>
+<p>The graph shows the specified response rate for each treatment arm and the target rate on control plus CSD.</p>
+<section id="control-hazard-rate-with-dichotomous-predictor" class="level4">
+<h4 class="anchored" data-anchor-id="control-hazard-rate-with-dichotomous-predictor">Control Hazard Rate with Dichotomous Predictor</h4>
+<div id="fig-dichpredctrl" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dichpredctrl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image25.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dichpredctrl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Specify the control arm hazard rate for each potential value of the dichotomous predictor.
+</figcaption>
+</figure>
+</div>
+<p>As usual, multiple control hazard rate profiles can be created and the hazard rate on the control arm specified over different time segments. What differs from the case where there is no predictor is that, if a dichotomous predictor (with event rate simulated dependent on the predictor) is being used, separate hazard rates are specified for subjects depending on whether or not they will have the dichotomous predictor response or not.</p>
+</section>
+<section id="dose-response-with-a-dichotomous-predictor" class="level4">
+<h4 class="anchored" data-anchor-id="dose-response-with-a-dichotomous-predictor">Dose Response with a Dichotomous Predictor</h4>
+<div id="fig-dichpreddoseresponse" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dichpreddoseresponse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image26.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dichpreddoseresponse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: Specify the hazard ratio for active arms given the value of the dichotomous predictor.
+</figcaption>
+</figure>
+</div>
+<p>As usual, multiple dose response profiles can be created, and in each profile the hazard ratio to simulate for each treatment arm compared to the control arm is specified. What differs from the case where there is no predictor, is that, if a dichotomous predictor is being used, separate hazard ratios are specified for subjects depending on whether or not they will have the dichotomous predictor response or not.</p>
+<p>As with the continuous predictor, the observed event rate is affected by the predictor (it will not be the same as specified in the dose-response profile). Similarly, the observed times to event will not be exponentially distributed. The graph shows the effective combined hazard ratio for a given combination of control hazard rate, predictor rates and dose response. The controls for selecting which control hazard rate and which predictor rates to use are to the right of the graph.</p>
+<p>The impact is best understood by simulating the patient responses and performing rough analyses (e.g.&nbsp;in R).</p>
+<p>For example, with a predictor response rate on control of 0.1 and control hazard rates of 0.01 (with a predictor response) and 0.02 (with no predictor response), and treatment arm with a predictor response rate of 0.2 and hazard ratios of 0.9 (with a predictor response) and 0.8 (with no predictor response), simulations of 1000 subjects times to events on each of control and treatment arm give (ignoring censoring) a HR of between 0.75 and 0.90.</p>
+</section>
+</section>
+<section id="time-to-event-predictor" class="level3">
+<h3 class="anchored" data-anchor-id="time-to-event-predictor">Time-to-Event Predictor</h3>
+<section id="predictor-1" class="level4">
+<h4 class="anchored" data-anchor-id="predictor-1">Predictor</h4>
+<p>The predictor endpoint to be simulated is specified in a similar manner to specifying the simulation of a time to event endpoint. A number of profiles can be specified; in each one the hazard rate on the control arm is specified over one, or more, time segments, and the overall hazard ratio of the time to the predictor event of each treatment arm to the control arm is specified.</p>
+<p>The simulation of the time to the final event is in terms of the event rate (over one, or more, time segments) on the control arm after the predictor event, and then the hazard ratio of the time to the final event after the predictor event of each treatment arm to the control arm.</p>
+<p>On those tabs the user specifies</p>
+<ul>
+<li><p>separate control hazard rates for subjects post predictor event</p></li>
+<li><p>hazard ratios for each treatment arm the time to final event, after the predictor event has occurred.</p></li>
+</ul>
+<div id="fig-ttepred" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ttepred-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image27.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ttepred-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11: Specifying the dichotomous predictor’s control hazard rate and active arm hazard ratios for each arm.
+</figcaption>
+</figure>
+</div>
+<p>Multiple predictor profiles can be created.</p>
+<p>For each profile the control hazard rate can be specified over an arbitrary set of time segments (i.e the time segments can vary from profile to profile, can be different from the observation times (if any) and different from the time segments used in the analysis model.</p>
+<p>The hazard ratio of the control arm to itself has to be 1 and cannot be modified. For the other treatment arms, the time to predictor event is specified by specifying the hazard ratio on that treatment arm, to the control arm.</p>
+<p>The graph can be used to show the hazard rate, probability of event or probability of not having the event on each arm.</p>
+</section>
+<section id="control-hazard-rates-2" class="level4">
+<h4 class="anchored" data-anchor-id="control-hazard-rates-2">Control Hazard Rates</h4>
+<p>Specifying the simulation of the control hazard rate with a TTE predictor is the same as specifying the control hazard rate without a predictor. The difference is that with a TTE predictor, the hazard rate specified here is only simulated after the predictor has been seen.</p>
+<div id="fig-ttepredctrl" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ttepredctrl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image28.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ttepredctrl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12: Specify the control arm’s event rate after the predictor endpoint event has occured.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="dose-response-2" class="level4">
+<h4 class="anchored" data-anchor-id="dose-response-2">Dose Response</h4>
+<div id="fig-ttepreddoseresponse" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ttepreddoseresponse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image29.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ttepreddoseresponse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;13: Specify the hazard ratio for the active arms on the hazard rate after the predictor event is observed. The primary endpoint event time can also be set to equal the predictor event time with some probability.
+</figcaption>
+</figure>
+</div>
+<p>As usual, multiple hazard ratio profiles can be created, and in each profile the hazard ratio to simulate each treatment arm compared to the control arm specified. What differs from the case where there is no predictor is that if a TTE predictor is being used,</p>
+<ol type="1">
+<li><p>the hazard ratios are specified for the occurrence of the final event having observed the predictor event</p></li>
+<li><p>a probability can be specified that the post predictor event to endpoint event time is 0.</p></li>
+</ol>
+<p>As with the continuous predictor, the observed event rate is affected by the predictor, it will not be the same as the hazard ratio for endpoint post event predictor. The observed times to event will not be exponentially distributed. The impact is best understood by simulating the patient responses and performing rough analyses (e.g.&nbsp;in R).</p>
+<p>For example, with a predictor hazard rate on control of 0.1 and post predictor hazard rates of 0.01 and probability that the post predictor event time is 0 of 0.1, and treatment arm with a predictor hazard ratio of 0.9 and post predictor hazard ratio of 0.8 and probability that the post predictor event time is 0 of 0.1, simulations of 1000 subjects times to events on each of control and treatment arm give (ignoring censoring) a HR of between 0.74 and 0.88.</p>
+</section>
+</section>
+</section>
+<section id="explicitly-defined-predictor-event-rate" class="level2">
+<h2 class="anchored" data-anchor-id="explicitly-defined-predictor-event-rate">Explicitly Defined (Predictor | Event Rate)</h2>
+<p>To simulate event times and an associated predictor with a possible correlation between the two in a way that preserves the exponential distribution of the event times, use this tab to specify the simulation of subjects’ time to event first and then the probability of the observed predictor derived from that. This is only supported for Dichotomous and TTE predictors.</p>
+<p>The “Explicitly Defined (Predictor | Event Rate)” tab allows the specification of profiles that define how the predictor endpoint is to be simulated in relation to the control hazard rate and hazard ratios for the final events. This allows the simulated final observed final events to still have an exponential distribution.</p>
+<p>Once the time-to-event for a subjects has been simulated, a simple user specified transformation of the time-to-final-event provides the expected value of the predictor’s distributions.</p>
+<section id="dichotomous" class="level3">
+<h3 class="anchored" data-anchor-id="dichotomous">Dichotomous</h3>
+<p>When using a dichotomous predictor, control hazard rates and dose response hazard ratios are specified as when there is <a href="#explicitly-defined">no predictor</a>.</p>
+<section id="predictor-2" class="level4">
+<h4 class="anchored" data-anchor-id="predictor-2">Predictor</h4>
+<div id="fig-dichpredgiveneventrate" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-dichpredgiveneventrate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image30.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dichpredgiveneventrate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14: Specify the distribution of the predictor per arm given the uncensored endpoint value for a patient.
+</figcaption>
+</figure>
+</div>
+<p>As usual, multiple profiles can be defined. To simulate the dichotomous endpoint given the event rate, the predictor values are simulated by drawing from the Bernoulli distribution with probability given by the inverse logit(<span class="math inline">\(\alpha + \beta Y\)</span>), where <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> are specified here and <span class="math inline">\(Y\)</span> is the subject’s final time to event (in weeks). A single set of values for <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> can be specified, or separate values per treatment arm can be specified. The expected response rate is shown in the plot at the bottom of the predictor tab.</p>
+</section>
+</section>
+<section id="time-to-event" class="level3">
+<h3 class="anchored" data-anchor-id="time-to-event">Time-to-Event</h3>
+<p>When simulating a time-to-event predictor, control hazard rates and dose response hazard ratios are specified as when there is <a href="#explicitly-defined">no predictor</a>.</p>
+<section id="predictor-3" class="level4">
+<h4 class="anchored" data-anchor-id="predictor-3">Predictor</h4>
+<div id="fig-ttepredgiveneventrate" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ttepredgiveneventrate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image31.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ttepredgiveneventrate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15: Specify the distribution of the predictor event per arm given the uncensored endpoint value for a patient.
+</figcaption>
+</figure>
+</div>
+<p>Multiple profiles can be defined. To simulate predictor event endpoint given the event rate of the primary event, the predictor values are simulated by drawing from the Exponential distribution with rate given by (<span class="math inline">\(\lambda_{z}\exp(\ \beta Y)\)</span>), where <span class="math inline">\(\lambda_z\)</span> and <span class="math inline">\(\beta\)</span> are specified here and <span class="math inline">\(Y\)</span> is the subject’s time to event (in weeks). A single set of values for <span class="math inline">\(\lambda_z\)</span> and <span class="math inline">\(\beta\)</span> can be specified, or separate values per treatment arm can be specified.</p>
+<p>The arm specific hazard ratios of the predictor given the final endpoint event rate of a specified scenario is shown in the plot at the bottom of the predictor tab. The final endpoint scenario can be changed using the dropdown boxes the right of the figure.</p>
+</section>
+</section>
+</section>
+<section id="external" class="level2">
+<h2 class="anchored" data-anchor-id="external">External</h2>
+<p>As well as simulating subject responses with predictors within FACTS they can be simulated externally and imported into FACTS where the supplied responses are sampled from when simulating the trial. The specification of a file containing subject response data (which must be in the required format) can be done from the External Files sub-tab depicted below (Figure 6‑13).</p>
+<p>To import an external file, the user must first add a profile to the table. After adding the profile, the user must click “Browse” to locate the file of externally simulated data. The user will then be prompted to locate the external file on their computer with a dialog box.</p>
+<div id="fig-externalfiles2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-externalfiles2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image32.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-externalfiles2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16: The external files sub-tab for uploading patient data to be sampled from.
+</figcaption>
+</figure>
+</div>
+<section id="required-format-of-externally-simulated-detail" class="level3">
+<h3 class="anchored" data-anchor-id="required-format-of-externally-simulated-detail">Required Format of Externally Simulated Detail</h3>
+<p>The supplied data should have the following columns:</p>
+<ol type="1">
+<li><p>Patient id, these must be positive integers and unique</p></li>
+<li><p>Arm Index (1 = Control, 2 = Treatment1, 3 = Treatment2, …)</p></li>
+<li><p>Uncensored time to event in weeks</p></li>
+<li><p>Uncensored Predictor value, one of the following depending on the predictor type:</p>
+<ol type="a">
+<li><p>Continuous: “NN.NN” change from baseline</p></li>
+<li><p>Dichotomous: 0 for no response, 1 for response</p></li>
+<li><p>TTE: uncensored time to event in weeks</p></li>
+</ol></li>
+</ol>
+<p><strong>The GUI requires that the file name has a “.dat” suffix. The file need not have column headers, but if it does the first column name must start with a pound sign (#).</strong></p>
+<p>The following shows values from an example file with a dichotomous predictor. Unlike other endpoints there is only one line per subject, as there is no need to record the subject’s state at interim visits.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>#Patient ID</th>
+<th>Dose Index</th>
+<th>Uncensored Time to Event (weeks)</th>
+<th>Uncensored Predictor value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>1</td>
+<td>8.87</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>1</td>
+<td>9.34</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>2</td>
+<td>6.78</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>2</td>
+<td>10.23</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>2</td>
+<td>9.96</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>2</td>
+<td>5.6</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>1</td>
+<td>37.01</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>1</td>
+<td>28.67</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>1</td>
+<td>39.70</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>In the above, column headers have been included to make it clearer to read but they are not required.</p>
+<p>Simulated subjects will be drawn from this supplied list, with replacement, to provide the simulated response values.</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<footer style="display: flex; justify-content: space-between; align-items: center;">
+  <!-- Left side: Copyright -->
+  <p style="margin: 0;">
+    © <span id="year"></span>
+    <a href="https://www.berryconsultants.com">Berry Consultants</a>
+  </p>
+
+  <!-- Right side: Relative link -->
+  <p style="margin: 0;">
+    <a href="../../../../../introduction/citation.html">How to Cite</a>
+  </p>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
