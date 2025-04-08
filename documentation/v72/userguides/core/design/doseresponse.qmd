@@ -34,11 +34,11 @@ range of dose response models to be used for all endpoint types.
 Transformations (see below) of the dichotomous and time-to-event
 responses are used to achieve this.
 
-# Continuous, Dichotomous, and Time-To-Event
+# Continuous, Dichotomous, Time-To-Event, and Ordinal
 
 With the exception of two dose response models specific to a dichotomous
-endpoint, the same dose response modeling facilities are available for
-all endpoints.
+endpoint, and the Dirichlet modeling capability for an ordinal endpoint, 
+the same dose response modeling facilities are available for all endpoints.
 
 Let there be D total doses including the control arm if it exists. For
 any endpoint, the estimate of dose response model is called
@@ -87,6 +87,32 @@ $\left( \ln\left( \frac{\lambda_{s}e^{\theta_{d}}}{\lambda_{s}} \right) = \ln\le
 averaged over the observation time segments. This formulation
 implies a proportional treatment effect across the pieces of the
 piece-wise exponential.
+
+## Ordinal
+
+In the ordinal case the final endpoint for the $i^{th}$ participant can take on any of $K$ different values $1, 2, \ldots, K$. If the $i^{th}$ participant has been allocated to the control arm $(d_i = 0)$ then 
+$$ Y_i \sim \mbox{Multinomial}(p^0_1,p^0_2,\ldots,p^0_K), $$
+that is:
+$$ \mbox{Pr}\left\{Y_i = k | d_i = 0 \right\} = p^0_k$$
+where $0 \leq p^0_k \leq 1$, $\sum_{k=1}^K p^0_k = 1$.  
+
+If the $i^{th}$ participant is assigned to arm $d_i = d$, then 
+$$ \mbox{Pr}\left\{Y_i = k | d_i = d \right\} = p^d_k$$
+When the user selects ordinal modeling with independent Dirichlet distributions, then the ordinal outcome 
+probabilities $p^d_k$ for the other arms can vary freely (they are not functions of the control arm probabilities). 
+
+When the user has selected the cumulative logistic family, the $d^{th}$ arm has a log-odds ratio parameter $\theta_d$
+such that 
+$$\mbox{logit Pr}\{Y_i \leq k | d_i = d\} = \mbox{logit Pr}\{Y_i \leq k | d_i = 0\} - \theta_d = \alpha_k - \theta_d 
+\mbox{ for } k=1,\ldots,K-1$$
+where $\mbox{logit}(p) = \log\{p/(1-p)\}$ and where we have defined 
+$\alpha_1 \leq \alpha_2 \cdots \leq \alpha_{K-1}$ by 
+$\alpha_k = \mbox{logit} \left( \sum_{j=1}^k p^0_j \right)$.  
+
+If $\theta_d > 0$, small values of the ordinal endpoint are less likely for arm $d$ than they are for control.  
+In other words, if small values of the ordinal endpoint are desirable, then an arm $d$ with $\theta_d < 0$ is 
+beneficial compared to control.  On the other hand if large values of the ordinal endpoint are desirable, then 
+$\theta_d > 0$ implies that arm $d$ is beneficial relative to control.  
 
 :::
 
@@ -144,6 +170,25 @@ estimate of the log hazard ratio compared to the control arm on the
 treatment arm $d$.
 
 When the primary endpoint is time-to-event, the response rate on the control arm, $\lambda$, is estimated and $\theta_d$ for $d\in \{1,2,\ldots,D\}$ is the log hazard of the response rate of each treatment arm compared to the control arm, so $\theta_0\equiv 0$.
+
+## Ordinal
+
+If the response is ordinal and the user has selected cumulative logistic modeling, $\theta_d$ is 
+the log odds ratio for arm $d$ compared to the control arm.  The control arm parameter $\theta_0 = 0$ by definition.  
+
+If the user has selected independent Dirichlet modeling, then there is no parameter $\theta_d$.  
+
+As of the initial release of the FACTS Ordinal Engine, the control arm is never included in the dose-response model, 
+and two-dimensional models are not supported.  
+
+The prior distribution for the control arm probabilities is
+$$ (p^0_1, p^0_2, \ldots p^0_K) \sim \mbox{Dirichlet}\left( a^0_1, a^0_2, \ldots, a^0_K \right) $$
+where $a^0_k>0$ for $k=1,2,\ldots,K$.  
+
+If the user selects independent Dirichlet modeling, then each arm $d$ has its own Dirichlet prior distribution
+$$ (p^d_1, p^d_2, \ldots p^d_K) \sim \mbox{Dirichlet}\left( a^d_1, a^d_2, \ldots, a^d_K \right) $$
+If non-informative priors for the $a^d_k$s are desired, Berger, Bernardo, and Sun 
+("Overall Objective Priors", Bayesian Analysis 2015), recommend using $a^d_k$ of approximately $0.8/K$ for $k=1,2,\ldots,K$.  
 
 :::
 
