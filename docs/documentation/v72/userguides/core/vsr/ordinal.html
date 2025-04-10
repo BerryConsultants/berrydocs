@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Study Tab - Ordinal Endpoint</title>
+<title>Virtual Subject Response - Ordinal Endpoint</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -187,8 +187,8 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">Study Tab - Ordinal Endpoint</h1>
-            <p class="subtitle lead">Description of the Study tab and its sub-tabs in the Core engine.</p>
+      <h1 class="title">Virtual Subject Response - Ordinal Endpoint</h1>
+            <p class="subtitle lead">Description of how to specify the virtual subject response for ordinal endpoints.</p>
                       </div>
   </div>
     
@@ -209,21 +209,10 @@ window.Quarto = {
     <h2 id="toc-title">Table of Contents</h2>
    
   <ul>
-  <li><a href="#study-info" id="toc-study-info" class="nav-link active" data-scroll-target="#study-info">Study Info</a>
+  <li><a href="#explicitly-defined-dichotomous-response" id="toc-explicitly-defined-dichotomous-response" class="nav-link active" data-scroll-target="#explicitly-defined-dichotomous-response">Explicitly Defined Dichotomous Response</a>
   <ul>
-  <li><a href="#design-options" id="toc-design-options" class="nav-link" data-scroll-target="#design-options">Design Options:</a>
-  <ul class="collapse">
-  <li><a href="#enable-adaptive-features" id="toc-enable-adaptive-features" class="nav-link" data-scroll-target="#enable-adaptive-features">Enable adaptive features</a></li>
+  <li><a href="#dose-response" id="toc-dose-response" class="nav-link" data-scroll-target="#dose-response">Dose Response</a></li>
   </ul></li>
-  <li><a href="#trial-information" id="toc-trial-information" class="nav-link" data-scroll-target="#trial-information">Trial Information:</a>
-  <ul class="collapse">
-  <li><a href="#recruit-subjects" id="toc-recruit-subjects" class="nav-link" data-scroll-target="#recruit-subjects">Recruit Subjects</a></li>
-  <li><a href="#response" id="toc-response" class="nav-link" data-scroll-target="#response">Response:</a></li>
-  </ul></li>
-  <li><a href="#ordinal-values" id="toc-ordinal-values" class="nav-link" data-scroll-target="#ordinal-values">Ordinal Values</a></li>
-  </ul></li>
-  <li><a href="#treatment-arms" id="toc-treatment-arms" class="nav-link" data-scroll-target="#treatment-arms">Treatment Arms</a></li>
-  <li><a href="#variants" id="toc-variants" class="nav-link" data-scroll-target="#variants">Variants</a></li>
   </ul>
 </nav>
     </div>
@@ -234,68 +223,73 @@ window.Quarto = {
 
 
 
-<section id="study-info" class="level1">
-<h1>Study Info</h1>
-<p>The Study Info sub-tab provides parameters for specifying rules and methods for common clinical trial simulation features. These include accrual style, <!--- visit schedule, ## not yet implemented in ordinal  ---> whether interim analyses will be simulated, and more.</p>
-<!--- ![The study tab for an ordinal trial.](../coreUGattachments/dichotomous/media/image3.png){#fig-studyd} --->
-<section id="design-options" class="level2">
-<h2 class="anchored" data-anchor-id="design-options">Design Options:</h2>
-<p>In the design options section of the Study tab the user gets check boxes for whether they want to enable adaptive features, and whether they wish to use the cumulative logistic family of dose-response models or independent Dirichlet models for the ordinal endpoint.<br>
-(Longitudinal modelling and include simulation of baseline are available for other FACTS endpoints but not yet for Ordinal.) These options have the following effects on the trial simulation.</p>
-<section id="enable-adaptive-features" class="level3">
-<h3 class="anchored" data-anchor-id="enable-adaptive-features">Enable adaptive features</h3>
-<p>Whether the design is adaptive or fixed. If “adaptive features” are enabled, some adaptive specific parameters and tabs are added to the GUI, such as the tabs for defining interims, early stopping criteria, and adaptive allocation. <!---
-### Use longitudinal modeling
+<p>In FACTS Core with an ordinal endpoint there are 2 different ways to specify the virtual subject response:</p>
+<ol type="1">
+<li><p>Explicit specification of all outcome probabilities</p></li>
+<li><p>Explicit specification of outcome probabilities for the control arm, plus an odds ratio for each other arm that defines a proportional odds treatment effect deviation from the control probabilities.</p></li>
+</ol>
+<section id="explicitly-defined-dichotomous-response" class="level1">
+<h1>Explicitly Defined Dichotomous Response</h1>
+<p>Explicitly defined VSRs are the most common type specified in FACTS. In dichotomous endpoint designs, an explicitly defined VSR is specified by providing a response rate for each arm in the trial. The dichotomous final outcome will be simulated having the desired response rate, and longitudinal correlation can be simulated connecting subjects’ intermediate endpoints to the final endpoint.</p>
+<section id="dose-response" class="level2">
+<h2 class="anchored" data-anchor-id="dose-response">Dose Response</h2>
+<!--- ![The Explicitly Defined > Dose Response model for an ordinal endpoint.](../coreUGattachments/dichotomous/media/image20.png){#fig-expdrd} --->
+<p>Dose response profiles can be added and deleted. For each profile the user may use either of these specifications:</p>
+<ol type="1">
+<li><p>The outcome probabilities for each treatment arm (if “Use proportional odds” is unchecked). FACTS allows the user to supply unnormalized probabilities (for example, counts) and will convert the input into a vector of probabilities that sum to one.</p></li>
+<li><p>The outcome probabilities for the control arm (which can be entered unnormalized), and an odds ratio for each other arm. If the normalized probabilities for the control arm are denoted by <span class="math inline">\((p^0_1,p^0_2,\ldots,p^0_K)\)</span> and the odds ratio for the <span class="math inline">\(d^{th}\)</span> arm is <span class="math inline">\(\exp(\theta_d)\)</span>, then the probabilities for the <span class="math inline">\(d^{th}\)</span> arm are given by <span class="math display">\[\mbox{logit}\left(\sum_{j=1}^k p^d_j\right)=\mbox{logit}\left(\sum_{j=1}^k p^0_j\right) - \theta_d\]</span> for <span class="math inline">\(k=1,2,\ldots,K-1\)</span>.</p></li>
+</ol>
+<p>In addition, FACTS provides a check box that allows the user to specify whether a specific arm “should succeed” in that scenario: so that FACTS can report on the proportion of simulations that were successful <strong>and</strong> a ‘good’ treatment arm selected.</p>
+<!--- The graph on the tab shows the mean response rate specified and the target. --->
+<!---
+#### Load Scenario Outcome Data From File
 
-Whether longitudinal modeling is going to be used. If
-longitudinal modeling is not selected, some longitudinal specific
-parameters and tabs are hidden. If use longitudinal modeling is selected,
-FACTS expects that the early endpoint data will be used, it cannot be ignored.
-If intermediate data is not intended to be used in the modeling, then it should
-not be simulated in FACTS.
---></p>
-</section>
-</section>
-<section id="trial-information" class="level2">
-<h2 class="anchored" data-anchor-id="trial-information">Trial Information:</h2>
-<p>The trial information section allows the user to specify how subject accrual should be simulated, and whether a larger endpoint value indicates improvement or not.</p>
-<section id="recruit-subjects" class="level3">
-<h3 class="anchored" data-anchor-id="recruit-subjects">Recruit Subjects</h3>
-<p>Subject accrual can be configured to be done continuously or deterministically.</p>
-<p>If recruited continuously, the user recruitment will be simulated stochastically with a Poisson process, using the parameters specified on the Execution &gt; Accrual tab.</p>
-<p>If recruited deterministically, the user specifies the recruitment date of every subject recruited by uploading a file of dates on the Execution &gt; Accrual tab.</p>
-</section>
-<section id="response" class="level3">
-<h3 class="anchored" data-anchor-id="response">Response:</h3>
-<p>Indicate whether a higher ordinal index indicates improving or worsening for the participant. The directions of Wilcoxon tests, Dichotomized Ordinal Tests, and Frequentist Proportional Odds models are defined by this selection. If the user has selected Cumulative Logistic modeling, selecting Higher ordinal index is improvement here implies that an odds ratio greater than 1 corresponds to an arm that is superior to control. Correspondingly, if Lower ordinal index is improvement, then an arm with an odds ratio smaller than 1 is superior to control.<br>
-If the user has selected Dirichlet modeling, then for the purpose of posterior probability quantities and t-tests, an arm that is superior to control is one with a large expected utility, regardless of what is selected here.</p>
-<!--- Schedule of Post-Baseline Visits was deleted here; 
-Get it from dichotomous.qmd or elsewhere when longitudinal model is implemented for ordinal --->
-</section>
-</section>
-<section id="ordinal-values" class="level2">
-<h2 class="anchored" data-anchor-id="ordinal-values">Ordinal Values</h2>
-<p>This is where the user defines the number of possible values of the ordinal endpoint. They can be set explicitly using the Add button or Auto-Generated. The user may give names to the ordinal values by clicking in the Name column and entering text.</p>
-<p>Here the user also enters Utility values for the possible outcomes, where large values of Utility are meant to represent positive outcomes. It is possible to create good designs in FACTS without taking the Utility values entered here seriously, but we encourage users to think carefully about which outcomes are better than others and by how much. In particular, when Dirichlet outcome modeling has been selected, all posterior probability quantities of interest are based on Expected Utility (i.e.&nbsp;the mathematical expectation of the Utility according to the probabilities of each outcome). When Cumulative Logistic modeling has been selected, Utilities are less critical, because posterior probability quantities of interest are based on Odds Ratios. At a minimum, the utility values entered here should agree with whether Higher or Lower ordinal index is improvement as selected in the Trial Information section.</p>
-</section>
-</section>
-<section id="treatment-arms" class="level1">
-<h1>Treatment Arms</h1>
-<p>As with all FACTS Core engines, the Treatment Arms sub-tab provides an interface for specifying the various dose levels, Control and Additional Comparator arms. 2D treatment arm models are not supported in FACTS Ordinal.</p>
-<p>The user may add doses either explicitly or by auto-generation.</p>
-<p>The index column provides the ordering of the doses, as well as the number that will be used to subset the dose in dose response models and FACTS output. The dose name column is editable by the user, and is used to identify the doses in the VSR tab as well as in the simulation output shown on the Simulation tab. Effective Dose Strength (<span class="math inline">\(v_d\)</span>) are the relative strength values of the doses, and are the values used in the dose response model analysis as <span class="math inline">\(v_d\)</span>. They have no units, but the proximity of doses to other doses will determine them amount of information sharing that occurs between doses in certain dose response models. Dose levels <span class="custom-tooltip"> may not be edited directly <span class="tooltip-text">The doses in the design become linked to many other parameters, if dose levels could be edited this could change the effective order of doses and keeping the other parameters settings associated with the right doses becomes problematic – in different circumstances the user might want values to stay with the particular treatment arm or stay with the particular slot in the treatment arm ranking. Forcing doses to be deleted and re-entered if their dose level changes </span> </span> – to change a dose level, delete the entry and add a new dose with the correct level.</p>
-<!--- ![The Study > Treatment Arms tab.](../coreUGattachments/dichotomous/media/image16.png){#fig-treatmentarmsd} --->
-<p>In FACTS Ordinal, a control arm must always be included. Many default QOIs compare experimental arms to control, while frequentist tests, predictive probabilities, and conditional power are based on comparisons to the control arm.</p>
-<p>The active comparator arm can be compared against in posterior probability QOIs, and is always modelled independently in the dose response model.</p>
-</section>
-<section id="variants" class="level1">
-<h1>Variants</h1>
-<p>On this tab the user can specify that a number of design variants should be created. Currently, the only design feature that can be changed is the sample size (maximum number of subjects).</p>
-<p>If “multiple variants” is checked, then the user can specify that simulations setups should be created for each simulation scenario with versions of the design with a different maximum number of subjects.</p>
-<p>The user enters the number of variants they wish to create. Then in the resulting table, enter different “Maximum Subjects” for each variant. On the simulations tab FACTS will then create a copy of all the scenarios to run with each variant.</p>
-<!--- ![The Study > Variants tab.](../coreUGattachments/dichotomous/media/image19.png){#fig-variantsd} --->
+If the "Load scenario outcome data from file" option is selected then in
+scenarios using this profile the simulations will use a range of dose
+responses. Each individual simulation uses one set of outcome probabilities
+from the supplied file, each row being used in an equal number of
+simulations. The summary results are thus averaged over all the VSRs in
+the file. The use of this form of simulation is somewhat different from
+simulations using a single rate or single external virtual subject
+response file. When all the simulations are simulated from one 'truth'
+then the purpose of the simulations is to analyse the performance of the
+design under that specific circumstance. When the simulations are based
+on a range of 'truths' then the summary results show the expected
+probability of the different outcomes for the trial over that range of
+possible circumstances. Note that to give different VSRs different
+weights of expectation, the more likely VSRs should be repeated within
+the file.
+
+ ![The Explicitly Defined > Dose Response tab when loading scenario means from a file.](../coreUGattachments/dichotomous/media/image21.png){#fig-expmeansfromfiledich}
+
+After selecting the ".mvsr" file the graph shows the individual response
+rates and the mean response rate over all the VSRs.
+
+The format of the ".mvsr" file is a simple CSV text file. Lines starting
+with a '#' character are ignored, so the file can include comment and
+header lines. There must be one column per treatment arm, and they must
+be in dose index order. Each value is the underlying response rate to
+simulate. E.g.:
+
+```
+#Cntrl, D1, D2, D3, D4
+0.05, 0.1, 0.15, 0.25, 0.5
+0.05, 0.1, 0.15, 0.23, 0.45
+0.05, 0.1, 0.15, 0.21, 0.4
+0.05, 0.1, 0.15, 0.19, 0.35
+0.05, 0.1, 0.15, 0.17, 0.3
+0.05, 0.1, 0.15, 0.15, 0.25
+```
+--->
+<!---
+## Longitudinal
+
+The tab for defining ordinal longitudinal response profiles 
+
+--->
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
