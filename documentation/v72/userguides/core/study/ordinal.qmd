@@ -1,0 +1,142 @@
+---
+title: "Study Tab - Ordinal Endpoint"
+subtitle: "Description of the Study tab and its sub-tabs in the Core engine."
+title-block-banner: '#125740'
+title-block-banner-color: white
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-title: "Table of Contents"
+    number-sections: false
+    number-depth: 4
+---
+
+# Study Info
+
+The Study Info sub-tab provides parameters for specifying rules and methods
+for common clinical trial simulation features. These include accrual style,
+<!--- visit schedule, ## not yet implemented in ordinal  --->
+whether interim analyses will be simulated, and more.
+
+![The study tab for an ordinal trial.](../coreUGattachments/dichotomous/media/image3.png){#fig-studyd}
+
+## Design Options:
+
+In the design options section of the Study tab the user gets check boxes for
+whether they want to enable adaptive features, and whether they wish to use
+the cumulative logistic family of dose-response models or independent Dirichlet
+models for the ordinal endpoint.  
+(Longitudinal modelling and include simulation of baseline are available 
+for other FACTS endpoints but not yet for Ordinal.)
+These options have the following effects on
+the trial simulation.
+
+### Enable adaptive features
+
+Whether the design is adaptive or fixed. If "adaptive features"
+are enabled, some adaptive specific parameters and tabs are added
+to the GUI, such as the tabs for defining interims, early
+stopping criteria, and adaptive allocation.
+<!---
+### Use longitudinal modeling
+
+Whether longitudinal modeling is going to be used. If
+longitudinal modeling is not selected, some longitudinal specific
+parameters and tabs are hidden. If use longitudinal modeling is selected,
+FACTS expects that the early endpoint data will be used, it cannot be ignored.
+If intermediate data is not intended to be used in the modeling, then it should
+not be simulated in FACTS.
+-->
+
+## Trial Information:
+
+The trial information section allows the user to specify how subject accrual
+should be simulated, and whether a larger endpoint value indicates improvement
+or not.
+
+### Recruit Subjects
+
+Subject accrual can be configured to be done continuously or
+deterministically.
+
+If recruited continuously, the user recruitment will be
+simulated stochastically with a Poisson process, using the
+parameters specified on the Execution \> Accrual tab.
+
+If recruited deterministically, the user specifies the recruitment
+date of every subject recruited by uploading a file of dates on
+the Execution \> Accrual tab.
+
+### Response:
+
+Indicate whether a higher ordinal index indicates improving
+or worsening for the participant. 
+
+REWRITE: The value provided here informs the <span class="custom-tooltip"> direction
+of frequentist hypothesis tests <span class="tooltip-text">All FACTS frequentist tests
+are 1-sided.</span> </span>
+and the evaluation of QOIs like [Pr(Max)]{.fake-code-block} and predictive probabilities.
+
+<!--- Schedule of Post-Baseline Visits was deleted here; 
+Get it from dichotomous.qmd or elsewhere when longitudinal model is implemented for ordinal --->
+
+## Ordinal Values
+
+This is where the user defines the number of possible values of the ordinal endpoint.  They can be set explicitly using the Add button or Auto-Generated.  The user may give names to the ordinal values by clicking in the Name column and entering text.  
+
+Here the user also enters Utility values for the possible outcomes, where large values of Utility 
+are meant to represent positive outcomes.  It is possible to create good designs in FACTS without 
+taking the Utility values entered here seriously, but we encourage users to think carefully 
+about which outcomes are better than others and by how much.  In particular, when Dirichlet outcome 
+modeling has been selected, all posterior probability quantities of interest are based on Expected Utility
+(i.e. the mathematical expectation of the Utility according to the probabilities of each outcome).  When Cumulative 
+Logistic modeling has been selected, Utilities are less critical, because posterior probability 
+quantities of interest are based on Odds Ratios.  At a minimum, the utility values entered here should agree with 
+whether Higher or Lower ordinal index is improvement as selected in the Trial Information section.  
+
+# Treatment Arms
+
+As with all FACTS Core engines, the Treatment Arms sub-tab provides an
+interface for specifying the various dose levels, Control and Additional
+Comparator arms.  2D treatment arm models are not supported in FACTS Ordinal.
+
+The user may add doses either explicitly or by auto-generation.
+
+The index column provides the ordering of the doses, as well as the number
+that will be used to subset the dose in dose response models and FACTS output.
+The dose name column is editable by the user, and is used to identify the
+doses in the VSR tab as well as in the simulation output shown on the Simulation
+tab. Effective Dose Strength ($v_d$) are the relative strength values of the doses,
+and are the values used in the dose response model analysis as $v_d$. They have
+no units, but the proximity of doses to other doses will determine them amount of
+information sharing that occurs between doses in certain dose response models.
+Dose levels <span class="custom-tooltip"> may not be edited directly <span class="tooltip-text">The doses in the design become linked to many other parameters, if dose levels could be edited this could change the effective order of doses and keeping the other parameters settings associated with the right doses becomes problematic – in different circumstances the user might want values to stay with the particular treatment arm or stay with the particular slot in the treatment arm ranking. Forcing doses to be deleted and re-entered if their dose level changes </span> </span> -- to change a dose level, delete the entry and add a new
+dose with the correct level.
+
+![The Study > Treatment Arms tab.](../coreUGattachments/dichotomous/media/image16.png){#fig-treatmentarmsd}
+
+In FACTS Ordinal, a control arm must always be included.  Many default QOIs
+compare experimental arms to control, while frequentist tests, predictive probabilities,
+and conditional power are based on comparisons to the control arm.  
+
+The active comparator arm can be compared against in posterior probability QOIs, and is
+always modelled independently in the dose response model.
+
+
+# Variants
+
+On this tab the user can specify that a number of design variants should
+be created. Currently, the only design feature that can be changed is the
+sample size (maximum number of subjects).
+
+If "multiple variants" is checked, then the user can specify that
+simulations setups should be created for each simulation scenario with
+versions of the design with a different maximum number of subjects.
+
+The user enters the number of variants they wish to create. Then in the
+resulting table, enter different "Maximum Subjects" for each variant. On
+the simulations tab FACTS will then create a copy of all the scenarios
+to run with each variant.
+
+![The Study > Variants tab.](../coreUGattachments/dichotomous/media/image19.png){#fig-variantsd}
