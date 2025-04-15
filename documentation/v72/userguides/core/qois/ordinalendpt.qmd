@@ -1,0 +1,94 @@
+---
+title: "Ordinal Endpoint QOIs"
+subtitle: "QOIs specific to ordinal endpoints."
+title-block-banner: '#125740'
+title-block-banner-color: white
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-title: "Table of Contents"
+    number-sections: false
+    number-depth: 4
+---
+
+The FACTS Ordinal Engine features several special quantities of interest. 
+
+# Posterior probability QOIs
+
+The posterior probability QOIs available depend on whether the user has chosen to
+model the ordinal endpoint with the cumulative logistic family or with 
+independent Dirichlet distributions.  
+
+## Cumulative logistic modeling
+
+When the cumulative logistic family is in use, each arm other than control has 
+an odds ratio parameter relative to control.  Posterior probability QOIs are 
+defined based on these odds ratios.  By default, the following 
+posterior probability QOIs are available, (here $OR_d$ is $exp(\theta_d)$ where 
+the $\theta_d$'s are the parameters defined in the dose-response model):  
+
+ - The probability of being better than control, which is 
+ [Pr($OR_d > 1$)]{.fake-code-block} when large values of the ordinal index are 
+ good, or [Pr($OR_d < 1$)]{.fake-code-block} when small values are good.
+ 
+ - The probability of being better than control by a clinically significant 
+ difference, which is [Pr($OR_d - 1 > CSD$)]{.fake-code-block} when large values 
+ are good, or [Pr($OR_d - 1 < -CSD$)]{.fake-code-block} when small values are 
+ good.  The CSD is entered by the user in the Standard Evaluation Variables 
+ section of the Quantities of Interest tab.
+
+## Dirichlet modeling
+
+When the user has selected independent Dirichlet modeling for the ordinal 
+endpoint, the posterior probability QOIs are based on expected utility.  The 
+default posterior probability QOIs are:
+
+- The probability of being better than control with respect to expected utility, 
+which is [Pr($EU_d > EU_{Control}$)]{.fake-code-block}.  Here 
+$EU_d = \sum_{k=1}^K p^d_k U_k$, where $p^d_k$ is the probability of ordinal 
+outcome $k$ for arm $d$ and where $U_k$ is the utility for outcome $k$.  
+
+- The probability of being better than control by a clinical significant difference, 
+which is [Pr($EU_d > EU_{Control} + CSD$)]{.fake-code-block} regardles of whether 
+whether large or small values of the ordinal endpoint are good (large values of 
+utility are always good).  The CSD is entered by the user in the Standard 
+Evaluation Variables section of the Quantities of Interest tab.
+
+# $p$-values
+
+The Ordinal Engine has the following different frequentist final analyses available.
+If there are multiple experimental arms, the $p$-values can optionally be adjusted 
+using the Bonferroni correction.  The $p$-values may handle missing values by 
+ignoring them or by imputing a specific ordinal outcome chosen by the user.  
+
+## Utility $t$-test
+
+One option is to perform a $t$-test on the utility values observed, comparing 
+each experimental arm to control.  
+
+## Wilcoxon test
+
+FACTS will also perform a Wilcoxon-Mann-Whitney test comparing each experimental 
+arm to control. FACTS adjusts for ties in computing the $p$-value.   
+
+## Proportional odds likelihood ratio test
+
+FACTS will also perform a likelihood ratio test based on the proportional odds 
+model, comparing each experimental arm to control.  It fits a multinomial model 
+to both arms together, and also fits a model where the experimental arm has a 
+single proportional odds model deviation from control, and compares twice the logged 
+ratio of maximized likelihoods to the chi-squared distribution with one degree of 
+freedom.  In practice, this test will often give similar results to the Wilcoxon 
+test.  (See, for example, blog posts by Harrell.)
+
+## Dichotomized ordinal test
+
+FACTS will also test whether the probability of a "good" outcome is larger for 
+an experimental arm than it is for control.  The user defines a "good" outcome 
+using the "Definition of Success" selector in the "Standard Evaluation Variables"
+section.  Dichotomizing an ordinal outcome is rarely a good choice because much 
+of the information in the ordinal outcome is wasted.  See, for example, 
+Podcast by Scott Berry.  FACTS simulations can be useful in demonstrating the 
+reduction in power when an ordinal endpoint is dichotomized.   
+
