@@ -1,0 +1,103 @@
+---
+title: "Virtual Subject Response - Ordinal Endpoint "
+subtitle: "Description of how to specify the virtual subject response for ordinal endpoints."
+title-block-banner: '#125740'
+title-block-banner-color: white
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-title: "Table of Contents"
+    number-sections: false
+    number-depth: 4
+---
+
+In FACTS Core with an ordinal endpoint there are 2 different
+ways to specify the virtual subject response:
+
+1.  Explicit specification of all outcome probabilities
+
+2.  Explicit specification of outcome probabilities for the control arm, plus an odds ratio for each other arm that defines a proportional odds treatment effect deviation from the control probabilities.  
+
+
+# Explicitly Defined Dichotomous Response
+
+Explicitly defined VSRs are the most common type specified in FACTS. In
+dichotomous endpoint designs, an explicitly defined VSR is specified by providing
+a response rate for each arm in the trial. The dichotomous final outcome will
+be simulated having the desired response rate, and longitudinal correlation can
+be simulated connecting subjects' intermediate endpoints to the final endpoint.
+
+## Dose Response
+
+<!--- ![The Explicitly Defined > Dose Response model for an ordinal endpoint.](../coreUGattachments/dichotomous/media/image20.png){#fig-expdrd} --->
+
+Dose response profiles can be added and deleted.  For each profile the user may use either of these specifications: 
+
+1.  The outcome probabilities for each treatment arm (if "Use proportional odds" is unchecked).  FACTS allows the user to supply unnormalized probabilities (for example, counts) and will convert the input into a vector of probabilities that sum to one.  
+
+2.  The outcome probabilities for the control arm (which can be entered unnormalized), and an odds ratio for each other arm.  If the normalized probabilities for the control arm are denoted by 
+$(p^0_1,p^0_2,\ldots,p^0_K)$ and the odds ratio for the $d^{th}$ arm is $\exp(\theta_d)$, then the probabilities for the $d^{th}$ arm are given by 
+$$\mbox{logit}\left(\sum_{j=1}^k p^d_j\right)=\mbox{logit}\left(\sum_{j=1}^k p^0_j\right) - \theta_d$$
+for $k=1,2,\ldots,K-1$.  
+
+
+In addition, FACTS provides a check box that allows the user to specify whether a specific arm
+    "should succeed" in that scenario: so that FACTS can report on the
+    proportion of simulations that were successful **and** a 'good'
+    treatment arm selected.
+
+<!--- The graph on the tab shows the mean response rate specified and the target. --->
+
+
+<!---
+#### Load Scenario Outcome Data From File
+
+If the "Load scenario outcome data from file" option is selected then in
+scenarios using this profile the simulations will use a range of dose
+responses. Each individual simulation uses one set of outcome probabilities
+from the supplied file, each row being used in an equal number of
+simulations. The summary results are thus averaged over all the VSRs in
+the file. The use of this form of simulation is somewhat different from
+simulations using a single rate or single external virtual subject
+response file. When all the simulations are simulated from one 'truth'
+then the purpose of the simulations is to analyse the performance of the
+design under that specific circumstance. When the simulations are based
+on a range of 'truths' then the summary results show the expected
+probability of the different outcomes for the trial over that range of
+possible circumstances. Note that to give different VSRs different
+weights of expectation, the more likely VSRs should be repeated within
+the file.
+
+ ![The Explicitly Defined > Dose Response tab when loading scenario means from a file.](../coreUGattachments/dichotomous/media/image21.png){#fig-expmeansfromfiledich}
+
+After selecting the ".mvsr" file the graph shows the individual response
+rates and the mean response rate over all the VSRs.
+
+The format of the ".mvsr" file is a simple CSV text file. Lines starting
+with a '#' character are ignored, so the file can include comment and
+header lines. There must be one column per treatment arm, and they must
+be in dose index order. Each value is the underlying response rate to
+simulate. E.g.:
+
+```
+#Cntrl, D1, D2, D3, D4
+0.05, 0.1, 0.15, 0.25, 0.5
+0.05, 0.1, 0.15, 0.23, 0.45
+0.05, 0.1, 0.15, 0.21, 0.4
+0.05, 0.1, 0.15, 0.19, 0.35
+0.05, 0.1, 0.15, 0.17, 0.3
+0.05, 0.1, 0.15, 0.15, 0.25
+```
+--->
+
+<!---
+## Longitudinal
+
+The tab for defining ordinal longitudinal response profiles 
+
+--->
+
+
+
+

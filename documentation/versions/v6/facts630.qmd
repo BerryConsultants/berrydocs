@@ -1,0 +1,58 @@
+---
+title: "FACTS 6.3.0 Release Notes"
+subtitle: "March 16, 2020"
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    toc-title: "Table of Contents"
+    number-sections: true
+    number-depth: 3
+---
+
+FACTS 6.3.0 is now available for official release. This version contains significant changes to FACTS N-CRM Open Enrollment to make it more efficient, and adds to FACTS Core and FACTS Staged Designs (Continuous, Dichotomous and Multiple Endpoint) options to model arms that differ in strength along 2 dimensions (for example, but not limited to: dose strength and dosing frequency). Please [contact us](../../../contact/index.qmd) regarding any questions.
+
+In detail the new features in FACTS 6.3.0 are:
+
+1)  In FACTS Dose Escalation N-CRM the open enrollment option has been improved:
+
+    a)  The limit of the “maximum number of subjects without final results” is now applied per dose not overall. This means that after escalating to a higher dose, allocation is not held up waiting for later subjects on the lower dose to complete. Accrual is faster, fewer subjects are lost. If you are thinking of doing an open enrollment N-CRM design, we strongly recommend you update to FACTS 6.3.0.
+    b)  The user supplies two limits, one used while allocating to an “uncleared” dose, the other used when allocating to a “cleared” dose (and hence allocating to the MTD).
+    c)  If recruiting 2 groups, different maximums can be specified for the second group.
+    d)  There is now an option so that the simulation of Open enrollment only “pauses” when the early stopping criteria are met, allowing enrollment to be re-started if the final follow up data move MTD to a dose where the stopping criteria are not met.
+
+2)  In FACTS Dose Escalation N-CRM the open enrollment option has a new feature, the option to use “backfill”. Enabling “backfill” allows a subject who would otherwise be lost (because the “maximum number of subjects without final results” is currently met) to be allocated to a lower dose. There are parameters to control the backfill:
+
+    a)  separate trial maximums can be specified for the subjects allocated in escalation or to the MTD, or in backfill.
+    b)  limits on how many subjects can be on a dose for it to be open for backfill.
+    c)  limits on how high the dose must be before it is open for backfill.
+    d)  limits on how close a dose must be to the current dose for it to be open for backfill.
+
+3)  In FACTS Dose Escalation N-CRM there are now more “run-in” options:
+
+    a)  simple run-in (as in FACTS 6.2.0)
+    b)  custom run-in – where the user precisely specifies the sequence of doses to be tested and the number of subjects to test at each dose.
+    c)  small cohort pre-escalation – this follows the full escalation rules, including overdose control but with a smaller cohort size – and the same number of cohorts required to clear doses. Like all run-ins, it ends when a toxicity is observed.
+
+4)  In FACTS Dose Escalation N-CRM the calculation of the likelihood when analyzing an Ordinal Toxicity endpoint has been improved. This means however that a design using Ordinal Toxicity created under FACTS 6.2.0 is likely to behave noticeably differently under FACTS 6.3.0. If the design is well advanced, or in use, you are advised to stay with using FACTS 6.2.0 for that design. If you are just starting out designing an Ordinal Toxicity endpoint N-CRM we recommend upgrading to FACTS 6.3.0.
+
+5)  FACTS Core and FACTS Staged Designs features a new 2D treatment arm option and associated 2D response models. The 2D options are available for the Continuous, Dichotomous and Multiple Endpoints. The 2D treatment arm option allows:
+
+    a)  Arms to be defined as a combination of 2 “factors” e.g. dose strength and dosing frequency, or dose strengths of two different agents.
+    b)  The combinations can be analyzed independently, mapped onto a 1D ordering and analyzed with any of the standard 1D dose models, or with one of the three new 2D response models: a 2D NDLM, a 2D continuous factorial model, or a 2D discrete factorial model.
+    c)  Target Quantities of Interest can be defined to be confined to those combinations in a particular row or column (e.g. the calculate the Pr(max) of the once a day doses).
+
+6)  In FACTS Enrichment Designs the implementation of fitting of the Hierarchical model (options for treatment arms across groups and control arms across group) have been improved. They should converge somewhat faster and at the FACTS default MCMC sample length (2500), will typically be more accurate than before.
+
+This release addresses some situations in FACTS 6.2.0 that could cause errors. If any of your designs replicate these circumstances, you are recommended to upgrade to FACTS 6.3.0:
+
+-   In FACTS 6.2.0 Dose Escalation 3+3, the simulations don’t properly implement the re-escalation rules after de-escalation. This was introduced when we made the significant extensions to N-CRM in FACTS 6.2.0.
+-   In FACTS 6.2.0 Dose Escalation N-CRM many “pseudo-patients” parameters are not interpreted correctly.
+-   In FACTS 6.2.0 Enrichment Designs with a Continuous endpoint, when using the Linear Regression Longitudinal Model, it fitted incorrectly when informative priors were used.
+-   In FACTS 6 Core with a Continuous endpoint and simulating baseline, calculating a p-value QOI, with BOCF for missing data, the BOCF value for missing subjects was being set incorrectly (only a problem if baseline values are very difference from 0).
+
+The following minor issues in the FACTS GUI were also fixed:
+
+-   In FACTS Dose Escalation with N-CRM when specifying an open enrollment design, maximum subjects on MTD for “clearing” a dose and for stopping are meant to be entered in “subjects” but the GUI interpreted the input as “cohorts’ using whatever was the last cohort size in that “.facts” file.
+-   When using the “Ppn Correct Arm” in FACTS Core by marking arms as “should succeed” in the VSR profiles, if variants were not enabled, the variant target QOI arm selection criteria would incorrectly re-set to “Pr(Max)” when re-opening the file.
+-   When using a large external data file, running simulations with lots of packets could cause “out-of-memory” issues. Finally, some enhancements and fixes in the Design Report in FACTS Core have been implemented.

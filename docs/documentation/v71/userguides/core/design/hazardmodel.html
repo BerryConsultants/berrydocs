@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.42">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Hazard Model and Predictor Model</title>
+<title>Hazard Model and Predictor Model for Time to Event Trials</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -35,10 +35,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../../../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../../../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../../../../../site_libs/bootstrap/bootstrap-5e3d804025be65b29583b827833ef31d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -65,39 +65,40 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>
 
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 
-
-
 <!-- Roboto Serif -->
-
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
 
-
-
 <!-- Roboto Sans -->
-
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
 <!-- Google tag (gtag.js) -->
-
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
-
 <script>
-
   window.dataLayer = window.dataLayer || [];
-
   function gtag(){dataLayer.push(arguments);}
-
   gtag('js', new Date());
 
-
-
   gtag('config', 'G-WLMVE7GR4S');
-
 </script>
-
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -132,10 +133,10 @@ window.Quarto = {
 <link rel="stylesheet" href="../../../../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
@@ -154,7 +155,7 @@ window.Quarto = {
 <span class="menu-text">Introduction</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../../../../documentation/index.html"> 
+    <a class="nav-link active" href="../../../../../documentation/index.html" aria-current="page"> 
 <span class="menu-text">Documentation</span></a>
   </li>  
   <li class="nav-item">
@@ -166,10 +167,6 @@ window.Quarto = {
   <li class="nav-item">
     <a class="nav-link" href="../../../../../blog/index.html"> 
 <span class="menu-text">Blog</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../../../../../versions/index.html"> 
-<span class="menu-text">Versions</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../../../../get/index.html"> 
@@ -185,10 +182,585 @@ window.Quarto = {
 </div>
       </div> <!-- /container-fluid -->
     </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Version 7.1</li><li class="breadcrumb-item"><a href="../../../../../documentation/v71/userguides/core/index.html">User Guides</a></li><li class="breadcrumb-item"><a href="../../../../../documentation/v71/userguides/core/index.html">Phase II &amp; III Designs</a></li><li class="breadcrumb-item"><a href="../../../../../documentation/v71/userguides/core/design/index.html">Design</a></li><li class="breadcrumb-item"><a href="../../../../../documentation/v71/userguides/core/longitudinalmodels/tte.html">Modelling for Time-to-Event Endpoints</a></li><li class="breadcrumb-item"><a href="../../../../../documentation/v71/userguides/core/design/hazardmodel.html">Hazard Model</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Version 7.1</li><li class="breadcrumb-item"><a href="../../../../../documentation/v71/userguides/core/index.html">User Guides</a></li><li class="breadcrumb-item"><a href="../../../../../documentation/v71/userguides/core/index.html">Phase II &amp; III Designs</a></li><li class="breadcrumb-item"><a href="../../../../../documentation/v71/userguides/core/design/index.html">Design</a></li><li class="breadcrumb-item"><a href="../../../../../documentation/v71/userguides/core/longitudinalmodels/tte.html">Modelling for Time-to-Event Endpoints</a></li><li class="breadcrumb-item"><a href="../../../../../documentation/v71/userguides/core/design/hazardmodel.html">Hazard Model</a></li></ol></nav>
+      <h1 class="title">Hazard Model and Predictor Model for Time to Event Trials</h1>
+            <p class="subtitle lead">A description of the time-to-event specific design tabs, Hazard Model and Predictor Model.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-body">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Documentation</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Version 7.1</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">User Guides</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth2 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../../../../documentation/v71/userguides/core/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Phase II &amp; III Designs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth3 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Study</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth4 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/study/continuous.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Continuous</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/study/dichotomous.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dichotomous</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/study/tte.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Time-to-Event</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/study/multendpt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multiple Endpoint</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../../../../documentation/v71/userguides/core/vsr/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Virtual Subject Response</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth4 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/vsr/continuous.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Continuous</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/vsr/dichotomous.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dichotomous</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/vsr/tte.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Time-to-Event</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/vsr/multendpt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multiple Endpoint</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/execution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Execution</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../../../../documentation/v71/userguides/core/qois/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quantities of Interest</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth4 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/qois/multendpt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multiple Endpoint QOIs</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../../../../documentation/v71/userguides/core/design/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Design</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth4 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/design/doseresponse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dose Response Models</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/design/frequentistanalysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Frequentist Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../../../../documentation/v71/userguides/core/longitudinalmodels/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Longitudinal Models</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth5 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/longitudinalmodels/continuous.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Continuous</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/longitudinalmodels/dichotomous.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dichotomous</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/design/allocation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Allocation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/design/interims.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interims</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/design/successfutility.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Success/Futility Criteria</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">Modelling for Time-to-Event Endpoints</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth5 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/longitudinalmodels/tte.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Predictor Model</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/design/hazardmodel.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Hazard Model</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../../../../documentation/v71/userguides/core/simulation/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simulation</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth4 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/simulation/contanddichot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Continuous/Dichotomous</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/simulation/tte.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Time-to-Event</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/simulation/multendpt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Multiple Endpoint</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/core/analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Analysis</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/staged.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Seamless Designs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../../../../documentation/v71/userguides/enrichment/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Enrichment Designs</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-11" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-11" class="collapse list-unstyled sidebar-section depth3 ">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false">
+ <span class="menu-text">Study</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-12" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-12" class="collapse list-unstyled sidebar-section depth4 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/enrichment/study/continuous.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Continuous</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/enrichment/study/dichotomous.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dichotomous</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/enrichment/study/tte.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Time-to-Event</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false">
+ <span class="menu-text">Virtual Subject Response</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-13" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-13" class="collapse list-unstyled sidebar-section depth4 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/enrichment/vsr/continuous.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Continuous</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/enrichment/vsr/dichotomous.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dichotomous</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/enrichment/vsr/tte.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Time-to-Event</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/enrichment/execution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Execution</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/enrichment/design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Design</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../../../../documentation/v71/userguides/enrichment/simulation/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simulation</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-14" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-14" class="collapse list-unstyled sidebar-section depth4 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/enrichment/simulation/continuous.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Continuous</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/enrichment/simulation/dichotomous.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dichotomous</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/enrichment/simulation/tte.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Time-to-Event</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/enrichment/analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Analysis</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/platform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Platform Trials</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/crm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">CRM</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/de.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">3+3 / mTPI</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/2dcrm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2D-CRM</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/dr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Design Report</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/flfll.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FLFLL</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/v71/userguides/FACTSfromR.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FACTS from R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Glossary</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../../../../documentation/versions/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Release Notes</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-15" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-15" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-16" role="navigation" aria-expanded="false">
+ <span class="menu-text">FACTS 7 Release Notes</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-16" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-16" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/versions/v7/facts711.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FACTS 7.1.1 Release Notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/versions/v7/facts710.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FACTS 7.1.0 Release Notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/versions/v7/facts700.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FACTS 7.0.0 Release Notes</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-17" role="navigation" aria-expanded="false">
+ <span class="menu-text">FACTS 6 Release Notes</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-17" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-17" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/versions/v6/facts650.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FACTS 6.5.0 Release Notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/versions/v6/facts641.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FACTS 6.4.1 Release Notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/versions/v6/facts640.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FACTS 6.4.0 Release Notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/versions/v6/facts630.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FACTS 6.3.0 Release Notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/versions/v6/facts625.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FACTS 6.2.5 Release Notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/versions/v6/facts624.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FACTS 6.2.4 Release Notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/versions/v6/facts620.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FACTS 6.2.0 Release Notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/versions/v6/facts616.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FACTS 6.1.6 Release Notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/versions/v6/facts610.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FACTS 6.1.0 Release Notes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/versions/v6/facts600.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FACTS 6.0.0 Release Notes</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../../../documentation/versions/roadmap.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FACTS Roadmap</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -200,42 +772,17 @@ window.Quarto = {
   <li><a href="#fixed-priors" id="toc-fixed-priors" class="nav-link" data-scroll-target="#fixed-priors">Fixed priors</a></li>
   <li><a href="#hierarchical-prior" id="toc-hierarchical-prior" class="nav-link" data-scroll-target="#hierarchical-prior">Hierarchical Prior</a></li>
   </ul></li>
-  <li><a href="#predictor-model" id="toc-predictor-model" class="nav-link" data-scroll-target="#predictor-model">Predictor Model</a>
-  <ul>
-  <li><a href="#continuous-dichotomous-predictors" id="toc-continuous-dichotomous-predictors" class="nav-link" data-scroll-target="#continuous-dichotomous-predictors">Continuous &amp; Dichotomous Predictors</a>
-  <ul class="collapse">
-  <li><a href="#relationship-to-endpoint-model" id="toc-relationship-to-endpoint-model" class="nav-link" data-scroll-target="#relationship-to-endpoint-model">Relationship to Endpoint Model</a></li>
-  </ul></li>
-  <li><a href="#tips-on-prior-strength" id="toc-tips-on-prior-strength" class="nav-link" data-scroll-target="#tips-on-prior-strength">Tips on prior strength</a></li>
-  <li><a href="#time-to-event-predictor" id="toc-time-to-event-predictor" class="nav-link" data-scroll-target="#time-to-event-predictor">Time-to-event Predictor</a></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content column-page-left" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Hazard Model and Predictor Model</h1>
-<p class="subtitle lead">A description of the time-to-event specific design tabs, Hazard Model and Predictor Model.</p>
-</div>
+<main class="content quarto-banner-title-block column-body" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta column-page-left">
-
-    
-  
-    
-  </div>
-  
 
 
-</header>
-
-
-<p>The two main differences in the design tabs available for a time-to-event endpoint rather than continuous or dichotomous are way that the control arm hazard model is defined and the use of a predictor model.</p>
+<p>The two main differences in the design tabs available for a time-to-event endpoint, rather than continuous or dichotomous, are ways that the control arm hazard model is defined and the use of a predictor model.</p>
 <section id="hazard-model" class="level1">
 <h1>Hazard Model</h1>
 <p>The hazard model is how the hazard rate on the control arm is modeled. In the continuous and dichotomous engines the control arm and the active arms have their own estimated response rate (mean or probability of response) that can be compared to the control arm. When using a time-to-event endpoint the control arm has an estimated hazard rate, and each active arm has an estimated hazard ratio that, when applied to the control arm hazard rate, provides its hazard rate.</p>
@@ -304,96 +851,6 @@ Setting the priors for Hierarchical model hyper parameters
 <p>The best way to understand the impact of the priors is try different values and run simulations.</p>
 </div>
 </div>
-</section>
-</section>
-<section id="predictor-model" class="level1">
-<h1>Predictor Model</h1>
-<p>In FACTS Core TTE ‘predictor endpoints’ can be used in a similar way to early observations of the clinical endpoint measure in FACTS Core Continuous and Dichotomous. That is, they are used to inform the analysis about what the final outcome is likely to be for subjects for whom the final outcome has not <span class="custom-tooltip"> yet been observed <span class="tooltip-text">If a subject drop’s out, their final endpoint will never be observed, but their predictors are still used to impute the subject’s possibly final time to event if the predictor is observed before the dropout.</span> </span>. The estimates of the predictor response can also be used in QOIs, and thus somewhat like an additional endpoint and used for decision making.</p>
-<p>The dose-predictor model is used to impute subjects’ predictor responses based on their treatment allocation when their predictor response has not yet been observed. The predictor-endpoint model is used to impute their time to final endpoint when that has not yet been observed.</p>
-<p>The differences between predictor endpoints in FACTS Core TTE and early endpoints with longitudinal modeling in FACTS Core Continuous and Dichotomous, are that:</p>
-<ul>
-<li><p>There is only one observation of a predictor per-subject, there may be multiple early observations per subject of the clinical endpoint.</p></li>
-<li><p>In FACTS Continuous and Dichotomous longitudinal modeling is over time, there is no response modeling of early observations <strong>across</strong> doses, longitudinal modeling is either for different doses or pooled.</p></li>
-<li><p>In FACTS TTE the design can include a dose-predictor model that</p>
-<ul>
-<li><p>Allows subjects’ predictor event endpoint to be imputed (Imputation is described in the FACTS Core Design Guide).</p></li>
-<li><p>Allows early stopping decisions to taken based on the estimates of the dose-predictor model.</p></li>
-</ul></li>
-</ul>
-<section id="continuous-dichotomous-predictors" class="level2">
-<h2 class="anchored" data-anchor-id="continuous-dichotomous-predictors">Continuous &amp; Dichotomous Predictors</h2>
-<p>For the predictor model with a continuous or dichotomous predictor, there are two tabs – the Dose Response and the Relationship to Endpoint tabs.</p>
-<p>The dose response model for the predictor is the model used to estimate the marginal distribution of the predictor response at each dose as a normal mean and variance (for a continuous endpoint) or mean and variance of the log-odds (for a dichotomous endpoint). The dose response options are as per the continuous and dichotomous endpoint standard dose response options (except use of BAC for the predictor is not supported). The predictor dose-response model can be selected and specified completely independently of the dose response model for the time-to-event endpoint (the model of the log hazard ratio). See the FACTS Core Design Guide for details.</p>
-<div id="fig-predNDLM" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-predNDLM-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../coreUGattachments/tte/media/image40.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-predNDLM-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: The dichotomous predictor model showing a Simple NDLM dose response. The NDLM model for the predictor response works exactly like the NDLM dose response model.
-</figcaption>
-</figure>
-</div>
-<section id="relationship-to-endpoint-model" class="level3">
-<h3 class="anchored" data-anchor-id="relationship-to-endpoint-model">Relationship to Endpoint Model</h3>
-<p>The relationship to endpoint model is:</p>
-<ul>
-<li><p><span class="math inline">\(T_{i} \sim \text{Exp}(\lambda_{d}\ e^{\beta Z_{i}})\)</span> for a continuous predictor where <span class="math inline">\(Z_i\)</span>, is the observed value of the predictor for the <span class="math inline">\(i\)</span><sup>th</sup> subject</p></li>
-<li><p><span class="math inline">\(T_{i} \sim \text{Exp}(\lambda_{d}\ e^{\beta Z_{i}})\)</span> for a dichotomous predictor where <span class="math inline">\(Z_i=0\)</span> or <span class="math inline">\(1\)</span> is the observed dichotomous predictor for the i<sup>th</sup> subject</p></li>
-</ul>
-<p>That is, for the i<sup>th</sup> subject, the time to their event is taken to follow an exponential distribution with mean <span class="math inline">\(\lambda_d\ e^{\beta Z_i}\)</span>. The parameters of the model are estimated from the values of the predictor, and the time to event for the subjects for whom these have been observed. Then the time to event is imputed for subjects for whom predictor values have been observed, but not events.</p>
-<div id="fig-reltoendpoint" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-reltoendpoint-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../coreUGattachments/tte/media/image41.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-reltoendpoint-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5: The Relationship to Endpoint tab for a continuous or dichotomous predictor.
-</figcaption>
-</figure>
-</div>
-<p>On the Relationship to Endpoint tab, the user specifies the prior distributions for the relationship to endpoint model.</p>
-<p>For a continuous predictor, <span class="math inline">\(\lambda_d\)</span> is the dose dependent hazard rate when the predictor is at its ‘center’ value. For a dichotomous predictor <span class="math inline">\(\lambda_d\)</span> is the dose dependent hazard rate when the predictor is 0. The <span class="math inline">\(\lambda\)</span>s have independent gamma priors for each dose, specified by their expected mean and a weight in equivalent number of events seen. Thus, a weight of 1 would be very weakly informative with any normal number of events. A weight of 0.1 would be uninformative with even a small number of events. A way to think about the use of a weight of <span class="math inline">\(&gt;1\)</span> is, if weight of <span class="math inline">\(n&gt;1\)</span> is used, then after <span class="math inline">\(n\)</span> actual events are observed the posterior mean estimate of <span class="math inline">\(\lambda\)</span> will be the average of the observed mean and the prior mean.</p>
-<p>The <span class="math inline">\(\beta\)</span> parameter has a normal prior, specified by its prior mean and standard deviation. For a continuous predictor, this is the log scaling factor of the hazard rate for the correlation of the event rate to the predictor. For a dichotomous predictor, it is the log scaling factor of the hazard rate for subjects who have had response on the predictor. For a continuous predictor with the center and scale values set so that the value of <span class="math inline">\(Z\)</span> will vary approximately between <span class="math inline">\(-1\)</span> and <span class="math inline">\(1\)</span>, and a dichotomous predictor where the predictor value is <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>, a prior distribution of <span class="math inline">\(N(0,5)\)</span> for <span class="math inline">\(\beta\)</span> would mean that <span class="math inline">\(e^{\beta Z}\)</span> will take values between <span class="math inline">\(22,000^{-1}\)</span> to 22,000 and the prior could be deemed to be essentially uninformative. Large values (&gt;&gt;5) for the SD of the prior for <span class="math inline">\(\beta\)</span> can lead to numeric overflow in the simulator. If the values of Z do not largely fall in the range <span class="math inline">\([-1, 1]\)</span>, it is suggested that the prior for <span class="math inline">\(\beta\)</span> be constructed to limit the coefficient <span class="math inline">\(\exp{(Z\beta)}\)</span> to lie within its plausible range. If the prior for <span class="math inline">\(\beta\)</span> is left uninformative and <span class="math inline">\(Z\)</span> can take values <span class="math inline">\(&gt;&gt; 1\)</span> it can result in inflation in the uncertainty in the estimates of the hazard ratios of subject’s time to final event from a few extreme imputed time-to-event values for subjects whose times-to-event are imputed, particularly if their predictor value is imputed too.</p>
-</section>
-</section>
-<section id="tips-on-prior-strength" class="level2 {callout-tip}">
-<h2 class="anchored" data-anchor-id="tips-on-prior-strength">Tips on prior strength</h2>
-<p>If the main use of the predictor is to improve the information for the final analysis, unless the trial has a particularly small sample size, usually weak priors can be used so the model is driven by the data observed in the trial.</p>
-<p>If the model is to be used to improve the information at interim analyses, and even at the first interim there will be some events observed to allow an initial model to be fitted (even though it might have a very diffuse posterior), again weak priors can be used.</p>
-<p>If the model is to be used to allow interim analyses before any events are likely to have been seen, then informative priors are necessary.</p>
-<p>When there is a need to set informative priors, one way to establish the values to use is to estimate them from simulations using external data file based on actual data.</p>
-<p>Method</p>
-<ol type="1">
-<li><p>Create a simple, fixed trial with a sample size (per arm) of the weight of the prior desired, with non-informative priors for the predictor model.</p></li>
-<li><p>Create an external file of actual data, or data sampled from the prior predictor-time-to-event model with at least as many samples per arm as the sample size in step 1.</p></li>
-<li><p>Run 100 simulations and take the averages of the posterior estimates of the predictor model parameters to use as informative values in the actual design.</p></li>
-</ol>
-</section>
-<p>It is possible to specify a minimum information (subjects with both predictor outcomes and final events) before the predictor model is used to impute time-to-event for subjects where their final event has not yet been observed. It also possible to disable the imputation completely, and simply have the predictor endpoint and final event be modelled separately.</p>
-<p>The priors will be combined with the data from the subjects for whom the predictor value and the endpoint has been observed to estimate the parameters of the model. The model is then used to impute missing event times for subjects whose event is not observed because</p>
-<ul>
-<li><p>it occurs after the end of the follow-up period,</p></li>
-<li><p>the subject has dropped out, or</p></li>
-<li><p>the analysis is at an interim before the end of the subjects follow-up period and the event has not occurred yet.</p></li>
-</ul>
-<p>Thus, the model can increase the information available both at the end of the trial and at interims.</p>
-<section id="time-to-event-predictor" class="level3">
-<h3 class="anchored" data-anchor-id="time-to-event-predictor">Time-to-event Predictor</h3>
-<p>For the predictor model with a time-to-event predictor, there are three tabs within the Design &gt; Predictor Model tab – the Hazard Model, Dose Response, and the Relationship to Endpoint tabs.</p>
-<div id="fig-reltoendpointttepred" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-reltoendpointttepred-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="../coreUGattachments/tte/media/image42.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-reltoendpointttepred-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6: The Relationship to Endpoint tab for the time-to-event engine with a time-to-event predictor.
-</figcaption>
-</figure>
-</div>
-<p>As in the response model for the primary event, the response model for a time to event predictor comprises a hazard model for the event rate on the control arm, and a dose response model used to estimate the marginal distribution of the predictor response at each dose as a normal mean and variance log-hazard ratio.</p>
-<p>The hazard model and dose response options are as per the time-to-event endpoint standard hazard model and dose response options (except use of the cox model or BAC for the predictor hazard model is not supported). The predictor dose-response model can be selected and specified completely independently of the dose response model for the time-to-event endpoint.</p>
-<p>For the time-to-event predictor, the relationship to endpoint model is simply a per-dose hazard rate for the time from the predictor event to the final event. For each dose the user specifies the parameters of a gamma prior distribution for this ‘post-predictor event’ hazard rate. This model is a simple exponential, not piecewise.</p>
 
 
 </section>
@@ -401,35 +858,20 @@ Figure&nbsp;6: The Relationship to Endpoint tab for the time-to-event engine wit
 
 </main> <!-- /main -->
 <footer style="display: flex; justify-content: space-between; align-items: center;">
-
   <!-- Left side: Copyright -->
-
   <p style="margin: 0;">
-
     © <span id="year"></span>
-
     <a href="https://www.berryconsultants.com">Berry Consultants</a>
-
   </p>
-
-
 
   <!-- Right side: Relative link -->
-
   <p style="margin: 0;">
-
     <a href="../../../../../introduction/citation.html">How to Cite</a>
-
   </p>
-
 </footer>
 
-
-
 <script>
-
   document.getElementById('year').textContent = new Date().getFullYear();
-
 </script>
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
@@ -513,8 +955,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -625,7 +1065,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

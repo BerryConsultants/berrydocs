@@ -1,0 +1,3484 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Time to Event Output</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../../">
+<link href="../../../../../media/FACTS_icon.png" rel="icon" type="image/png">
+<script src="../../../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../../site_libs/bootstrap/bootstrap-5e3d804025be65b29583b827833ef31d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<!-- Roboto Serif -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
+
+<!-- Roboto Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WLMVE7GR4S');
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../../../media/FACTSLogo.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../introduction/index.html"> 
+<span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../documentation/index.html"> 
+<span class="menu-text">Documentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../get/index.html"> 
+<span class="menu-text">Get FACTS</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../contact/index.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Time to Event Output</h1>
+            <p class="subtitle lead">Description of the simulation tab and the results generated by simulations using a time-to-event endpoint.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#graphs-of-simulation-results" id="toc-graphs-of-simulation-results" class="nav-link active" data-scroll-target="#graphs-of-simulation-results">Graphs of Simulation Results</a>
+  <ul>
+  <li><a href="#box-and-whisker-plot-conventions" id="toc-box-and-whisker-plot-conventions" class="nav-link" data-scroll-target="#box-and-whisker-plot-conventions">Box and whisker plot conventions</a></li>
+  </ul></li>
+  <li><a href="#per-scenario-graphs" id="toc-per-scenario-graphs" class="nav-link" data-scroll-target="#per-scenario-graphs">Per Scenario Graphs</a>
+  <ul>
+  <li><a href="#allocation-box-and-whisker-plot" id="toc-allocation-box-and-whisker-plot" class="nav-link" data-scroll-target="#allocation-box-and-whisker-plot">Allocation Box and Whisker Plot</a></li>
+  <li><a href="#events-boxplot" id="toc-events-boxplot" class="nav-link" data-scroll-target="#events-boxplot">Events Boxplot</a></li>
+  <li><a href="#hazard-ratio-and-subject-allocation" id="toc-hazard-ratio-and-subject-allocation" class="nav-link" data-scroll-target="#hazard-ratio-and-subject-allocation">Hazard Ratio and Subject Allocation</a></li>
+  <li><a href="#hazard-ratio-and-target-selection-graphs" id="toc-hazard-ratio-and-target-selection-graphs" class="nav-link" data-scroll-target="#hazard-ratio-and-target-selection-graphs">Hazard Ratio and Target Selection graphs</a></li>
+  <li><a href="#predictor-response-and-allocation" id="toc-predictor-response-and-allocation" class="nav-link" data-scroll-target="#predictor-response-and-allocation">Predictor: Response and Allocation</a></li>
+  <li><a href="#per-dose-qois" id="toc-per-dose-qois" class="nav-link" data-scroll-target="#per-dose-qois">Per Dose: QOIs</a></li>
+  <li><a href="#target-hazard-ratio-scatter-plot" id="toc-target-hazard-ratio-scatter-plot" class="nav-link" data-scroll-target="#target-hazard-ratio-scatter-plot">Target Hazard Ratio Scatter Plot</a></li>
+  <li><a href="#cumulative-operating-characteristics-plot" id="toc-cumulative-operating-characteristics-plot" class="nav-link" data-scroll-target="#cumulative-operating-characteristics-plot">Cumulative Operating Characteristics Plot</a></li>
+  <li><a href="#time-course-for-stopping" id="toc-time-course-for-stopping" class="nav-link" data-scroll-target="#time-course-for-stopping">Time course for stopping</a></li>
+  <li><a href="#arm-dropping-graphs" id="toc-arm-dropping-graphs" class="nav-link" data-scroll-target="#arm-dropping-graphs">Arm Dropping Graphs</a>
+  <ul class="collapse">
+  <li><a href="#hazard-ratio-and-ppn-arms-dropped" id="toc-hazard-ratio-and-ppn-arms-dropped" class="nav-link" data-scroll-target="#hazard-ratio-and-ppn-arms-dropped">Hazard ratio and Ppn Arms Dropped</a></li>
+  <li><a href="#time-course-for-arm-dropping" id="toc-time-course-for-arm-dropping" class="nav-link" data-scroll-target="#time-course-for-arm-dropping">Time Course for Arm Dropping</a></li>
+  <li><a href="#time-course-for-arm-retention" id="toc-time-course-for-arm-retention" class="nav-link" data-scroll-target="#time-course-for-arm-retention">Time Course for Arm retention</a></li>
+  <li><a href="#arm-retention-proportion" id="toc-arm-retention-proportion" class="nav-link" data-scroll-target="#arm-retention-proportion">Arm Retention Proportion</a></li>
+  </ul></li>
+  <li><a href="#frequentist" id="toc-frequentist" class="nav-link" data-scroll-target="#frequentist">Frequentist</a>
+  <ul class="collapse">
+  <li><a href="#frequentist-psignificance" id="toc-frequentist-psignificance" class="nav-link" data-scroll-target="#frequentist-psignificance">Frequentist P(significance)</a></li>
+  <li><a href="#frequentist-response-and-significance" id="toc-frequentist-response-and-significance" class="nav-link" data-scroll-target="#frequentist-response-and-significance">Frequentist: Response and Significance</a></li>
+  </ul></li>
+  <li><a href="#per-sim-graphs" id="toc-per-sim-graphs" class="nav-link" data-scroll-target="#per-sim-graphs">Per Sim Graphs</a>
+  <ul class="collapse">
+  <li><a href="#hazard-ratio-and-subject-allocation-1" id="toc-hazard-ratio-and-subject-allocation-1" class="nav-link" data-scroll-target="#hazard-ratio-and-subject-allocation-1">Hazard Ratio and Subject Allocation</a></li>
+  <li><a href="#posterior-quantities" id="toc-posterior-quantities" class="nav-link" data-scroll-target="#posterior-quantities">Posterior Quantities</a></li>
+  <li><a href="#predictor-response-and-allocation-1" id="toc-predictor-response-and-allocation-1" class="nav-link" data-scroll-target="#predictor-response-and-allocation-1">Predictor Response and Allocation</a></li>
+  </ul></li>
+  <li><a href="#per-interim-graphs" id="toc-per-interim-graphs" class="nav-link" data-scroll-target="#per-interim-graphs">Per Interim Graphs</a></li>
+  <li><a href="#post-simulation-boundary-finding-graphs" id="toc-post-simulation-boundary-finding-graphs" class="nav-link" data-scroll-target="#post-simulation-boundary-finding-graphs">Post Simulation Boundary Finding Graphs</a>
+  <ul class="collapse">
+  <li><a href="#explore-successfutility-eval-criteria" id="toc-explore-successfutility-eval-criteria" class="nav-link" data-scroll-target="#explore-successfutility-eval-criteria">Explore Success/Futility Eval Criteria</a></li>
+  <li><a href="#explore-early-successfutility-eval-criteria" id="toc-explore-early-successfutility-eval-criteria" class="nav-link" data-scroll-target="#explore-early-successfutility-eval-criteria">Explore Early Success/Futility Eval Criteria</a></li>
+  <li><a href="#explore-arm-dropping-criteria" id="toc-explore-arm-dropping-criteria" class="nav-link" data-scroll-target="#explore-arm-dropping-criteria">Explore Arm Dropping Criteria</a></li>
+  <li><a href="#successfutility-stopping-contours" id="toc-successfutility-stopping-contours" class="nav-link" data-scroll-target="#successfutility-stopping-contours">Success/Futility Stopping Contours</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#across-scenario-graphs" id="toc-across-scenario-graphs" class="nav-link" data-scroll-target="#across-scenario-graphs">Across Scenario Graphs</a>
+  <ul>
+  <li><a href="#selected-arms" id="toc-selected-arms" class="nav-link" data-scroll-target="#selected-arms">Selected Arms</a></li>
+  <li><a href="#qoi-box-plots" id="toc-qoi-box-plots" class="nav-link" data-scroll-target="#qoi-box-plots">QOI Box Plots</a></li>
+  <li><a href="#ppn-success" id="toc-ppn-success" class="nav-link" data-scroll-target="#ppn-success">Ppn Success</a></li>
+  <li><a href="#response" id="toc-response" class="nav-link" data-scroll-target="#response">Response</a></li>
+  <li><a href="#allocation" id="toc-allocation" class="nav-link" data-scroll-target="#allocation">Allocation</a></li>
+  <li><a href="#sample-size" id="toc-sample-size" class="nav-link" data-scroll-target="#sample-size">Sample Size</a></li>
+  <li><a href="#interim-vs-final-scatter-plot" id="toc-interim-vs-final-scatter-plot" class="nav-link" data-scroll-target="#interim-vs-final-scatter-plot">Interim vs Final Scatter Plot</a></li>
+  <li><a href="#receiver-operating-characteristics" id="toc-receiver-operating-characteristics" class="nav-link" data-scroll-target="#receiver-operating-characteristics">Receiver Operating Characteristics</a></li>
+  </ul></li>
+  <li><a href="#viewing-simulation-results-in-the-simulations-tab" id="toc-viewing-simulation-results-in-the-simulations-tab" class="nav-link" data-scroll-target="#viewing-simulation-results-in-the-simulations-tab">Viewing Simulation Results in the Simulations Tab</a>
+  <ul>
+  <li><a href="#summary-per-scenario" id="toc-summary-per-scenario" class="nav-link" data-scroll-target="#summary-per-scenario">Summary per Scenario</a>
+  <ul class="collapse">
+  <li><a href="#highlights" id="toc-highlights" class="nav-link" data-scroll-target="#highlights">Highlights</a></li>
+  <li><a href="#allocation-1" id="toc-allocation-1" class="nav-link" data-scroll-target="#allocation-1">Allocation</a></li>
+  <li><a href="#response-1" id="toc-response-1" class="nav-link" data-scroll-target="#response-1">Response</a></li>
+  <li><a href="#observed" id="toc-observed" class="nav-link" data-scroll-target="#observed">Observed</a></li>
+  <li><a href="#probabilities" id="toc-probabilities" class="nav-link" data-scroll-target="#probabilities">Probabilities</a></li>
+  <li><a href="#hierarchical-prior-parameters" id="toc-hierarchical-prior-parameters" class="nav-link" data-scroll-target="#hierarchical-prior-parameters">Hierarchical Prior Parameters</a></li>
+  <li><a href="#predictor" id="toc-predictor" class="nav-link" data-scroll-target="#predictor">Predictor</a></li>
+  <li><a href="#model-parameters" id="toc-model-parameters" class="nav-link" data-scroll-target="#model-parameters">Model Parameters</a></li>
+  </ul></li>
+  <li><a href="#detailed-simulation-results" id="toc-detailed-simulation-results" class="nav-link" data-scroll-target="#detailed-simulation-results">Detailed Simulation Results</a></li>
+  </ul></li>
+  <li><a href="#output-files" id="toc-output-files" class="nav-link" data-scroll-target="#output-files">Output Files</a>
+  <ul>
+  <li><a href="#contents-of-summary.csv" id="toc-contents-of-summary.csv" class="nav-link" data-scroll-target="#contents-of-summary.csv">Contents of summary.csv</a>
+  <ul class="collapse">
+  <li><a href="#qoi-columns" id="toc-qoi-columns" class="nav-link" data-scroll-target="#qoi-columns">QOI Columns</a></li>
+  </ul></li>
+  <li><a href="#contents-of-summary_freq.csv" id="toc-contents-of-summary_freq.csv" class="nav-link" data-scroll-target="#contents-of-summary_freq.csv">Contents of Summary_freq.csv</a>
+  <ul class="collapse">
+  <li><a href="#continuous-predictor" id="toc-continuous-predictor" class="nav-link" data-scroll-target="#continuous-predictor">Continuous Predictor:</a></li>
+  <li><a href="#dichotomous-predictor" id="toc-dichotomous-predictor" class="nav-link" data-scroll-target="#dichotomous-predictor">Dichotomous Predictor:</a></li>
+  <li><a href="#time-to-event-predictor" id="toc-time-to-event-predictor" class="nav-link" data-scroll-target="#time-to-event-predictor">Time-to-Event Predictor</a></li>
+  </ul></li>
+  <li><a href="#contents-of-simulations.csv-and-weeksnnnnn.csv" id="toc-contents-of-simulations.csv-and-weeksnnnnn.csv" class="nav-link" data-scroll-target="#contents-of-simulations.csv-and-weeksnnnnn.csv">Contents of simulations.csv and weeksNNNNN.csv</a>
+  <ul class="collapse">
+  <li><a href="#qoi-columns-1" id="toc-qoi-columns-1" class="nav-link" data-scroll-target="#qoi-columns-1">QOI Columns</a></li>
+  </ul></li>
+  <li><a href="#contents-of-simulations_freq.csv" id="toc-contents-of-simulations_freq.csv" class="nav-link" data-scroll-target="#contents-of-simulations_freq.csv">Contents of Simulations_freq.csv</a>
+  <ul class="collapse">
+  <li><a href="#continuous-predictor-1" id="toc-continuous-predictor-1" class="nav-link" data-scroll-target="#continuous-predictor-1">Continuous predictor</a></li>
+  <li><a href="#dichotomous-predictor-1" id="toc-dichotomous-predictor-1" class="nav-link" data-scroll-target="#dichotomous-predictor-1">Dichotomous predictor</a></li>
+  <li><a href="#time-to-event-predictor-1" id="toc-time-to-event-predictor-1" class="nav-link" data-scroll-target="#time-to-event-predictor-1">Time-to-event Predictor</a></li>
+  </ul></li>
+  <li><a href="#contents-of-patientsnnnnn.csv" id="toc-contents-of-patientsnnnnn.csv" class="nav-link" data-scroll-target="#contents-of-patientsnnnnn.csv">Contents of PatientsNNNNN.csv</a></li>
+  <li><a href="#contents-of-mcmcnnnnn.csv" id="toc-contents-of-mcmcnnnnn.csv" class="nav-link" data-scroll-target="#contents-of-mcmcnnnnn.csv">Contents of MCMCNNNNN.csv</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+
+
+
+
+
+<section id="graphs-of-simulation-results" class="level1">
+<h1>Graphs of Simulation Results</h1>
+<p>To enable swift visualization and analysis of the simulation results, FACTS has a number of pre-defined graphs it can display. Full and detailed simulation results are available in ‘csv’ format files that can be loaded into other analysis tools allowing any aspect of the simulation to be explored. These files are described in Section 16, below.</p>
+<p>To view the graphs of the results of the simulations of a particular design variant in a particular scenario, select a row of scenario results by clicking on it and then click on the ‘View Graph’ button and select “Show Per Scenario Graphs”.</p>
+<p>To view graphs showing the results of the simulations of possibly all the design variants and all the scenarios click on the ‘View Graph’ button and select “Show Across Scenario Graphs”. This launches a graph display that displays multiple graphs in a trellis plot.</p>
+<div id="fig-acrossscentte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-acrossscentte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image51.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-acrossscentte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Select the scenarios to include in Across Scenario graphs.
+</figcaption>
+</figure>
+</div>
+<p>The graph display supports copying an image of the graph to the clipboard, to facilitate pasting them into documents and presentations. Right clicking on a graph brings up a short menu that allows the image of the graph to be copied to the clipboard or saved in ‘.png’ format to a file.</p>
+<p>Many graphs have a number of controls to allow the graph to be tailored, standard graph controls available on most graphs are:</p>
+<ul>
+<li><p>Set Y axis – this displays a dialog boxing allowing the user to fix the minimum and maximum of each of the Y axes and the number of ‘tick’ marks. (Not displayed if the ‘y’ value must lie in the interval 0-1.</p></li>
+<li><p>Space doses evenly – if the x-value is ‘dose’, then data for each dose can either be spaced equally or proportionate to the doses’ effective dose strength.</p></li>
+</ul>
+<section id="box-and-whisker-plot-conventions" class="level4">
+<h4 class="anchored" data-anchor-id="box-and-whisker-plot-conventions">Box and whisker plot conventions</h4>
+<ul>
+<li><p>The mean probability is plotted as a large dot.</p></li>
+<li><p>The median value is plotted as a dashed line.</p></li>
+<li><p>The 25-75<sup>th</sup> quantile range is plotted as the “box” portion of each point.</p></li>
+<li><p>The “whiskers” extend to the largest and smallest values within 1 ½ times the interquartile range from either end of the box.</p></li>
+<li><p>Points outside the whisker range are considered outliers, and are plotted as small blue dots. Note that it may be difficult to see all of these symbols if they are plotted at the same value.</p></li>
+</ul>
+</section>
+</section>
+<section id="per-scenario-graphs" class="level1">
+<h1>Per Scenario Graphs</h1>
+<section id="allocation-box-and-whisker-plot" class="level2">
+<h2 class="anchored" data-anchor-id="allocation-box-and-whisker-plot">Allocation Box and Whisker Plot</h2>
+<div id="fig-52t" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-52t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image52.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-52t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Distribution of Subject Allocation Across Simulations.
+</figcaption>
+</figure>
+</div>
+<p>This graph displays a box and whisker plot of the number of subjects recruited into each arm. These plots show:</p>
+<ul>
+<li><p>The distribution over all simulations of the number of subjects allocated to each arm shown as a box and whisker plot. If the design is not adaptive, the number allocated will be the same in every simulation and the box and whiskers collapse to a single line.</p></li>
+<li><p>The mean number of events observed in each arm across the simulations shown as a red triangle.</p></li>
+</ul>
+</section>
+<section id="events-boxplot" class="level2">
+<h2 class="anchored" data-anchor-id="events-boxplot">Events Boxplot</h2>
+<div id="fig-numEvents" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-numEvents-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image53.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-numEvents-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Distribution of Number of Events Across Simulations
+</figcaption>
+</figure>
+</div>
+<p>This graph displays a box and whisker plot of the number of events observed in each arm. These plots show:</p>
+<ul>
+<li>The distribution over all simulations of the number of events observed in each arm shown as a box and whisker plot.</li>
+</ul>
+</section>
+<section id="hazard-ratio-and-subject-allocation" class="level2">
+<h2 class="anchored" data-anchor-id="hazard-ratio-and-subject-allocation">Hazard Ratio and Subject Allocation</h2>
+<div id="fig-hrsubjalloc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hrsubjalloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image54.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hrsubjalloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Hazard Ratio and Subject Allocation
+</figcaption>
+</figure>
+</div>
+<p>This graph shows for each treatment arm, the mean subject allocation, mean number of events observed and the mean estimated hazard ratio. Specifically:</p>
+<ul>
+<li><p>The blue bars show the mean number of subjects without events and the brown bars mean number of subjects who had events.</p></li>
+<li><p>The black line shows the true Hazard Ratio being simulated (but without allowing for any effect of the predictor)</p></li>
+<li><p>The green dashed line (drawn if a response model is fitted), shows the mean of the estimated hazard ratios across the simulations</p></li>
+<li><p>The green ‘error bars’ show the spread of the central 95% of the estimated hazard ratios (if less than 20 simulations have been run it simply shows the full spread).</p></li>
+</ul>
+</section>
+<section id="hazard-ratio-and-target-selection-graphs" class="level2">
+<h2 class="anchored" data-anchor-id="hazard-ratio-and-target-selection-graphs">Hazard Ratio and Target Selection graphs</h2>
+<div id="fig-hrtargetsel" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hrtargetsel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image55.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hrtargetsel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Hazard Ratio and <span class="fake-code-block"><span class="math inline">\(Pr\)</span>(MED relative to Control: Delta=-0.2)</span> Selection
+</figcaption>
+</figure>
+</div>
+<p>These plots show the true simulated hazard ratio (without allowance for the effect of the predictor) and the mean and 95% spread of the mean fitted hazard ratios along with bars showing the proportion of simulations the different treatment arms are the finally selected target. The target displayed is selected by a control on the graph, from any of the defined Target QOIs.:</p>
+</section>
+<section id="predictor-response-and-allocation" class="level2">
+<h2 class="anchored" data-anchor-id="predictor-response-and-allocation">Predictor: Response and Allocation</h2>
+<div id="fig-predhrsubjAlloc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-predhrsubjAlloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image56.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-predhrsubjAlloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Predictor Hazard Ratio and Subject Allocation
+</figcaption>
+</figure>
+</div>
+<p>These plots show the true simulated predictor response and the mean and 95% spread of the mean fitted predictor response model, with the blue bars showing the mean number of subjects allocated to each arm across the simulations.</p>
+</section>
+<section id="per-dose-qois" class="level2">
+<h2 class="anchored" data-anchor-id="per-dose-qois">Per Dose: QOIs</h2>
+<div id="fig-perdoseQOI" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-perdoseQOI-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image57.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-perdoseQOI-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Distribution of <span class="fake-code-block">P(Succ. Future Trial: N=250; Sup. <span class="math inline">\(\alpha=0.025\)</span>, <span class="math inline">\(\delta=0\)</span> Adjusted Significance)</span> Across Simulations
+</figcaption>
+</figure>
+</div>
+<p>These plots show a box plot showing the distribution of the values for any of the defined QOIs for each dose.</p>
+<p>Which QOI is displayed can be selected by the user from a drop down list on the graph. Any of the Posterior Probability, Predictive Probability, P-value and Target QOI’s can be selected.</p>
+</section>
+<section id="target-hazard-ratio-scatter-plot" class="level2">
+<h2 class="anchored" data-anchor-id="target-hazard-ratio-scatter-plot">Target Hazard Ratio Scatter Plot</h2>
+<div id="fig-meanHRSS" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-meanHRSS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image58.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-meanHRSS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Posterior Mean Hazard Ratio at <span class="fake-code-block">Pr(Max)</span> vs Total Sample Size per Simulation Run
+</figcaption>
+</figure>
+</div>
+<p>This graph shows a scatter plot of trial outcomes with the estimate hazard ratio as the y-axis and total number of subjects recruited as the x-axis. A drop down list on the graph allows the user to select which target QOI is used to supply the hazard ratio:</p>
+<p>The trials are plotted with a symbol that indicated the final outcome:</p>
+<ul>
+<li><p>A light blue circle indicates a trial that stopped early for success</p></li>
+<li><p>A dark blue circle indicates a trial that was a late success</p></li>
+<li><p>A dark red square indicates a trial that was a late futility</p></li>
+<li><p>A light red square indicates a trial that stopped early for futility</p></li>
+<li><p>A light pink diamond indicates a trial that stopped early for success but where the final analysis was futility</p></li>
+<li><p>A dark pink diamond indicates a trial that stopped early for futility but where the final analysis was success</p></li>
+<li><p>A yellow cross indicates a trial that completed full enrolment but was inconclusive at the end.</p></li>
+</ul>
+<p>These graphs are not particularly useful if there is no early stopping.</p>
+<p>If the design does allow early stopping this graph shows</p>
+<ul>
+<li><p>The overall distribution of sample sizes – in particular is stopping evenly distributed from the moment stopping is possible, or is there are large cohort of trials that stop as soon as its possible?</p></li>
+<li><p>When and with what response rate trials stop incorrectly, in particular having trials stopping and the decision being reversed suggests stopping is allowed to soon or the criteria is not conservative enough.</p></li>
+</ul>
+<p>There are two further variants of this graph, these have alternative y-axes: the hazard ratio at the EDx or at the MED.</p>
+</section>
+<section id="cumulative-operating-characteristics-plot" class="level2">
+<h2 class="anchored" data-anchor-id="cumulative-operating-characteristics-plot">Cumulative Operating Characteristics Plot</h2>
+<div id="fig-cpdursubj" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cpdursubj-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-cpdursubj" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-cpdur" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-cpdur-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image59.png" class="img-fluid figure-img" data-ref-parent="fig-cpdursubj">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-cpdur-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Cumulative Proportion of Duration
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-cpdursubj" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-cpsubj" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-cpsubj-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image60.png" class="img-fluid figure-img" data-ref-parent="fig-cpdursubj">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-cpsubj-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Cumulative Proportion of Subjects
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-cpdursubj-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9
+</figcaption>
+</figure>
+</div>
+<p>There are two graphs, one that shows the cumulative proportion of durations across all simulations, and the other shows the cumulative proportion of subjects across all simulations.</p>
+</section>
+<section id="time-course-for-stopping" class="level2">
+<h2 class="anchored" data-anchor-id="time-course-for-stopping">Time course for stopping</h2>
+<p>There are two graphs, one that shows the distribution over time for stopping for futility and one for stopping for success.</p>
+<div id="fig-cpsuccfutil" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cpsuccfutil-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-cpsuccfutil" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-cpfutil" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-cpfutil-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image61.png" class="img-fluid figure-img" data-ref-parent="fig-cpsuccfutil">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-cpfutil-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Cumulative Proportion of Futility Over Time
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-cpsuccfutil" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-cpsuccess" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-cpsuccess-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image62.png" class="img-fluid figure-img" data-ref-parent="fig-cpsuccfutil">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-cpsuccess-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Cumulative Proportion of Success Over Time
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-cpsuccfutil-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10
+</figcaption>
+</figure>
+</div>
+<p>These plots show as cumulative curves the proportion of the simulations that stopped at different time points from the start of the trial.</p>
+<p>The x-axis is configurable, the user can select cumulative stopping to be plotted relative to time, sample size or number of events observed.</p>
+</section>
+<section id="arm-dropping-graphs" class="level2">
+<h2 class="anchored" data-anchor-id="arm-dropping-graphs">Arm Dropping Graphs</h2>
+<p>If the design has used arm dropping, the following graphs are available.</p>
+<section id="hazard-ratio-and-ppn-arms-dropped" class="level3">
+<h3 class="anchored" data-anchor-id="hazard-ratio-and-ppn-arms-dropped">Hazard ratio and Ppn Arms Dropped</h3>
+<div id="fig-hrarmdrop" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hrarmdrop-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image63.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hrarmdrop-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11: Hazard Ratio and Proportion Arm Dropped
+</figcaption>
+</figure>
+</div>
+<p>This graph shows the true (simulated) mean response and the average fitted response with 2.5% &amp; 97.5% quantiles.</p>
+<p>The histogram bars show for each arm the proportion of simulations for which the arm was dropped.</p>
+</section>
+<section id="time-course-for-arm-dropping" class="level3">
+<h3 class="anchored" data-anchor-id="time-course-for-arm-dropping">Time Course for Arm Dropping</h3>
+<p>This graph shows, for each arm, the cumulative proportion of simulations when it was dropped. The user can select whether time or number of subjects allocated to the arm is used as the x-axis.</p>
+<div id="fig-cparmdropped" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cparmdropped-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image64.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cparmdropped-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12: Cumulative Proportion of Trials where Arm Dropped
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="time-course-for-arm-retention" class="level3">
+<h3 class="anchored" data-anchor-id="time-course-for-arm-retention">Time Course for Arm retention</h3>
+<p>This graph shows, for each arm, the cumulative proportion of simulations when the arm was retained. The user can select whether time or number of subjects allocated to the arm is used as the x-axis. This is simply the inverse of the arm dropping graph above.</p>
+<div id="fig-cparmretained" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cparmretained-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image65.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cparmretained-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;13: Cumulative Proportion of Trials Where Arm Retained
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="arm-retention-proportion" class="level3">
+<h3 class="anchored" data-anchor-id="arm-retention-proportion">Arm Retention Proportion</h3>
+<p>This graph shows, for each arm, the simple proportion of simulations where the arm was retained.</p>
+<div id="fig-armretprop" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-armretprop-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image66.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-armretprop-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14: Arm Retention Proportion
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="frequentist" class="level2">
+<h2 class="anchored" data-anchor-id="frequentist">Frequentist</h2>
+<p>These graphs are available if frequentist analysis is enabled.</p>
+<section id="frequentist-psignificance" class="level3">
+<h3 class="anchored" data-anchor-id="frequentist-psignificance">Frequentist P(significance)</h3>
+<p>These graphs are the box and whisker plots of various p-values that are automatically calculated (that is to say they do not need to be defined as QOIs for them to be calculated) for the final analysis. The user can select from Unadjusted, Bonferroni and Dunnett's and LOCF, BOCF (if baseline is simulated) or PP (per-protocol) treatment of missing values.</p>
+<div id="fig-pvaldist" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pvaldist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image67.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pvaldist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15: Distribution of <span class="fake-code-block"><span class="math inline">\(P\)</span>(Log Rand Adjusted Significance)</span> Across Simulations
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="frequentist-response-and-significance" class="level3">
+<h3 class="anchored" data-anchor-id="frequentist-response-and-significance">Frequentist: Response and Significance</h3>
+<p>This graph plots the mean and 2.5-97.5 percentile of the mean across the simulations or the simple frequentist estimate of the response for each arm, along with a histogram plot of the ppn of times the response on each arm was significant. The user can select from the Unadjusted, Bonferroni or Log Rank, Log Rank Bonferroni, Wilcox and Wilcox Bonferroni p-values.</p>
+<div id="fig-respsig" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-respsig-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image68.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-respsig-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16: Hazard Ratio and Ppn Log Rank Significance
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="per-sim-graphs" class="level2">
+<h2 class="anchored" data-anchor-id="per-sim-graphs">Per Sim Graphs</h2>
+<p>This set of graphs includes a control that allows the user to select which simulation to graph the results from. Each graph shows the output from only 1 simulated trial.</p>
+<div id="fig-persimcontrol" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-persimcontrol-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image70.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-persimcontrol-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;17: The plot window when selecting a Per Sim graph. Note the Simulation control in the bottom left allowing for the selection of which simulated trial the graph should be made for.
+</figcaption>
+</figure>
+</div>
+<section id="hazard-ratio-and-subject-allocation-1" class="level3">
+<h3 class="anchored" data-anchor-id="hazard-ratio-and-subject-allocation-1">Hazard Ratio and Subject Allocation</h3>
+<p>This graph shows the final analysis at the end of individual simulations.</p>
+<div id="fig-persimhrsubjalloc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-persimhrsubjalloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image69.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-persimhrsubjalloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18: Hazard Ratio and Subject Allocation
+</figcaption>
+</figure>
+</div>
+<p>On each graph</p>
+<ul>
+<li><p>The black line shows the ‘True’ Hazard Ratio being simulated, (not adjusted to include any predictor effects)</p></li>
+<li><p>The blue bars show the mean number of subjects without events and the brown bars mean number of subjects who had events.</p></li>
+<li><p>If a response model has been fitted:</p>
+<ul>
+<li><p>The green solid line shows the estimate of the mean hazard ratio</p></li>
+<li><p>The green dashed lines show the boundaries of the 95% credible interval for the estimate of the hazard ratio.</p></li>
+</ul></li>
+<li><p>Otherwise if the Independent Dose model has been fitted:</p>
+<ul>
+<li><p>The light green circle shows the mean estimate of the hazard ratio for each arm</p></li>
+<li><p>The vertical green arms show the extent of the 95% credible interval for the estimate of the hazard ratio for each arm.</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="posterior-quantities" class="level3">
+<h3 class="anchored" data-anchor-id="posterior-quantities">Posterior Quantities</h3>
+<p>This graph shows the final analysis at the end of individual simulations, including the distribution of a selected QOI.</p>
+<div id="fig-persimpostquant" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-persimpostquant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image71.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-persimpostquant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;19: Hazard Ratio and <span class="fake-code-block"><span class="math inline">\(Pr\)</span>(<span class="math inline">\(HR_d\)</span> - 1 &lt; -0.2)</span> Probability
+</figcaption>
+</figure>
+</div>
+<p>This graph includes a control that allows the user to select which simulation to graph the results from and which QOI to plot. On each graph</p>
+<ul>
+<li><p>The black line shows the ‘True’ mean response being simulated.</p></li>
+<li><p>The brown circles and arms show the mean raw data and its 95% CI for each arm.</p></li>
+<li><p>If a response model has been fitted:</p>
+<ul>
+<li><p>The green solid line shows the estimate of the mean hazard ratio</p></li>
+<li><p>The green dashed lines show the boundaries of the 95% credible interval for the estimate of the hazard ratio.</p></li>
+</ul></li>
+<li><p>Otherwise if the Independent Dose model has been fitted:</p>
+<ul>
+<li><p>The light green circle shows the mean estimate of the hazard ratio for each arm</p></li>
+<li><p>The vertical green arms show the extent of the 95% credible interval for the estimate of the hazard ratio for each arm.</p></li>
+</ul></li>
+<li><p>Brown bars showing the final value of the selected QOI for each arm at the end of the simulated trial.</p></li>
+</ul>
+<p>The user can select from any of the Posterior Probability, Predictive Probability or Target Probability QOIs to plot, including QOI’s based on the predictor.</p>
+</section>
+<section id="predictor-response-and-allocation-1" class="level3">
+<h3 class="anchored" data-anchor-id="predictor-response-and-allocation-1">Predictor Response and Allocation</h3>
+<div id="fig-persimpredhrsubjalloc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-persimpredhrsubjalloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image72.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-persimpredhrsubjalloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;20: Predictor Hazard Ratio and Subject Allocation (Week: 80)
+</figcaption>
+</figure>
+</div>
+<p>If the simulations include a predictor this graph is available.</p>
+<p>This graph includes a control that allows the user to select which simulation to graph the results from. On each graph</p>
+<ul>
+<li><p>The black line shows the ‘True’ Predictor response being simulated</p></li>
+<li><p>If a response model has been fitted:</p>
+<ul>
+<li><p>The green solid line shows the estimate of the mean hazard ratio</p></li>
+<li><p>The green dashed lines show the boundaries of the 95% credible interval for the estimate of the hazard ratio.</p></li>
+</ul></li>
+<li><p>Otherwise if the Independent Dose model has been fitted:</p>
+<ul>
+<li><p>The light green circle shows the mean estimate of the hazard ratio for each arm</p></li>
+<li><p>The vertical green arms show the extent of the 95% credible interval for the estimate of the hazard ratio for each arm.</p></li>
+</ul></li>
+<li><p>Blue Bars showing number of subjects allocated to each treatment arm.</p></li>
+</ul>
+</section>
+</section>
+<section id="per-interim-graphs" class="level2">
+<h2 class="anchored" data-anchor-id="per-interim-graphs">Per Interim Graphs</h2>
+<p>This is an identical set of graphs to the Per Sim graphs, the difference is that in addition to a control to select which simulation to graph the results from, there is a control to select which interim within the simulation to graph the results from. These graphs are only available for those simulations for which ‘weeks’ files have been output (by default the first 100). Note the control in the bottom left that allows for specification of Simulation number as well as Interim number.</p>
+<div id="fig-perintpostquant" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-perintpostquant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image73.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-perintpostquant-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;21: The plot window when selecting a Per Interim graph. Note the Simulation control in the bottom left allowing for the selection of which simulated trial and which interim analysis the graph should be made for.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="post-simulation-boundary-finding-graphs" class="level2">
+<h2 class="anchored" data-anchor-id="post-simulation-boundary-finding-graphs">Post Simulation Boundary Finding Graphs</h2>
+<section id="explore-successfutility-eval-criteria" class="level3">
+<h3 class="anchored" data-anchor-id="explore-successfutility-eval-criteria">Explore Success/Futility Eval Criteria</h3>
+<!-- :::{#fig-exploreSuccFutil layout-ncol=2}
+
+![Proportion of Simulations that would be futile by futility threshold.](){#fig-exploreFutil}
+
+![Proportion of Simulations that would be successful by success threshold.](){#fig-exploreSuccess}
+
+::: -->
+<p>These graphs can be used to explore what proportion of simulated trials of a particular scenario would have been a success/failure at final evaluation. Using the two drop down controls the user can select the target dose to use: Max, EDx or MED, and set and lower/upper limits to explore for the threshold (setting the range used on the x-axis).</p>
+<p>For the given target the proportion of trials that would meet each of the criteria over the range of threshold values is plotted. As in the examples above, the plots will be somewhat jagged if only a small number of simulations have been run. These graphs can be used to select thresholds that can be expected to yield a certain level of type-1 or power, but the user must remember these will only be approximate (depending on the number of simulations) but can be useful to understand the designs sensitivity to the thresholds and to set initial thresholds early on in the design / simulation process that will get close to the desired type-1 error and power from the outset.</p>
+</section>
+<section id="explore-early-successfutility-eval-criteria" class="level3">
+<h3 class="anchored" data-anchor-id="explore-early-successfutility-eval-criteria">Explore Early Success/Futility Eval Criteria</h3>
+<div id="fig-cpsuccfutilearly" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cpsuccfutilearly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-cpsuccfutilearly" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-cpfutilearly" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-cpfutilearly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image74.png" class="img-fluid figure-img" data-ref-parent="fig-cpsuccfutilearly">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-cpfutilearly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Cumulative Proportion of Simulations Satisfying Futility Criterion by Interim
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-cpsuccfutilearly" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-cpsuccessearly" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-cpsuccessearly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image75.png" class="img-fluid figure-img" data-ref-parent="fig-cpsuccfutilearly">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-cpsuccessearly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Cumulative Proportion of Simulations Satisfying Success Criterion by Interim
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-cpsuccfutilearly-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;22
+</figcaption>
+</figure>
+</div>
+<p>These graphs can be used to explore what proportion of simulated trials of a particular scenario would have stopped early for success/futility. NOTE these graphs require weeks files to have been output, they are also most use where the design has been simulated with interims but no early stopping (as in the examples above where the shape of the “existing stopping rules” line indicates that no early stopping occurred in these simulations).</p>
+<p>Using the two drop down controls, the user can select which stopping criteria is evaluated and from which interim stopping will be permitted. Lines are then displayed for the proportion of simulations that would have stopped by each interim for a fixed set of thresholds.</p>
+<p>Typically these can be used to see at what threshold (and starting at what interim) stopping for success or futility introduces an unacceptably level of ‘incorrect’ early stopping – stopping for futility in successful scenarios and stopping for success in futile scenarios and whether at below/above these levels there may be a useful probability of correct stopping.</p>
+</section>
+<section id="explore-arm-dropping-criteria" class="level3">
+<h3 class="anchored" data-anchor-id="explore-arm-dropping-criteria">Explore Arm Dropping Criteria</h3>
+<div id="fig-cpselectedwins" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cpselectedwins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image76.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cpselectedwins-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;23: Cumulative Proportion of Simulations Where Selected Arm Satisfies Criterion by Interim
+</figcaption>
+</figure>
+</div>
+<p>This graph is similar to the Explore Early Success/Futility Criteria graph but for arm dropping criteria. The user has an additional control to select which dose the proportion of trials in which the arm would be dropped is displayed.</p>
+</section>
+<section id="successfutility-stopping-contours" class="level3">
+<h3 class="anchored" data-anchor-id="successfutility-stopping-contours">Success/Futility Stopping Contours</h3>
+<div id="fig-succfutilcontours" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-succfutilcontours-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<img src="../coreUGattachments/tte/media/image77.png" id="fig-futilcontours" class="img-fluid figure-img">
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-succfutilcontours-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;24
+</figcaption>
+</figure>
+</div>
+<p>These graphs allow early stopping and final evaluation criteria to be considered jointly. Like the explore early stopping criteria plots, these graphs require weeks files to have been output and will work best if interims were evaluated but no trials actually stopped early.</p>
+<p>The user selects the criterion to plot, the first interim at which early stopping is allowed, and the upper/lower limit of the threshold to consider.</p>
+<p>FACTS will then plot contours where (final evaluation threshold, early stopping threshold) yield the same proportion of trials that are a success/futile. Contours are only plotted where final evaluation threshold &lt; early stopping threshold for success and vice versa for futility. Early stopping criteria should not be less strict than final criteria.</p>
+<p>Again the example graphs shown are based on only 100 simulations with weeks files, so any threshold derived will only very approximately yield these success/futility rates.</p>
+</section>
+</section>
+</section>
+<section id="across-scenario-graphs" class="level1">
+<h1>Across Scenario Graphs</h1>
+<section id="selected-arms" class="level2">
+<h2 class="anchored" data-anchor-id="selected-arms">Selected Arms</h2>
+<p>This graph shows a bar chart for each scenario and variant selected. Each chart shows how often each arm was ‘selected’ by the target QOI specified on the Study &gt; Variants tab. Each bar uses a stacked bar to show the proportion of times that arm was:</p>
+<ul>
+<li><p>“Successful” –the arm was correctly selected (marked as “Should succeed” on the VSR tab) and the trial was successful.</p></li>
+<li><p>“Should not succeed” – the arm was incorrectly selected (not marked as “Should succeed” on the VSR tab) and the trial was successful.</p></li>
+<li><p>Unsuccessful – the arm was selected and the trial failed.</p></li>
+</ul>
+<div id="fig-79t" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-79t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image79.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-79t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;25: Across scenario graph for selected arms with 4 scenarios and 3 design variants.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="qoi-box-plots" class="level2">
+<h2 class="anchored" data-anchor-id="qoi-box-plots">QOI Box Plots</h2>
+<p>This graph shows a box and whisker plot for each scenario and variant selected. Each plot shows the distribution of the values of a selected QOI for each arm. There is a drop down control to allow the selection of the QOI to be displayed. Any Posterior probability, Predictive probability, p-value or target QOI can be selected.</p>
+<div id="fig-80t" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-80t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image80.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-80t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;26: Across scenario graph showing QOIs per arm with 4 scenarios and 3 design variants.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="ppn-success" class="level2">
+<h2 class="anchored" data-anchor-id="ppn-success">Ppn Success</h2>
+<p>This grouped bar chart shows a bar for the proportion of successful simulations for each variant, grouped by scenario.</p>
+<div id="fig-81t" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-81t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image81.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-81t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;27: Across scenario graph for showing the proportion of trials that result in success with 4 scenarios and 3 design variants.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="response" class="level2">
+<h2 class="anchored" data-anchor-id="response">Response</h2>
+<p>This graph shows a dose response plot for each scenario and variant selected. Each plot shows the mean estimate over the simulations and the 95%-ile interval of the mean estimates over the simulations. The graph also shoes the “true response” i.e.&nbsp;the mean response being simulated.</p>
+<div id="fig-82t" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-82t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image82.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-82t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;28: Across scenario graph for showing the average estimated dose response model vs.&nbsp;the true dose responses with 4 scenarios and 3 design variants.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="allocation" class="level2">
+<h2 class="anchored" data-anchor-id="allocation">Allocation</h2>
+<p>This graph shows a box and whisker plot for each scenario and variant selected. Each plot shows the distribution of the number of subjects allocated to each arm over the simulations.</p>
+<div id="fig-83t" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-83t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image83.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-83t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;29: Across scenario graph for showing the distribution of allocation per arm with 4 scenarios and 3 design variants.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="sample-size" class="level2">
+<h2 class="anchored" data-anchor-id="sample-size">Sample Size</h2>
+<p>This graph shows the mean sample size for each scenario at different maximum sample sizes (the different variants).</p>
+<div id="fig-84t" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-84t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image84.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-84t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;30: Across scenario graph for showing the mean sample size of the study with 4 scenarios and 3 design variants.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="interim-vs-final-scatter-plot" class="level2">
+<h2 class="anchored" data-anchor-id="interim-vs-final-scatter-plot">Interim vs Final Scatter Plot</h2>
+<p>This is an interactive plot that shows the outcome of each simulation over all the scenarios of a selected variant.</p>
+<p>The x-axis shows the value of the selected decision QOI at the specified interim, and the y-axis shows the final value of a (possibly different) selected decision QOI. As well as selecting a decision QOI for the final decision, the graph can use the actual final decision in the simulations – the value of the QOI used in the first criteria is used for the decision is used for the y-axis.</p>
+<p>Note the graph is based just on the values at the selected interim, what might happen at other interims is ignored.</p>
+<p>Thresholds can be set to specify early and late success/futility. Each scenario is then coloured to show its outcome – and stacked bar graphs are displayed to show the proportion of each outcome for each scenario. The thresholds can be changed and the graph re-drawn. If the selected QOI uses a p-value the checks for success are that it is “&lt;” than the threshold, (and vice-versa for futility), otherwise the checks for success are that it is “&gt;” the threshold (and vice-versa for futility).</p>
+<p>The graph can only display the results for simulations for which cohorts files have been output, and for simulations that reached the specified interim. Thus the graph works best if interims have been specified, but the simulations run without any early stopping enabled – so each simulation has the results for every interim.</p>
+<p>With 1,000 simulations per scenario and cohorts files for each simulation, the graph will take several seconds to re-draw. To allow several parameters to be set before redrawing (rather than having to wait for the redraw after each change) the graph is only redrawn after the ‘Redraw’ button is clicked.</p>
+<div id="fig-85t" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-85t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image85.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-85t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;31: Across scenario graph showing an interim QOI plotted against a final analysis QOI with the decision dictating the point color. Additionally, the bars on the right hand side represent the proportion of trials that made each decision based on the decision rules specified in the plot controls.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="receiver-operating-characteristics" class="level2">
+<h2 class="anchored" data-anchor-id="receiver-operating-characteristics">Receiver Operating Characteristics</h2>
+<p>This graph plots the relative proportion of successful simulations in the scenarios compared to the proportion of successes in one specific scenario. The intended use of this is to yield a “Receiver Operating Characteristics” (ROC) curve. This is done as follows:</p>
+<ul>
+<li><p>Select the decision QoI that is to be used to determine final success/futility. (The graph only supports the simple case where just one is being used).</p></li>
+<li><p>Select a scenario that represents the ‘Null’ case – where determining success is a type-1 error.</p></li>
+<li><p>If multiple variants have been simulated, select which variant to plot.</p></li>
+</ul>
+<p>FACTS computes for the null scenario, for a range of decision threshold values, what proportion of the ‘Null’ scenario sims would have been successful (giving the estimated type-1 error rate), these proportions form the x-values for each point. The corresponding threshold values are shown on the x-axis at the top of the graph, the type-1 error rate on the x-axis at the bottom of the graph.</p>
+<p>FACTS then computes for each of the other scenarios in turn the proportion of sims that would have been successful <strong>and selected a “should succeed” dose</strong> so it is necessary for doses to have been specified as “should succeed” on the Virtual Subject Response profiles (giving the estimate of power for that scenario – where ‘power’ also requires correct dose selection), at each of the threshold values, these proportions are then shown on the y-axis of the graph.</p>
+<p>Thus for each scenario we can see the estimated power of the design to determine success for a given type-1 error rate in the specified Null scenario.</p>
+<div id="fig-86t" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-86t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image86.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-86t-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;32: Across scenario graph showing ROC curves of the power of one selected design variant under different scenarios as a function of the type I error in the selected null scenario.
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="viewing-simulation-results-in-the-simulations-tab" class="level1">
+<h1>Viewing Simulation Results in the Simulations Tab</h1>
+<p>After simulations have been run, FACTS provides a table for assessing the output from the simulations. While everything that FACTS displays in the table on the SImulation tab is available in output files, FACTS does a substantial amount of “beautifying” of results in its built-in table. This entails changes like converting numeric outcome scores to readable text and using descriptive names for QOI columns.</p>
+<p>The main table has 1 line per scenario, and shows the summary of all simulations run for each scenario. These lines show values that are stored in the summary.csv file.</p>
+<p>More detailed simulation output, providing a row per simulation run, is accessbile by double clicking on any row of the output table. This row-per-simulation output is what is stored in the simulations.csv files.</p>
+<p>Additional detail is available for simulations that have a weeks file by right clicking on a simulation in the simulation summary window and selecting “Weeks Results”. See the Results Output section of the Simulation tab to specify the number of weeks files to be output.</p>
+<section id="summary-per-scenario" class="level2">
+<h2 class="anchored" data-anchor-id="summary-per-scenario">Summary per Scenario</h2>
+<p>By default, only a subset of all columns of output are provided when simulations are complete. This set of columns is called “Highlights.” To get access to further columns, you can right click anywhere on the simulation output table and click “Summary Results: ….” for whichever set of columns you would like to see. There is a “Summary Results: All” option that will provide a pop up containing every column available for summary results.</p>
+<p>The following sections break down which columns are available by sorting to which column subset.</p>
+<section id="highlights" class="level3">
+<h3 class="anchored" data-anchor-id="highlights">Highlights</h3>
+<p>These are the columns displayed on the simulations tab after simulations are completed, the can also be displayed in the separate “Highlights” results window.</p>
+<table class="caption-top table">
+<caption>The columns that are displayed by default in the simulations tab after time-to-event simulations have been run.</caption>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Select</td>
+<td>1</td>
+<td>Not an output column, this column contains check box to allow the user to select which scenario to simulate. The ‘Select All’ button causes them all to be checked.</td>
+</tr>
+<tr class="even">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="odd">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Dose Response’,</p>
+<p>’Virtual Subject Response &gt; Explicitly Defined &gt; Control Hazard rates,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Predictor’,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="even">
+<td>Random Number Seed</td>
+<td>1</td>
+<td>Base random number seed used to perform the simulations.</td>
+</tr>
+<tr class="odd">
+<td>Num Sims</td>
+<td>1</td>
+<td>The number of simulations that were run to produce the displayed results.</td>
+</tr>
+<tr class="even">
+<td>Mean Subj.</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the number of subjects recruited in this scenario.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Overall Success</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped for success, either early success or late success (as defined below).</td>
+</tr>
+<tr class="even">
+<td>Ppn Early Success</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped early for success (and did not regress to futility in the final analysis – though they might have regressed to ‘inconclusive’).</td>
+</tr>
+<tr class="odd">
+<td>Ppn Late Success</td>
+<td>1</td>
+<td>This is the proportion of simulations that did not stop early but were successful in the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Ppn Overall Futility</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped for futility, either early futility or late futility (as defined below).</td>
+</tr>
+<tr class="odd">
+<td>Ppn Late Futility</td>
+<td>1</td>
+<td>This is the proportion of simulations that did not stop early but were futile in the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Ppn Early Futility</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped early for futility (and did not regress to success in the final analysis – though they might have regressed to ‘inconclusive’).</td>
+</tr>
+<tr class="odd">
+<td>Ppn S uc-&gt;Fut Flipflop</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped early for success but regressed to futility in the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Ppn F ut-&gt;Suc Flipflop</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped early for futility but regressed to success in the final analysis.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Inco nclusive</td>
+<td>1</td>
+<td>This is the proportion of simulations that did not stop early and were neither successful nor futile in the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Early Success Time</td>
+<td>1</td>
+<td>This is the average time to an early decision to stop for success (i.e.&nbsp;the time excluding final follow up) over those simulations that did decide early to stop for success.</td>
+</tr>
+<tr class="odd">
+<td>Mean Trt. &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the mean (over the simulations) of the hazard ratio of the treatment arms to control. The HZ for the control arm is always 1.</td>
+</tr>
+<tr class="even">
+<td>Mean Duration</td>
+<td>1</td>
+<td>The mean over the simulations of the total duration from the start of enrolment to end of follow up.</td>
+</tr>
+<tr class="odd">
+<td>PPn Arms Drop: &lt; Dose&gt;&gt;</td>
+<td>One per arm</td>
+<td>This is the number of times (over the simulations) that each arm was dropped.</td>
+</tr>
+<tr class="even">
+<td>Mean LP Enrolled</td>
+<td>1</td>
+<td>This is the mean, in weeks (over the simulations) of the duration of the trial from first patient first visit to Last Patient First Visit (i.e.&nbsp;the duration of accrual).</td>
+</tr>
+<tr class="odd">
+<td>Ppn Correct Arm</td>
+<td>1</td>
+<td>The proportion of simulations that met the success criteria and selected (by the target QOI specified on the Study &gt; Variant tab) one of the arms marked as “should succeed” on the Virtual Subject Response &gt; Explicitly Defined &gt; Dose Response tab</td>
+</tr>
+<tr class="even">
+<td>Ppn I ncorrect Arm</td>
+<td>1</td>
+<td>The proportion of simulations that met the success criteria and selected (by the target QOI specified on the Study &gt; Variant tab) one of the arms <strong>not</strong> marked as “should succeed” on the Virtual Subject Response &gt; Explicitly Defined &gt; Dose Response tab</td>
+</tr>
+<tr class="odd">
+<td>Version</td>
+<td>1</td>
+<td>The FACTS version number at the time the simulations were run.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="allocation-1" class="level3">
+<h3 class="anchored" data-anchor-id="allocation-1">Allocation</h3>
+<p>By right clicking and selecting the allocation columns, a pop-out will appear that provides the following columns.</p>
+<table class="caption-top table">
+<caption>The allocation tabs provided in FACTS output for time-to-event trials.</caption>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Dose Response’,</p>
+<p>’Virtual Subject Response &gt; Explicitly Defined &gt; Control Hazard rates,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Predictor’,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="odd">
+<td>Mean Subj.</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the number of subjects recruited in this scenario.</td>
+</tr>
+<tr class="even">
+<td>SD Mean Subj.</td>
+<td>1</td>
+<td>This is the standard deviation across the simulations of the number of subjects recruited.</td>
+</tr>
+<tr class="odd">
+<td>80%-ile Subj</td>
+<td>1</td>
+<td>This is the eightieth percentile across the simulations of the number of subjects recruited into the trial.</td>
+</tr>
+<tr class="even">
+<td>Mean Alloc.: &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the mean (over the simulations) of the number of subjects recruited into each arm in this scenario.</td>
+</tr>
+<tr class="odd">
+<td>SD Alloc.: &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the SD of the means (over the simulations) of the number of subjects allocated to each treatment arm.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="response-1" class="level3">
+<h3 class="anchored" data-anchor-id="response-1">Response</h3>
+<p>The following columns provide summaries of the estimated hazard ratios based on the bayesian model incorporating the dose response model and the predictor model, if one is specified.</p>
+<table class="caption-top table">
+<caption>Response columns available in FACTS output for time-to-event simulations.</caption>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Dose Response’,</p>
+<p>’Virtual Subject Response &gt; Explicitly Defined &gt; Control Hazard rates,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Predictor’,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="odd">
+<td>Mean Trt. &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the mean (over the simulations) of the hazard ratio of the treatment arms to control. The HZ for the control arm is always 1.</td>
+</tr>
+<tr class="even">
+<td>SD Trt .: &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the standard deviation (over the simulations) of the estimate of the treatment hazard ratio for each arm. The SD of the treatment response for the control arm is always 0.</td>
+</tr>
+<tr class="odd">
+<td>True Resp: &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the true Hazard Ratio from which the simulation data was sampled. When using VSR with Event Rate | Predictor, these rates will not be the same as the Dose Response HRs entered on the VSR &gt; Explicitly Defined (ER | P) &gt; Dose Response tab.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="observed" class="level3">
+<h3 class="anchored" data-anchor-id="observed">Observed</h3>
+<p>By right clicking and selecting the Observed columns, a pop-out will appear that provides the following columns. These columns relate to the raw data observed in the trial.</p>
+<table class="caption-top table">
+<caption>Observed columns available in FACTS output for time-to-event simulations.</caption>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Dose Response’,</p>
+<p>’Virtual Subject Response &gt; Explicitly Defined &gt; Control Hazard rates,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Predictor’,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="odd">
+<td>Mean Total Events</td>
+<td>1</td>
+<td>The mean (over the simulations) of the number of events observed in each trial.</td>
+</tr>
+<tr class="even">
+<td>Mean Events &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>The mean (over the simulations) of the number of events observer in each arm in each trial.</td>
+</tr>
+<tr class="odd">
+<td>Mean Events &lt;Dose&gt; &lt;S egment&gt;</td>
+<td>One per arm per segment</td>
+<td>The mean (over the simulations) of the number of events observer in each arm and segment in each trial.</td>
+</tr>
+<tr class="even">
+<td>Mean Complete Info &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the mean (over the simulations) of information observed per arm as defined on the Interims tab (Subjects enrolled, Complete Predictor Data, Opportunity to Complete Predictor, Events, Predictor Events) in this scenario.</td>
+</tr>
+<tr class="odd">
+<td>Mean Dropouts &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>If dropouts are simulated this is the mean (over the simulations) of the number of subjects in each arm that dropout before an event is observed.</td>
+</tr>
+<tr class="even">
+<td>Mean Exposure &lt;Dose&gt; &lt;S egment&gt;</td>
+<td>One per arm</td>
+<td>The mean (over the simulations), of the total exposure of the subjects observed on each arm and segment.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="probabilities" class="level3">
+<h3 class="anchored" data-anchor-id="probabilities">Probabilities</h3>
+<p>By right clicking and selecting the allocation columns, a pop-out will appear that provides the following columns. These columns provide summaries of the Quantities of Interest values.</p>
+<table class="caption-top table">
+<caption>Probabilities columns available in FACTS output for time-to-event simulations.</caption>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Dose Response’,</p>
+<p>’Virtual Subject Response &gt; Explicitly Defined &gt; Control Hazard rates,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Predictor’,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;QOI&gt; &lt;Dose&gt;</td>
+<td>One per arm per QOI</td>
+<td><p>For each Posterior Probability and Predictive Probability QOI defined on this endpoint, this is the mean over the simulations of the estimate of the probability of the QOI for each dose. (P-value QOIs are reported in the frequentist results table).</p>
+<p>For each Target QOI this is the proportion of simulations where this dose was selected at the end of the trial as the dose with the greatest probability of meeting the target condition.</p>
+<p>The probability that each dose is the target at the end of a simulated trial is its marginal probability (the number of times it was the dose closest to the target in the MCMC sampling of the analysis at the end of the trial). The target of having the Max response on this endpoint, or some fraction of it (EDq) is always identifiable, so the Ppn(target) for these QOIs will sum to 1 across the doses.</p>
+<p>An MED target is not guaranteed to be identifiable, if no dose meets the CSD criteria in any MCMC sample so all doses have a 0 probability of having a response greater than Control (or AC) by the CSD then no dose is the MED. So the sum of each Ppn(target) QOI across the doses should sum to between 0 and 1 inclusive.</p>
+<p>Decision QOI’s are not reported here separately, but their component QOIs – the vector of values and target QOI used to select from them are.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="hierarchical-prior-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="hierarchical-prior-parameters">Hierarchical Prior Parameters</h3>
+<p>By right clicking and selecting the Hierarchical Prior Parameters columns, a pop-out will appear that provides the following columns.</p>
+<table class="caption-top table">
+<caption>Hierarchical Prior Parameters columns available in FACTS output for time-to-event simulations.</caption>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Dose Response’,</p>
+<p>’Virtual Subject Response &gt; Explicitly Defined &gt; Control Hazard rates,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Predictor’,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="odd">
+<td>Mean BAC Mu</td>
+<td>1</td>
+<td>The average (over the simulation) of the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean Control responses, if a Hierarchical Prior is being used for Control is being used, otherwise the column contains -9999.</td>
+</tr>
+<tr class="even">
+<td>SD BAC Mu</td>
+<td>1</td>
+<td>The average (over the simulations) of the standard deviation of the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean Control responses, if a Hierarchical Prior is being used for Control is being used, otherwise the column contains -9999.</td>
+</tr>
+<tr class="odd">
+<td>Mean BAC Tau</td>
+<td>1</td>
+<td>The average (over the simulations) of the posterior estimate of the standard deviation of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean Control responses, if a Hierarchical Prior is being used for Control is being used, otherwise the column contains -9999.</td>
+</tr>
+<tr class="even">
+<td>SD BAC Tau</td>
+<td>1</td>
+<td>The standard deviation (over the simulations) of the posterior estimate of the standard deviation of the Bayesian Augmented Control (hierarchical Prior) distribution of mean Control responses, if a Hierarchical Prior is being used for Control is being used, otherwise the column contains -9999.</td>
+</tr>
+<tr class="odd">
+<td>Mean BAAC Mu</td>
+<td>1</td>
+<td>The average (over the simulation) of the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean Active Comparator responses, if a Hierarchical Prior is being used for Active Comparator is being used, otherwise the column contains -9999.</td>
+</tr>
+<tr class="even">
+<td>SD BAAC Mu</td>
+<td>1</td>
+<td>The average (over the simulations) of the standard deviation of the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean Active Comparator responses, if a Hierarchical Prior is being used for Active Comparator is being used, otherwise the column contains -9999.</td>
+</tr>
+<tr class="odd">
+<td>Mean BAAC Tau</td>
+<td>1</td>
+<td>The average (over the simulations) of the posterior estimate of the standard deviation of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean Active Comparator responses, if a Hierarchical Prior is being used for Active Comparator is being used, otherwise the column contains -9999.</td>
+</tr>
+<tr class="even">
+<td>SD BAAC Tau</td>
+<td>1</td>
+<td>The standard deviation (over the simulations) of the posterior estimate of the standard deviation of the Bayesian Augmented Active Comparator (hierarchical Prior) distribution of mean Active Comparator responses, if a Hierarchical Prior is being used for Active Comparator, otherwise the column contains -9999.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="predictor" class="level3">
+<h3 class="anchored" data-anchor-id="predictor">Predictor</h3>
+<p>By right clicking and selecting the Predictor columns, a pop-out will appear that provides the following columns. These colums provide summaries of the bayesian model estimates relating to the predictor endpoint.</p>
+<table class="caption-top table">
+<caption>Predictor columns available in FACTS output for time-to-event simulations.</caption>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 69%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Dose Response’,</p>
+<p>’Virtual Subject Response &gt; Explicitly Defined &gt; Control Hazard rates,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Predictor’,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="odd">
+<td>Mean Pred. Resp.: &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td><p>The mean (over the simulations) of the mean estimate of the predictor response for each arm. The response reported is:</p>
+<p>Continuous predictor: The mean change from baseline</p>
+<p>Dichotomous predictor: The response rate</p>
+<p>TTE predictor: The hazard ratio</p>
+<p>No predictor: 0</p></td>
+</tr>
+<tr class="even">
+<td>SD Pred. Resp.: &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>The SD (over the simulations) of the mean estimate of the predictor response for each arm.</td>
+</tr>
+<tr class="odd">
+<td>Mean Pred. Sigma</td>
+<td>1</td>
+<td>This is the average (over the simulations) of the estimate of sigma (SD of response) of a continuous predictor, if one was being used. Otherwise the column contains -9999.</td>
+</tr>
+<tr class="even">
+<td>SD Pred Sigma</td>
+<td>1</td>
+<td>This is the standard deviation (over the simulations) of the estimate of the sigma (SD of the response) of a continuous predictor, if one was being used. Otherwise the column contains -9999.</td>
+</tr>
+<tr class="odd">
+<td>True P redictor Resp: &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the true predictor response from which the simulated subject predictor responses were sampled. For a continuous predictor this is the mean of the response, for a dichotomous predictor it is the predictor response rate and for a time-to-event predictor it is the hazard ratio of the predictor, otherwise the column contain -9999.</td>
+</tr>
+<tr class="even">
+<td>True P redictor Sigma: &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the true standard deviation of the predictor response from which the simulated subject predictor responses were sampled when the predictor is a continuous measure, otherwise the column contains -9999</td>
+</tr>
+<tr class="odd">
+<td>Mean Pred. Lambda: &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the average (over the simulations) of the estimate of Lambda for each dose in the endpoint predictor model – the estimated mean time to the final event for each dose either where the predictor is zero for a continuous or dichotomous predictor, or for the time after observing the event of time-to-event predictor. Otherwise the column contains 0.</td>
+</tr>
+<tr class="even">
+<td>SD Pred. Lambda: &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the standard deviation (over the simulations) of the estimate of Lambda for each dose (see above). Otherwise the column contains 0.</td>
+</tr>
+<tr class="odd">
+<td>Mean Pred. Beta</td>
+<td>1</td>
+<td>This is the average (over the simulations) of the estimate of Beta – the coefficient that relates the predictor to the endpoint for a continuous or dichotomous predictor. Otherwise the column contains -9999.</td>
+</tr>
+<tr class="even">
+<td>SD Pred. Beta</td>
+<td>1</td>
+<td>This is the standard deviations (over the simulations) of the estimate of Beta – the coefficient that relates the predictor to the endpoint for a continuous or dichotomous predictor. Otherwise the column contains -9999.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="model-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="model-parameters">Model Parameters</h3>
+<p>By right clicking and selecting the Model Parameters columns, a pop-out will appear that provides the following columns.</p>
+<table class="caption-top table">
+<caption>Model Parameters columns available in FACTS output for time-to-event simulations.</caption>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Dose Response’,</p>
+<p>’Virtual Subject Response &gt; Explicitly Defined &gt; Control Hazard rates,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Predictor’,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="odd">
+<td>True P redictor Baseline Hazard Lambda: &lt;s egment&gt;</td>
+<td>One per VSR pr edictor hazard rate segment</td>
+<td>The true hazard rate for the predictor (if the predictor is itself an event), in each of the predictor VSR time segments.</td>
+</tr>
+<tr class="even">
+<td>Lambda: &lt;s egment&gt;</td>
+<td>One per Design, Hazard Model segment</td>
+<td>The mean (over the simulations) of the mean estimate of lambda – the event rate (events per week) in each time segment of the hazard model.</td>
+</tr>
+<tr class="odd">
+<td>SE Lambda: &lt;s egment&gt;</td>
+<td>One per Design, Hazard Model segment</td>
+<td>The standard error (over the simulations) of the mean estimate of lambda for each time segment of the hazard model.</td>
+</tr>
+<tr class="even">
+<td>True Lambda: &lt;s egment&gt;</td>
+<td>One per VSR control hazard segment</td>
+<td>The true hazard rate for each segment of the virtual subject response hazard rate profile.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="detailed-simulation-results" class="level2">
+<h2 class="anchored" data-anchor-id="detailed-simulation-results">Detailed Simulation Results</h2>
+<p>After simulation has completed and simulation results have been loaded, the user may examine detailed results for any scenario with simulation data in the table by double-clicking on the row. A separate window (as in Figure 15‑1) displays the individual results for each simulation. This is the contents of the “simulations.csv” file, which is described below.</p>
+<div id="fig-simulations" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-simulations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image96.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-simulations-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;33: The simulation results pop out viewer showing simulation highlights.
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="output-files" class="level1">
+<h1>Output Files</h1>
+<p>Instead of viewing simulation output on the Simulation tab within FACTS, the output is all contained within easily accessible files saved the the user’s local machine. FACTS stores the results of simulations as ‘.csv’ files under a Results folder. For each row in the simulations table, there is a folder named by the profiles that make up the scenario, which contains the corresponding ‘.csv’ files.</p>
+<div id="fig-windowsexplorer" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-windowsexplorer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/tte/media/image97.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-windowsexplorer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;34: The windows file explorer when opened to the directory containing simulation output.
+</figcaption>
+</figure>
+</div>
+<p>These files can be opened using Microsoft Excel or any text editor. Excel, and many other apps, takes out a file lock on any file it has open, while a FACTS results file is open in another piece of software it cannot be deleted or modified by FACTS. The most common cause for an error to be reported when simulating trials in FACTS is because the user has one of the previous results files is still open in Excel.</p>
+<p>In the scenario directory there are the following types of results file:</p>
+<p><strong>Summary.csv</strong> Contains a single row of data that summarizes the simulation results. This is the source of the shown on the simulations tab.</p>
+<p><strong>Summary_freq.csv</strong> Contains a single row of data that that summarizes the frequentist analysis of the simulations.</p>
+<p><strong>Simulations.csv</strong> Contains one row per simulation describing the final state of each simulation for every trial simulated.</p>
+<p><strong>Simulations_freq.csv</strong> Contains one row per simulation describing the frequentist analysis of the final state of each simulation for every trial simulated.</p>
+<p><strong>PatientsNNNNN.csv</strong> Contains one row per patient in simulation, where NNNNN is the number of the simulation. By default this file is written out only for the first simulation, but this can be changed via the ‘Advanced’ button on the simulations tab.</p>
+<p><strong>WeeksNNNNN.csv</strong> contains one row for each cohort during a simulation where NNN is the number of the simulation. By default this file is written only for the first 100 simulations, but this can be changed via the advanced button on the simulation tab. The values in the last row of the cohorts file will be the same as the final values for that simulation in the simulations file.</p>
+<section id="contents-of-summary.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-summary.csv">Contents of summary.csv</h2>
+<p>The first line is a header line, starting with a ‘#’, containing the FACTS GUI version number, the name of the FACTS file, the name of the scenario, and the time stamp of the start of the simulation.</p>
+<p>The second line is a header line, starting with a ‘#’, containing the following column headings.</p>
+<table class="caption-top table">
+<caption>Contents of the summary.csv file for time-to-event simulations.</caption>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Project</td>
+<td>1</td>
+<td>The name of the facts file</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td>The name of the scenario</td>
+</tr>
+<tr class="odd">
+<td>T imestamp</td>
+<td>1</td>
+<td>The time the simulations were run</td>
+</tr>
+<tr class="even">
+<td>Version</td>
+<td>1</td>
+<td>The version of FACTC that was used to run the simulations</td>
+</tr>
+<tr class="odd">
+<td>NSim</td>
+<td>1</td>
+<td>The number of simulation runs.</td>
+</tr>
+<tr class="even">
+<td>No.&nbsp;Subj</td>
+<td>1</td>
+<td>The mean, over the simulations, of the total number of subjects recruited in the trial.</td>
+</tr>
+<tr class="odd">
+<td>SE Subj.</td>
+<td>1</td>
+<td>The standard error of the total number of subjects recruited into the trials.</td>
+</tr>
+<tr class="even">
+<td>No.subj 80-ile</td>
+<td>1</td>
+<td>The 80<sup>th</sup> percentile, over the simulations, of the total number of subjects recruited in the trial.</td>
+</tr>
+<tr class="odd">
+<td>P(ES)</td>
+<td><blockquote class="blockquote">
+<p>1</p>
+</blockquote></td>
+<td>The proportion of simulations that stopped early for success.</td>
+</tr>
+<tr class="even">
+<td>P(LS)</td>
+<td>1</td>
+<td>The proportion of simulations that did not stop early, and were successful on final evaluation.</td>
+</tr>
+<tr class="odd">
+<td>P(LF)</td>
+<td>1</td>
+<td>The proportion of simulations that did not stop early, and were futile on final evaluation.</td>
+</tr>
+<tr class="even">
+<td>P(EF)</td>
+<td>1</td>
+<td>The proportion of simulations that stopped early for futility.</td>
+</tr>
+<tr class="odd">
+<td>SFFF</td>
+<td>1</td>
+<td>The proportion of simulations that stopped early for success, but at final analysis were futile (Success-Futility ‘flip-flops’).</td>
+</tr>
+<tr class="even">
+<td>FSFF</td>
+<td>1</td>
+<td>The proportion of simulations that stopped early for futility, but at final analysis were successful (Futility- Success ‘flip-flops’).</td>
+</tr>
+<tr class="odd">
+<td>Undec.</td>
+<td>1</td>
+<td>The proportion of simulations that did not stop early, and met neither the success or futility final evaluation criteria and hence are counted as ‘undecided’.</td>
+</tr>
+<tr class="even">
+<td>Unused</td>
+<td>3</td>
+<td>Three unused columns for other outcome types.</td>
+</tr>
+<tr class="odd">
+<td>Early Success Time</td>
+<td>1</td>
+<td>This is the mean early decision time (over the simulations stopped early for success), it is the time from the start of the trial to the interim where early success was declared. It does not include the subsequent follow up time.</td>
+</tr>
+<tr class="even">
+<td>Mean Alloc &lt;dose&gt;</td>
+<td>D</td>
+<td>The mean (over the simulations) of the number of subjects allocated to each treatment arm.</td>
+</tr>
+<tr class="odd">
+<td>SE Alloc &lt;dose&gt;</td>
+<td>D</td>
+<td>The standard error (over the simulations) of the number of subjects allocated to each treatment arm.</td>
+</tr>
+<tr class="even">
+<td>Mean Resp &lt;dose&gt;</td>
+<td>D</td>
+<td>The mean of the estimates of hazard ratio of each treatment arm. (This is always 1 for the control arm)</td>
+</tr>
+<tr class="odd">
+<td>SE Resp &lt;dose&gt;</td>
+<td>D</td>
+<td>The standard error, over the simulations, of the estimate of hazard ratio of each treatment arm. (This is always 0 for the control arm).</td>
+</tr>
+<tr class="even">
+<td>True Mean resp &lt;dose&gt;</td>
+<td>D</td>
+<td>The true hazard ratio for each treatment arm used to derive the simulated subject event times (the HR for the control arm is always 1).</td>
+</tr>
+<tr class="odd">
+<td>Mean p redictor resp &lt;dose&gt;</td>
+<td>D</td>
+<td>The mean (over the simulations) of the estimated predictor response per arm – this is the estimated mean response for a continuous predictor, the estimated response rate for a dichotomous predictor and the estimated hazard ratio for a time to event predictor.</td>
+</tr>
+<tr class="even">
+<td>SE p redictor resp &lt;dose&gt;</td>
+<td>D</td>
+<td>The standard error (over the simulations) of the estimated predictor response per arm.</td>
+</tr>
+<tr class="odd">
+<td>Mean P redictor Sigma</td>
+<td>1</td>
+<td>The mean (over the simulation) of the estimated standard deviation in the predictor response when modeling a continuous predictor.</td>
+</tr>
+<tr class="even">
+<td>SE P redictor Sigma</td>
+<td>1</td>
+<td>The standard error (over the simulations) of the estimated standard deviation in the predictor response when modeling a continuous predictor.</td>
+</tr>
+<tr class="odd">
+<td>True Mean p redictor resp &lt;dose&gt;</td>
+<td>D</td>
+<td>The true predictor response rate used to drive the simulation of the subjects’ predictor outcomes – this is the mean of the response for a continuous predictor, the response rate for a dichotomous predictor and the hazard ratio for a time to event predictor.</td>
+</tr>
+<tr class="even">
+<td>True Sigma p redictor &lt;dose&gt;</td>
+<td>D</td>
+<td>The true sigma used to drive the simulation of the subjects’ predictor outcomes when the predictor is a continuous measure.</td>
+</tr>
+<tr class="odd">
+<td>Mean P redictor Lambda &lt;dose&gt;</td>
+<td>D</td>
+<td>The mean (over the simulations) of the estimate of lambda – the estimated mean time to the final event in the endpoint predictor model – the estimated mean time to the final event for each dose when the predictor is zero (continuous or dichotomous) or for the time after observing the predictor event.</td>
+</tr>
+<tr class="even">
+<td>SE P redictor Lambda &lt;dose.</td>
+<td>D</td>
+<td>This is the standard error (over the simulations) of the estimate of lambda for each dose.</td>
+</tr>
+<tr class="odd">
+<td>Mean P redictor Beta</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the estimate of Beta – the coefficient that relates the predictor to the endpoint for a continuous or dichotomous predictor.</td>
+</tr>
+<tr class="even">
+<td>SE p redictor Beta</td>
+<td>1</td>
+<td>This is the standard error (over the simulations) of the estimate of Beta.</td>
+</tr>
+<tr class="odd">
+<td>Mean TTE P redictor Baseline Hazard Lambda &lt;s egment&gt;</td>
+<td>S</td>
+<td>This is the mean (over the simulations) of the estimate of the event rate on the control arm in each hazard model time segment.</td>
+</tr>
+<tr class="even">
+<td>SE TTE P redictor Baseline Hazard Lambda &lt;s egment&gt;</td>
+<td>S</td>
+<td>This is the standard error (over the simulations) of the estimate of the event rate on the control arm in each hazard model time segment.</td>
+</tr>
+<tr class="odd">
+<td>BAC Mean</td>
+<td>1</td>
+<td>If a hierarchical prior for Control is being used this is the mean (over the simulations) of the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="even">
+<td>SE of BAC Mean</td>
+<td>1</td>
+<td>If a hierarchical prior for Control is being used this is the standard error (over the simulations) of the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="odd">
+<td>BAC Tau</td>
+<td>1</td>
+<td>If a hierarchical prior for Control is being used this is the mean (over the simulations) of the posterior estimate of the SD of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="even">
+<td>SE of BAC Tau</td>
+<td>1</td>
+<td>If a hierarchical prior for Control is being used this is the standard error (over the simulations) of the posterior estimate of the SD of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="odd">
+<td>BAAC Mean</td>
+<td>1</td>
+<td>If a hierarchical prior for Active Comparator is being used this is the mean (over the simulations) of the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses.</td>
+</tr>
+<tr class="even">
+<td>SE of BAAC Mean</td>
+<td>1</td>
+<td>If a hierarchical prior for Active Comparator is being used this is the standard error (over the simulations) of the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="odd">
+<td>BAAC Tau</td>
+<td>1</td>
+<td>If a hierarchical prior for Active Comparator is being used this is the mean (over the simulations) of the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses.</td>
+</tr>
+<tr class="even">
+<td>SE of BAAC Tau</td>
+<td>1</td>
+<td>If a hierarchical prior for Active Comparator is being used this is the standard error (over the simulations) of the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses.</td>
+</tr>
+<tr class="odd">
+<td>Est. Lambda &lt;s egment&gt;</td>
+<td>S</td>
+<td>The mean, over the simulations, of the estimate of the event rate on the control arm in each time segment of the hazard model.</td>
+</tr>
+<tr class="even">
+<td>SE lambda &lt;s egment&gt;</td>
+<td>S</td>
+<td>The mean, over the simulations, of the SD of the estimate of the event rate on the control arm in each time segment of the hazard model.</td>
+</tr>
+<tr class="odd">
+<td>Mean Total Events</td>
+<td>1</td>
+<td>The mean, over the simulations of the total number of events observed in the trials.</td>
+</tr>
+<tr class="even">
+<td>SE Total Events</td>
+<td></td>
+<td>The standard error, over the simulations, of the total number of events observed in the trials.</td>
+</tr>
+<tr class="odd">
+<td>No. Events &lt;dose&gt;</td>
+<td>D</td>
+<td>The mean, over the simulations, of the number of events observed on each arm.</td>
+</tr>
+<tr class="even">
+<td>SE No. Events &lt;dose&gt;</td>
+<td></td>
+<td>The standard error, over the simulations, of the number of events observed on each arm.</td>
+</tr>
+<tr class="odd">
+<td>Mean Exposure &lt;dose&gt;</td>
+<td></td>
+<td>The mean, over the simulations, of the total exposure of the subjects observed on each arm.</td>
+</tr>
+<tr class="even">
+<td>SE Exposure &lt;dose&gt;</td>
+<td></td>
+<td>The standard error, over the simulations, of the total exposure of the subjects observed on each arm.</td>
+</tr>
+<tr class="odd">
+<td>Mean Duration</td>
+<td>1</td>
+<td>The mean, over the simulations, of the overall duration of the trials, from first person first visit, to last person last visit.</td>
+</tr>
+<tr class="even">
+<td>Ppn Arms Dropped &lt;dose&gt;</td>
+<td>D</td>
+<td>The proportion of the simulations in which each arm was dropped. These will be zero if arm dropping is not selected as the means of adaptive allocation.</td>
+</tr>
+<tr class="odd">
+<td>Mean LPFV time</td>
+<td>1</td>
+<td>The mean, over the simulations, of the accrual period of the trials, from first person first visit, to last person first visit (LPFV).</td>
+</tr>
+<tr class="even">
+<td>QOI Columns</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<section id="qoi-columns" class="level3">
+<h3 class="anchored" data-anchor-id="qoi-columns">QOI Columns</h3>
+<p>The QOI columns depend on the QOIs that have been defined for this design. The columns in the following order:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 45%">
+<col style="width: 54%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Statistic</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Posterior Probabilities</td>
+<td>The summary file contains the mean (over the simulations) of the posterior probability for each dose.</td>
+</tr>
+<tr class="even">
+<td>Predictive Probabilities</td>
+<td>The summary file contains the mean (over the simulations) of the predictive probability for each dose.</td>
+</tr>
+<tr class="odd">
+<td>P-Values</td>
+<td>The summary file contains the mean (over the simulations) of the p-value for each dose.</td>
+</tr>
+<tr class="even">
+<td>Target Probabilities</td>
+<td>The summary file contains the proportion of times (over the simulations) each dose had the greatest probability of being the target.</td>
+</tr>
+<tr class="odd">
+<td>Decision QOIs</td>
+<td>The summary file contains the mean (over the simulations) of the final value of the decision QOI at the target.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="contents-of-summary_freq.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-summary_freq.csv">Contents of Summary_freq.csv</h2>
+<p>The first line is a header line, starting with a ‘#’, containing the FACTS GUI version number, the name of the FACTS file, the name of the scenario, and the time stamp of the start of the simulation.</p>
+<p>The second line is a header line, starting with a ‘#’, containing the following column headings.</p>
+<table class="caption-top table">
+<caption>Contents of the summary_freq.csv file for time-to-event simulations.</caption>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ppn LR Signif</td>
+<td>1</td>
+<td>The proportion of simulations where at least one of the unadjusted p-values (from the Log Rank test) is less than the user specified one-sided alpha.</td>
+</tr>
+<tr class="even">
+<td>Ppn LR Signif &lt;dose&gt;</td>
+<td>D</td>
+<td><p>For each treatment arm, the proportion of simulations where the unadjusted p-value (from the Log Rank test) is less than the user specified one-sided alpha.</p>
+<p>The marginal probability of significance per dose (using unadjusted p-values.</p></td>
+</tr>
+<tr class="odd">
+<td>Ppn LR Signif Bonf</td>
+<td>1</td>
+<td>The proportion of simulations where at least one of the unadjusted p-values (from the Log Rank test) is less than the Bonferroni corrected user specified one-sided alpha.</td>
+</tr>
+<tr class="even">
+<td>Ppn LR Signif Bonf &lt;dose&gt;</td>
+<td>D</td>
+<td>For each treatment arm, the proportion of simulations where the unadjusted p-value (from the Log Rank test) is less than the Bonferroni corrected user specified one-sided alpha.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Wilcox Signif</td>
+<td>1</td>
+<td>The proportion of simulations where at least one of the unadjusted p-values (from the Wilcoxon test) is less than the user specified one-sided alpha.</td>
+</tr>
+<tr class="even">
+<td>Ppn Wilcox Signif &lt;dose&gt;</td>
+<td>D</td>
+<td><p>For each treatment arm, the proportion of simulations where the unadjusted p-value (from the Wilcoxon test) is less than the user specified one-sided alpha.</p>
+<p>The marginal probability of significance per dose (using unadjusted p-values.</p></td>
+</tr>
+<tr class="odd">
+<td>Ppn Wilcox Signif Bonf</td>
+<td>1</td>
+<td>The proportion of simulations where at least one of the unadjusted p-values (from the Wilcoxon test) is less than the Bonferroni corrected user specified one-sided alpha.</td>
+</tr>
+<tr class="even">
+<td>Ppn Wilcox Signif Bonf &lt;dose&gt;</td>
+<td>D</td>
+<td>For each treatment arm, the proportion of simulations where the unadjusted p-value (from the Wilcoxon test) is less than the Bonferroni correct user specified one-sided alpha.</td>
+</tr>
+<tr class="odd">
+<td>Mean HR &lt;dose&gt;</td>
+<td>D</td>
+<td>The mean Hazard Ratio per dose.</td>
+</tr>
+<tr class="even">
+<td>SE HR &lt;dose&gt;</td>
+<td>D</td>
+<td>The standard error of the Hazard Ratio per dose</td>
+</tr>
+<tr class="odd">
+<td>Ppn HR Signif</td>
+<td>1</td>
+<td>The proportion of simulations where at least one of the unadjusted p-values (from the Cox model) is less than the user specified one-sided alpha.</td>
+</tr>
+<tr class="even">
+<td>Ppn HR Signif &lt;dose&gt;</td>
+<td>D</td>
+<td><p>For each treatment arm, the proportion of simulations where the unadjusted p-value (from the Cox model) is less than the user specified one-sided alpha.</p>
+<p>The marginal probability of significance per dose (using unadjusted p-values.</p></td>
+</tr>
+<tr class="odd">
+<td>Ppn HR Signif Bonf</td>
+<td>1</td>
+<td>The proportion of simulations where at least one of the unadjusted p-values (from the Cox model) is less than the Bonferroni corrected user specified one-sided alpha.</td>
+</tr>
+<tr class="even">
+<td>Ppn HR Signif Bonf &lt;dose&gt;</td>
+<td>D</td>
+<td>For each treatment arm, the proportion of simulations where the unadjusted p-value (from the Cox model) is less than the Bonferroni correct user specified one-sided alpha.</td>
+</tr>
+<tr class="odd">
+<td>Bias &lt;dose&gt;</td>
+<td>D</td>
+<td>The difference between the mean response and the true (simulated) response per dose</td>
+</tr>
+<tr class="even">
+<td>Coverage &lt;dose&gt;</td>
+<td>D</td>
+<td>The proportion of simulations where the unadjusted confidence interval for the response contains the true response rate used to simulate subject responses.</td>
+</tr>
+<tr class="odd">
+<td>Mean KM med &lt;dose&gt;</td>
+<td>D</td>
+<td>The mean Kaplan-Meier estimate of the median survival time per dose</td>
+</tr>
+<tr class="even">
+<td>SE KM med &lt;dose&gt;</td>
+<td>D</td>
+<td>The standard error of the Kaplan-Meier estimate of the median survival time per dose</td>
+</tr>
+<tr class="odd">
+<td>Predictor Cols</td>
+<td></td>
+<td>The appropriate output columns for the chosen type of predictor. See next tables for specifics of columns provided for each predictor type.</td>
+</tr>
+</tbody>
+</table>
+<section id="continuous-predictor" class="level4">
+<h4 class="anchored" data-anchor-id="continuous-predictor">Continuous Predictor:</h4>
+<table class="caption-top table">
+<caption>Extra columns on the summary_freq.csv file when using a continuous predictor.</caption>
+<colgroup>
+<col style="width: 20%">
+<col style="width: 12%">
+<col style="width: 64%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Column Title</th>
+<th style="text-align: left;">Number of columns</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Predictor Cox Mean HR &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The mean value of the cox model coefficient – the predictor as a covariate predicting final endpoint per dose.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor Cox SE HR &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The standard error of the cox model coefficient – the predictor as a covariate predicting final endpoint per dose.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor Avg. Min &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The average of the minimum value for the predictor per dose.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor Avg. 10-percentile &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The average of the 10<sup>th</sup> percentile values for the predictor per dose.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor Avg. 25-percentile &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The average of the 25<sup>th</sup> percentile values for the predictor per dose.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor Avg. Median &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The average of the median values for the predictor per dose.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor Avg. 75-percentile &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The average of the 75<sup>th</sup> percentile values for the predictor per dose.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor Avg. 90-percentile &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The average of the 90<sup>th</sup> percentile values for the predictor per dose.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor Avg. Max &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The average of the maximum value for the predictor per dose.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor Mean &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The mean of the mean value of the predictor per dose.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor SE &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The standard error of the mean value of the predictor per dose.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dichotomous-predictor" class="level4">
+<h4 class="anchored" data-anchor-id="dichotomous-predictor">Dichotomous Predictor:</h4>
+<table class="caption-top table">
+<caption>Extra columns on the summary_freq.csv file when using a dichotomous predictor.</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 13%">
+<col style="width: 67%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Column Title</th>
+<th style="text-align: left;">Number of columns</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Predictor Cox Mean HR &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The mean value of the cox model coefficient – the predictor as a covariate predicting final endpoint per dose.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor Cox SE HR &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The standard error of the cox model coefficient – the predictor as a covariate predicting final endpoint per dose.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor Mean Response Rate &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The mean of the predictor response rate per dose.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor SE Response Rate &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The standard error of the predictor response rate per dose.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="time-to-event-predictor" class="level4">
+<h4 class="anchored" data-anchor-id="time-to-event-predictor">Time-to-Event Predictor</h4>
+<table class="caption-top table">
+<caption>Extra columns on the summary_freq.csv file when using a time-to-event predictor.</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 13%">
+<col style="width: 67%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Column Title</th>
+<th style="text-align: left;">Number of columns</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Predictor Mean KM Median &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The mean of the Kaplan-Meier estimate of the median time to the predictor event per dose.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor SE KM Median &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The standard error of the Kaplan-Meier estimate of the median time to the predictor event per dose.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="contents-of-simulations.csv-and-weeksnnnnn.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-simulations.csv-and-weeksnnnnn.csv">Contents of simulations.csv and weeksNNNNN.csv</h2>
+<p>The simulations.csv file holds the FACTS summary of the final analysis for each simulation (one per row).</p>
+<p>The weeksNNNNN.csv file holds the FACTS summary of every analysis for the NNNNN<sup>th</sup> simulation. It contains a row for each interim in the trial and a row for the final analysis (Interim number 999).</p>
+<p>The final analysis occurs after all the planned data is collected. If the trial does not stop early, the final analysis occurs after full follow-up for all subjects. If the trial does stop early at an interim analysis, then the timing of the final analysis depends on the status of the check boxes on the <a href="../../../../../documentation/v72/userguides/core/design/interims.html#subject-follow-up-options">Interims tab</a>. If follow-up is collected after the particular interim decision, then an analysis after full follow-up of the subjects recruited up to the point of the interim when the stopping decision was taken. If there is no follow-up intended after the interim analysis decision, then the final analysis occurs immediately (at the same time as the interim analysis), and the final analysis criteria are checked.</p>
+<p>The first line is a header line, starting with a ‘#’, containing the FACTS GUI version number, the name of the FACTS file, the name of the scenario, and the time stamp of the start of the simulation.</p>
+<p>The second line is a header line, starting with a ‘#’, containing the following column headings.</p>
+<p>Most of the columns are common to the two file types, but the weeks file does not contain columns for the ‘final’ values of the evaluation criteria.</p>
+<table class="caption-top table">
+<caption>Simulations and weeks file column names for a time-to-event endpoint.</caption>
+<colgroup>
+<col style="width: 18%">
+<col style="width: 9%">
+<col style="width: 11%">
+<col style="width: 6%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Nu mber of col umns</th>
+<th>In s imula tions file</th>
+<th>In w ee ks fi le</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td># Weeks (Duration)</td>
+<td>1</td>
+<td></td>
+<td>✔</td>
+<td>The week of the analysis</td>
+</tr>
+<tr class="even">
+<td>#Sim</td>
+<td>1</td>
+<td>✔</td>
+<td></td>
+<td>The number of the simulation.</td>
+</tr>
+<tr class="odd">
+<td>LastInt erimNumber</td>
+<td>1</td>
+<td>✔</td>
+<td></td>
+<td>The index of the last interim performed the index of the interim immediately before the final interim (index ‘999’). Note this is not necessarily the interim when the trial stopped if the design includes follow-up after stopping.</td>
+</tr>
+<tr class="even">
+<td>#Subjects</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The number of subjects recruited in the simulation.</td>
+</tr>
+<tr class="odd">
+<td>Outcome</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td><p>A flag categorizing final study outcome:</p>
+<ol type="1">
+<li><p>= Early success</p></li>
+<li><p>= Late success</p></li>
+<li><p>= Late futility</p></li>
+<li><p>= Early futility</p></li>
+<li><p>= Success to futility flip-flop</p></li>
+<li><p>= Futility to success flip-flop</p></li>
+<li><p>= Inconclusive</p></li>
+</ol></td>
+</tr>
+<tr class="even">
+<td>Early Success</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the time to the early success decision (-9999 if there was no early success decision). The from the start of the trial to the interim where the early success conditions were first met. It does not include the subsequent follow up time.</td>
+</tr>
+<tr class="odd">
+<td>Alloc &lt;dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The number of subjects allocated to each arm.</td>
+</tr>
+<tr class="even">
+<td>Pr(Alloc) &lt;dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The probability of allocation to the different arms following the interim.</td>
+</tr>
+<tr class="odd">
+<td>Mean resp &lt;dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The estimated hazard ratio of each treatment arm.</td>
+</tr>
+<tr class="even">
+<td>SD resp &lt;dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The standard deviation of the estimate of the hazard ratio of each treatment arm.</td>
+</tr>
+<tr class="odd">
+<td>True Mean resp &lt;dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The true mean response (hazard ratio) of each treatment arm for this simulation.</td>
+</tr>
+<tr class="even">
+<td>Mean Predictor Resp &lt;dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td><p>The estimated response of the predictor at each treatment arm.</p>
+<p>Cts: mean change from baseline</p>
+<p>Dich: response rate</p>
+<p>TTE: hazard ratio with control</p></td>
+</tr>
+<tr class="odd">
+<td>SD Predictor Resp &lt;dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The standard deviation of the estimate of the predictor response.</td>
+</tr>
+<tr class="even">
+<td>Mean Predictor Sigma</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The mean of the estimate of the sigma of the predictor response (the sd of the response of a continuous predictor)</td>
+</tr>
+<tr class="odd">
+<td>SD Predictor Sigma</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The SD of the estimate of the sigma of the predictor response (the sd of the response of a continuous predictor)</td>
+</tr>
+<tr class="even">
+<td>True Predictor Mean resp &lt;dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The true mean predictor response being simulated for each treatment arm (mean of a continuous predictor, response rate of a dichotomous predictor and the hazard ratio of a time-to-event predictor)</td>
+</tr>
+<tr class="odd">
+<td>True Predictor Sigma &lt;dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The true sigma of the predictor response of each treatment arm, if the predictor is a continuous endpoint</td>
+</tr>
+<tr class="even">
+<td>Mean Predictor Lambda &lt;dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The mean of the estimate of Lambda for each dose in the endpoint predictor model – the estimated mean time to the final event for each dose where the predictor is zero for a continuous or dichotomous predictor or the time after observing the event of a time-to-event predictor.</td>
+</tr>
+<tr class="odd">
+<td>SD Predictor Lambda &lt;dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The standard deviation of the estimate of Lambda for each dose in the endpoint predictor model (see above).</td>
+</tr>
+<tr class="even">
+<td>Mean Predictor Beta</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The mean of the estimate of the Beta coefficient in the endpoint predictor model.</td>
+</tr>
+<tr class="odd">
+<td>SD Predictor Beta</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The standard deviation of the estimate of the Beta coefficient in the endpoint predictor model.</td>
+</tr>
+<tr class="even">
+<td>Mean TTE Predictor Baseline Hazard Lambda &lt;seg&gt;</td>
+<td>S</td>
+<td>✔</td>
+<td>✔</td>
+<td>The mean estimate of the hazard rate of the predictor event on the control arm, when using a time-to-event predictor, for each time segment of the predictor control hazard model.</td>
+</tr>
+<tr class="odd">
+<td>Mean TTE Predictor Baseline Hazard Lambda &lt;seg&gt;</td>
+<td>S</td>
+<td>✔</td>
+<td>✔</td>
+<td>The standard deviation of the estimate of the hazard rate of the predictor event on the control arm, when using a time-to-event predictor, for each time segment of the predictor control hazard model.</td>
+</tr>
+<tr class="even">
+<td>Num Events &lt;dose&gt;<br>
+&lt;segment&gt;</td>
+<td>S * D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The number of events observed on each arm in each control hazard model time segment.</td>
+</tr>
+<tr class="odd">
+<td>Total Exposure &lt;dose&gt;<br>
+&lt;segment&gt;</td>
+<td>S * D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The total exposure (in weeks) of the subjects on each arm in each control hazard model time segment.</td>
+</tr>
+<tr class="even">
+<td>Seed1, Seed2</td>
+<td>2</td>
+<td>✔</td>
+<td>✔</td>
+<td><p>The random number seeds at the start of the interim.</p>
+<p>Due to a change in the random number generator to one that uses seeds far larger than two 32-bit integers these values are not currently being written out.</p></td>
+</tr>
+<tr class="odd">
+<td>DR Param &lt;param&gt;</td>
+<td>4</td>
+<td>✔</td>
+<td>✔</td>
+<td>The estimate of the mean value of each of the response model parameters. The response models require up to 4 parameters, some less. The model parameters are labeled α<sub>1</sub>, α<sub>2</sub>, .. the subscripts corresponding to the column their value appears in here.</td>
+</tr>
+<tr class="even">
+<td>Sd DR Param &lt;param&gt;</td>
+<td>4</td>
+<td>✔</td>
+<td>✔</td>
+<td>The standard deviation of the estimate of the mean value of the corresponding response model parameter.</td>
+</tr>
+<tr class="odd">
+<td>Mean Lambda &lt;seg&gt;</td>
+<td>S</td>
+<td>✔</td>
+<td>✔</td>
+<td>The mean estimate of the hazard rate on the control arm, for each time segment of the analysis model.</td>
+</tr>
+<tr class="even">
+<td>Sd Lambda &lt;seg&gt;</td>
+<td>S</td>
+<td>✔</td>
+<td>✔</td>
+<td>The standard deviation of the estimate of the hazard rate on the control arm, for each time segment of the analysis model.</td>
+</tr>
+<tr class="odd">
+<td>True Lambda</td>
+<td>S</td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Num Events &lt;dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The number of events observed on each treatment arm.</td>
+</tr>
+<tr class="odd">
+<td>BAC Mean</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="even">
+<td>BAC Mean SD</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the SD of the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="odd">
+<td>BAC Tau</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the posterior estimate of the SD of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="even">
+<td>BAC Tau SD</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the SD of the posterior estimate of the SD of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="odd">
+<td>BAAC Mean</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses.</td>
+</tr>
+<tr class="even">
+<td>BAAC Mean SD</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the SD of the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses.</td>
+</tr>
+<tr class="odd">
+<td>BAAC Tau</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses.</td>
+</tr>
+<tr class="even">
+<td>BAAC Tau SD</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the SD of the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses.</td>
+</tr>
+<tr class="odd">
+<td>Duration</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The time in weeks to the analysis shown.</td>
+</tr>
+<tr class="even">
+<td>Arm Drop Time &lt;dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>For each treatment arm, the time in weeks when it was decided to drop the arm.</td>
+</tr>
+<tr class="odd">
+<td>LPFV</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The time in weeks to the last patient first visit.</td>
+</tr>
+<tr class="even">
+<td>QOI Columns</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<section id="qoi-columns-1" class="level3">
+<h3 class="anchored" data-anchor-id="qoi-columns-1">QOI Columns</h3>
+<p>The QOI columns depend on the QOIs that have been defined for this design. The columns are grouped in the following order:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 72%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>QOI Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Posterior Probabilities</td>
+<td>The posterior probability for each QOI for each dose.</td>
+</tr>
+<tr class="even">
+<td>Predictive Probabilities</td>
+<td>The predictive probability for each QOI for each dose.</td>
+</tr>
+<tr class="odd">
+<td>P-Values</td>
+<td>The p-value for each QOI for each dose.</td>
+</tr>
+<tr class="even">
+<td>Target Probabilities</td>
+<td>The probability of being the target for each QOI for each dose.</td>
+</tr>
+<tr class="odd">
+<td>Decision QOIs</td>
+<td>The value of the decision QOI at the target.</td>
+</tr>
+<tr class="even">
+<td>Success Futile</td>
+<td>A flag for each QOI decision criteria indicating if the decision QOI was evaluated and compared to a threshold at the interim (weeks file) or final analysis (simulation file). The flag value is -1 if the decision QOI was not evaluated, 0 if it did not meet the threshold and 1 if it did.</td>
+</tr>
+<tr class="odd">
+<td>Success / Futile Combined</td>
+<td>Flags indicating if the interim or final analysis determined success or futility taking all the factors defined for Success/Futility into account: 0 if the conditions were not met, 1 it the conditions were met. If success and futility conditions have been defined that are not mutually exclusive and both sets of combined conditions are met, FACTS will pick one of the outcomes as met but not the other. In order to discourage defining Success and Futility rules that can both be true FACTS does not guarantee which outcome will be selected.</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="contents-of-simulations_freq.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-simulations_freq.csv">Contents of Simulations_freq.csv</h2>
+<table class="caption-top table">
+<caption>Contents of the simulations_freq.csv file for a time-to-event simulation.</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 13%">
+<col style="width: 67%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Column Title</th>
+<th style="text-align: left;">Number of columns</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"># Trial</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The number of the simulation.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LR Stat &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">Unadjusted log-rank test statistic per arm</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LR pval &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The unadjusted log-rank p-value per arm</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LR adj_pval &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The Bonferroni adjusted log-rank p-value per arm</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Wilcoxon stat &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The Wilcoxon test statistic per arm</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Wilcoxon pval &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The unadjusted Wilcoxon p-value per arm</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Wilcoxon adj_pval &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The Bonferroni adjusted Wilcoxon p-value per arm</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HR &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The Cox model hazard ratio per arm</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HR pval &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The unadjusted Cox model p-value per arm</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HR lower CI &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The unadjusted lower bound of the alpha confidence interval of the hazard ratio estimate.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HR upper CI &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The unadjusted upper bound of the alpha confideneeeddce interval of the hazard ratio estimate.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HR adj pval &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The Bonferroni adjusted Cox model p-value per arm</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HR adj lower CI &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The Bonferroni adjusted lower bound of the alpha confidence interval of the hazard ratio estimate.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HR adj upper CI &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The Bonferroni adjusted upper bound of the alpha confidence interval of the hazard ratio estimate.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">KM med &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The Kaplan Meier estimates of the median survival time per arm.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor Cols</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The appropriate output columns for the chosen type of predictor. See next tables for specifics of columns provided for each predictor type.</td>
+</tr>
+</tbody>
+</table>
+<section id="continuous-predictor-1" class="level4">
+<h4 class="anchored" data-anchor-id="continuous-predictor-1">Continuous predictor</h4>
+<table class="caption-top table">
+<caption>Extra columns on the simulations_freq.csv file when using a continuous predictor.</caption>
+<colgroup>
+<col style="width: 20%">
+<col style="width: 12%">
+<col style="width: 64%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Column Title</th>
+<th style="text-align: left;">Number of columns</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Predictor Cox HR &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The Cox model Hazard Ratio per arm (where the model includes the predictor as a covariate predicting final endpoint).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor Cox HR pred</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The Cox model predictor coefficient</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor Cox HR pval &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The Cox model p-value per arm (where the model includes the predictor as a covariate predicting final endpoint).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor Cox HR pval pred</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The Cox model predictor p-value</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor Cox HR lower CI &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The Cox model lower bound of the alpha confidence interval of the hazard ratio estimate per arm (where the model includes the predictor as a covariate predicting final endpoint).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor Cox HR lower CI pred</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The Cox model lower bound of the alpha confidence interval of the predictor coefficient.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor Cox HR upper CI &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The Cox model upper bound of the alpha confidence interval of the hazard ratio estimate per arm (where the model includes the predictor as a covariate predicting final endpoint).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor Cox HR upper CI pred</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The Cox model upper bound of the alpha confidence interval of the predictor coefficient.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor Min &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The minimum value of the predictor value for each treatment arm.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor 10-percentile &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The 10<sup>th</sup> percentile value of the predictor value for each treatment arm.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor 25-percentile &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The 25<sup>th</sup> percentile value of the predictor value for each treatment arm.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor Median &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The mediam value of the predictor value for each treatment arm.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor 75-percentile &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The 75<sup>th</sup> percentile value of the predictor value for each treatment arm.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor 90-percentile &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The 90<sup>th</sup> percentile value of the predictor value for each treatment arm.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor Max &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The maximum value of the predictor value for each treatment arm.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor Mean &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The mean of the predictor value for each treatment arm</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor SD &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The SD of the mean of the predictor value for each arm</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dichotomous-predictor-1" class="level4">
+<h4 class="anchored" data-anchor-id="dichotomous-predictor-1">Dichotomous predictor</h4>
+<table class="caption-top table">
+<caption>Extra columns on the simulations_freq.csv file when using a dichotomous predictor.</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 13%">
+<col style="width: 67%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Column Title</th>
+<th style="text-align: left;">Number of columns</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Predictor Cox HR &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The Cox model Hazard Ratio per arm (where the model includes the predictor as a covariate predicting final endpoint).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor Cox HR pred</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The Cox model predictor coefficient</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor Cox HR pval &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The Cox model p-value per arm (where the model includes the predictor as a covariate predicting final endpoint).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor Cox HR pval pred</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The Cox model predictor p-value</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor Cox HR lower CI &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The Cox model lower bound of the alpha confidence interval of the hazard ratio estimate per arm (where the model includes the predictor as a covariate predicting final endpoint).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor Cox HR lower CI pred</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The Cox model lower bound of the alpha confidence interval of the predictor coefficient.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor Cox HR upper CI &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The Cox model upper bound of the alpha confidence interval of the hazard ratio estimate per arm (where the model includes the predictor as a covariate predicting final endpoint).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor Cox HR upper CI pred</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The Cox model upper bound of the alpha confidence interval of the predictor coefficient.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor Response Rate &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The predictor response rate per arm.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="time-to-event-predictor-1" class="level4">
+<h4 class="anchored" data-anchor-id="time-to-event-predictor-1">Time-to-event Predictor</h4>
+<table class="caption-top table">
+<caption>Extra columns on the simulations_freq.csv file when using a time-to-event predictor.</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 13%">
+<col style="width: 67%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Column Title</th>
+<th style="text-align: left;">Number of columns</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Predictor KM Median &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The Kaplan Meier estimate of the median time to the predictor event per arm</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="contents-of-patientsnnnnn.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-patientsnnnnn.csv">Contents of PatientsNNNNN.csv</h2>
+<table class="caption-top table">
+<caption>The patients file output when simulating a time-to-event tria..</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 13%">
+<col style="width: 67%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Column Title</th>
+<th style="text-align: left;">Number of columns</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">#Subject</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The subject id number, starting at 1.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Region</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Which region the subject was recruited in</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Date</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The date, in weeks from the start of the trial, of the subject’s baseline visit and randomization.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dose</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The index number (1, …) of the treatment arm the subject belongs to.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Duration</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The time of observation of the subject (in weeks)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Outcome</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Whether an event was observed (1) or not (0)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Predictor</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The value of the observed predictor</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pred Outcome</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">A flag indicating whether the predictor was observed or not</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dropout</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">A flag indicating whether the subject dropped out (1) or not (0).</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="contents-of-mcmcnnnnn.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-mcmcnnnnn.csv">Contents of MCMCNNNNN.csv</h2>
+<p>The MCMC file if requested for output by the user, contains all the MCMC samples for the fitted parameters in the design. There is one row per sample (including the burnin) and the samples from all the analyses in the simulation are included. The first two columns are the analysis index and the sample (within analysis) index. The remaining columns are the parameters whose sample values are being reported, the number and constituents of these columns are highly variable depending on design of the statistical analysis.</p>
+<table class="caption-top table">
+<caption>MCMC file format for a time-to-event simulation.</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 13%">
+<col style="width: 67%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Column Title</th>
+<th style="text-align: left;">Number of columns</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Analysis</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The index of the analysis (interim) in the simulation</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sample</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The index of the sample within the analysis</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">HR &lt;dose&gt;</td>
+<td style="text-align: left;">D</td>
+<td style="text-align: left;">The estimate of the hazard ratio for each dose, based on the dose response model fitted.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lambda &lt;seg&gt;</td>
+<td style="text-align: left;">S</td>
+<td style="text-align: left;">The estimate of the control hazard rate in each segment of the control hazard rate model</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A &lt;1-8&gt; / Tau</td>
+<td style="text-align: left;">P</td>
+<td style="text-align: left;">If the dose response model estimates parameters then the samples of these are listed next. The number and name of the parameters will vary depending on the model being fitted. Check the Design &gt; Dose Response tab for a listing of the parameters.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Predictor …</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">The parameters of the predictor endpoint, these vary by the type of endpoint that the predictor has – they will be consistent with the parameters that would be output if the predictor was the only endpoint in a single endpoint design.</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<footer style="display: flex; justify-content: space-between; align-items: center;">
+  <!-- Left side: Copyright -->
+  <p style="margin: 0;">
+    © <span id="year"></span>
+    <a href="https://www.berryconsultants.com">Berry Consultants</a>
+  </p>
+
+  <!-- Right side: Relative link -->
+  <p style="margin: 0;">
+    <a href="../../../../../introduction/citation.html">How to Cite</a>
+  </p>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

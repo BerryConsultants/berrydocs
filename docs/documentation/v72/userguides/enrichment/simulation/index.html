@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Simulation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../../">
+<link href="../../../../../media/FACTS_icon.png" rel="icon" type="image/png">
+<script src="../../../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../../site_libs/bootstrap/bootstrap-5e3d804025be65b29583b827833ef31d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<!-- Roboto Serif -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
+
+<!-- Roboto Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WLMVE7GR4S');
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../../../media/FACTSLogo.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../introduction/index.html"> 
+<span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../documentation/index.html"> 
+<span class="menu-text">Documentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../get/index.html"> 
+<span class="menu-text">Get FACTS</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../contact/index.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Simulation</h1>
+            <p class="subtitle lead">Description of the simulation tab and the results generated by simulations.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#simulation-options" id="toc-simulation-options" class="nav-link active" data-scroll-target="#simulation-options">Simulation Options</a>
+  <ul>
+  <li><a href="#number-of-simulations" id="toc-number-of-simulations" class="nav-link" data-scroll-target="#number-of-simulations">Number of simulations</a></li>
+  <li><a href="#sec-startatsimulation" id="toc-sec-startatsimulation" class="nav-link" data-scroll-target="#sec-startatsimulation">Start at Simulation</a></li>
+  <li><a href="#parallelization-packet-size" id="toc-parallelization-packet-size" class="nav-link" data-scroll-target="#parallelization-packet-size">Parallelization Packet Size</a></li>
+  <li><a href="#sec-randomseed" id="toc-sec-randomseed" class="nav-link" data-scroll-target="#sec-randomseed">Random Seed</a></li>
+  <li><a href="#mcmc-settings" id="toc-mcmc-settings" class="nav-link" data-scroll-target="#mcmc-settings">MCMC Settings</a></li>
+  <li><a href="#results-output" id="toc-results-output" class="nav-link" data-scroll-target="#results-output">Results Output</a></li>
+  </ul></li>
+  <li><a href="#run-simulations" id="toc-run-simulations" class="nav-link" data-scroll-target="#run-simulations">Run Simulations</a>
+  <ul>
+  <li><a href="#facts-grid-simulation-settings" id="toc-facts-grid-simulation-settings" class="nav-link" data-scroll-target="#facts-grid-simulation-settings">FACTS Grid Simulation Settings</a></li>
+  </ul></li>
+  <li><a href="#simulation-results" id="toc-simulation-results" class="nav-link" data-scroll-target="#simulation-results">Simulation Results</a>
+  <ul>
+  <li><a href="#right-click-menu" id="toc-right-click-menu" class="nav-link" data-scroll-target="#right-click-menu">Right Click Menu</a></li>
+  <li><a href="#open-in-r" id="toc-open-in-r" class="nav-link" data-scroll-target="#open-in-r">Open in R</a></li>
+  <li><a href="#aggregation" id="toc-aggregation" class="nav-link" data-scroll-target="#aggregation">Aggregation</a></li>
+  <li><a href="#design-report" id="toc-design-report" class="nav-link" data-scroll-target="#design-report">Design Report</a></li>
+  </ul></li>
+  <li><a href="#graphs-of-simulation-results" id="toc-graphs-of-simulation-results" class="nav-link" data-scroll-target="#graphs-of-simulation-results">Graphs of Simulation Results</a>
+  <ul>
+  <li><a href="#box-and-whisker-plot-conventions" id="toc-box-and-whisker-plot-conventions" class="nav-link" data-scroll-target="#box-and-whisker-plot-conventions">Box and whisker plot conventions</a></li>
+  <li><a href="#per-scenario-graphs" id="toc-per-scenario-graphs" class="nav-link" data-scroll-target="#per-scenario-graphs">Per Scenario Graphs</a>
+  <ul class="collapse">
+  <li><a href="#outcome-and-subject-allocation" id="toc-outcome-and-subject-allocation" class="nav-link" data-scroll-target="#outcome-and-subject-allocation">Outcome and Subject Allocation</a></li>
+  <li><a href="#prob.-group-compared-to-csdcshrd-futility" id="toc-prob.-group-compared-to-csdcshrd-futility" class="nav-link" data-scroll-target="#prob.-group-compared-to-csdcshrd-futility">Prob. Group Compared to CSD/CSHRD Futility</a></li>
+  <li><a href="#prob.-group-compared-to-csdcshrd-success-and-group-phase-iii-success" id="toc-prob.-group-compared-to-csdcshrd-success-and-group-phase-iii-success" class="nav-link" data-scroll-target="#prob.-group-compared-to-csdcshrd-success-and-group-phase-iii-success">Prob. Group Compared to CSD/CSHRD Success and Group Phase III Success</a></li>
+  <li><a href="#trial-outcomes-by-group" id="toc-trial-outcomes-by-group" class="nav-link" data-scroll-target="#trial-outcomes-by-group">Trial Outcomes by Group</a></li>
+  <li><a href="#outcome-by-scatterplot" id="toc-outcome-by-scatterplot" class="nav-link" data-scroll-target="#outcome-by-scatterplot">Outcome by Scatterplot</a></li>
+  <li><a href="#distribution-of-early-stopping-futility" id="toc-distribution-of-early-stopping-futility" class="nav-link" data-scroll-target="#distribution-of-early-stopping-futility">Distribution of Early Stopping (Futility)</a></li>
+  <li><a href="#distribution-of-early-stopping-success" id="toc-distribution-of-early-stopping-success" class="nav-link" data-scroll-target="#distribution-of-early-stopping-success">Distribution of Early Stopping (Success)</a></li>
+  <li><a href="#cumulative-operating-characteristics-plot" id="toc-cumulative-operating-characteristics-plot" class="nav-link" data-scroll-target="#cumulative-operating-characteristics-plot">Cumulative Operating Characteristics Plot</a></li>
+  <li><a href="#per-sim-and-interim-relative-response-and-allocation" id="toc-per-sim-and-interim-relative-response-and-allocation" class="nav-link" data-scroll-target="#per-sim-and-interim-relative-response-and-allocation">Per Sim and Interim Relative Response and Allocation</a></li>
+  <li><a href="#per-sim-and-interim-relative-response-and-allocation-1" id="toc-per-sim-and-interim-relative-response-and-allocation-1" class="nav-link" data-scroll-target="#per-sim-and-interim-relative-response-and-allocation-1">Per Sim and Interim Relative Response and Allocation</a></li>
+  <li><a href="#explore-final-futilitysuccess-criteria" id="toc-explore-final-futilitysuccess-criteria" class="nav-link" data-scroll-target="#explore-final-futilitysuccess-criteria">Explore Final Futility/Success Criteria</a></li>
+  <li><a href="#explore-early-successfutility-eval-criteria" id="toc-explore-early-successfutility-eval-criteria" class="nav-link" data-scroll-target="#explore-early-successfutility-eval-criteria">Explore Early Success/Futility Eval Criteria</a></li>
+  <li><a href="#mcmc-trace-plots" id="toc-mcmc-trace-plots" class="nav-link" data-scroll-target="#mcmc-trace-plots">MCMC Trace plots</a></li>
+  </ul></li>
+  <li><a href="#across-scenario-graphs" id="toc-across-scenario-graphs" class="nav-link" data-scroll-target="#across-scenario-graphs">Across Scenario Graphs</a>
+  <ul class="collapse">
+  <li><a href="#selected-groups" id="toc-selected-groups" class="nav-link" data-scroll-target="#selected-groups">Selected Groups</a></li>
+  <li><a href="#qoi-box-plots" id="toc-qoi-box-plots" class="nav-link" data-scroll-target="#qoi-box-plots">QOI Box Plots</a></li>
+  <li><a href="#ppn-success" id="toc-ppn-success" class="nav-link" data-scroll-target="#ppn-success">Ppn Success</a></li>
+  <li><a href="#response" id="toc-response" class="nav-link" data-scroll-target="#response">Response</a></li>
+  <li><a href="#allocation" id="toc-allocation" class="nav-link" data-scroll-target="#allocation">Allocation</a></li>
+  <li><a href="#total-subjects" id="toc-total-subjects" class="nav-link" data-scroll-target="#total-subjects">Total Subjects</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+
+
+
+
+
+<p>The Simulation tab allows the user to execute simulations for each of the scenarios specified for the study. The user may choose the number of simulations, whether to execute locally or on the Grid, and modify the random number seeds.</p>
+<div id="fig-fig48tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig48tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image48.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig48tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: The Simulation tab with complete simulation output in the table.
+</figcaption>
+</figure>
+</div>
+<p>In the Simulation tab the user can provide simulation configuration parameters like the number of simulations to run, whether the simulations can be run on the Grid, the parallelization strategy, the random number seed used in the simulations, and the number of certain output files that should be kept during the simulation execution.</p>
+<p>FACTS uses Markov Chain Monte Carlo (MCMC) methods in the generation of simulated patient response data and trial results. In order to exactly reproduce a statistical set of results, it is necessary to start the Markov Chain from an identical <a href="@sec-randomseed">“Random Seed”</a>. The initial random seed for FACTS simulations is set from the simulation tab, the first thing that FACTS does is to draw the random number seeds to use at the start of each simulation. It is possible to re-run a specific simulation, for example to have more detailed output files generated, by specifying <a href="@sec-startatsimulation">‘start at simulation’</a>.</p>
+<section id="simulation-options" class="level1">
+<h1>Simulation Options</h1>
+<section id="number-of-simulations" class="level2">
+<h2 class="anchored" data-anchor-id="number-of-simulations">Number of simulations</h2>
+<p>This box allows the user to enter the number of simulations that they would like FACTS to run for each scenario listed in the table at the bottom of the simulation tab. There is no set number of simulations that is always appropriate.</p>
+<dl>
+<dt>10 simulations</dt>
+<dd>
+You might want to run 10 simulations if you just want to look at a few simulated trials and assess how the decision rules work and if FACTS is simulating what you expected based on what you input on the previous tabs. If all 10 simulations of a ‘null’ scenario are successful, or all 10 simulations of what was intended to be an effective drug scenario are futile, it is likely there has been a mistake or misunderstanding in the specification of the scenarios or the final evaluation or early stopping criteria.
+</dd>
+<dt>100 simulations</dt>
+<dd>
+You might want to run 100 simulations if you want to look at many individual trials to make sure that what you want to happen is nearly always happening. You can also start to get a very loose idea about operating characteristics like power based on 100 sims. 100 simulations is also usually sufficient to spot big problems with the data analysis such as poor model fits or significant bias in the posterior estimates.
+</dd>
+<dt>1,000 simulations</dt>
+<dd>
+You might want to run 1,000 simulations if you want estimates of operating characteristics like power, sample size, and Type I error for internal use or while iterating the design. This generally isn’t considered enough simulations for something like a regulatory submission. With 1,000 simulations the standard error for a typical type I error calculation is on the order of <span class="math inline">\(0.005\)</span>.
+</dd>
+<dt>10,000 simulations</dt>
+<dd>
+You might want to run 10,000 simulations per scenario if you are finalizing a design and are preparing a report. This is generally enough simulations for a regulatory submission, especially in non-null simulation scenarios. The standard error for a typical type I error calculation using 10,000 simulations is on the order of <span class="math inline">\(0.0015\)</span>.
+</dd>
+<dt>&gt; 10,000</dt>
+<dd>
+You might want to run more than 10,000 simulations if you want to be very certain of an operating characteristic’s value - like Type I error. And plan to use the measurement of the quantity for something important like a regulatory submission. The standard error of a Type I error calculation with 100,000 simulations, e.g., is on the order of <span class="math inline">\(0.0005\)</span>.
+</dd>
+<dt>&gt; 100,000</dt>
+<dd>
+You probably don’t want to run more than 100,000 simulations per scenario. Maybe your finger slipped an hit an extra 0, or you thought there were 5 zeroes in that number when there were actually 6. If the simulated trial is adaptive, this is going to take a while.
+</dd>
+</dl>
+<p>Each time the FACTS application opens, the “Number of Simulations” will be set to the number of simulations last run for this design. Not all scenarios must be run with the same number of simulations. If completed results are available, the <em>actual</em> number of simulations run for each scenario is reported in the ‘Num Sims’ column of the results table. The value displayed in the “Number of Simulations” control is the number of simulations that <em>will be</em> run if the user clicks on the ‘Simulate’ button.</p>
+<p>Note also that if a scenario uses an external VSR file or directory of external files, the number of simulations will be rounded down to the nearest complete multiple of the number of VSR lines or external files. If the number of simulations requested is less than the number of VSR lines or external files, then just the requested number of simulations are run.</p>
+</section>
+<section id="sec-startatsimulation" class="level2">
+<h2 class="anchored" data-anchor-id="sec-startatsimulation">Start at Simulation</h2>
+<p>The “Start at simulation” option allows for the simulation of a particular trial seen in a previous set of simulations without having to simulate all of the previous trials in that previous set to get to it.</p>
+<p>The initial <a href="#random-seed">random seed</a> for FACTS simulations is set in the simulation tab. The first thing that FACTS does is to draw the random number seeds to use at the start of each simulation. Thus, it is possible to re-run a specific simulation out of a large set without re-running all of them. For example, say the 999<sup>th</sup> simulation out of a set displayed some unusual behavior, in order to understand why, one might want to see the individual interim analyses for that simulation (the “weeks” file), the sampled subject results for that simulation (the “Subjects” files) and possibly even the MCMC samples from the analyses in that simulation. You can save the .facts file with a slightly different name (to preserve the existing simulation results), then run 1 simulation of the specific scenario, specifying that the simulations start at simulation 999 and that at least 1 weeks file, 1 subjects file and the MCMC samples file (see the “MCMC settings” dialog) are output.</p>
+</section>
+<section id="parallelization-packet-size" class="level2">
+<h2 class="anchored" data-anchor-id="parallelization-packet-size">Parallelization Packet Size</h2>
+<p>The parallelization packet size option allows simulation jobs to be split into runs of no-more than the specified number of trials that are run in parallel. If more simulations of a scenario are requested than can be done in one packet, the simulations are broken into the requisite number of packets, run, and combined and summarized when they are all complete. The final results files will look just as though all the simulations were run as one job or packet.</p>
+<p>The packet size must be a perfect divisor of the number of simulations. This is usually easy since common numbers of simulations are multiples of 100, but don’t try to use a prime number for Number of Simulations or you’re stuck with only 2 packet size options.</p>
+<p>By default (if the check box with Choose Parallel Packet Size is not checked) the number of simulations per packet depends on the number of simulations per scenario. If the number of simulations is less than 1000, then each scenario is packaged as a single packed and simulated. If the number of simulations per scenario is greater than or equal to 1000, the default packet size is 10 and all simulations are decomposed into packets of size 10.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Packetization with VSRs using .mvsr files
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If an external file is used to create explicit VSRs (a .mvsr file), then the packet size should be a multiple of the number of rows in that MVSR file. Each packet will get passed the entire .mvsr file to run. If there are multiple .mvsr files with differing numbers of lines then only the VSR scenarios that have a .mvsr file that has a number of rows that is a divisor of the packet size will be run. The rest will error. The packet size can then be modified to get each of the .mvsr specified VSR files to be run.</p>
+<p>Care should be taken when packetizing a scenario that includes an external data file to supply the virtual subject responses; in this situation, a of copy of the external file is included <em>in each packet</em> which can cause the packetisation process to run out of memory as the packets are being created. In this case, use a smaller number of larger packets, such as packets that are 1/10<sup>th</sup> of the total number of simulations.</p>
+</div>
+</div>
+<p>When running simulations, FACTS will create and run as many packets in parallel as there are execution threads on the local machine. In general, the overhead of packetization is quite low, so a packet size of 10 to 100 can help speed up the overall simulation process. Threads used to simulate scenarios that finish quickly can pick up packets for scenarios that take longer. The progress bar updates as simulation packets complete, so the smaller the packet size, the more accurately FACTS can report the overall progress of the simulation execution.</p>
+</section>
+<section id="sec-randomseed" class="level2">
+<h2 class="anchored" data-anchor-id="sec-randomseed">Random Seed</h2>
+<p>Random number generation plays a huge role in FACTS’s virtual patient generation and statistical analyses. In order to exactly reproduce a statistical set of results, it is necessary to start the random number generation process from an identical “Random Seed”. Using the same random seed in the same version of FACTS guarantees that simulated trials will always be reproducible. Changing the design parameters or the version of FACTS may or may not remove this reproducibility depending on the change.</p>
+<p>Even a small change in the random seed will produce very different simulation results.</p>
+<p>In addition to setting the seed, the user can choose whether they want the “Same seed for all scenarios” or “Different seed” for different scenarios. If “Same seed for all scenarios” is selected, the subjects generated for each simulated trial will match for the different scenarios. This induces a correlation among the simulation output for different scenarios. This can be good if you’re trying to compare operating characteristics for different scenarios, but it can also be misleading. To disable this option select the “Different Seed” option. If “Different seed” is selected, then each scenario has its own seed that samples a different set of subjects than any other scenario. This uncorrelates the simulation output across scenarios, which can be advantageous if the absolute value of the operating characteristics are more valuable to you than the comparison of operating characteristics across scenarios.</p>
+</section>
+<section id="mcmc-settings" class="level2">
+<h2 class="anchored" data-anchor-id="mcmc-settings">MCMC Settings</h2>
+<p>To set advanced settings for simulation, the user may click the “MCMC Settings” button, which will display a number of additional specifiable parameters for simulation in a separate window.</p>
+<div id="fig-fig49tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig49tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image49.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig49tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Advanced MCMC settings.
+</figcaption>
+</figure>
+</div>
+<p>The first two values specify two standard MCMC parameters –</p>
+<ul>
+<li><p>The length of burn-in is the number of the initial iterations whose results are discarded, to allow the MCMC chain to reach its stationary distribution. Burn-in samples are output in MCMC files if the files are output.</p></li>
+<li><p>The number of samples is the number of subsequent iterations whose results are recorded in order to give posterior estimates of the values of interest.</p></li>
+</ul>
+<p>The third parameter controls the number of MCMC samples taken after each imputation of missing data using the longitudinal model. The default value is 1. This parameter only has an effect if Bayesian imputation is being used to impute missing or partially observed data. Increasing the value of this parameter allows the parameter estimates to converge somewhat to a potentially new stationary distribution for each new set of imputed data. If the imputed data is only a small percentage of the overall data this is likely unnecessary. As a rough guide, if it at some early interims &gt; 5% of the data being analyzed will be imputed, a value in the range 2 to 10 is recommended to avoid underestimating the uncertainty. A higher number should be used the greater the proportion of imputed data.</p>
+<p>The next parameter concerns the output of the MCMC samples to a file. It is possible to have the design engine output the sampled values from the MCMC in all of the interims of the first N simulated trials of each scenario by specifying the “Number of MCMC files to output” to be greater than 0. The resulting files, ‘mcmcNNNN.csv’, will be in the results directory with all the other results files for that scenario. These files include the burn-in samples from the MCMC chains.</p>
+<p>The final parameter in MCMC Settings is the thinning parameter. This parameter will only keep every <span class="math inline">\(N^{th}\)</span> sample taken during MCMC where <span class="math inline">\(N\)</span> is the thinning parameter. Thinning MCMC samples can reduce the autocorrelation of consecutive MCMC iterations, which increases the effective samples per retained sample, but also results in needing many more MCMC iterations to reach the same number of retained samples. Generally, we do not recommend thinning for standard simulation runs.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning about thinning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Unlike other software that performs MCMC, when you choose to thin by a value, FACTS does not increase the number of MCMC iterations it performs in order to retain the value specified in “Number of Samples”. So if you leave “Number of Samples” at its default value, <span class="math inline">\(2500\)</span>, and thin by <span class="math inline">\(10\)</span>, you will be left with <span class="math inline">\(250\)</span> retained samples. You should adjust for this by increasing the “Number of Samples” if you choose to thin.</p>
+</div>
+</div>
+</section>
+<section id="results-output" class="level2">
+<h2 class="anchored" data-anchor-id="results-output">Results Output</h2>
+<p>The results output section of the Simulation tab allows for the specification of how many output files should be generated for files that are individually created for each simulation. Summary files (summary.csv) that have 1 line per scenario are always created. Simulations files (simulations.csv) that have 1 line per simulation are always created. Weeks files (weeksXXXXX.csv), patients files (patientsXXXXX.csv), and frequentist weeks files (weeks_freq_{missingness}_XXXXX.csv) are not created for every single simulation. Instead, the number of simulation specific output files can be set per type. This limits the amount of output files that FACTS will save.</p>
+<p>See the endpoint specific descriptions of the output files for descriptions of what the previously mentioned output files report (<a href="../../../../../documentation/v72/userguides/enrichment/simulation/continuous.html">continuous</a>, <a href="../../../../../documentation/v72/userguides/enrichment/simulation/dichotomous.html">dichotomous</a> and <a href="../../../../../documentation/v72/userguides/enrichment/simulation/tte.html">time-to-event</a>).</p>
+<p>Some plots in FACTS that are created based on weeks files, and if very few weeks files are saved, the plots will not be as accurate or descriptive.</p>
+</section>
+</section>
+<section id="run-simulations" class="level1">
+<h1>Run Simulations</h1>
+<p>Click in the check box in each of the rows corresponding the to the scenarios to be run. FACTS displays a row for each possible combination of the ‘profiles’ that have been specified: - baseline response, dose response, longitudinal response, accrual rate, and dropout rate. Or simply click on “Select All”.</p>
+<p>Then click on the “Simulate” button.</p>
+<p>During simulation, the user is prevented from modifying any parameters on any other tab of the application. This safeguard ensures that the simulation results reflect the parameters specified in the user interface.</p>
+<p>When simulations are started, FACTS saves all the study parameters, and when the simulations are complete all the simulation results are saved in results files in a “_results” folder in the same directory as the “.facts” file. Within the “_results” folder there will be a sub-folder that holds the results for each scenario.</p>
+<section id="facts-grid-simulation-settings" class="level2">
+<h2 class="anchored" data-anchor-id="facts-grid-simulation-settings">FACTS Grid Simulation Settings</h2>
+<p>A user with access to a computational grid may choose to run simulations on the grid instead of running them locally. This frees the user’s computer from the computationally intensive task of simulating so that they can continue other work or even shutdown their PC or laptop. In order to run simulations on the grid, it must first be configured. This is normally done via a configuration file supplied with the FACTS installation by the IT group responsible for the FACTS installation.</p>
+</section>
+</section>
+<section id="simulation-results" class="level1">
+<h1>Simulation Results</h1>
+<p>In the center of the simulation tab, the summary simulation results are displayed. There are many columns of results, these are organized into related groups of sub-windows, which can be displayed by clicking on the “Show More Columns” button.</p>
+<div id="fig-fig50tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig50tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image50.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig50tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Options available when clicking on the “Show More Columns…” button.
+</figcaption>
+</figure>
+</div>
+<p>These windows will show:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 72%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Column Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>All</td>
+<td>All summary columns</td>
+</tr>
+<tr class="even">
+<td>Highlights</td>
+<td>Only the columns shown on the main tab</td>
+</tr>
+<tr class="odd">
+<td>Allocation</td>
+<td>The columns that report on participant recruitment and allocation</td>
+</tr>
+<tr class="even">
+<td>Response</td>
+<td>The columns that report that estimate treatment response, the SD of the estimate, the estimate of the SD of the response, the true treatment response and the true SD of the response.</td>
+</tr>
+<tr class="odd">
+<td>Probabilities</td>
+<td>The final estimates for the QOIs that were computed for the trial.</td>
+</tr>
+<tr class="even">
+<td>Stopping Rules</td>
+<td>The proportion of times the different stopping criteria were met</td>
+</tr>
+<tr class="odd">
+<td>Evaluation Rules</td>
+<td>The proportion of times the different final success/futility criteria were met.</td>
+</tr>
+<tr class="even">
+<td>Hierarchical Prior</td>
+<td>Parameters the posterior estimates of the values of the parameters of the Hierarchical Prior models, if any were used.</td>
+</tr>
+<tr class="odd">
+<td>Simulation Results</td>
+<td>A window that displays the individual simulation results for the currently selected scenario.</td>
+</tr>
+<tr class="even">
+<td>Frequentist results</td>
+<td>A window that displays the frequentist summary results.</td>
+</tr>
+</tbody>
+</table>
+<section id="right-click-menu" class="level2">
+<h2 class="anchored" data-anchor-id="right-click-menu">Right Click Menu</h2>
+<p>Clicking the Right-hand mouse button on a row in the simulations tab brings up a short cut menu:</p>
+<div id="fig-fig51tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig51tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image51.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig51tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: The menu that appears when you right click on the table within the simulation tab.
+</figcaption>
+</figure>
+</div>
+<p>These will respectively:</p>
+<ul>
+<li><p>Open a new Windows directory browser window showing the contents of the simulation results for that scenario.</p></li>
+<li><p>Open a window that displays the individual simulation results for that scenario. The results initially displayed are the ‘highlights’ columns, similarly to the summary results (see below) the results columns are collected into sub-groups, windows of these subgroups can be opened from the Right Click menu of the Simulation Results highlights window.</p></li>
+<li><p>Open a window that displays the frequentist analysis summary results. This option is only available if one or more frequentist analyses have been selected on the Design &gt; Frequentist Analysis tab. (If more than one analysis has been requested – using different treatments of missing data there will be separate options in the menu to display each summary).</p></li>
+<li><p>Open R loading in the result files for that scenario as separate dataframes.</p></li>
+<li><p>Opens the FACTS graph control displaying the graphs for that scenario.</p></li>
+<li><p>Opens the FACTS graph control that displays the trellis plot of graphs of selected scenarios for selected design variants.</p></li>
+</ul>
+</section>
+<section id="open-in-r" class="level2">
+<h2 class="anchored" data-anchor-id="open-in-r">Open in R</h2>
+<p>The “Open in R” button allows for the creation of an R script that has pre-populated code for loading in output files created by the FACTS simulations.</p>
+<p>By default, any/all of the simulation output files can be included in the created script. If “Aggregation” (see below) has been performed, then only the aggregated files will be available for being loaded in R.</p>
+<p>When the button is clicked, FACTS will create an R script with the correct file paths to load in the data, as well as creating a function that will read the files in correctly. The file is then opened in the default R editor for the user. If there is no default program for opening a .R file, your operating system should ask how you want to open the file.</p>
+</section>
+<section id="aggregation" class="level2">
+<h2 class="anchored" data-anchor-id="aggregation">Aggregation</h2>
+<p>Aggregation combines the csv output from multiple scenarios into fewer csv files. The Aggregate… button displays a dialog which allows the user to select what to aggregate.</p>
+<div id="fig-fig52tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig52tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image52.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig52tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Window that appears when aggregating simulation results.
+</figcaption>
+</figure>
+</div>
+<p>The default location for the aggregated files is the results directory for the study, but this can be changed.</p>
+<p>Aggregation may be performed with or without pivoting on group, or both.</p>
+<ul>
+<li><p>Unpivoted files will have one row for each row in the original files.</p></li>
+<li><p>In pivoted files each original row will be split into one row per group, plus an extra across groups row.</p>
+<ul>
+<li><p>Where there is a group of columns for each group, they will be turned into a single column with each value on a new row.</p></li>
+<li><p>Values in columns that are independent of group will be repeated on each row.</p></li>
+</ul></li>
+</ul>
+<p>The default is to aggregate all scenarios, but any combination may be selected.</p>
+<p>Pressing “Aggregate” generates the aggregated files.</p>
+<p>Each type of csv file is aggregated into a separate csv file whose name begins agg_ or agg_pivot_, so agg_summary.csv will contain the rows from each of the summary.csv files, unpivoted. WeeksNNNNN.csv files are aggregated into a single agg_[pivot_]weeks.csv file. PatientsNNNNN.csv files are aggregated into a single agg_patients.csv file, but they are never pivoted because each row already refers to a single group. Similarly the various frequentist results at the summary, simulation and weeks level are aggregated (if they’ve been output).</p>
+<p>RegionIndex.csv is not aggregated.</p>
+<p>Each aggregated file begins with the following extra columns, followed by the columns from the original csv file:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 68%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Column Name</th>
+<th style="text-align: left;">Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Scenario ID</td>
+<td style="text-align: left;">Index of the scenario</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Recruitment Profile</td>
+<td style="text-align: left;">A series of columns containing the names of the various profiles used to construct the scenario. Columns that are never used are omitted (e.g. External Subjects Profile if there are no external scenarios)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dropouts Profile</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Longitudinal Rates Profile</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Group Response Profile</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">External Subjects Profile</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Agg Timestamp</td>
+<td style="text-align: left;">Date and time when aggregation was performed</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">P(TS)</td>
+<td style="text-align: left;">Proportion of trial success (early success + late success)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">P(TF)</td>
+<td style="text-align: left;">Proportion of trial futility (early futility + late futility)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sims</td>
+<td style="text-align: left;">Simulation number. Only present in weeks and patients files.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Group</td>
+<td style="text-align: left;">Only present if pivoted</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="design-report" class="level2">
+<h2 class="anchored" data-anchor-id="design-report">Design Report</h2>
+<p>This button becomes enabled once there are simulation results, it uses an R script and R libraries to generate a MS Word document describing the design.</p>
+<p>See the <a href="../../../../../documentation/v72/userguides/dr.html">FACTS Design Report User Guide</a> for details of what R packages need installing, how FACTS needs configuring to use the correct R instance, how the generate_report() function is run, and where the resulting report can be found.</p>
+</section>
+</section>
+<section id="graphs-of-simulation-results" class="level1">
+<h1>Graphs of Simulation Results</h1>
+<p>To enable swift visualization and analysis of the simulation results, FACTS has a number of pre-defined graphs it can display. Full and detailed simulation results are available in ‘csv’ format files that can be loaded into other analysis tools allowing any aspect of the simulation to be explored. These files are described in Section 15, below.</p>
+<section id="box-and-whisker-plot-conventions" class="level3">
+<h3 class="anchored" data-anchor-id="box-and-whisker-plot-conventions">Box and whisker plot conventions</h3>
+<ul>
+<li><p>The mean probability is plotted as a large dot.</p></li>
+<li><p>The median value is plotted as a dashed line.</p></li>
+<li><p>The 25-75<sup>th</sup> quantile range is plotted as the “box” portion of each point.</p></li>
+<li><p>The “whiskers” extend to the largest and smallest values within 1 ½ times the interquartile range from either end of the box.</p></li>
+<li><p>Points outside the whisker range are considered outliers, and are plotted as small blue dots. Note that it may be difficult to see all of these symbols if they are plotted at the same value.</p></li>
+</ul>
+</section>
+<section id="per-scenario-graphs" class="level2">
+<h2 class="anchored" data-anchor-id="per-scenario-graphs">Per Scenario Graphs</h2>
+<p>To view the graphs of the results of the simulations of a particular design variant in a particular scenario, select that row of scenario results by clicking on it and then click on the ‘View Graph’ button and select “Show Per Scenario Graphs”.</p>
+<p>The graph display supports copying an image of the graph to the clipboard, to facilitate pasting them into documents and presentations. Right clicking on a graph brings up a short menu that allows the image of the graph to be copied to the clipboard or saved in ‘png’ format to a file.</p>
+<p>Many graphs have a number of controls to allow the graph to be tailored, standard graph controls available on most graphs are:</p>
+<ul>
+<li><p>Set Y axis – this displays a dialog boxing allowing the user to fix the minimum and maximum of each of the Y axes and the number of ‘tick’ marks. (Not displayed if the ‘y’ value must lie in the interval 0-1.</p></li>
+<li><p>Group – on some graphs the results show results for the treatment effect in a specific group or across groups, this drop down allows the user to select which.</p></li>
+<li><p>Simulation – on some graphs the data shown is from a specific simulation, this control allows the user to select which one.</p></li>
+<li><p>Interim – on some graphs the data shown is from a specific interim in a specific simulation, this control allows the user to select which one.</p></li>
+</ul>
+<section id="outcome-and-subject-allocation" class="level3">
+<h3 class="anchored" data-anchor-id="outcome-and-subject-allocation">Outcome and Subject Allocation</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Dichotomous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Time-to-Event</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<section id="relative-response-and-allocation" class="level4">
+<h4 class="anchored" data-anchor-id="relative-response-and-allocation">Relative Response and Allocation</h4>
+<div id="fig-fig63cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig63cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDCont/media/image63.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig63cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Relative Response and Allocation.
+</figcaption>
+</figure>
+</div>
+<p>This graph displays a histogram of the mean number of subjects recruited into each group. These plots show:</p>
+<ul>
+<li><p>The mean allocation over all simulations in each group plotted as a green bar.</p></li>
+<li><p>The true difference in response between the study treatment and control in each group as a black cross.</p></li>
+<li><p>The estimated mean difference in response (“treatment effect”) and the 2.5-97.5% interquartile range of the observed estimates across the simulations in each group as a red circle with vertical red error bars.</p></li>
+<li><p>The estimated mean overall difference from the individual control responses and 2.5-97.5% interquartile range of the observed estimates across the simulations across the groups as a red circle with vertical red error bars.</p></li>
+<li><p>The true population weighted across groups difference in response between the study treatment and control, calculated as the average of the true difference in response in each group weighted by the true population fractions of each group as defined in the actual profile, as a grey triangle.</p></li>
+<li><p>The true design enriched across groups difference between the study treatment and control, calculated as the average of the true difference in response in each group weighted by the actual numbers of subjects recruited into each group, as a black star.</p></li>
+</ul>
+</section>
+<section id="response-and-allocation" class="level4">
+<h4 class="anchored" data-anchor-id="response-and-allocation">Response and Allocation</h4>
+<div id="fig-fig64cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig64cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDCont/media/image64.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig64cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Response and Allocation.
+</figcaption>
+</figure>
+</div>
+<p>This is similar to the previous graph, except it shows the allocation to, and response on, the study treatment and control arms separately and not the treatment difference.</p>
+<p>This graph displays a histogram of the mean number of subjects recruited into each group. These plots show:</p>
+<ul>
+<li><p>The mean allocation over all simulations to control as a blue bar and to the study treatment arm as a green bar.</p></li>
+<li><p>The true mean response to the study treatment in each group as a black cross.</p></li>
+<li><p>The true mean response to the control in each group as a black diamond.</p></li>
+<li><p>The estimated mean response on the study treatment arms and the 2.5-97.5% interquartile range of the observed estimates across the simulations as a red circle with vertical red error bars.</p></li>
+<li><p>The estimated mean response on the control arms and the 2.5-97.5% interquartile range of the observed estimates across the simulations as a orange circle with vertical orange error bars.</p></li>
+</ul>
+</section>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<section id="odds-ratio-and-allocation" class="level4">
+<h4 class="anchored" data-anchor-id="odds-ratio-and-allocation">Odds Ratio and Allocation</h4>
+<div id="fig-fig59dich" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig59dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDDich/media/image59.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig59dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Odds Ratio and Allocation.
+</figcaption>
+</figure>
+</div>
+<p>This graph displays a histogram of the mean number of subjects recruited into each group. These plots show:</p>
+<ul>
+<li><p>The mean allocation over all simulations in each group plotted as a green bar.</p></li>
+<li><p>The true response odds ratio between the study treatment and control in each group as a black cross.</p></li>
+<li><p>The estimated response odds ratio (“treatment effect”) and the 2.5-97.5% interquartile range of the observed estimates across the simulations in each group as a red circle with vertical red error bars.</p></li>
+<li><p>The estimated mean overall response odds ratio and 2.5-97.5% interquartile range of the observed estimates across the simulations across the groups as a red circle with vertical red error bars.</p></li>
+<li><p>The true population weighted across groups response odds ratio between the study treatment and control, calculated as the average of the true odds ratio in each group weighted by the true population fractions of each group as defined in the actual profile, as a grey triangle.</p></li>
+<li><p>The true design enriched across groups odds ratio between the study treatment and control, calculated as the average of the true odds ratio in each group weighted by the actual numbers of subjects recruited into each group, as a black star.</p></li>
+</ul>
+</section>
+<section id="response-and-allocation-1" class="level4">
+<h4 class="anchored" data-anchor-id="response-and-allocation-1">Response and Allocation</h4>
+<div id="fig-fig60dich" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig60dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDDich/media/image60.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig60dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Response and Allocation.
+</figcaption>
+</figure>
+</div>
+<p>This is similar to the previous graph, except it shows the response rate on the study treatment and control arms separately and not the odds ratio.</p>
+<p>This graph displays a histogram of the mean number of subjects recruited into each group. These plots show:</p>
+<ul>
+<li><p>The mean allocation over all simulations to control as a blue bar and to the study treatment arm as a green bar.</p></li>
+<li><p>The true mean response rate for the study treatment in each group as a black cross.</p></li>
+<li><p>The true mean response rate for the control in each group as a blue triangle.</p></li>
+<li><p>The estimated mean response rate on the study treatment arms and the 2.5-97.5% interquartile range of the observed estimates across the simulations as a red circle with vertical red error bars.</p></li>
+<li><p>The estimated mean response rate on the control arms and the 2.5-97.5% interquartile range of the observed estimates across the simulations as an orange circle with vertical orange error bars.</p></li>
+</ul>
+</section>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<section id="hazard-ratio-and-allocation" class="level4">
+<h4 class="anchored" data-anchor-id="hazard-ratio-and-allocation">Hazard Ratio and Allocation</h4>
+<div id="fig-fig54tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig54tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image54.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig54tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: Hazard Ratio and Allocation.
+</figcaption>
+</figure>
+</div>
+<p>This graph displays a histogram of the mean number of subjects recruited into each group. These plots show:</p>
+<ul>
+<li><p>The mean allocation over all simulations in each group plotted as a green bar.</p></li>
+<li><p>The true hazard ratio between the study treatment and control in each group as a black cross.</p></li>
+<li><p>The estimated hazard ratio (“treatment effect”) and the 2.5-97.5% interquartile range of the observed estimates across the simulations in each group as a red circle with vertical red error bars.</p></li>
+<li><p>The estimated mean overall hazard ratio and 2.5-97.5% interquartile range of the observed estimates across the simulations across the groups as a red circle with vertical red error bars.</p></li>
+<li><p>The true population weighted across groups hazard odds ratio between the study treatment and control, calculated as the average of the true hazard ratio in each group weighted by the true population fractions of each group as defined in the actual profile, as a grey triangle.</p></li>
+<li><p>The true design enriched across groups hazard ratio between the study treatment and control, calculated as the average of the true hazard ratio in each group weighted by the actual numbers of subjects recruited into each group, as a black star.</p></li>
+</ul>
+</section>
+<section id="hazard-rates" class="level4">
+<h4 class="anchored" data-anchor-id="hazard-rates">Hazard Rates</h4>
+<div id="fig-fig56tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig56tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image56.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig56tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11: Hazard Ratio graph.
+</figcaption>
+</figure>
+</div>
+<p>The Hazard Rates graphs shows the number of events in each arm, the raw hazard ratio and fitted hazard ratios.</p>
+<ul>
+<li><p>The blue show the number of events in the control arm.</p></li>
+<li><p>The gray bar shows the number of events in the treatment arm.</p></li>
+<li><p>The raw hazard ratio in each arm is shown by a gray circle.</p></li>
+<li><p>The fitted hazard ratio in the control arm is shown by an orange diamond with orange bars indicating the 2.5-97.5% interquartile range.</p></li>
+<li><p>The fitted hazard ratio in the treatment arm is shown by a red diamond, with red bars indicating the 2.5-97.5% interquartile range.</p></li>
+</ul>
+</section>
+</div>
+</div>
+</div>
+</section>
+<section id="prob.-group-compared-to-csdcshrd-futility" class="level3">
+<h3 class="anchored" data-anchor-id="prob.-group-compared-to-csdcshrd-futility">Prob. Group Compared to CSD/CSHRD Futility</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Dichotomous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Time-to-Event</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div id="fig-fig65cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig65cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDCont/media/image65.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig65cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12: Probability Response Compared to CSD for Futility plot.
+</figcaption>
+</figure>
+</div>
+<p>This graph shows for each group and the across groups analysis, the probability of ‘beating’ the CSD for futility (the definition of ‘beating’ will depend on whether a higher endpoint score is a better or worse outcome for the subject and whether the trial is for superiority or non-inferiority).</p>
+<p>Note that though This is the comparison against the Futility CSD it is the probability of being better than it, higher probabilities mean <strong>less</strong> likelihood of stopping early for futility or declaring futility in the final evaluation.</p>
+<ul>
+<li><p>The mean probability is plotted as solid line.</p></li>
+<li><p>The median value is plotted as a dashed line.</p></li>
+<li><p>The 25-75<sup>th</sup> quantile range is plotted as the “box” portion of each point.</p></li>
+<li><p>The “whiskers” extend to the largest and smallest values within 1 ½ times the interquartile range from either end of the box.</p></li>
+<li><p>Points outside the whisker range are considered outliers, and are plotted as small blue dots. Note that it may be difficult to see all of these symbols if they are plotted at the same value.</p></li>
+</ul>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div id="fig-fig59dich" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig59dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDDich/media/image59.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig59dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;13: Probability Response Compared to CSD for Futility plot.
+</figcaption>
+</figure>
+</div>
+<p>This graph shows for each group and the across groups analysis, the probability of ‘beating’ the CSD for futility (the definition of ‘beating’ will depend on whether a higher endpoint score is a better or worse outcome for the subject and whether the trial is for superiority or non-inferiority).</p>
+<p>Note that though this is the comparison against the Futility CSD it is the probability of being better than it, higher probabilities mean <strong>less</strong> likelihood of stopping early for futility or declaring futility in the final evaluation.</p>
+<ul>
+<li><p>The mean probability is plotted as a solid line.</p></li>
+<li><p>The median value is plotted as a dashed line.</p></li>
+<li><p>The 25-75<sup>th</sup> quantile range is plotted as the “box” portion of each point.</p></li>
+<li><p>The “whiskers” extend to the largest and smallest values within 1 ½ times the interquartile range from either end of the box.</p></li>
+<li><p>Points outside the whisker range are considered outliers, and are plotted as small blue dots. Note that it may be difficult to see all of these symbols if they are plotted at the same value.</p></li>
+</ul>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<div id="fig-fig55tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig55tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image55.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig55tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14: Probability Response Compared to CSHRD for Futility plot.
+</figcaption>
+</figure>
+</div>
+<p>This graph shows for each group and the across groups analysis, the probability of ‘beating’ the CSHRD for futility (the definition of ‘beating’ will depend on whether a higher endpoint score is a better or worse outcome for the subject and whether the trial is for superiority or non-inferiority).</p>
+<p>Note that though this is the comparison against the Futility CSHRD it is the probability of being better than it, higher probabilities mean <strong>less</strong> likelihood of stopping early for futility or declaring futility in the final evaluation.</p>
+<ul>
+<li><p>The mean probability is plotted as a solid line.</p></li>
+<li><p>The median value is plotted as a dashed line.</p></li>
+<li><p>The 25-75<sup>th</sup> quantile range is plotted as the “box” portion of each point.</p></li>
+<li><p>The “whiskers” extend to the largest and smallest values within 1 ½ times the interquartile range from either end of the box.</p></li>
+<li><p>Points outside the whisker range are considered outliers, and are plotted as small blue dots. Note that it may be difficult to see all of these symbols if they are plotted at the same value.</p></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="prob.-group-compared-to-csdcshrd-success-and-group-phase-iii-success" class="level3">
+<h3 class="anchored" data-anchor-id="prob.-group-compared-to-csdcshrd-success-and-group-phase-iii-success">Prob. Group Compared to CSD/CSHRD Success and Group Phase III Success</h3>
+<p>This is the same as the “Prob. Group Compared to CSD/CSHRD Futility” plot, except that the probabilities are either</p>
+<ol type="1">
+<li><p>Relative to control and the CSHRD for success.</p></li>
+<li><p>The probability of Phase III success</p></li>
+</ol>
+</section>
+<section id="trial-outcomes-by-group" class="level3">
+<h3 class="anchored" data-anchor-id="trial-outcomes-by-group">Trial Outcomes by Group</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Dichotomous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">Time-to-Event</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div id="fig-fig66cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig66cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDCont/media/image66.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig66cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15: Relative Response and Allocation.
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div id="fig-fig62dich" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig62dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDDich/media/image62.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig62dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16: Outcomes by Group plot.
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<div id="fig-fig57tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig57tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image57.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig57tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;17: Outcomes by Group plot.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>This plot shows as a stacked bar chart the proportion of different outcomes by group, across group and whole study.</p>
+<p>The outcome types are:</p>
+<ul>
+<li><p>Early Success (dark green): the group stopped early for success and had not regressed to futile (but it could have regressed to inconclusive) at the final analysis (if there was one).</p></li>
+<li><p>Late Success (light green): the group recruitment stopped because the group or study recruitment cap was reached; in the final evaluation of the group data the final evaluation success criteria were met.</p></li>
+<li><p>Late Futility (light red): the group recruitment stopped because the group or study recruitment cap was reached; in the final evaluation of the group data the final evaluation futility criteria were met.</p></li>
+<li><p>Early Futility (dark red): the group stopped early for futility and had not regressed to success (but it could have regressed to inconclusive) at the final analysis (if there was one).</p></li>
+<li><p>Success to Futility Flip-Flop (pink): the group stopped early for success but had regressed to futility at the final analysis.</p></li>
+<li><p>Futility to Success Flip-Flop (purple): the group stopped early for futility but had regressed to success at the final analysis.</p></li>
+<li><p>Inconclusive - Study Cap (dark brown): the group recruitment stopped because the study recruitment cap was reached; in the final evaluation of the group data neither the final evaluation success not the final evaluation futility criteria were met.</p></li>
+<li><p>Inconclusive – Group Cap (light brown): the group recruitment stopped because the group recruitment cap was reached; in the final evaluation of the group data neither the final evaluation success not the final evaluation futility criteria were met.</p></li>
+</ul>
+</section>
+<section id="outcome-by-scatterplot" class="level3">
+<h3 class="anchored" data-anchor-id="outcome-by-scatterplot">Outcome by Scatterplot</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Dichotomous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false">Time-to-Event</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<div id="fig-fig67cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig67cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDCont/media/image67.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig67cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18: Group Outcome Scatterplot.
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<div id="fig-fig63dich" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig63dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDDich/media/image63.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig63dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;19: Group Outcome Scatterplot.
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-4-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-3-tab">
+<div id="fig-fig58tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig58tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image58.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig58tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;20: Group Outcome Scatterplot.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>This is a scatter plot graph that plots the result of a particular group or the ‘across groups’ plotting the estimate of response against the number of subjects recruited into the group or whole trial.</p>
+<p>The symbol used to plot each simulation indicates the reason for stopping / outcome.</p>
+<ul>
+<li><p>Light blue circle: the group stopped early for success</p></li>
+<li><p>Dark blue circle: the group did not stop early and was a success in the final analysis</p></li>
+<li><p>Brown square: the group did not stop early and the was futile in the final analysis</p></li>
+<li><p>Red square: the group stopped early for futility</p></li>
+<li><p>Light pink diamond: the group stopped early for success but was futile in the final analysis.</p></li>
+<li><p>Brown diamond: the group stopped early for futility but was successful in the final analysis</p></li>
+<li><p>Yellow cross: the group outcome was inconclusive; the study reached the study cap.</p></li>
+<li><p>Blue cross: the group outcome was inconclusive; the group reached the group cap.</p></li>
+<li><p>Pink cross: the group outcome was inconclusive; the study stopped early.</p></li>
+</ul>
+<p>There is a control that allows the user to select whether the points are plotted for a particular group or for the whole study – using the across groups treatment estimate.</p>
+</section>
+<section id="distribution-of-early-stopping-futility" class="level3">
+<h3 class="anchored" data-anchor-id="distribution-of-early-stopping-futility">Distribution of Early Stopping (Futility)</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Dichotomous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false">Time-to-Event</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<div id="fig-fig68cont" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig68cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDCont/media/image68.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig68cont-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;21: Distribution of Early Stopping plot.
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div id="fig-fig64dich" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig64dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDDich/media/image64.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig64dich-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;22: Distribution of Early Stopping plot.
+</figcaption>
+</figure>
+</div>
+</div>
+<div id="tabset-5-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-3-tab">
+<div id="fig-fig59tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig59tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image59.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig59tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;23: Distribution of Early Stopping plot.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>This plot shows the proportion of times each group has stopped early for futility as a brown bar, plus box and whisker plots showing the distribution, in time in weeks, of when those early stops occurred.</p>
+</section>
+<section id="distribution-of-early-stopping-success" class="level3">
+<h3 class="anchored" data-anchor-id="distribution-of-early-stopping-success">Distribution of Early Stopping (Success)</h3>
+<p>This plot is the same as for the “Distribution of Early Stopping (Futility)” plot, except it shows the proportion of times each group has stopped early for success and the distribution in stopping times of those stops.</p>
+</section>
+<section id="cumulative-operating-characteristics-plot" class="level3">
+<h3 class="anchored" data-anchor-id="cumulative-operating-characteristics-plot">Cumulative Operating Characteristics Plot</h3>
+<div class="columns">
+<div class="column">
+<div id="fig-fig60tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig60tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image60.png" id="fig-fig60tte" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig60tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;24
+</figcaption>
+</figure>
+</div>
+</div><div class="column">
+<div id="fig-fig61tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig61tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image61.png" id="fig-fig61tte" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig61tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;25
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>There are two graphs, one that shows the cumulative proportion of durations across all simulations, and the other shows the cumulative proportion of subjects across all simulations.</p>
+</section>
+<section id="per-sim-and-interim-relative-response-and-allocation" class="level3">
+<h3 class="anchored" data-anchor-id="per-sim-and-interim-relative-response-and-allocation">Per Sim and Interim Relative Response and Allocation</h3>
+<p>These graphs exclusive to continuous and dichotomous endpoint designs show similar information to the Relative Response and Allocation graph above, but show the results for a single simulation, or single interim of a single simulation. The individual interim results can only be shown for simulations for which ‘weeks’ files were output.</p>
+</section>
+<section id="per-sim-and-interim-relative-response-and-allocation-1" class="level3">
+<h3 class="anchored" data-anchor-id="per-sim-and-interim-relative-response-and-allocation-1">Per Sim and Interim Relative Response and Allocation</h3>
+<p>These graphs show similar information to the Outcome and Allocation graph above, but show the results for a single simulation, or single interim of a single simulation. The individual interim results can only be shown for simulations for which ‘weeks’ files were output.</p>
+</section>
+<section id="explore-final-futilitysuccess-criteria" class="level3">
+<h3 class="anchored" data-anchor-id="explore-final-futilitysuccess-criteria">Explore Final Futility/Success Criteria</h3>
+<div class="columns">
+<div class="column">
+<div id="fig-fig62tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig62tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image62.png" id="fig-fig62tte" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig62tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;26
+</figcaption>
+</figure>
+</div>
+</div><div class="column">
+<div id="fig-fig63tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig63tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image63.png" id="fig-fig63tte" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig63tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;27
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>These graphs can be used to explore what proportion of simulated trials of a particular scenario would have been a success/failure at final evaluation. Using the two drop down controls the user can select criteria to use: posterior probability of beating the CSD/CSHRD or probability of phase III success, and set and lower/upper limits to explore for the threshold (setting the range used on the x-axis).</p>
+<p>For the given target the proportion of trials that would meet each of the criteria over the range of threshold values is plotted for each group and across group treatment effects.</p>
+<p>As in the examples above, the plots will be somewhat jagged if only a small number of simulations have been run. These graphs can be used to select thresholds that can be expected to yield a certain level of type-1 or power, but the user must remember these will only be approximate (depending on the number of simulations) but can be useful to understand the designs sensitivity to the thresholds and to set initial thresholds early on in the design / simulation process that will get close to the desired type-1 error and power from the outset.</p>
+</section>
+<section id="explore-early-successfutility-eval-criteria" class="level3">
+<h3 class="anchored" data-anchor-id="explore-early-successfutility-eval-criteria">Explore Early Success/Futility Eval Criteria</h3>
+<div class="columns">
+<div class="column">
+<div id="fig-fig64tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig64tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image64.png" id="fig-fig64tte" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig64tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;28
+</figcaption>
+</figure>
+</div>
+</div><div class="column">
+<div id="fig-fig65tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig65tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image65.png" id="fig-fig65tte" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig65tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;29
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>These graphs can be used to explore what proportion of simulated trials of a particular scenario would have stopped early for success/futility. NOTE these graphs require weeks files to have been output, they are also most use where the design has been simulated with interims but no early stopping (as in the examples above where the shape of the “existing stopping rules” line indicates that no early stopping occurred in these simulations).</p>
+<p>Using the two drop down controls, the user can select which stopping criteria is evaluated and from which interim stopping will be permitted. Lines are then displayed for the proportion of simulations that would have stopped by each interim for a fixed set of thresholds.</p>
+<p>Typically these can be used to see at what threshold (and starting at what interim) stopping for success or futility introduces an unacceptably level of ‘incorrect’ early stopping – stopping for futility in successful scenarios and stopping for success in futile scenarios and whether at below/above these levels there may be a useful probability of correct stopping.</p>
+</section>
+<section id="mcmc-trace-plots" class="level3">
+<h3 class="anchored" data-anchor-id="mcmc-trace-plots">MCMC Trace plots</h3>
+<div id="fig-fig66tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig66tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image66.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig66tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;30: MCMC Trace Plot.
+</figcaption>
+</figure>
+</div>
+<p>If an MCMC sample file has been output for one or more simulations (the default is to <strong>not</strong> output MCMC sample files due to their size), then for each of those simulations it is possible to view the MCMC trace of the sampled values for each of the parameters sampled in the MCMC. (See the description of the MCMC file contents below 16.6).</p>
+<p>If the design is adaptive, the user can select which interim (“update”) the samples are from, as well as which parameter’s samples to plot.</p>
+</section>
+</section>
+<section id="across-scenario-graphs" class="level2">
+<h2 class="anchored" data-anchor-id="across-scenario-graphs">Across Scenario Graphs</h2>
+<p>To view multiple graphs showing the results of the simulations of possibly all the design variants and all the scenarios click on the ‘View Graph’ button and select “Show Across Scenario Graphs”. This launches a graph display that displays multiple graphs in a trellis plot. You can select the graph type, filter the design variants and filter which scenarios displayed:</p>
+<div id="fig-fig53tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig53tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image53.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig53tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;31: Window that appears when aggregating simulation results.
+</figcaption>
+</figure>
+</div>
+<section id="selected-groups" class="level3">
+<h3 class="anchored" data-anchor-id="selected-groups">Selected Groups</h3>
+<p>This graph shows a bar chart for each scenario and variant selected. Each chart shows how often each group was successful in a trial that was successful.</p>
+<ul>
+<li><p>“Successful” –the arm was correctly successful: it was successful, marked as “Should succeed” on the VSR tab and the trial was successful.</p></li>
+<li><p>“Should not succeed” – the arm was incorrectly successful: it was successful but not marked as “Should succeed” on the VSR tab and the trial was successful.</p></li>
+<li><p>Unsuccessful – the trial was successful but the group was not.</p></li>
+</ul>
+<div id="fig-fig67tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig67tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image67.png" id="fig-fig67tte" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig67tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;32
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="qoi-box-plots" class="level3">
+<h3 class="anchored" data-anchor-id="qoi-box-plots">QOI Box Plots</h3>
+<p>This graph shows a box and whisker plot for each scenario and variant selected. Each plot shows the distribution of the values of a selected QOI for each group. There is a dropdown control to allow the selection of the QOI to be displayed. Any Posterior probability, Predictive probability, p-value or target QOI can be selected.</p>
+<div id="fig-fig68tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig68tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image68.png" id="fig-fig68tte" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig68tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;33
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="ppn-success" class="level3">
+<h3 class="anchored" data-anchor-id="ppn-success">Ppn Success</h3>
+<p>This grouped bar chart shows a bar for the proportion of successful simulations for each variant, grouped by scenario.</p>
+<div id="fig-fig69tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig69tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image69.png" id="fig-fig69tte" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig69tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;34
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="response" class="level3">
+<h3 class="anchored" data-anchor-id="response">Response</h3>
+<p>This graph shows a group response plot for each scenario and variant selected. Each plot shows the mean estimate over the simulations and the 95%-ile interval of the mean estimates over the simulations. The graph also shoes the “true response” i.e.&nbsp;the mean response being simulated.</p>
+<div id="fig-fig70tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig70tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image70.png" id="fig-fig70tte" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig70tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;35
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="allocation" class="level3">
+<h3 class="anchored" data-anchor-id="allocation">Allocation</h3>
+<p>This graph shows a box and whisker plot for each scenario and variant selected. Each plot shows the distribution of the number of subjects allocated to each arm in each group over the simulations.</p>
+<div id="fig-fig71tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig71tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image71.png" id="fig-fig71tte" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig71tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;36
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="total-subjects" class="level3">
+<h3 class="anchored" data-anchor-id="total-subjects">Total Subjects</h3>
+<p>This graph shows the mean total sample size for each scenario at different maximum sample sizes (the different variants).</p>
+<div id="fig-fig72tte" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig72tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image72.png" id="fig-fig72tte" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig72tte-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;37
+</figcaption>
+</figure>
+</div>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<footer style="display: flex; justify-content: space-between; align-items: center;">
+  <!-- Left side: Copyright -->
+  <p style="margin: 0;">
+    © <span id="year"></span>
+    <a href="https://www.berryconsultants.com">Berry Consultants</a>
+  </p>
+
+  <!-- Right side: Relative link -->
+  <p style="margin: 0;">
+    <a href="../../../../../introduction/citation.html">How to Cite</a>
+  </p>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

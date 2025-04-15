@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Study Tab - Time-to-Event Endpoint</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../../">
+<link href="../../../../../media/FACTS_icon.png" rel="icon" type="image/png">
+<script src="../../../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../../site_libs/bootstrap/bootstrap-5e3d804025be65b29583b827833ef31d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<!-- Roboto Serif -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
+
+<!-- Roboto Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WLMVE7GR4S');
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../../../media/FACTSLogo.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../introduction/index.html"> 
+<span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../documentation/index.html"> 
+<span class="menu-text">Documentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../get/index.html"> 
+<span class="menu-text">Get FACTS</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../contact/index.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Study Tab - Time-to-Event Endpoint</h1>
+            <p class="subtitle lead">Description of the Study tab and its sub-tabs in the Enrichment TTE Engine.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#study-info" id="toc-study-info" class="nav-link active" data-scroll-target="#study-info">Study Info</a></li>
+  <li><a href="#sec-groups" id="toc-sec-groups" class="nav-link" data-scroll-target="#sec-groups">Group Info</a>
+  <ul>
+  <li><a href="#notes-on-setting-target-hazard-ratio-differences" id="toc-notes-on-setting-target-hazard-ratio-differences" class="nav-link" data-scroll-target="#notes-on-setting-target-hazard-ratio-differences">Notes on setting Target Hazard Ratio Differences</a></li>
+  <li><a href="#non-inferiority" id="toc-non-inferiority" class="nav-link" data-scroll-target="#non-inferiority">Non-inferiority</a></li>
+  </ul></li>
+  <li><a href="#visits" id="toc-visits" class="nav-link" data-scroll-target="#visits">Visits</a></li>
+  <li><a href="#variants" id="toc-variants" class="nav-link" data-scroll-target="#variants">Variants</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+
+
+
+
+
+<section id="study-info" class="level2">
+<h2 class="anchored" data-anchor-id="study-info">Study Info</h2>
+<p>The Study Info sub-tab provides parameters for specifying:</p>
+<ul>
+<li><p>Study Information, selecting: whether there are control arms in each group as well as a treatment arm or only a treatment arm, whether an event represents patient improvement or deterioration, whether the trial is attempting to show the treatment’s superiority over the control, or its non-inferiority to it, and the length of time subjects are to be followed.</p></li>
+<li><p>Design Options, selecting: whether the design is adaptive and there are to be interims where the trial can be modified or not, and whether the design will look at subject’s longitudinal results at interim visits before their final visit.</p></li>
+<li><p>Groups, defining the different groups to be studied.</p></li>
+</ul>
+<div id="fig-fig15" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image15.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: The Study Info sub-tab.
+</figcaption>
+</figure>
+</div>
+<ul>
+<li><p>In ‘Study Information’ the following is specified:</p>
+<ul>
+<li><p>Whether there are control arms in each group as well as a treatment arm or only a treatment arm (the analysis is to “Compare to an objective control”).</p>
+<ul>
+<li><p>If control arms are included the analysis will be by the comparison of the results of the subjects on the treatment arm with that of the subjects on the control arm.</p></li>
+<li><p>If an objective control is used, there will be no control arm in the trial and the analysis will be by the comparison of the results of the subjects on the treatment arm with an assumed ‘historic’ or ‘objective’ control response.</p></li>
+</ul></li>
+<li><p>Whether an event is subject improvement or subject deterioration. This determines the direction of the comparisons performed when making decisions about the trial’s success or futility.</p>
+<ul>
+<li><p>If an event indicates success (subject improvement), then success criteria will estimate the probability that the hazard ratio of the treatment arm to the control arm (or of a specified event rate based on historical data) is greater than 1 by some Target Hazard Ratio Difference for Success (THRDS) (also called the Clinically Significant Difference (CSD)). Futility criteria will estimate the probability that the hazard ratio of the treatment arm to the control is greater than 1 by more than the Target Hazard Ratio Difference for Futility (THRDF).</p></li>
+<li><p>If an event indicates failure (subject condition worsening), then success criteria will estimate the probability that the hazard ratio of the treatment arm to the control arm (or of a specified event rate based on historical data) to be less than 1 by some Target Hazard Ratio Difference for Success (TRDS). Futility criteria will estimate the probability that the hazard ratio of the treatment arm to the control is less than 1, by the Target Hazard Ratio Difference for Futility (THRDF).</p></li>
+<li><p>See <a href="#sec-groups" class="quarto-xref">Section&nbsp;2</a> for more information.</p></li>
+</ul></li>
+<li><p>Whether the aim of the study is to determine superiority or non-inferiority. If non-inferiority is specified, then on other tabs, instead of specifying a clinically significant difference (CSD), a non-inferiority margin is specified. Whereas in a superiority trial the target is to be ‘better’ than control by the specified margin, in a non-inferiority trial the target is to be not worse than control by the specified margin.</p></li>
+<li><p>The limit on subject follow up, this can be either:</p>
+<ul>
+<li><p>The maximum follow-up time, no subject will be followed for longer than this. If the study does not stop early it will stop when every subject recruited has reached their maximum follow-up time or has had an event.</p></li>
+<li><p>The follow-up time after full enrolment. If the study does not stop early then it will stop the specified time after full enrolment or when every subject has had an event.</p></li>
+</ul></li>
+</ul></li>
+<li><p>Note that as a result of being able to specify whether a higher or lower event rate represents improvement, and whether the aim is superiority or non-inferiority, the CSD or the Margin will almost always be a positive value. The user may specify clinically significant differences, the engine will automatically determine which direction is appropriate (e.g.&nbsp;if lower values are subject improvement, the engine will realize a THRD of 0.3 for success corresponds to a hazard ratio of 0.7”)</p></li>
+<li><p>In ‘Design Options’ the following is specified, where the simpler options are taken, this allows the GUI to reduce the number of options presented to the user.</p>
+<ul>
+<li><p>Specify an Adaptive or Non-Adaptive design. If ‘Enable adaptive features’ is selected the ’Design &gt; Interims’ and ’Design Success/Futility Criteria &gt; Interims tabs are now visible having not been required for non-adaptive designs.</p>
+<div id="fig-fig16" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image16.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Defining Groups.
+</figcaption>
+</figure>
+</div></li>
+</ul></li>
+<li><p>Groups:</p>
+<ul>
+<li><p>Groups can be added and deleted (clicking ‘Delete’ deletes the currently selected group).</p></li>
+<li><p>Groups can be named and it is possible to specify whether there is a ‘cap’ on the number of subjects that can be recruited into that group, if so then the maximum ‘Group size’ must be specified.</p></li>
+<li><p>If any groups do not have an individual group cap, then an overall cap (max sample size) must be specified. If all groups have a cap it is still possible to specify an overall cap (which to have any meaning, must be less than the sum of the individual group caps).</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="sec-groups" class="level2">
+<h2 class="anchored" data-anchor-id="sec-groups">Group Info</h2>
+<p>On this tab values to define the analysis for each group are specified.</p>
+<p>In a trial to show superiority, for each group the Target Clinically Significant Difference can be set. Optionally the parameters for a phase 3 may be specified to allow the predictive probability of subsequent success in such a phase 3 trial to be used as decision criteria.</p>
+<ul>
+<li><p>With a time-to-event endpoint the Clinically Significant Difference is in terms of Target Hazard Ratio Difference – that is a difference from 1 in the ratio of the hazard rate in the treatment arm and the hazard rate in the control arm. Separate differences can be set for determining success and futility, and separate differences can be set for each group and for the across groups analysis. Their use in practice is specified on the “Design &gt; Stopping Criteria” and “Design &gt; Evaluation Criteria” tabs.</p></li>
+<li><p>The phase 3 success criteria are:</p>
+<ul>
+<li><p>Phase 3 total number of subjects per arm</p></li>
+<li><p>The required one-sided alpha</p></li>
+<li><p>Whether the phase 3 is to use a test for superiority or non-inferiority (set independently from whether the ED trial is for superiority or non-inferiority)</p></li>
+<li><p>A super-superiority margin / non-inferiority margin (depending on whether the phase 3 trial is for superiority or non-inferiority), this margin is independent from any margins specified for the ED trial.</p></li>
+</ul></li>
+<li><p>Given these criteria FACTS calculates the predicted probability of success in the subsequent phase 3, given the estimate of the hazard ratio integrated over the uncertainty in that estimate. The conventional expected power of the specified phase 3 is calculated for the treatment effect in each MCMC sample and then averaged. The resulting predicted probability of success in phase 3 can then be used in the stopping criteria and final evaluation criteria.</p></li>
+</ul>
+<div id="fig-fig17" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image17.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: The Group Info sub-tab.
+</figcaption>
+</figure>
+</div>
+<p>Separate ‘Target Hazard Ratio Differences’ can be set for success and for futility, specifying the THRD for success and THRD for futility. We use the terms Target Hazard Rate Difference here as it makes it clearer that the value to be entered should be positive. Elsewhere (in column headings for instance) the more conventional term CSD may be used.</p>
+<ul>
+<li><p>If used to decide to stop a group for success or judge whether the group was successful in the final evaluation, the criteria will test whether <span class="math inline">\(PR(1 - HR &gt; CSHRD\ for\ success) &gt; Success\ threshold\ \)</span>.</p>
+<p>That is, whether the posterior probability that the hazard ratio is less than one by more than the target hazard ratio difference is greater than a specified threshold (which is set on the Design tabs).</p></li>
+<li><p>If used to decide to stop a group for futility or judge whether the group was futile in the final evaluation, the criteria will test whether <span class="math inline">\(\Pr(1 - HR &gt; CSHRD\ for\ futility) &lt; Futility\ threshold\)</span></p>
+<p>That is, whether he posterior probability that the hazard ratio is less than one by more than the target hazard ratio difference for futility is less than a specified threshold (which is set on the Design tabs).</p></li>
+<li><p>If the endpoint is such that an event means subject improvement, then the comparison is reversed (the treatment difference becomes <span class="math inline">\(HR - 1\)</span> and if the trial is non-inferiority then the test for “being greater than the CSD” is replaced with testing for “being less than the NIM” (Non-Inferiority Margin). Thus the meaning of the user specified Difference or Margin is interpreted taking into account both whether a response means ‘better’ or ‘worse’ and whether the trial aim is ‘superiority’ or ‘non-inferiority’. The result is that for normal usage the value entered will be +ve, as the following diagrams should make clear:</p>
+<div id="fig-fig94" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig94-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDCont/media/image94.png" id="fig-fig94" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig94-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4
+</figcaption>
+</figure>
+</div></li>
+</ul>
+<p>Note that in Superiority trials the required THRD for success will be greater than or equal to the THRD for futility, whereas in the Non-Inferiority trials the required NIM for futility will be greater than or equal to the NIM for success.</p>
+<section id="notes-on-setting-target-hazard-ratio-differences" class="level3">
+<h3 class="anchored" data-anchor-id="notes-on-setting-target-hazard-ratio-differences">Notes on setting Target Hazard Ratio Differences</h3>
+<p>Target Hazard Ratio Differences (THRD) are also referred to as Clinically Significant Differences (CSD). A “standard” hypothesis test for demonstrating superiority to control uses a CSD of 0. Testing with a non-zero CSD is different, and the implications need to be carefully understood.</p>
+<p>The first mistake to avoid is setting the target hazard ratio difference for success too large. The decisions for success are in terms of the estimated posterior probability that the difference of the hazard ratio from 1 is greater than the target. If the CSD is set to what might be the treatment difference in the “alternate hypothesis” of a standard hypothesis test, we could only expect on average to have a posterior probability that the treatment difference is greater than the CSD of 50%.</p>
+<p>To achieve posterior probabilities of &gt; 50%, the observed difference must be greater than the target difference. To achieve the desired power by lowering the required posterior probability would be a mistake, as posterior probability thresholds of &lt; 50% have the undesirable characteristic that the criteria can be met in circumstances where it can be seen that if further data was gathered consistent with what had been seen already, it would lead the threshold no longer being met. The posterior distribution would shrink so that there was no longer sufficient of the tail above the CSD.</p>
+<p>It is better therefore to use a target hazard ratio difference for success that, should the treatment have the value that it is hoped to achieve, we would expect to see some &gt;50% probability of being greater than it. Thus rather than using what might be termed ‘the target value’ for the THRDS, it is better to use ‘the minimum acceptable value’.</p>
+<p>The same target difference can be used to decide futility, requiring a &lt;&lt; 50% confidence that the difference of the hazard ratio from 1 is greater than the target difference. However, particularly if there are other endpoints not being explored in the simulation, or other properties of the treatment (such as convenience, compliance, cost, tolerability etc.) that might justify continued development even if it is not an outright winner on the primary endpoint, it may be that a lower target hazard ration difference needs to be set as the threshold for determining futility – for example sufficient to demonstrate that development even on the basis of non-inferiority on the primary endpoint is likely to fail. Hence FACTS allows separate CSDs to be set for assessing success and futility.</p>
+</section>
+<section id="non-inferiority" class="level3">
+<h3 class="anchored" data-anchor-id="non-inferiority">Non-inferiority</h3>
+<p>In a trial to show non-inferiority, the tab is the same except that ‘Target Hazard Ratio Differences’ are now ‘Margin deltas’ to be set.</p>
+<div id="fig-fig18" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image18.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Group Info tab, in a non-inferiority design.
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="visits" class="level2">
+<h2 class="anchored" data-anchor-id="visits">Visits</h2>
+<p>If events are observed at any time that they occur during follow up, then there is no need to specify a visit schedule, the length of follow up will be as it has been specified on the Study &gt; Study Info tab (above), leave the “Events Are Only Observed at Visits” check box unchecked:</p>
+<div id="fig-fig19" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image19.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Events Observed When They Occur.
+</figcaption>
+</figure>
+</div>
+<p>If observation of event is to be only at visits, the visit schedule needs to be specified. There is an additional observation at the end of follow-up. Visits can be specified one at a time, by entering the required week value for the visit and then clicking ‘Add’, or by specifying a regularly spaced sequence: select ‘Auto-Generate’, enter the number of visits, the week of the first visit and the number of weeks between each visit and then click ‘Generate’.</p>
+<p>Individual visits can be deleted by selecting them in the list and clicking ‘Delete’. The default visit names can be edited by clicking the visit name and typing. The week and the index cannot be changed. Should it be necessary to change the week of a visit, the incorrect visit must be deleted and a new one with the correct week number added.</p>
+<div id="fig-fig20" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image20.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Observation of Events Restricted to Visits.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="variants" class="level2">
+<h2 class="anchored" data-anchor-id="variants">Variants</h2>
+<p>On this tab the user can specify that a number of design variants should be created. Currently the only design feature that can be changed is the sample size (maximum number of subjects).</p>
+<p>If “multiple variants” is checked then the user can specify that simulations setups should be created for each simulation scenario with versions of the design with a different maximum number of subjects.</p>
+<p>The user enters the number of variants they wish to create. Then in the resulting table, enter different maximum subjects for each group that has had a cap specified on the Study &gt; Study Info tab and maximum “Total Subjects” for each variant. On the simulations tab FACTS will then create a copy of all the scenarios to run with each variant.</p>
+<p>In FACTS Enrichment Designs, as well as trial Success and Failure rates, a major Operating Characteristic that we often wish to estimate is the ability of the design (if the trial is successful) to select the ‘right’ groups, depending of course on the scenario being simulated. To enable FACTS to report this the user must specify on the Virtual Subject Response &gt; Explicitly Defined &gt; Group Response profiles which of the groups “Should succeed”, that is, it would constitute a ‘correct selection’ by the design in that scenario.</p>
+<div id="fig-fig21" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../EDTTE/media/image21.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: The Variants tab, specifying 3 variants.
+</figcaption>
+</figure>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<footer style="display: flex; justify-content: space-between; align-items: center;">
+  <!-- Left side: Copyright -->
+  <p style="margin: 0;">
+    © <span id="year"></span>
+    <a href="https://www.berryconsultants.com">Berry Consultants</a>
+  </p>
+
+  <!-- Right side: Relative link -->
+  <p style="margin: 0;">
+    <a href="../../../../../introduction/citation.html">How to Cite</a>
+  </p>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
