@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Virtual Subject Response - Ordinal Endpoint</title>
+<title>Ordinal Endpoint QOIs</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -187,8 +187,8 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page-left">
-      <h1 class="title">Virtual Subject Response - Ordinal Endpoint</h1>
-            <p class="subtitle lead">Description of how to specify the virtual subject response for ordinal endpoints.</p>
+      <h1 class="title">Ordinal Endpoint QOIs</h1>
+            <p class="subtitle lead">QOIs specific to ordinal endpoints.</p>
                       </div>
   </div>
     
@@ -209,9 +209,17 @@ window.Quarto = {
     <h2 id="toc-title">Table of Contents</h2>
    
   <ul>
-  <li><a href="#explicitly-defined-ordinal-response" id="toc-explicitly-defined-ordinal-response" class="nav-link active" data-scroll-target="#explicitly-defined-ordinal-response">Explicitly Defined Ordinal Response</a>
+  <li><a href="#posterior-probability-qois" id="toc-posterior-probability-qois" class="nav-link active" data-scroll-target="#posterior-probability-qois">Posterior probability QOIs</a>
   <ul>
-  <li><a href="#dose-response" id="toc-dose-response" class="nav-link" data-scroll-target="#dose-response">Dose Response</a></li>
+  <li><a href="#cumulative-logistic-modeling" id="toc-cumulative-logistic-modeling" class="nav-link" data-scroll-target="#cumulative-logistic-modeling">Cumulative logistic modeling</a></li>
+  <li><a href="#dirichlet-modeling" id="toc-dirichlet-modeling" class="nav-link" data-scroll-target="#dirichlet-modeling">Dirichlet modeling</a></li>
+  </ul></li>
+  <li><a href="#p-values" id="toc-p-values" class="nav-link" data-scroll-target="#p-values"><span class="math inline">\(p\)</span>-values</a>
+  <ul>
+  <li><a href="#utility-t-test" id="toc-utility-t-test" class="nav-link" data-scroll-target="#utility-t-test">Utility <span class="math inline">\(t\)</span>-test</a></li>
+  <li><a href="#wilcoxon-test" id="toc-wilcoxon-test" class="nav-link" data-scroll-target="#wilcoxon-test">Wilcoxon test</a></li>
+  <li><a href="#proportional-odds-likelihood-ratio-test" id="toc-proportional-odds-likelihood-ratio-test" class="nav-link" data-scroll-target="#proportional-odds-likelihood-ratio-test">Proportional odds likelihood ratio test</a></li>
+  <li><a href="#dichotomized-ordinal-test" id="toc-dichotomized-ordinal-test" class="nav-link" data-scroll-target="#dichotomized-ordinal-test">Dichotomized ordinal test</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -223,70 +231,45 @@ window.Quarto = {
 
 
 
-<p>In FACTS Core with an ordinal endpoint there are 2 different ways to specify the virtual subject response:</p>
-<ol type="1">
-<li><p>Explicit specification of all outcome probabilities</p></li>
-<li><p>Explicit specification of outcome probabilities for the control arm, plus an odds ratio for each other arm that defines a proportional odds treatment effect deviation from the control probabilities.</p></li>
-</ol>
-<section id="explicitly-defined-ordinal-response" class="level1">
-<h1>Explicitly Defined Ordinal Response</h1>
-<p>Explicitly defined VSRs are the most common type specified in FACTS. In dichotomous endpoint designs, an explicitly defined VSR is specified by providing a response rate for each arm in the trial. The dichotomous final outcome will be simulated having the desired response rate, and longitudinal correlation can be simulated connecting subjects’ intermediate endpoints to the final endpoint.</p>
-<section id="dose-response" class="level2">
-<h2 class="anchored" data-anchor-id="dose-response">Dose Response</h2>
-<!--- ![The Explicitly Defined > Dose Response model for an ordinal endpoint.](../coreUGattachments/dichotomous/media/image20.png){#fig-expdrd} --->
-<p>Dose response profiles can be added and deleted. For each profile the user may use either of these specifications:</p>
-<ol type="1">
-<li><p>The outcome probabilities for each treatment arm (if “Use proportional odds” is unchecked). FACTS allows the user to supply unnormalized probabilities (for example, counts) and will convert the input into a vector of probabilities that sum to one.</p></li>
-<li><p>The outcome probabilities for the control arm (which can be entered unnormalized), and an odds ratio for each other arm. If the normalized probabilities for the control arm are denoted by <span class="math inline">\((p^0_1,p^0_2,\ldots,p^0_K)\)</span> and the odds ratio for the <span class="math inline">\(d^{th}\)</span> arm is <span class="math inline">\(\exp(\theta_d)\)</span>, then the probabilities for the <span class="math inline">\(d^{th}\)</span> arm are given by <span class="math display">\[\mbox{logit}\left(\sum_{j=1}^k p^d_j\right)=\mbox{logit}\left(\sum_{j=1}^k p^0_j\right) - \theta_d\]</span> for <span class="math inline">\(k=1,2,\ldots,K-1\)</span>.</p></li>
-</ol>
-<p>In addition, FACTS provides a check box that allows the user to specify whether a specific arm “should succeed” in that scenario: so that FACTS can report on the proportion of simulations that were successful <strong>and</strong> a ‘good’ treatment arm selected.</p>
-<!--- The graph on the tab shows the mean response rate specified and the target. --->
-<!---
-#### Load Scenario Outcome Data From File
-
-If the "Load scenario outcome data from file" option is selected then in
-scenarios using this profile the simulations will use a range of dose
-responses. Each individual simulation uses one set of outcome probabilities
-from the supplied file, each row being used in an equal number of
-simulations. The summary results are thus averaged over all the VSRs in
-the file. The use of this form of simulation is somewhat different from
-simulations using a single rate or single external virtual subject
-response file. When all the simulations are simulated from one 'truth'
-then the purpose of the simulations is to analyse the performance of the
-design under that specific circumstance. When the simulations are based
-on a range of 'truths' then the summary results show the expected
-probability of the different outcomes for the trial over that range of
-possible circumstances. Note that to give different VSRs different
-weights of expectation, the more likely VSRs should be repeated within
-the file.
-
- ![The Explicitly Defined > Dose Response tab when loading scenario means from a file.](../coreUGattachments/dichotomous/media/image21.png){#fig-expmeansfromfiledich}
-
-After selecting the ".mvsr" file the graph shows the individual response
-rates and the mean response rate over all the VSRs.
-
-The format of the ".mvsr" file is a simple CSV text file. Lines starting
-with a '#' character are ignored, so the file can include comment and
-header lines. There must be one column per treatment arm, and they must
-be in dose index order. Each value is the underlying response rate to
-simulate. E.g.:
-
-```
-#Cntrl, D1, D2, D3, D4
-0.05, 0.1, 0.15, 0.25, 0.5
-0.05, 0.1, 0.15, 0.23, 0.45
-0.05, 0.1, 0.15, 0.21, 0.4
-0.05, 0.1, 0.15, 0.19, 0.35
-0.05, 0.1, 0.15, 0.17, 0.3
-0.05, 0.1, 0.15, 0.15, 0.25
-```
---->
-<!---
-## Longitudinal
-
-The tab for defining ordinal longitudinal response profiles 
-
---->
+<p>The FACTS Ordinal Engine features several special quantities of interest.</p>
+<section id="posterior-probability-qois" class="level1">
+<h1>Posterior probability QOIs</h1>
+<p>The posterior probability QOIs available depend on whether the user has chosen to model the ordinal endpoint with the cumulative logistic family or with independent Dirichlet distributions.</p>
+<section id="cumulative-logistic-modeling" class="level2">
+<h2 class="anchored" data-anchor-id="cumulative-logistic-modeling">Cumulative logistic modeling</h2>
+<p>When the cumulative logistic family is in use, each arm other than control has an odds ratio parameter relative to control. Posterior probability QOIs are defined based on these odds ratios. By default, the following posterior probability QOIs are available, (here <span class="math inline">\(OR_d\)</span> is <span class="math inline">\(\exp(\theta_d)\)</span> where the <span class="math inline">\(\theta_d\)</span>’s are the parameters defined in the dose-response model):</p>
+<ul>
+<li><p>The probability of being better than control, which is <span class="fake-code-block">Pr(<span class="math inline">\(OR_d &gt; 1\)</span>)</span> when large values of the ordinal index are good, or <span class="fake-code-block">Pr(<span class="math inline">\(OR_d &lt; 1\)</span>)</span> when small values are good.</p></li>
+<li><p>The probability of being better than control by a clinically significant difference, which is <span class="fake-code-block">Pr(<span class="math inline">\(OR_d - 1 &gt; CSD\)</span>)</span> when large values are good, or <span class="fake-code-block">Pr(<span class="math inline">\(OR_d - 1 &lt; -CSD\)</span>)</span> when small values are good. The CSD is entered by the user in the Standard Evaluation Variables section of the Quantities of Interest tab.</p></li>
+</ul>
+</section>
+<section id="dirichlet-modeling" class="level2">
+<h2 class="anchored" data-anchor-id="dirichlet-modeling">Dirichlet modeling</h2>
+<p>When the user has selected independent Dirichlet modeling for the ordinal endpoint, the posterior probability QOIs are based on expected utility. The default posterior probability QOIs are:</p>
+<ul>
+<li><p>The probability of being better than control with respect to expected utility, which is <span class="fake-code-block">Pr(<span class="math inline">\(EU_d &gt; EU_{Control}\)</span>)</span>. Here <span class="math inline">\(EU_d = \sum_{k=1}^K p^d_k U_k\)</span>, where <span class="math inline">\(p^d_k\)</span> is the probability of ordinal outcome <span class="math inline">\(k\)</span> for arm <span class="math inline">\(d\)</span> and where <span class="math inline">\(U_k\)</span> is the utility for outcome <span class="math inline">\(k\)</span>.</p></li>
+<li><p>The probability of being better than control by a clinical significant difference, which is <span class="fake-code-block">Pr(<span class="math inline">\(EU_d &gt; EU_{Control} + CSD\)</span>)</span> regardless of whether large or small values of the ordinal endpoint are good (large values of utility are always good). The CSD is entered by the user in the Standard Evaluation Variables section of the Quantities of Interest tab.</p></li>
+</ul>
+</section>
+</section>
+<section id="p-values" class="level1">
+<h1><span class="math inline">\(p\)</span>-values</h1>
+<p>The Ordinal Engine has the following different frequentist final analyses available. If there are multiple experimental arms, the <span class="math inline">\(p\)</span>-values can optionally be adjusted using the Bonferroni correction. The <span class="math inline">\(p\)</span>-values may handle missing values by ignoring them or by imputing a specific ordinal outcome chosen by the user.</p>
+<section id="utility-t-test" class="level2">
+<h2 class="anchored" data-anchor-id="utility-t-test">Utility <span class="math inline">\(t\)</span>-test</h2>
+<p>One option is to perform a <span class="math inline">\(t\)</span>-test on the utility values observed, comparing each experimental arm to control.</p>
+</section>
+<section id="wilcoxon-test" class="level2">
+<h2 class="anchored" data-anchor-id="wilcoxon-test">Wilcoxon test</h2>
+<p>FACTS will also perform a Wilcoxon-Mann-Whitney test comparing each experimental arm to control. FACTS adjusts for ties in computing the <span class="math inline">\(p\)</span>-value.</p>
+</section>
+<section id="proportional-odds-likelihood-ratio-test" class="level2">
+<h2 class="anchored" data-anchor-id="proportional-odds-likelihood-ratio-test">Proportional odds likelihood ratio test</h2>
+<p>FACTS will also perform a likelihood ratio test based on the proportional odds model, comparing each experimental arm to control. It fits a multinomial model to both arms together, and also fits a model where the experimental arm has a single proportional odds model deviation from control, and compares twice the logged ratio of maximized likelihoods to the chi-squared distribution with one degree of freedom. In practice, this test will often give similar results to the Wilcoxon test. (See, for example, blog posts by Harrell.)</p>
+</section>
+<section id="dichotomized-ordinal-test" class="level2">
+<h2 class="anchored" data-anchor-id="dichotomized-ordinal-test">Dichotomized ordinal test</h2>
+<p>FACTS will also test whether the probability of a “good” outcome is larger for an experimental arm than it is for control. The user defines a “good” outcome using the “Definition of Success” selector in the “Standard Evaluation Variables” section. Dichotomizing an ordinal outcome is rarely a good choice because much of the information in the ordinal outcome is wasted. See, for example, Podcast by Scott Berry. FACTS simulations can be useful in demonstrating the reduction in power when an ordinal endpoint is dichotomized.</p>
 
 
 </section>
