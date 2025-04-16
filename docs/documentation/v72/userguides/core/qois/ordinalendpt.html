@@ -217,10 +217,18 @@ window.Quarto = {
   <li><a href="#p-values" id="toc-p-values" class="nav-link" data-scroll-target="#p-values"><span class="math inline">\(p\)</span>-values</a>
   <ul>
   <li><a href="#utility-t-test" id="toc-utility-t-test" class="nav-link" data-scroll-target="#utility-t-test">Utility <span class="math inline">\(t\)</span>-test</a></li>
-  <li><a href="#wilcoxon-test" id="toc-wilcoxon-test" class="nav-link" data-scroll-target="#wilcoxon-test">Wilcoxon test</a></li>
+  <li><a href="#wilcoxon-mann-whitney-test" id="toc-wilcoxon-mann-whitney-test" class="nav-link" data-scroll-target="#wilcoxon-mann-whitney-test">Wilcoxon-Mann-Whitney test</a></li>
   <li><a href="#proportional-odds-likelihood-ratio-test" id="toc-proportional-odds-likelihood-ratio-test" class="nav-link" data-scroll-target="#proportional-odds-likelihood-ratio-test">Proportional odds likelihood ratio test</a></li>
   <li><a href="#dichotomized-ordinal-test" id="toc-dichotomized-ordinal-test" class="nav-link" data-scroll-target="#dichotomized-ordinal-test">Dichotomized ordinal test</a></li>
   </ul></li>
+  <li><a href="#bayesian-predictive-probabilities" id="toc-bayesian-predictive-probabilities" class="nav-link" data-scroll-target="#bayesian-predictive-probabilities">Bayesian Predictive Probabilities</a>
+  <ul>
+  <li><a href="#current-trial-bayesian-predictive-probabilities" id="toc-current-trial-bayesian-predictive-probabilities" class="nav-link" data-scroll-target="#current-trial-bayesian-predictive-probabilities">Current Trial Bayesian Predictive Probabilities</a></li>
+  <li><a href="#future-trial-bayesian-predictive-probabilities" id="toc-future-trial-bayesian-predictive-probabilities" class="nav-link" data-scroll-target="#future-trial-bayesian-predictive-probabilities">Future Trial Bayesian Predictive Probabilities</a></li>
+  <li><a href="#conditional-power" id="toc-conditional-power" class="nav-link" data-scroll-target="#conditional-power">Conditional Power</a></li>
+  </ul></li>
+  <li><a href="#decision-quantities" id="toc-decision-quantities" class="nav-link" data-scroll-target="#decision-quantities">Decision Quantities</a></li>
+  <li><a href="#standard-evaluation-variables" id="toc-standard-evaluation-variables" class="nav-link" data-scroll-target="#standard-evaluation-variables">Standard Evaluation Variables</a></li>
   </ul>
 </nav>
     </div>
@@ -257,11 +265,11 @@ window.Quarto = {
 <p>The Ordinal Engine has the following different frequentist final analyses available. If there are multiple experimental arms, the <span class="math inline">\(p\)</span>-values can optionally be adjusted using the Bonferroni correction. The <span class="math inline">\(p\)</span>-values may handle missing values by ignoring them or by imputing a specific ordinal outcome chosen by the user.</p>
 <section id="utility-t-test" class="level2">
 <h2 class="anchored" data-anchor-id="utility-t-test">Utility <span class="math inline">\(t\)</span>-test</h2>
-<p>One option is to perform a <span class="math inline">\(t\)</span>-test on the utility values observed, comparing each experimental arm to control.</p>
+<p>One option is to perform a <span class="math inline">\(t\)</span>-test on the utility values observed, comparing each experimental arm to control, in the same way as with a continuous endpoint.</p>
 </section>
-<section id="wilcoxon-test" class="level2">
-<h2 class="anchored" data-anchor-id="wilcoxon-test">Wilcoxon test</h2>
-<p>FACTS will also perform a Wilcoxon-Mann-Whitney test comparing each experimental arm to control. FACTS adjusts for ties in computing the <span class="math inline">\(p\)</span>-value.</p>
+<section id="wilcoxon-mann-whitney-test" class="level2">
+<h2 class="anchored" data-anchor-id="wilcoxon-mann-whitney-test">Wilcoxon-Mann-Whitney test</h2>
+<p>FACTS will also perform a Wilcoxon-Mann-Whitney (rank sum) test comparing each experimental arm to control. FACTS adjusts for ties in computing the <span class="math inline">\(p\)</span>-value.</p>
 </section>
 <section id="proportional-odds-likelihood-ratio-test" class="level2">
 <h2 class="anchored" data-anchor-id="proportional-odds-likelihood-ratio-test">Proportional odds likelihood ratio test</h2>
@@ -269,10 +277,40 @@ window.Quarto = {
 </section>
 <section id="dichotomized-ordinal-test" class="level2">
 <h2 class="anchored" data-anchor-id="dichotomized-ordinal-test">Dichotomized ordinal test</h2>
-<p>FACTS will also test whether the probability of a “good” outcome is larger for an experimental arm than it is for control. The user defines a “good” outcome using the “Definition of Success” selector in the “Standard Evaluation Variables” section. Dichotomizing an ordinal outcome is rarely a good choice because much of the information in the ordinal outcome is wasted. See, for example, Podcast by Scott Berry. FACTS simulations can be useful in demonstrating the reduction in power when an ordinal endpoint is dichotomized.</p>
-
-
+<p>FACTS will also test whether the probability of a “good” outcome is larger for an experimental arm than it is for control. The user defines a “good” outcome using the “Definition of Success” selector in the “Standard Evaluation Variables” section. The test is the same as for a dichotomous endpoint.</p>
+<p>Dichotomizing an ordinal outcome is rarely a good choice because much of the information in the ordinal outcome is wasted. See, for example, Podcast by Scott Berry. FACTS simulations can be useful in demonstrating the reduction in power when an ordinal endpoint is dichotomized.</p>
 </section>
+</section>
+<section id="bayesian-predictive-probabilities" class="level1">
+<h1>Bayesian Predictive Probabilities</h1>
+<p>Bayesian predictive probabilities are available for any of the four <span class="math inline">\(p\)</span>-value-based frequentist final analyses described above. As with other endpoints, these can be predictions of the result of the current trial, or a separate two-arm trial.<br>
+The current trial predictions can refer either to an analysis of the patients currently enrolled but after follow-up is complete, or at the maximum sample size for the trial.</p>
+<p>Here are a few notes about the different predictive probabilities.</p>
+<ul>
+<li><p>Predictive probabilities for the proportional odds likelihood ratio test are likely to be more time-consuming, and less accurate, to simulate than the other <span class="math inline">\(p\)</span>-values. These predictive probabilities require simulating a large number of final data sets, computing the test statistic for each, and counting how many achieved the desired significance level. We recommend substituting the Wilcoxon test while the design is being developed (and maybe permanently); its results should be similar.</p></li>
+<li><p>Predictive probabilities for the Wilcoxon test: Both future trial and current trial predictive probabilities for the Wilcoxon test are computed using formulas developed by Graves for use in simulating trials designed by Berry Consultants including SEPSIS-ACT. The approach is to write the Wilcoxon-Mann-Whitney as a sum, over pairs of patients, of indicators that an experimental arm patient has a better outcome than a control arm patients, and then correctly computes the predictive mean and variance of this sum as a function of the probabilities of each outcome for each arm. The results are then averaged over a large number of Markov chain Monte Carlo samples of outcome probabilities. The predictive probabilities computed in this way are very accurate, the only exception is when there are a very small number of future patients whose data are yet to be collected.</p></li>
+</ul>
+<section id="current-trial-bayesian-predictive-probabilities" class="level2">
+<h2 class="anchored" data-anchor-id="current-trial-bayesian-predictive-probabilities">Current Trial Bayesian Predictive Probabilities</h2>
+<p>For general discussion of current trial Bayesian predictive probabilities, see the core QOIs page.</p>
+</section>
+<section id="future-trial-bayesian-predictive-probabilities" class="level2">
+<h2 class="anchored" data-anchor-id="future-trial-bayesian-predictive-probabilities">Future Trial Bayesian Predictive Probabilities</h2>
+<p>For general discussion of future trial Bayesian predictive probabilities, see the core QOIs page.</p>
+</section>
+<section id="conditional-power" class="level2">
+<h2 class="anchored" data-anchor-id="conditional-power">Conditional Power</h2>
+<p>Conditional power in trials with an ordinal endpoint will be added in a future release of FACTS Ordinal.</p>
+</section>
+</section>
+<section id="decision-quantities" class="level1">
+<h1>Decision Quantities</h1>
+<p>Decision quantities in FACTS Ordinal operate similarly to decision quantities with other FACTS endpoints.</p>
+</section>
+<section id="standard-evaluation-variables" class="level1">
+<h1>Standard Evaluation Variables</h1>
+
+
 </section>
 
 </main> <!-- /main -->
