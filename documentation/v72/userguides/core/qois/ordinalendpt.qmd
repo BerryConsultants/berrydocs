@@ -65,12 +65,12 @@ ignoring them or by imputing a specific ordinal outcome chosen by the user.
 ## Utility $t$-test
 
 One option is to perform a $t$-test on the utility values observed, comparing 
-each experimental arm to control.  
+each experimental arm to control, in the same way as with a continuous endpoint.  
 
-## Wilcoxon test
+## Wilcoxon-Mann-Whitney test
 
-FACTS will also perform a Wilcoxon-Mann-Whitney test comparing each experimental 
-arm to control. FACTS adjusts for ties in computing the $p$-value.   
+FACTS will also perform a Wilcoxon-Mann-Whitney (rank sum) test comparing each 
+experimental arm to control. FACTS adjusts for ties in computing the $p$-value.   
 
 ## Proportional odds likelihood ratio test
 
@@ -87,8 +87,66 @@ test.  (See, for example, blog posts by Harrell.)
 FACTS will also test whether the probability of a "good" outcome is larger for 
 an experimental arm than it is for control.  The user defines a "good" outcome 
 using the "Definition of Success" selector in the "Standard Evaluation Variables"
-section.  Dichotomizing an ordinal outcome is rarely a good choice because much 
+section.  The test is the same as for a dichotomous endpoint.  
+
+Dichotomizing an ordinal outcome is rarely a good choice because much 
 of the information in the ordinal outcome is wasted.  See, for example, 
 Podcast by Scott Berry.  FACTS simulations can be useful in demonstrating the 
 reduction in power when an ordinal endpoint is dichotomized.   
+
+# Bayesian Predictive Probabilities
+
+Bayesian predictive probabilities are available for any of the four $p$-value-based 
+frequentist final analyses described above.  As with other endpoints, these can 
+be predictions of the result of the current trial, or a separate two-arm trial.  
+The current trial predictions can refer either to an analysis of the patients 
+currently enrolled but after follow-up is complete, or at the maximum sample 
+size for the trial.  
+
+Here are a few notes about the different predictive probabilities.  
+
+- Predictive probabilities for the proportional odds likelihood ratio test are 
+likely to be more time-consuming, and less accurate, to simulate than the other 
+$p$-values.  These predictive probabilities require simulating a large number of 
+final data sets, computing the test statistic for each, and counting how many 
+achieved the desired significance level.  We recommend substituting the 
+Wilcoxon test while the design is being developed (and maybe permanently); its
+results should be similar.  
+
+- Predictive probabilities for the Wilcoxon test:
+Both future trial and current trial predictive probabilities for the Wilcoxon 
+test are computed using formulas developed by Graves for use in simulating 
+trials designed by Berry Consultants including SEPSIS-ACT.  The approach is to write
+the Wilcoxon-Mann-Whitney as a sum, over pairs of patients, of indicators that 
+an experimental arm patient has a better outcome than a control arm patients, 
+and then correctly computes the predictive mean and variance of this sum as a 
+function of the probabilities of each outcome for each arm.  The results are 
+then averaged over a large number of Markov chain Monte Carlo samples of 
+outcome probabilities.  The predictive probabilities computed in this way are 
+very accurate, the only exception is when there are a very small number of future 
+patients whose data are yet to be collected.  
+
+## Current Trial Bayesian Predictive Probabilities
+
+For general discussion of current trial Bayesian predictive probabilities, 
+see the core QOIs page.  
+
+## Future Trial Bayesian Predictive Probabilities
+
+For general discussion of future trial Bayesian predictive probabilities, 
+see the core QOIs page.  
+
+## Conditional Power
+
+Conditional power in trials with an ordinal endpoint 
+will be added in a future release of FACTS Ordinal.  
+
+# Decision Quantities
+
+Decision quantities in FACTS Ordinal operate similarly to decision quantities with 
+other FACTS endpoints.
+
+# Standard Evaluation Variables
+
+
 
