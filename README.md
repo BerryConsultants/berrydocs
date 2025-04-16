@@ -2,7 +2,7 @@
 
 The repository at hand hosts the Knowledge Hub. The website is deployed from the `/docs` folder of the `main` branch of the repository, so any changes not reflected in the `/docs` folder of the `main` branch will not be reflected on the live website.
 
-The website is built using *Quarto*, which means the `/docs` folder is populated automatically using the features of *Quarto* and should not be edited manually. In order to work on the website, you will need to have [*Git*](https://git-scm.com/downloads), [*Quarto*](https://quarto.org/docs/get-started/), [*RStudio*](https://posit.co/download/rstudio-desktop/) and [*pandoc*](https://pandoc.org/installing.html) installed. You will also need to have [*python3*](https://www.python.org/downloads/) installed with Jupiter notebooks via running `py -m pip install jupyter` in order to preview the website.
+The website is built using *Quarto*, which means the `/docs` folder is populated automatically using the features of *Quarto* and should not be edited manually. In order to work on the website, you will need to have [*Git*](https://git-scm.com/downloads), [*Quarto*](https://quarto.org/docs/get-started/) and [*pandoc*](https://pandoc.org/installing.html) installed. It is highly recommended that you open the repository as a project in [*RStudio*](https://posit.co/download/rstudio-desktop/) or [*Positron*](https://positron.posit.co). If you choose not to do so, you might not be able to preview the website locally or only with [*python3*](https://www.python.org/downloads/) downloaded and installed and Jupiter notebooks installed via running `py -m pip install jupyter`.
 
 This document is a guide how to modify the contents and build the website using *Quarto* and finally how to deploy the site using *Github pages*. 
 
@@ -35,7 +35,7 @@ Using RStudio's terminal, navigate to the location to where you cloned the `berr
 quarto render
 ```
 
-which re-generates the `/docs` folder from the `.qmd` files following a set of rules specified in the `.yml` and `.css` files. If any errors occur, install the appropriate version of [*Rtools*](https://cran.r-project.org/bin/windows/Rtools/) based on your R version and ensure that you have the following packages installed via `install.packages([name of package], dependencies = TRUE)` using RStudio: `devtools`, `rmarkdown`, `knitr`, `pkgdepends`, `pkgconfig`, `shinylive`.
+which re-generates the `/docs` folder from the `.qmd` files following a set of rules specified in the `.yml` and `.css` files. If any errors occur, you might have to install the appropriate version of [*Rtools*](https://cran.r-project.org/bin/windows/Rtools/) based on your R version and ensure that you have the following packages installed via `install.packages([name of package], dependencies = TRUE)` using RStudio: `devtools`, `rmarkdown`, `knitr`, `pkgdepends`, `pkgconfig`, `shinylive`.
 
 If you want to preview the website, you may run 
 
