@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Nick Berry">
-<meta name="description" content="A description of FACTS’s parameterization of the Inverse Gamma distribution.">
 
-<title>Inverse Gamma Distribution in FACTS</title>
+<title>Longitudinal Modeling in Clinical Trial Design</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -41,11 +39,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<meta name="shinylive:serviceworker_dir" content="../..">
-<script src="../../site_libs/quarto-contrib/shinylive-0.9.1/shinylive/load-shinylive-sw.js" type="module"></script>
-<script src="../../site_libs/quarto-contrib/shinylive-0.9.1/shinylive/run-python-blocks.js" type="module"></script>
-<link href="../../site_libs/quarto-contrib/shinylive-0.9.1/shinylive/shinylive.css" rel="stylesheet">
-<link href="../../site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -107,35 +100,6 @@ background: #125740;
   gtag('config', 'G-WLMVE7GR4S');
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -194,7 +158,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../concepts/facts/DropoutsDeepdive.html">FACTS Tips and Tricks</a></li><li class="breadcrumb-item"><a href="../../concepts/facts/InverseGammaDistribution.html">Inverse Gamma Distribution in FACTS</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../concepts/adaptiveDesigns/index.html">Adaptive Trials</a></li><li class="breadcrumb-item"><a href="../../concepts/adaptiveDesigns/longitudinalModels.html">Longitudinal Modeling in Clinical Trial Design</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -203,35 +167,16 @@ window.Quarto = {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-right"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../concepts/facts/DropoutsDeepdive.html">FACTS Tips and Tricks</a></li><li class="breadcrumb-item"><a href="../../concepts/facts/InverseGammaDistribution.html">Inverse Gamma Distribution in FACTS</a></li></ol></nav>
-      <h1 class="title">Inverse Gamma Distribution in FACTS</h1>
-                  <div>
-        <div class="description">
-          A description of FACTS’s parameterization of the Inverse Gamma distribution.
-        </div>
-      </div>
-                </div>
+    <div class="quarto-title column-body"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../concepts/adaptiveDesigns/index.html">Adaptive Trials</a></li><li class="breadcrumb-item"><a href="../../concepts/adaptiveDesigns/longitudinalModels.html">Longitudinal Modeling in Clinical Trial Design</a></li></ol></nav>
+      <h1 class="title">Longitudinal Modeling in Clinical Trial Design</h1>
+            <p class="subtitle lead">Methodological Advantages and Challenges</p>
+                      </div>
   </div>
     
-  <div class="quarto-title-meta-author column-page-right">
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-heading">Affiliation</div>
-    
-      <div class="quarto-title-meta-contents">
-      <p class="author"><a href="https://www.berryconsultants.com/team-members/nick-berry-phd">Nick Berry</a> </p>
-    </div>
-    <div class="quarto-title-meta-contents">
-          <p class="affiliation">
-              <a href="https://berryconsultants.com/">
-              Berry Consultants
-              </a>
-            </p>
-        </div>
-    </div>
+  
+  <div class="quarto-title-meta column-body">
 
-  <div class="quarto-title-meta column-page-right">
-
-        
+      
     
       
     </div>
@@ -252,14 +197,14 @@ window.Quarto = {
       <div class="sidebar-item-container"> 
             <a href="../../concepts/adaptiveDesigns/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Adaptive Trials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../concepts/adaptiveDesigns/longitudinalModels.html" class="sidebar-item-text sidebar-link">
+  <a href="../../concepts/adaptiveDesigns/longitudinalModels.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Longitudinal Modeling in Clinical Trial Design</span></a>
   </div>
 </li>
@@ -290,13 +235,13 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">FACTS Tips and Tricks</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../concepts/facts/DropoutsDeepdive.html" class="sidebar-item-text sidebar-link">
@@ -305,7 +250,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../concepts/facts/InverseGammaDistribution.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../concepts/facts/InverseGammaDistribution.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Inverse Gamma Distribution in FACTS</span></a>
   </div>
 </li>
@@ -322,342 +267,120 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#importance-in-clinical-trials" id="toc-importance-in-clinical-trials" class="nav-link" data-scroll-target="#importance-in-clinical-trials">Importance in Clinical Trials</a></li>
+  <li><a href="#benefits-of-longitudinal-modeling" id="toc-benefits-of-longitudinal-modeling" class="nav-link" data-scroll-target="#benefits-of-longitudinal-modeling">Benefits of Longitudinal Modeling</a></li>
+  <li><a href="#challenges-and-methodological-considerations" id="toc-challenges-and-methodological-considerations" class="nav-link" data-scroll-target="#challenges-and-methodological-considerations">Challenges and Methodological Considerations</a></li>
+  <li><a href="#applications-by-berry-consultants-and-facts" id="toc-applications-by-berry-consultants-and-facts" class="nav-link" data-scroll-target="#applications-by-berry-consultants-and-facts">Applications by Berry Consultants and FACTS</a>
+  <ul class="collapse">
+  <li><a href="#continuous-endpoints" id="toc-continuous-endpoints" class="nav-link" data-scroll-target="#continuous-endpoints">Continuous Endpoints</a></li>
+  <li><a href="#dichotomous-and-timetoevent-endpoints" id="toc-dichotomous-and-timetoevent-endpoints" class="nav-link" data-scroll-target="#dichotomous-and-timetoevent-endpoints">Dichotomous and Time‑to‑Event Endpoints</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#key-references" id="toc-key-references" class="nav-link" data-scroll-target="#key-references">Key References</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-right" id="quarto-document-content">
+<main class="content quarto-banner-title-block column-body" id="quarto-document-content">
 
 
 
 
 
-<p>The Inverse Gamma distribution is used as a prior for most variances in FACTS. The standard parameterization of the Inverse Gamma distribution using <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> as the shape and scale parameter is not always intuitive for specifying a prior. In order to assist with prior specification, FACTS reparameterizes the Inverse Gamma distribution to be a function of the expected center of the standard deviation and a prior weight.</p>
-<p>The application below is intended to help users of FACTS understand what the distribution they are specifying for the prior of a variance actually looks like.</p>
-<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
-#|   shinylive does not work in self-contained HTML documents.
-#|   Please set `embed-resources: false` in your metadata.
-#| standalone: true
-#| viewerHeight: 800
-
-library(shiny)
-library(bslib)
-library(ggplot2)
-
-qinvgamma = function (p, shape, rate = 1, scale = 1/rate, lower.tail = TRUE, 
-                      log.p = FALSE) 
-{
-  if (missing(rate) &amp;&amp; !missing(scale)) 
-    rate &lt;- 1/scale
-  qgamma(1 - p, shape, rate, lower.tail = lower.tail, log.p = log.p)^(-1)
-}
-pinvgamma = function (q, shape, rate = 1, scale = 1/rate, lower.tail = TRUE, 
-                      log.p = FALSE) 
-{
-  if (missing(rate) &amp;&amp; !missing(scale)) 
-    rate &lt;- 1/scale
-  pgamma(1/q, shape, rate, lower.tail = !lower.tail, log.p = log.p)
-}
-dinvgamma = function (x, shape, rate = 1, scale = 1/rate, log = FALSE) 
-{
-  if (missing(rate) &amp;&amp; !missing(scale)) 
-    rate &lt;- 1/scale
-  log_f &lt;- dgamma(1/x, shape, rate, log = TRUE) - 2 * log(x)
-  if (log) 
-    return(log_f)
-  exp(log_f)
-}
-rinvgamma = function (n, shape, rate = 1, scale = 1/rate) 
-{
-  if (missing(rate) &amp;&amp; !missing(scale)) 
-    rate &lt;- 1/scale
-  1/rgamma(n, shape, rate)
-}
-
-# Define UI for application that draws a histogram
-ui &lt;- fluidPage(
-  tags$head(
-    tags$style(HTML("
-      #radioButtonDiv {
-      display: flex;
-      justify-content: center;
-      }"
-    ))
-  ),
-  withMathJax(),
-  titlePanel(h1("Inverse Gamma Distribution in FACTS", align = "center")),
-  h5('$$\\sigma^2 \\sim \\text{IG}\\left(\\alpha=\\frac{\\text{weight}}{2}, \\beta=\\frac{\\text{center}^2\\;*\\;\\text{weight}}{2}\\right)$$'),
-  sidebarLayout(
-    sidebarPanel(width = 3,
-                 style = "border: 1px solid #000000",
-                 titlePanel(h4("Center/Weight Parameterization")),
-                 fluidRow(
-                   column(width = 10, offset = 1, numericInput(inputId = "center", label = "Center of SD:", value = 5, min = 0, max = Inf, step = "any")),
-                   column(width = 10, offset = 1, numericInput(inputId = "weight", label = "Weight:", value = 2, min = 0.001, max = Inf, step = "any")),
-                 ),
-                 titlePanel(h4("Alpha/Beta Parameterization")),
-                 fluidRow(
-                   column(width = 10, offset = 1, numericInput(inputId = "alpha", label = "Alpha:", value = 1, min = 0.0005, max = Inf, step = "any")),
-                   column(width = 10, offset = 1, numericInput(inputId = "beta", label = "Beta:", value = 25, min = 0, max = Inf, step = "any"))
-                 )
-    ),
-    mainPanel(width = 9,
-              wellPanel(style = "background: white; border: 1px solid #000000",
-                        fluidRow(
-                          column(12,
-                                 div(
-                                   radioButtons("whichParam", 
-                                                "Which parameter should be summarized?", 
-                                                choiceNames = c("Variance \\((\\sigma^2)\\)", "Std. Dev. \\((\\sigma)\\)"), 
-                                                choiceValues = c("sigma2", "sigma"), 
-                                                selected = "sigma2", 
-                                                inline = TRUE),
-                                   id = "radioButtonDiv")
-                          )
-                        ),
-                        uiOutput("sectionTitle"),
-                        fluidRow(
-                          column(width = 4, value_box("Mode", value= uiOutput("mode"), theme = value_box_theme(bg = "#0b2545"))),
-                          column(width = 4, value_box("Median", value= uiOutput("median"), theme = value_box_theme(bg = "#ba5a31"))),
-                          column(width = 4, value_box("Mean", value= uiOutput("mean"), theme = value_box_theme(bg = "#06402b")))
-                        ),
-                        br(),
-                        plotOutput("igDistributionPlot")
-              )
-    )
-  )
-)
-
-# Define server logic required to draw a histogram
-server &lt;- function(input, output, session) {
-  
-  update &lt;- reactiveVal(TRUE)
-  
-  observeEvent(input$center | input$weight, {
-    cat("CenterWeightChanged\n")
-    ctr = input$center
-    wgt = input$weight
-    
-    if(update() &amp; !is.null(ctr) &amp; !is.null(wgt) &amp; !is.na(ctr) &amp; !is.na(wgt) &amp; ctr &gt; 0 &amp; wgt &gt; 0) {
-      a = wgt/2
-      b = ctr^2*wgt/2
-      
-      updateNumericInput(session, "alpha", value = a)
-      updateNumericInput(session, "beta", value = b)
-      
-      update(FALSE)
-    } else {
-      update(TRUE)
-    }
-  })
-  observeEvent(input$alpha | input$beta, {
-    cat("AlphaBetaChanged\n")
-    a = input$alpha
-    b = input$beta
-    
-    if(update() &amp; !is.null(a) &amp; !is.null(b) &amp; !is.na(a) &amp; !is.na(b) &amp; a &gt; 0 &amp; b &gt; 0) {
-      wgt = 2*a
-      ctr = sqrt(b/a)
-      
-      updateNumericInput(session, "center", value = ctr)
-      updateNumericInput(session, "weight", value = wgt)
-      
-      update(FALSE)
-    } else {
-      update(TRUE)
-    }
-  })
-  
-  meanHolder = reactiveVal(NA)
-  
-  output$mean = renderText({
-    cat("CalcMean\n")
-    a = input$alpha
-    b = input$beta
-    
-    if(a &gt; 1) {
-      if(input$whichParam == "sigma2") {
-        meanHolder(b/(a-1))
-        return(round(b/(a-1), 2))
-      } else {
-        tmp = mean(sqrt(rinvgamma(10000, a, b)))
-        meanHolder(tmp)
-        return(round(tmp, 2))
-      }
-    } else {
-      meanHolder(NA)
-      return("-")
-    }
-  })
-  output$median = renderText({
-    cat("CalcMedian\n")
-    a = input$alpha
-    b = input$beta
-    
-    if(input$whichParam == "sigma2") {
-      return(round(qinvgamma(0.5, shape = a, rate = b), 2))
-    } else {
-      return(round(sqrt(qinvgamma(0.5, shape = a, rate = b)),2))
-    }
-  })
-  
-  output$mode = renderText({
-    cat("CalcMode\n")
-    a = input$alpha
-    b = input$beta
-    
-    if(input$whichParam == "sigma2") {
-      return(round(b/(a+1),2))
-    } else {
-      lmode = 0
-      hmode = max(b/(a+1), 2)
-      smode = seq(lmode, hmode, length.out = 100001)
-      dmode = dinvgamma(smode, a, b)*(1/(2*sqrt(smode)))
-      calcMode = sqrt(smode[which.max(dmode)])
-      
-      return(round(calcMode, 2))
-    }
-  })
-  
-  output$sectionTitle = renderUI({
-    cat("ChangeHeader\n")
-    if(input$whichParam == "sigma2") {
-      return(h4("Characteristics of the Variance"))
-    } else {
-      return(h4("Characteristics of the Standard Deviation"))
-    }
-  })
-  
-  output$igDistributionPlot = renderPlot({
-    cat("MakePlot\n")
-    a = input$alpha
-    b = input$beta
-    wchParam = input$whichParam
-    isolate({
-      if(!is.null(a) &amp; !is.null(b) &amp; !is.null(input$center) &amp; !is.null(input$weight) &amp;
-         a &gt; 0 &amp; b &gt; 0 &amp; input$center &gt; 0 &amp; input$weight &gt; 0) {
-        if(wchParam == "sigma2") {
-          lowerbound = 0
-          upperbound = qinvgamma(.995, a, b)
-          upperbound = min(1e15, upperbound)
-          
-          sq0to1 = seq(1e-10, 1-(1e-10), length.out = 1000)
-          sq = qinvgamma(sq0to1, a, b)
-          #  sq = seq(1e-10,upperbound, length.out = 1001)
-          
-          df = data.frame(sq = sq,
-                          density = dinvgamma(sq, a, b))
-          
-          modeDensity = dinvgamma(b/(a+1), a, b)
-          
-          if(df$density[sum(is.finite(df$density))] &gt; modeDensity*.01) {
-            maxPlot = sq[length(sq)]
-          } else {
-            maxPlot = sq[min(which(df$density &lt; modeDensity*.01 &amp; sq &gt; sq[which.max(df$density)]))]
-          }
-          maxPlot = max(maxPlot, 2*(b/(a+1)))
-          
-          sq0to1 = c(10^seq(-17, -2, length.out = 51), seq(.0101, pinvgamma(maxPlot*1.1, a, b), length.out = 1001))
-          sq = qinvgamma(sq0to1, a, b)
-          
-          df = data.frame(sq = sq,
-                          density = dinvgamma(sq, a, b))
-          
-          p1 = ggplot(data = df) + geom_line(aes(x = sq, y = density)) + geom_area(aes(x = sq, y = density), fill = "gray80") +
-            theme_bw() +
-            xlab("Variance") + ylab("Density") +
-            scale_y_continuous(expand = c(0, 0)) +
-            ggtitle("Probability Distribution of the Variance") +
-            coord_cartesian(xlim = c(0, maxPlot), ylim = c(0, modeDensity*1.3)) +
-            theme(text = element_text(size = 18))
-          
-          if(a &gt; 1) {
-            meantmp = meanHolder()
-            p1 = p1 + geom_vline(xintercept = meantmp, color = "#06402b") + annotate(geom="label", color = "white", fill = "#06402b", x = meantmp, y = modeDensity*1.15, label = "mean", angle=90, size = 4.5)
-          }
-          p1 = p1 + geom_vline(xintercept = b/(a+1), color = "#0b2545") + annotate(geom="label", color = "white", fill = "#0b2545", x = b/(a+1), y = modeDensity*1.15, label = "mode", angle=90, size = 4.5)
-          
-          if(is.finite(qinvgamma(.5, a, b))) {
-            p1 = p1 + geom_vline(xintercept = qinvgamma(.5, a, b), color = "#ba5a31") + annotate(geom="label", color = "white", fill = "#ba5a31", x = qinvgamma(.5, a, b), y = modeDensity*1.15, label = "median", angle=90, size = 4.5)
-          }
-          
-          p1 = p1 + geom_vline(xintercept = b/a) + annotate(geom="label", x = b/a, y = modeDensity*1.15, label = "center", angle=90, size = 4.5)
-          
-          p1
-        }
-        else {
-          #df = data.frame(sq = sq,
-          #density = dinvgamma(sq, a, b)*(1/(2*sqrt(sq))))
-          
-          lowerbound = 0
-          upperbound = qinvgamma(.995, a, b)
-          upperbound = min(1e15, upperbound)
-          
-          sq0to1 = seq(1e-10, 1-(1e-10), length.out = 1000)
-          sq = qinvgamma(sq0to1, a, b)
-          df = data.frame(sq = sq,
-                          density = dinvgamma(sq, a, b)*(2*sqrt(sq)))#(1/(2*sqrt(sq))))
-          
-          lmode = 0
-          hmode = max(b/(a), 2)
-          smode = seq(lmode, hmode, length.out = 1001)
-          dmode = dinvgamma(smode, a, b)*(2*sqrt(smode))#(1/(2*sqrt(smode)))
-          wchMax = which.max(dmode)
-          if(wchMax &gt; 1) {
-            smode2 = seq(smode[wchMax-1], smode[wchMax + 1], length.out = 1001)
-            dmode2 = dinvgamma(smode2, a, b)*(2*sqrt(smode2))#(1/(2*sqrt(smode2)))
-            wchMax = which.max(dmode2)
-          } else {
-            smode2 = seq(0, smode[2], length.out = 1000)
-            dmode2 = dinvgamma(smode2, a, b)*(2*sqrt(smode2))#(1/(2*sqrt(smode2)))
-            wchMax = which.max(dmode2)
-          }
-          calcMode = sqrt(smode2[wchMax])
-          
-          modeDensity = dinvgamma(calcMode^2, a, b)*(2*calcMode)#(1/(2*calcMode))
-          
-          if(df$density[sum(is.finite(df$density))] &gt; modeDensity*.01) {
-            maxPlot = sq[length(sq)]
-          } else {
-            maxPlot = sq[min(which(df$density &lt; modeDensity*.01 &amp; sq &gt; sq[which.max(df$density)]))]
-          }
-          maxPlot = max(maxPlot, 2*smode2[wchMax])
-          
-          sq = (seq(1e-10,sqrt(maxPlot*1.1), length.out = 1001))^2
-          
-          df = data.frame(sq = sq,
-                          density = dinvgamma(sq, a, b)*(2*sqrt(sq)))#(1/(2*sqrt(sq))))
-          
-          p1 = ggplot(data = df) + geom_line(aes(x = sqrt(sq), y = density)) + geom_area(aes(x = sqrt(sq), y = density), fill = "gray80") +
-            theme_bw() +
-            xlab("Standard Deviation") + ylab("Density") +
-            scale_y_continuous(expand = c(0, 0)) +
-            ggtitle("Probability Distribution of the Standard Deviation") +
-            coord_cartesian(xlim = c(0, sqrt(maxPlot)), ylim = c(0, modeDensity*1.3)) +
-            theme(text = element_text(size = 18))
-          
-          if(a &gt; 1) {
-            meantmp = meanHolder()
-            p1 = p1 + geom_vline(xintercept = meantmp, color = "#06402b") + annotate(geom="label", color = "white", fill = "#06402b", x = meantmp, y = modeDensity*1.15, label = "mean", angle=90, size = 4.5)
-          }
-          
-          p1 = p1 + geom_vline(xintercept = calcMode, color = "#0b2545") + annotate(geom="label", color = "white", fill = "#0b2545", x = calcMode, y = modeDensity*1.15, label = "mode", angle=90, size = 4.5)
-          if(is.finite(sqrt(qinvgamma(.5, a, b)))) {
-            p1 = p1 + geom_vline(xintercept = sqrt(qinvgamma(.5, a, b)), color = "#ba5a31") + annotate(geom="label", color = "white", fill = "#ba5a31", x = sqrt(qinvgamma(.5, a, b)), y = modeDensity*1.15, label = "median", angle=90, size = 4.5)
-          }
-          p1 = p1 + geom_vline(xintercept = sqrt(b/a)) + annotate(geom="label", x = sqrt(b/a), y = modeDensity*1.15, label = "center", angle=90, size = 4.5)
-          
-          p1
-        }
-      }
-    })
-  })
-}
-
-shinyApp(ui = ui, server = server)
-</code></pre>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Adaptive designs have, rightfully, become pervasive in clinical trials. Early stopping for efficacy or futility, as in group sequential, goldilocks, and promising zone designs, aim to make decisions before the maximum sample size has been reached. These trials can decrease expected sample size without sacrificing power or type I error. Response adaptive randomization, arm dropping, and other randomization manipulation strategies have been researched thoroughly and implemented widely. Adaptive allocation can focus randomization so that more data is collected on arms of interest. These methods are used broadly and recognized as cutting edge methods that diverge from the classic paradigm of how information is used in a clinical trial.</p>
+<p>A frontier that has similar goals as the previously mentioned adaptations, but has not been the focus of as much research is the use of early endpoint data in adaptive decision making. It’s a seemingly obvious statistical observation that a well-designed clinical trial should use all data available to it to make decisions. Despite that, it is common to ignore early data about subjects in a clinical trial, often to the extent that only subjects with complete information are included in statistical analyses.</p>
+<p>Longitudinal modeling leverages data collected from individual subjects before the final endpoint time to improve estimation of the final endpoint. For the purposes of this article, this inclusion of early subject data in the primary analysis model is done through multiple imputation of the final endpoint given early subject data. The statistical model that links early endpoint data with the final endpoint to allow for the imputation is called the longitudinal model. This imputation through the longitudinal model allows for improvements in the estimation of the final endpoint, and, as a result, improves the efficiency in clinical trial decision making.</p>
+</section>
+<section id="importance-in-clinical-trials" class="level2">
+<h2 class="anchored" data-anchor-id="importance-in-clinical-trials">Importance in Clinical Trials</h2>
+<p>While in early stages of development, frequent assessments of outcomes like biomarker levels, symptom scores, or surrogate endpoints are more common, we argue that for confirmatory trials, too, we should assess whether the efficiency gain of longitudinal models justify more frequent repeat measures, even if it comes at an incremental operational cost.</p>
+</section>
+<section id="benefits-of-longitudinal-modeling" class="level2">
+<h2 class="anchored" data-anchor-id="benefits-of-longitudinal-modeling">Benefits of Longitudinal Modeling</h2>
+<p>By leveraging repeated measurements, longitudinal modeling enables the following:</p>
+<ol type="1">
+<li><p><strong>Enhanced Statistical Estimation Efficiency</strong><br>
+Multiple imputation of missing final endpoint data increases statistical efficiency by capturing currently enrolled subjects’ trajectories and measuring within‑subject variability across multiple time points. Imputing final data for subjects with only early endpoint data allows the estimated treatment effect to incorporate likely trajectories of enrolled subjects, thereby estimating an effect closer to what will be observed once all subjects’ final data are available. Additionally, subjects without a final endpoint who are imputed contribute to the effective sample size—albeit with partial weights—improving precision in the estimation of the final endpoint response.</p></li>
+<li><p><strong>Reduced Sample Size Requirements</strong><br>
+Due to the increased statistical efficiency described above, trials using longitudinal modeling often require fewer participants than traditional designs to achieve equivalent power. This reduction can lead to faster, more cost‑effective trials and reduced patient exposure to potential risks. Alternatively, if the sample size is held constant, the same efficiency gains can be realized as increased power.</p></li>
+<li><p><strong>Improved Predictive Probability Calculations</strong><br>
+Utilizing the longitudinal model’s knowledge of standard subject progression enhances treatment effect estimates and enables better predictions of trial results at later time points. In adaptive designs—such as the “Goldilocks” design—predictive probabilities can leverage these imputation models to forecast final endpoint values for subjects who have enrolled and have partial data but have not yet reached their final endpoint.</p></li>
+<li><p><strong>Improved Understanding of Disease Progression</strong><br>
+Longitudinal approaches explicitly model likely final‑endpoint values conditional on observed early data. This allows for direct analysis of disease trajectories within each trial arm, characterizing how diseases evolve naturally and how interventions modify this progression—ultimately supporting more informative clinical conclusions.</p></li>
+<li><p><strong>Incorporation of Prior Information (or Not)</strong><br>
+Many indications are well understood before trial onset, and subjects’ likely outcomes throughout follow‑up are known in advance. Longitudinal models can be structured with informative priors based on past data, benefiting decision‑making even before any subject has complete data. Conversely, models can be specified with non‑informative priors and estimated solely from trial data as it accrues.</p></li>
+<li><p><strong>Flexibility in Handling Missing Data</strong><br>
+Missing data—a frequent challenge in trials—can be robustly managed with longitudinal imputation methods. Subjects lost to follow‑up (dropouts) can be imputed using the same models as those for interim data, under the assumption that missingness is at random conditional on early endpoint data—an assumption less restrictive than missing completely at random.</p></li>
+<li><p><strong>Individualized Patient Insights</strong><br>
+Longitudinal analyses support individual‑level predictions and personalized medicine approaches. These insights help clinicians understand each patient’s disease trajectory over time, informing tailored therapeutic decisions and enabling personalized healthcare strategies.</p></li>
+</ol>
+</section>
+<section id="challenges-and-methodological-considerations" class="level2">
+<h2 class="anchored" data-anchor-id="challenges-and-methodological-considerations">Challenges and Methodological Considerations</h2>
+<p>Longitudinal modeling often requires more advanced statistical methods than analyses based solely on final endpoints. In multiple‑imputation frameworks, this complexity translates into increased computational intensity. There are limited off‑the‑shelf resources for designing and implementing trials with longitudinal imputation as the primary analysis; in some cases, custom code must be developed.</p>
+<p>Key challenges center on model assumptions. The chosen parametric form, correlation structure, and variance components must be specified in advance and may not perfectly match collected data. Typically, models are selected after careful consideration of their risks, and model‐checking procedures are implemented routinely in adaptive designs.</p>
+</section>
+<section id="applications-by-berry-consultants-and-facts" class="level2">
+<h2 class="anchored" data-anchor-id="applications-by-berry-consultants-and-facts">Applications by Berry Consultants and FACTS</h2>
+<p>Berry Consultants has championed longitudinal modeling in adaptive trial design. Their FACTS software (Fixed and Adaptive Clinical Trial Simulator) integrates these techniques into a general adaptive‐design platform, enabling easy exploitation of intermediate endpoint data for simulation and analysis.</p>
+<section id="continuous-endpoints" class="level3">
+<h3 class="anchored" data-anchor-id="continuous-endpoints">Continuous Endpoints</h3>
+<ul>
+<li><p><strong>Time‑Course Hierarchical Modeling (TCH)</strong><br>
+Bayesian hierarchical models estimate the proportion of the final endpoint effect observable at an early time point.</p></li>
+<li><p><strong>Integrated Two‑Parameter (ITP) Models</strong><br>
+Combine patient‑level random effects with longitudinal observations to estimate individual trajectories and population‑level drug effects under a specified parametric shape.</p></li>
+<li><p><strong>Linear Regression Imputation</strong><br>
+Uses a simple slope‐intercept model to predict final responses from early observations, re‑estimating regression parameters at each interim analysis.</p></li>
+<li><p><strong>Kernel Density Models</strong><br>
+Link early to final endpoint data via nonparametric estimates of the conditional distribution of the final response.</p></li>
+</ul>
+</section>
+<section id="dichotomous-and-timetoevent-endpoints" class="level3">
+<h3 class="anchored" data-anchor-id="dichotomous-and-timetoevent-endpoints">Dichotomous and Time‑to‑Event Endpoints</h3>
+<ul>
+<li><p><strong>Beta‑Binomial or Logistic Regression (Dichotomous)</strong><br>
+FACTS can multiply impute final binary outcomes from early markers using these models.</p></li>
+<li><p><strong>Survival Imputation (Time‑to‑Event)</strong><br>
+Final event times can be imputed based on pre‑event predictors (continuous, binary, or time‑to‑event), with a range of models available for predictor evolution.</p></li>
+</ul>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Longitudinal modeling offers substantial efficiency gains in clinical trial design, enabling more informative studies with potentially smaller sample sizes, richer disease‑progression insights, and individualized patient analyses. While these methods demand careful attention to statistical assumptions and computational resources, their benefits strongly advocate for broader adoption in clinical research frameworks.</p>
+</section>
+<section id="key-references" class="level2">
+<h2 class="anchored" data-anchor-id="key-references">Key References</h2>
+<ol type="1">
+<li>Berry SM, Carlin BP, Lee JJ, Muller P. <em>Bayesian Adaptive Methods for Clinical Trials</em>. Chapman &amp; Hall/CRC; 2010.<br>
+</li>
+<li>Saville BR, Berry SM. Efficiencies of platform clinical trials: A vision of the future. <em>Clin Trials</em>. 2016;13(3):358–366. doi:10.1177/1740774515626362<br>
+</li>
+<li>Berry DA. Emerging innovations in clinical trial design. <em>Clin Pharmacol Ther</em>. 2016;99(1):82–91. doi:10.1002/cpt.282<br>
+</li>
+<li>Quintana M, Saville BR, Vestrucci M, et al.&nbsp;Design and Statistical Innovations in a Platform Trial for Amyotrophic Lateral Sclerosis. <em>Ann Neurol</em>. 2023;94(3):547–560. doi:10.1002/ana.26714<br>
+</li>
+<li>Berry SM, Petzold EA, Dull P, et al.&nbsp;A response‑adaptive randomization platform trial for efficient evaluation of Ebola virus treatments: A model for pandemic response. <em>Clin Trials</em>. 2016;13(1):22–30. doi:10.1177/1740774515621721<br>
+</li>
+<li>Diggle PJ, Liang KY, Zeger SL. <em>Analysis of Longitudinal Data</em>. Oxford University Press; 2002.<br>
+</li>
+<li>Berry SM, Carlin BP, Lee JJ, Muller P. <em>Bayesian Adaptive Methods for Clinical Trials</em>. CRC Press; 2010.<br>
+</li>
+<li>FACTS Software. Berry Consultants. <a href="https://www.berryconsultants.com/software/">https://www.berryconsultants.com/software/</a></li>
+</ol>
+<p>If you have a need for a longitudinal model in your trial design or would like to learn more about its benefits, please <a href="../../contact/index.html">contact us</a>.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <footer style="display: flex; justify-content: space-between; align-items: center;">
