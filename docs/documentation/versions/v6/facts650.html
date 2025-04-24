@@ -822,22 +822,95 @@ ul.task-list li input[type="checkbox"] {
 </section>
 
 </main> <!-- /main -->
-<footer style="display: flex; justify-content: space-between; align-items: center;">
-  <!-- Left side: Copyright -->
+<!-- footer.html -->
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pF6W3...<truncated>...Q==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+<footer style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
   <p style="margin: 0;">
     © <span id="year"></span>
     <a href="https://www.berryconsultants.com">Berry Consultants</a>
   </p>
 
-  <!-- Right side: Relative link -->
+  <div id="share-icons" style="display: flex; justify-content: center; gap: 1rem;">
+    <!-- buttons injected here -->
+  </div>
+
   <p style="margin: 0;">
-    <a href="../../../introduction/citation.html">How to Cite</a>
+    <a href="../../../introduction/citation.html">Cite</a>
   </p>
 </footer>
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const url   = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+
+    const networks = [
+      {
+        name: "X",
+        href: `https://twitter.com/intent/tweet?url=${url}&text=${title}`,
+        icon: `<i class="fab fa-x" style="font-size:1.4em;"></i>`
+      },
+      {
+        name: "LinkedIn",
+        href: `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}`,
+        icon: `<i class="fab fa-linkedin" style="font-size:1.4em;"></i>`
+      },
+      {
+        name: "Bluesky",
+        href: `https://bsky.app/intent/compose?text=${title}%20${url}`,
+        icon: `
+          <svg width="1.4em" height="1.4em" fill="currentColor"
+               viewBox="0 0 600 530" xmlns="http://www.w3.org/2000/svg">
+            <path d="m135.72 44.03c66.496 49.921 138.02 151.14 164.28 205.46
+                     26.262-54.316 97.782-155.54 164.28-205.46
+                     47.98-36.021 125.72-63.892 125.72 24.795
+                     0 17.712-10.155 148.79-16.111 170.07
+                     -20.703 73.984-96.144 92.854-163.25 81.433
+                     117.3 19.964 147.14 86.092 82.697 152.22
+                     -122.39 125.59-175.91-31.511-189.63-71.766
+                     -2.514-7.3797-3.6904-10.832-3.7077-7.8964
+                     -0.0174-2.9357-1.1937 0.51669-3.7077 7.8964
+                     -13.714 40.255-67.233 197.36-189.63 71.766
+                     -64.444-66.128-34.605-132.26 82.697-152.22
+                     -67.108 11.421-142.55-7.4491-163.25-81.433
+                     -5.9562-21.282-16.111-152.36-16.111-170.07
+                     0-88.687 77.742-60.816 125.72-24.795z"/>
+          </svg>`
+      },
+      {
+        name: "Reddit",
+        href: `https://www.reddit.com/submit?url=${url}&title=${title}`,
+        icon: `<i class="fab fa-reddit" style="font-size:1.4em;"></i>`
+      },
+      {
+        name: "WhatsApp",
+        href: `https://wa.me/?text=${title}%20${url}`,
+        icon: `<i class="fab fa-whatsapp" style="font-size:1.4em;"></i>`
+      },
+      {
+        name: "Email",
+        href: `mailto:?subject=${title}&body=${title}%20${url}`,
+        icon: `<i class="fas fa-envelope" style="font-size:1.4em;"></i>`
+      }
+    ];
+
+    const container = document.getElementById("share-icons");
+    networks.forEach(net => {
+      const a = document.createElement("a");
+      a.href      = net.href;
+      a.target    = "_blank";
+      a.rel       = "noopener";
+      a.setAttribute("aria-label", `Share on ${net.name}`);
+      a.innerHTML = net.icon;
+      container.appendChild(a);
+    });
+  });
 </script>
+
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -930,7 +1003,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/docs\.berryconsultants\.com");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
