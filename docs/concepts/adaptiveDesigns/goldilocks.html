@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Deep dive into dropout rate specification.">
 
-<title>Dropout Rate Explanation</title>
+<title>Goldilocks Designs</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -40,11 +39,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<meta name="shinylive:serviceworker_dir" content="../..">
-<script src="../../site_libs/quarto-contrib/shinylive-0.9.1/shinylive/load-shinylive-sw.js" type="module"></script>
-<script src="../../site_libs/quarto-contrib/shinylive-0.9.1/shinylive/run-python-blocks.js" type="module"></script>
-<link href="../../site_libs/quarto-contrib/shinylive-0.9.1/shinylive/shinylive.css" rel="stylesheet">
-<link href="../../site_libs/quarto-contrib/shinylive-quarto-css/shinylive-quarto.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -71,6 +65,23 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 
@@ -89,35 +100,6 @@ ul.task-list li input[type="checkbox"] {
   gtag('config', 'G-WLMVE7GR4S');
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -125,7 +107,7 @@ window.Quarto = {
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
@@ -176,14 +158,31 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../concepts/facts/DropoutsDeepdive.html">FACTS Tips and Tricks</a></li><li class="breadcrumb-item"><a href="../../concepts/facts/DropoutsDeepdive.html">Dropout Rate Explanation</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../concepts/adaptiveDesigns/index.html">Adaptive Trials</a></li><li class="breadcrumb-item"><a href="../../concepts/adaptiveDesigns/goldilocks.html">Goldilocks Designs</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../concepts/adaptiveDesigns/index.html">Adaptive Trials</a></li><li class="breadcrumb-item"><a href="../../concepts/adaptiveDesigns/goldilocks.html">Goldilocks Designs</a></li></ol></nav>
+      <h1 class="title">Goldilocks Designs</h1>
+            <p class="subtitle lead">If Bayesians had conceived Group Sequential Designs</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-body">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="sidebar-menu-container"> 
@@ -198,14 +197,14 @@ window.Quarto = {
       <div class="sidebar-item-container"> 
             <a href="../../concepts/adaptiveDesigns/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Adaptive Trials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../concepts/adaptiveDesigns/goldilocks.html" class="sidebar-item-text sidebar-link">
+  <a href="../../concepts/adaptiveDesigns/goldilocks.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Goldilocks Designs</span></a>
   </div>
 </li>
@@ -242,16 +241,16 @@ window.Quarto = {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
  <span class="menu-text">FACTS Tips and Tricks</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../concepts/facts/DropoutsDeepdive.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../concepts/facts/DropoutsDeepdive.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Dropout Rate Explanation</span></a>
   </div>
 </li>
@@ -279,261 +278,86 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#how-to-specify-dropouts-in-facts" id="toc-how-to-specify-dropouts-in-facts" class="nav-link active" data-scroll-target="#how-to-specify-dropouts-in-facts">How to specify dropouts in FACTS</a>
-  <ul class="collapse">
-  <li><a href="#dropouts-per-dose" id="toc-dropouts-per-dose" class="nav-link" data-scroll-target="#dropouts-per-dose">Dropouts Per Dose</a>
-  <ul class="collapse">
-  <li><a href="#dropout-per-dose-guide" id="toc-dropout-per-dose-guide" class="nav-link" data-scroll-target="#dropout-per-dose-guide">Dropout Per Dose Guide</a></li>
-  </ul></li>
-  <li><a href="#dropouts-per-dose-per-visit" id="toc-dropouts-per-dose-per-visit" class="nav-link" data-scroll-target="#dropouts-per-dose-per-visit">Dropouts Per Dose Per Visit</a></li>
-  </ul></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#goldilocks-clinical-trial-designs" id="toc-goldilocks-clinical-trial-designs" class="nav-link" data-scroll-target="#goldilocks-clinical-trial-designs">Goldilocks Clinical Trial Designs</a></li>
+  <li><a href="#key-features-of-goldilocks-trial-designs" id="toc-key-features-of-goldilocks-trial-designs" class="nav-link" data-scroll-target="#key-features-of-goldilocks-trial-designs">Key Features of Goldilocks Trial Designs</a></li>
+  <li><a href="#key-aspects-of-goldilocks-designs" id="toc-key-aspects-of-goldilocks-designs" class="nav-link" data-scroll-target="#key-aspects-of-goldilocks-designs">Key aspects of Goldilocks Designs</a></li>
+  <li><a href="#example-applications-and-technical-details" id="toc-example-applications-and-technical-details" class="nav-link" data-scroll-target="#example-applications-and-technical-details">Example Applications and Technical Details</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content column-body" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../concepts/facts/DropoutsDeepdive.html">FACTS Tips and Tricks</a></li><li class="breadcrumb-item"><a href="../../concepts/facts/DropoutsDeepdive.html">Dropout Rate Explanation</a></li></ol></nav>
-<div class="quarto-title">
-<h1 class="title">Dropout Rate Explanation</h1>
-</div>
-
-<div>
-  <div class="description">
-    Deep dive into dropout rate specification.
-  </div>
-</div>
+<main class="content quarto-banner-title-block column-body" id="quarto-document-content">
 
 
-<div class="quarto-title-meta column-body">
-
-    
-  
-    
-  </div>
-  
 
 
-</header>
 
-
-<section id="how-to-specify-dropouts-in-facts" class="level1">
-<h1>How to specify dropouts in FACTS</h1>
-<p>For the continuous and dichotomous engines, and the multiple endpoint engine, the default dropout scenario is that no subjects drop out of the study before observing their final endpoint data. If dropouts are expected, the user can specify either the “Dropouts per Dose,” or “Dropouts per Dose per Visit.”</p>
-<section id="dropouts-per-dose" class="level2">
-<h2 class="anchored" data-anchor-id="dropouts-per-dose">Dropouts Per Dose</h2>
-<p>If “Dropouts per Dose” is selected, then each subject has a probability of not having an observable final endpoint value equal to the dropout rate of the dose that subject is randomized to. If each subject has multiple visits and “Dropouts per Dose” is selected, then the conditional probability of dropping out before each visit given that the subject had not dropped out up to the visit before rates are all equal. In other words, if the total dropout rate is π_D, the probability of dropping out between visits i and i+1 given that the subject had not dropped out at visit <span class="math inline">\(i\)</span> is <span class="math display">\[
-1-\left(1-\pi_D\right)^{(\frac{1}{V})}\text{ where } V \text{ is the total number of visits.}
-\]</span> The following interactive widget takes in the desired dropout rate for a single dose and the number of visits a subject will have during their follow-up, and returns information about the dropout rate that FACTS will simulate by visit for that dose.</p>
-<p>The columns in the dynamic output table are:</p>
-<dl>
-<dt>Visit number</dt>
-<dd>
-<p>The index of the visit that a subject would observe.</p>
-</dd>
-<dt>Conditional Visit Dropout Rate</dt>
-<dd>
-<p>The probability that a subject drops out before row specified visit given that they have not dropped out after the previous visit.</p>
-</dd>
-<dt>Marginal Visit Dropout Rate</dt>
-<dd>
-<p>The probability that a subject that has not yet been enrolled in the study will dropout before row specified visit and after the previous row’s visit.</p>
-</dd>
-<dt>Cumulative Dropout Prob.</dt>
-<dd>
-<p>The probability that a subject will drop out at the row specified visit or before. At the last visit row this value will equal the Desired Dropout Rate.</p>
-</dd>
-</dl>
-<section id="dropout-per-dose-guide" class="level3">
-<h3 class="anchored" data-anchor-id="dropout-per-dose-guide">Dropout Per Dose Guide</h3>
-<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
-#|   shinylive does not work in self-contained HTML documents.
-#|   Please set `embed-resources: false` in your metadata.
-#| standalone: true
-#| viewerHeight: 450
-
-library(shiny)
-
-ui &lt;- fluidPage(
-  
-  titlePanel("Dropout Per Dose"),
-  sidebarLayout(
-    sidebarPanel(
-      numericInput("dropoutRate", "Desired Dropout Rate:", value = 0.1, min = 0.0, max = 1.0, step = 0.05),
-      sliderInput("numVisits", "Number of visits:", 
-                  min = 1, max = 20, value = 5)
-    ),
-    mainPanel(
-      tableOutput("visitsGuide")
-    )
-  )
-)
-
-server &lt;- function(input, output) {
-  
-  output$visitsGuide &lt;- renderTable({
-    
-    if(is.na(input$dropoutRate)) {stop(safeError("Please enter a dropout rate."))}
-    else if(input$dropoutRate &lt; 0 | input$dropoutRate &gt; 1) {stop(safeError("Dropout rate must be between 0 and 1."))}
-    else {
-      df = data.frame(Visits = 1:input$numVisits,
-                                                     ConditionalDropoutRate = 1-(1-input$dropoutRate)^(1/input$numVisits))
-      df$TotalDropoutRate = 1-cumprod(1-df$ConditionalDropoutRate)
-      df$MarginalDropoutRate = c(df$TotalDropoutRate[1], df$TotalDropoutRate[-1] - df$TotalDropoutRate[-nrow(df)])
-  
-      df = df[,c("Visits", "ConditionalDropoutRate", "MarginalDropoutRate", "TotalDropoutRate")]
-      colnames(df) = c("Visit number",
-                "Conditional Visit Dropout Rate",
-                "Marginal Visit Dropout Rate",
-                "Cumulative Dropout Prob.")
-    df}
-  }, digits = 4)
-}
-
-shinyApp(ui = ui, server = server)</code></pre>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Goldilocks designs achieve everything group sequential designs do, but may provide a number of additional advantages. Goldilocks designs are widely used both in “Learn” and “Confirm” studies, the approach is accepted by health authorities, and operating characteristics can be determined through simulation (FACTS).</p>
+<p>A Goldilocks trial design is an adaptive clinical trial methodology developed to optimize the sample size dynamically during the course of a trial. Its name references the “just right” principle from the Goldilocks fairy tale—neither too large nor too small. Goldilocks designs seek balance between flexibility and efficiency, by repeatedly updating sample-size decisions based on accumulating trial data, through predictive probability or other Bayesian statistical methods.</p>
+<p>Goldilocks designs allow for stopping the trial early by halting accrual at an interim analysis, but always allow subjects the opportunity to collect complete follow-up before the trial’s final analysis is performed. Goldilocks designs combine the completely observed patient data with the uncertainty associated with the missing data at the time of an interim analysis, and use predictive probabilities to decide if stopping for expected success or futility is appropriate.</p>
+<p>This is particularly relevant if the primary endpoint involves a delayed observation. If an interim analysis declares early success, and accrual stops, but more data from patients already randomized come in, and the statistic drops below the threshold, can we claim that we have demonstrated efficacy? Goldilocks designs explicitly take this possibility into account and mitigate the risk of a “flip flop” (i.e.&nbsp;declaring “success” early at an interim analysis, based on incomplete data, only to see this flipping into “no success”) once all data (including delayed observations) become available.</p>
+</section>
+<section id="goldilocks-clinical-trial-designs" class="level2">
+<h2 class="anchored" data-anchor-id="goldilocks-clinical-trial-designs">Goldilocks Clinical Trial Designs</h2>
+<p>The Goldilocks trial design, as an adaptive trial framework, draws on the strengths of group sequential designs and additionally emphasizes flexibility, efficiency, and optimal use of data. The concept of the “Goldilocks” design comes from the idea of finding an optimal balance—where the trial is neither too large (wasting resources) nor too small (lacking statistical power), but just right for the research question at hand.</p>
+</section>
+<section id="key-features-of-goldilocks-trial-designs" class="level2">
+<h2 class="anchored" data-anchor-id="key-features-of-goldilocks-trial-designs">Key Features of Goldilocks Trial Designs</h2>
+<ol type="1">
+<li>Adaptive and Flexible: Goldilocks designs allow for multiple adaptive changes based on interim results, such as the addition or removal of treatment arms, changes to patient inclusion/exclusion criteria, or modifications to the statistical model. This flexibility allows the trial to be tailored in real-time to the evolving landscape of treatment options, participant response, and other external factors.</li>
+<li>Incorporation of Multiple Interim Analyses: Goldilocks trials can conduct interim analyses at flexible intervals. This enables real-time decision-making that maximizes the use of accumulated data, including incomplete data.</li>
+</ol>
+</section>
+<section id="key-aspects-of-goldilocks-designs" class="level2">
+<h2 class="anchored" data-anchor-id="key-aspects-of-goldilocks-designs">Key aspects of Goldilocks Designs</h2>
+<section id="bayesian-and-predictive-probability-approaches" class="level4">
+<h4 class="anchored" data-anchor-id="bayesian-and-predictive-probability-approaches">Bayesian and Predictive Probability Approaches</h4>
+<p>Goldilocks designs frequently utilize Bayesian methods, commonly including multiple imputation, and predictive probability calculations at interim analyses to assess the likelihood of trial success at any given point, guiding adaptive sample size decisions. Both Goldilocks designs and group sequential designs can have a frequentist final analysis.</p>
+</section>
+<section id="analytical-calculations-of-stopping-boundaries" class="level4">
+<h4 class="anchored" data-anchor-id="analytical-calculations-of-stopping-boundaries">Analytical Calculations of Stopping Boundaries</h4>
+<p>Group sequential designs have analytical calculations that provide stopping boundaries guaranteeing exact Type I error control. It is common to simulate the Type I error of a Goldilocks design to calculate stopping boundaries.</p>
+</section>
+<section id="stopping-for-futility" class="level4">
+<h4 class="anchored" data-anchor-id="stopping-for-futility">Stopping for futility</h4>
+<p>Goldilocks designs allow futility stopping criteria to be framed in terms of the predictive probability of success: What would the probability of success be, should the trial continue to recruit up to the full sample size and all follow-up information was collected? If this probability is smaller than some predefined threshold (say for instance less than 5%) the trial can stop for futility.</p>
 </section>
 </section>
-<section id="dropouts-per-dose-per-visit" class="level2">
-<h2 class="anchored" data-anchor-id="dropouts-per-dose-per-visit">Dropouts Per Dose Per Visit</h2>
-<p>If “Dropouts per Dose per Visit” is selected, then each subject has a user specified probability of dropping out before a visit v that is specified as the conditional probability of dropping out before visit v given that that they had not dropped out by visit v-1. This leads to a total dropout rate π_D for a participant that is equal to:</p>
-<p><span class="math display">\[
-\pi_D = 1-\Pi_{v=0}^V(1-\pi_v)
-\]</span> When specifying Dropouts Per Dose Per Visit in FACTS, the user inputs the conditional visit dropout rate for each visit. This can make it not completely intuitive to get the exact desired cumulative dropout rate. The below application allows the user to enter either the conditional visit dropout rates or the marginal visit dropout rates for a single dose, and provides the implied dropout profile from those inputs. Again, the columns of the table represent:</p>
-<dl>
-<dt>Visit number</dt>
-<dd>
-<p>The index of the visit that a subject would observe.</p>
-</dd>
-<dt>Conditional Visit Dropout Rate</dt>
-<dd>
-<p>The probability that a subject drops out before row specified visit given that they have not dropped out after the previous visit.</p>
-</dd>
-<dt>Marginal Visit Dropout Rate</dt>
-<dd>
-<p>The probability that a subject that has not yet been enrolled in the study will dropout before row specified visit and after the previous row’s visit.</p>
-</dd>
-<dt>Cumulative Dropout Prob.</dt>
-<dd>
-<p>The probability that a subject will drop out at the row specified visit or before. At the last visit row this value will equal the Desired Dropout Rate.</p>
-</dd>
-</dl>
-<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
-#|   shinylive does not work in self-contained HTML documents.
-#|   Please set `embed-resources: false` in your metadata.
-#| standalone: true
-#| viewerHeight: 600
-
-library(shiny)
-library(DT)
-library(htmltools)
-
-alignCenter &lt;- function(el) {
-  htmltools::tagAppendAttributes(el,
-                                 style="margin-left:auto;margin-right:auto;"
-  )
-}
-
-ui &lt;- fluidPage(
-  tags$head(
-    # Note the wrapping of the string in HTML()
-    tags$style(HTML("
-      .my_col_class {
-         align-content: center;
-      }")
-    )
-  ),
-  
-  fluidRow(
-    titlePanel(h1("Dropout Per Dose Per Visit", align = "center")),
-    alignCenter(sliderInput("numVisits", "Number of visits:", 
-            min = 1, max = 20, value = 5)),
-    DTOutput("dataInputTable")
-  )
-)
-
-server &lt;- function(input, output) {
-  
-  df = data.frame(Visits = 1:5,
-                       ConditionalDropoutRate = 0.05)
-  df$TotalDropoutRate = 1-cumprod(1-df$ConditionalDropoutRate)
-  df$MarginalDropoutRate = c(df$TotalDropoutRate[1], df$TotalDropoutRate[-1] - df$TotalDropoutRate[-nrow(df)])
-  df = df[,c("Visits", "ConditionalDropoutRate", "MarginalDropoutRate", "TotalDropoutRate")]
-  colnames(df) = c("Visit number",
-                   "Conditional Visit Dropout Rate",
-                   "Marginal Visit Dropout Rate",
-                   "Cumulative Dropout Prob.")
-  
-  ## Render DF to actually change
-  output$dataInputTable = renderDT(datatable(df, options = list(
-    pageLength = 20,
-    dom = "t",
-    autoWidth = TRUE,
-    columnDefs = list(list(width = '150px', targets = 1:4, orderable = FALSE))), selection = 'none', editable = "cell") |&gt; formatRound(2:4, digits = 4))
-  
-  ## Update from Conditional
-  
-  proxy = dataTableProxy('dataInputTable')
-  
-  observeEvent(input$dataInputTable_cell_edit, {
-    info = input$dataInputTable_cell_edit
-    str(info)
-    i = info$row
-    j = info$col
-    v = info$value
-    df &lt;&lt;- editData(df, info)
-    if(j == 2) {
-      ## Update other columns from Conditional
-      df[,4] &lt;&lt;- 1-cumprod(1-df[,2])
-      df[,3] &lt;&lt;- c(df[1,4], df[-1,4] - df[-nrow(df),4])
-    } else if(j == 3) {
-      ## Update other columns from Marginal
-      df[,4] &lt;&lt;- cumsum(df[,3])
-      df[,2] &lt;&lt;- c(df[1,3],
-                   df[-1,3]/(1-df[-nrow(df),4]))
-    } else if(j == 4) {
-      ## Update other columns from Cumulative
-      
-      df[info$row, 3] &lt;&lt;- df[info$row, 4] - ifelse(info$row == 1, 0, df[info$row-1, 4])
-      df[info$row, 2] &lt;&lt;- ifelse(info$row == 1, df[info$row,3], df[info$row,3]/(1-df[info$row-1,4]))
-      df[,4] &lt;&lt;- 1-cumprod(1-df[,2])
-      df[,3] &lt;&lt;- c(df[1,4], df[-1,4] - df[-nrow(df),4])
-    }
-    replaceData(proxy, df) 
-  })
-  
-  observe({
-    input$numVisits
-    nv = input$numVisits
-    if(nv &gt; nrow(df)) {
-      if(nrow(df) == 0) {
-        df &lt;&lt;- data.frame(Visits = 1,
-                   ConditionalDropoutRate = 1-(1-.1)^(1))
-        df$TotalDropoutRate = 1-cumprod(1-df$ConditionalDropoutRate)
-        df$MarginalDropoutRate = c(df$TotalDropoutRate[1], df$TotalDropoutRate[-1] - df$TotalDropoutRate[-nrow(df)])
-        df = df[,c("Visits", "ConditionalDropoutRate", "MarginalDropoutRate", "TotalDropoutRate")]
-        colnames(df) = c("Visit number",
-                         "Conditional Visit Dropout Rate",
-                         "Marginal Visit Dropout Rate",
-                         "Cumulative Dropout Prob.")
-      } else {
-        for(i in 1:(nv-nrow(df))) {
-          df &lt;&lt;- rbind(df, setNames(data.frame(matrix(c(1+nrow(df), 0.05, 0, 0), nrow = 1)), names(df)))
-        }
-        df[,4] &lt;&lt;- 1-cumprod(1-df[,2])
-        df[,3] &lt;&lt;- c(df[1,4], df[-1,4] - df[-nrow(df),4])
-      }
-    } else if(nv &lt; nrow(df)) {
-      df &lt;&lt;- df[1:nv,]
-    }
-    replaceData(proxy, df) 
-  })
-}
-
-shinyApp(ui = ui, server = server)</code></pre>
-<p><strong>In order to simulate dropouts from the below profile in FACTS, enter the Conditional Visit Dropout Rate into the FACTS Dropout Rate tab.</strong></p>
+<section id="example-applications-and-technical-details" class="level2">
+<h2 class="anchored" data-anchor-id="example-applications-and-technical-details">Example Applications and Technical Details</h2>
+<p>A foundational paper explicitly outlining the “Goldilocks” approach was authored by Broglio, Connor, and Berry (2014) (1). In their seminal work, they introduce a Bayesian predictive probability framework to guide sample size adaptations, clearly illustrating how interim results influence sample-size decisions: In this paper, Broglio et al.&nbsp;provide detailed simulations and comparisons illustrating how Goldilocks designs can outperform traditional designs, particularly when initial estimates of treatment effects are uncertain. They demonstrate that these designs can substantially reduce the number of patients exposed to ineffective treatments without sacrificing statistical rigor. Tables and figures in the paper present simulations showing how predictive probabilities shift dynamically with accumulating data, and how this influences ongoing sample size decisions. Goldilocks designs represent a significant advance in clinical trial methodology, providing a mechanism for dynamically adjusting sample size to achieve optimal efficiency and ethical balance. They differ from traditional group sequential designs through continuous or periodic Bayesian predictive adaptation, making them well-suited to modern clinical trial challenges such as uncertain effect sizes, limited patient populations, or time-critical situations like pandemics. By integrating real-time data monitoring with flexible decision-making, Goldilocks designs help ensure trials are appropriately powered without unnecessary resource expenditure or patient exposure to inferior treatments.</p>
+<p>If you have more questions, please contact <a href="https://www.berryconsultants.com/team-members/nick-berry-phd">Dr Nick Berry</a> (North America; <a href="mailto:nick@berryconsultants.com">Email</a>) or <a href="https://www.berryconsultants.com/team-members/elias-laurin-meyer-phd">Dr Elias Laurin Meyer</a> (Europe; <a href="mailto:elias@berryconsultants.com">Email</a>).</p>
+<p>Key Papers:</p>
+<ol type="1">
+<li>Broglio KR, Connor JT, Berry SM. Not too big, not too small: a Goldilocks approach to sample size selection. J Biopharm Stat. 2014;24(3):685–705. <a href="https://pubmed.ncbi.nlm.nih.gov/24628485/">PubMed</a></li>
+<li>Berry DA. Emerging innovations in clinical trial design. Clin Pharmacol Ther. 2016;99(1):82–91. <a href="https://pubmed.ncbi.nlm.nih.gov/26289309/">PubMed</a> (This paper discusses general Bayesian adaptive methodologies including Goldilocks-style adaptations.)</li>
+<li>Connor JT, Broglio KR, Durkalski V, et al.&nbsp;The Stroke Hyperglycemia Insulin Network Effort (SHINE) trial: An adaptive trial design case study. Clin Trials. 2015;12(4):367–375. <a href="https://pubmed.ncbi.nlm.nih.gov/25991167/">PubMed</a> (This practical case study illustrates how a Goldilocks approach was implemented in a real-world clinical trial setting.)</li>
+<li>Broglio K, Meurer WJ, Durkalski V, Pauls Q, Connor J, Berry D, Lewis RJ, Johnston KC, Barsan WG. Comparison of Bayesian vs Frequentist Adaptive Trial Design in the Stroke Hyperglycemia Insulin Network Effort Trial. JAMA Netw Open. 2022 May 2;5(5):e2211616. doi: 10.1001/jamanetworkopen.2022.11616. PMID: 35544137; PMCID: PMC9096598. (The project described in ref. 3 also included a prospective comparison of a Goldilocks and Group Sequential design for the same trial).</li>
+<li>Lewis RJ. The pragmatic clinical trial in a learning healthcare system. Clin Trials. 2016;13(5):484–492. <a href="https://pubmed.ncbi.nlm.nih.gov/27365092/">PubMed</a> (This discusses adaptive and pragmatic trials, including concepts that underpin Goldilocks-style adjustments.)</li>
+<li>Zhan T, Zhang H, Hartford A, Mukhopadhyay S. Modified Goldilocks Design with strict type I error control in confirmatory clinical trials, Journal of Biopharmaceutical Statistics. 2020;30:5, 821-833, DOI: 10.1080/10543406.2020.1744620 (This paper presents a version of Goldilocks design with an analytical approach to controlling type-1 error, rather than relying on simulations).</li>
+<li>Lan KKG, DeMets DL. Discrete sequential boundaries for clinical trials. Biometrika. 1983;70(3), 659-663 (This paper laid the foundations for group sequential designs).</li>
+<li>Jennison C, Turnbull BW. Group Sequential Methods with Applications to Clinical Trials. 2000, CRC Press</li>
+<li>Pike MC. Goldilocks trials: A new approach to adaptive designs. Statistics in Medicine. 2019;38(10), 1801-1810</li>
+</ol>
+<p>Examples for published applications of Goldilocks designs (** if this led to market approval):</p>
+<ul>
+<li>** Wilber DJ et al.&nbsp;Comparison of antiarrhythmic drug therapy and radiofrequency catheter ablation in patients with paroxysmal atrial fibrillation: a randomized controlled trial. JAMA. 2010;303(4):333-40. doi: 10.1001/jama.2009.2029</li>
+<li>** Philpott JM et al.&nbsp;The ABLATE Trial: Safety and Efficacy of Cox Maze-IV Using a Bipolar Radiofrequency Ablation System. Ann Thorac Surg. 2015;100(5):1541-6; discussion 1547-8. doi: 10.1016/j.athoracsur.2015.07.006.</li>
+<li>Konstam MA et al.&nbsp;Impact of Autonomic Regulation Therapy in Patients with Heart Failure: ANTHEM-HFrEF Pivotal Study Design. Circ Heart Fail. 2019;12(11):e005879. doi: 10.1161/CIRCHEARTFAILURE.119.005879.</li>
+<li>Premchand RK et al.&nbsp;Autonomic regulation therapy via left or right cervical vagus nerve stimulation in patients with chronic heart failure: results of the ANTHEM-HF trial. J Card Fail. 2014;20(11):808-16. doi: 10.1016/j.cardfail.2014.08.009.</li>
+<li>White WB et al.&nbsp;A cardiovascular safety study of LibiGel (testosterone gel) in postmenopausal women with elevated cardiovascular risk and hypoactive sexual desire disorder. Am Heart J. 2012;163(1):27-32. doi: 10.1016/j.ahj.2011.09.021.</li>
+<li>Lorusso R et al.&nbsp;Sutureless versus Stented Bioprostheses for Aortic Valve Replacement: The Randomized PERSIST-AVR Study Design. Thorac Cardiovasc Surg. 2020;68(2):114-123. doi: 10.1055/s-0038-1675847.</li>
+<li>Duytschaever M et al.&nbsp;Paroxysmal Atrial Fibrillation Ablation Using a Novel Variable-Loop Biphasic Pulsed Field Ablation Catheter Integrated With a 3-Dimensional Mapping System: 1-Year Outcomes of the Multicenter inspIRE Study. Circ Arrhythm Electrophysiol. 2023;16(3):e011780. doi: 10.1161/CIRCEP.122.011780.</li>
+<li>** Nogueira RG et al.&nbsp;Thrombectomy 6 to 24 Hours after Stroke with a Mismatch between Deficit and Infarct. N Engl J Med. 2018;378(1):11-21. doi: 10.1056/NEJMoa1706442. Epub 2017 Nov 11. PMID: 29129157.</li>
+<li>** Swanson CJ et al.&nbsp;A randomized, double-blind, phase 2b proof-of-concept clinical trial in early Alzheimer’s disease with lecanemab, an anti-Aβ protofibril antibody. Alzheimers Res Ther. 2021;13(1):80. doi: 10.1186/s13195-021-00813-8.</li>
+<li>** Castro M et al.&nbsp;Effectiveness and safety of bronchial thermoplasty in the treatment of severe asthma: a multicenter, randomized, double-blind, sham-controlled clinical trial. Am J Respir Crit Care Med. 2010;181(2):116-24. doi: 10.1164/rccm.200903-0354OC.</li>
+<li>** Conway CR et al.&nbsp;A prospective, multi-center randomized, controlled, blinded trial of vagus nerve stimulation for difficult to treat depression: A novel design for a novel treatment. Contemp Clin Trials. 2020;95:106066. doi: 10.1016/j.cct.2020.106066.</li>
+</ul>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
