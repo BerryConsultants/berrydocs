@@ -1379,7 +1379,8 @@ or using independent Dirichlet models.
 
 #### Ordinal
 
-NOTE: we do not yet have a model parameters for ordinal available.  
+NOTE: we do not yet have a "Model Parameters" option for ordinal available
+under the "Show More Columns" button.  
 
 +----------+---------+------------------------------------------------+
 | Column   | Number  | Description                                    |
@@ -1402,7 +1403,7 @@ NOTE: we do not yet have a model parameters for ordinal available.
 |          |         |                                                |
 +----------+---------+------------------------------------------------+
 
-: Model Parameters columns available in FACTS output for dichotomous simulations.
+: Model Parameters columns available in FACTS output for ordinal simulations.
 
 :::
 
@@ -1410,7 +1411,8 @@ NOTE: we do not yet have a model parameters for ordinal available.
 
 After simulation has completed and simulation results have been loaded,
 the user may examine detailed results for any scenario with simulations output
-in the table by double-clicking on the appropriate row. A separate window pops up and displays the results for each individual simulation.
+in the table by double-clicking on the appropriate row. A separate window pops up 
+and displays the results for each individual simulation.
 This is a "prettier" view of the contents of the "simulations.csv" file, which is described
 below. The simulations results are partitioned into the same
 results groupings as the summary results. These can be accessed from the
@@ -1424,7 +1426,7 @@ patients file for a particular simulation (where a "weeks" file or a
 # Output Files
 
 Instead of viewing simulation output on the Simulation tab within FACTS,
-the output is all contained within easily accessible files saved the the
+the output is all contained within easily accessible files saved on the
 user's local machine. FACTS stores the results of simulations as '.csv'
 files under a Results folder. For each row in the simulations table,
 there is a folder named by the profiles that make up the scenario, which
@@ -1436,39 +1438,24 @@ These files can be opened using Microsoft Excel or any text editor. Excel, and m
 
 In the scenario directory there are the following types of results file:
 
-**Summary.csv** Contains a single row of data that summarizes the
+**summary.csv** Contains a single row of data that summarizes the
 simulation results. This is the source of the shown on the simulations
 tab.
 
-<span class="custom-tooltip"> **Summary_freq_bocf_NNNNN.csv,** <span class="tooltip-text">Continuous only.</span> </span> **Summary_freq_locf_NNNN.csv,** **Summary_freq_ignore_NNNN.csv,** <span class="custom-tooltip"> **Summary_freq_fail_NNNNN.csv,** <span class="tooltip-text">Dichotomous only.</span> </span>  Contains a single row of data that that
-summarizes the frequentist analysis of the simulations. A file is output
-for each of the different methods for dealing with missing data that are
-selected on the Frequentist Analysis tab: BOCF if the baseline score is being simulated, LOCF and
-"ignore" (referred to as PP (Per-Protocol) in the GUI).
-
-**Simulations.csv** Contains one row per simulation describing the final
+**simulations.csv** Contains one row per simulation describing the final
 state of each simulation for every trial simulated.
 
-**Simulations_freq.csv** Contains one row per simulation describing the
-frequentist analysis of the final state of each simulation for every
-trial simulated.
-
-**PatientsNNNNN.csv** Contains one row per patient in a simulation,
+**patientsNNNNN.csv** Contains one row per patient in a simulation,
 where NNNNN is the number of the simulation. By default this file is
 written out only for the first simulation, but this can be changed on
 the simulations tab.
 
-**WeeksNNNNN.csv** Contains one row for each cohort during a simulation
+**weeksNNNNN.csv** Contains one row for each cohort during a simulation
 where NNN is the number of the simulation. By default this file is
 written only for the first 100 simulations, but this can be changed via
 the simulation tab. The values in the last row of the cohorts file will
 be the same as the final values for that simulation in the simulations
 file.
-
-<span class="custom-tooltip"> **weeks_freq_bocf_NNNNN.csv,** <span class="tooltip-text">Continuous only.</span> </span> **weeks_freq_locf_NNNN.csv,** **weeks_freq_ignore_NNNN.csv,** <span class="custom-tooltip"> **weeks_freq_fail_NNNNN.csv,** <span class="tooltip-text">Dichotomous only.</span> </span> Contains one row for each interim during a simulation where NNNNN is the
-number of the simulation. A file is output for each simulation for which
-a frequentist "weeks file" is to be output, and for each of the
-different methods for dealing with missing data that are applicable.
 
 ## Contents of summary.csv
 
@@ -1481,7 +1468,7 @@ column headings.
 
 :::{.panel-tabset}
 
-### Continuous
+### Ordinal
 
 +-----------+---------+------------------------------------------------+
 | Column    | Number  | Description                                    |
@@ -1548,8 +1535,6 @@ column headings.
 |           |         | futility final evaluation criteria and hence   |
 |           |         | are counted as 'undecided'.                    |
 +-----------+---------+------------------------------------------------+
-| Unused    | 3       | Three unused columns for other outcome types.  |
-+-----------+---------+------------------------------------------------+
 | Early     | 1       | This is the mean early decision time (over the |
 | Success   |         | simulations stopped early for success), it is  |
 | Time      |         | the time from the start of the trial to the    |
@@ -1565,42 +1550,40 @@ column headings.
 | \<Dose\>  |         | the number of subjects allocated to each       |
 |           |         | treatment arm.                                 |
 +-----------+---------+------------------------------------------------+
-| Mean Resp | D       | The mean of the estimates of response of each  |
-| \<Dose\>  |         | treatment arm.                                 |
+| Mean Resp | D       | The mean, over the simulations, of the         |
+|           |         | estimates of a quantity                        |
+| \<Dose\>  |         | summarizing this arm.                          |
+|           |         | For cumulative logistic modeling, this is the  |
+|           |         | log odds ratio (zero for control).             |
+|           |         | For Dirichlet modeling, this is the expected   |
+|           |         | utility.                                       |
 +-----------+---------+------------------------------------------------+
 | SE Resp   | D       | The standard error, over the simulations, of   |
-| \<Dose\>  |         | the estimate of response of each treatment     |
-|           |         | arm.                                           |
+| \<Dose\>  |         | the estimate of response on each arm           |
+|           |         | arm, either the log odds ratio or the expected |
+|           |         | utility as above.                              |
 +-----------+---------+------------------------------------------------+
-| Mean      | 1       | The mean of the estimate of sigma -- the       |
-| Sigma     |         | average standard deviation of the dose         |
-|           |         | response                                       |
+| log OR    | D       | The lower limit of a 95% credible interval for |
+| (lower CI)|         | the log odds ratio.  Available only when using |
+| \<Dose\>  |         | cumulative logistic modeling.                  |
 +-----------+---------+------------------------------------------------+
-| SE Mean   | 1       | The standard error of the estimate of sigma -- |
-| Sigma     |         | the average standard deviation of the dose     |
-|           |         | response                                       |
+| log OR    | D       | The upper limit of a 95% credible interval for |
+| (upper CI)|         | the log odds ratio.  Available only when using |
+| \<Dose\>  |         | cumulative logistic modeling.                  |
 +-----------+---------+------------------------------------------------+
-| True Mean | D       | The true response for each treatment arm used  |
-| resp      |         | when sampling the simulated subject responses. |
-| \<Dose\>  |         |                                                |
+| True Mean | D       | The true expected utility for each treatment   |
+| resp      |         | arm used when sampling the simulated           |
+| \<Dose\>  |         | subject responses. Note that in general the    |
+|           |         | true log-odds ratio is undefined.              |
 +-----------+---------+------------------------------------------------+
-| True SD   | D       | The true SD of the response for each treatment |
-| resp      |         | arm of the simulated subject responses         |
-| \<Dose\>  |         |                                                |
+| True SD   | D       | The true SD of utility for each treatment      |
+| resp      |         | arm used when sampling the simulated           |
+| \<Dose\>  |         | subject responses.                             |
 +-----------+---------+------------------------------------------------+
-| Mean      | D\*V    | These are only calculated and written out if   |
-| Longmod   |         | the Time Course Hierarchical or ITP            |
-| Resp:     |         | longitudinal models are being used.            |
-| \<Dose\>  |         |                                                |
-| \<Visit\> |         | This is the mean (over the simulations) of the |
-|           |         | estimate of the mean response for a particular |
-|           |         | dose at a particular visit.                    |
+| Mean Raw? | D       |                                                |         
 +-----------+---------+------------------------------------------------+
-| SE Mean   | D\*V    | This is the standard error (over the           |
-| Longmod   |         | simulations) of the longitudinal model         |
-| Resp:     |         | estimate of the response at intermediate       |
-| \<Dose\>  |         | visits (see above)                             |
-| \<Visit\> |         |                                                |
+| Mean SE   | D       |                                                |
+| Mean Raw? |         |                                                |
 +-----------+---------+------------------------------------------------+
 | Mean      | D       | The mean number of completers for each         |
 | Complete  |         | treatment arm                                  |
@@ -1615,84 +1598,6 @@ column headings.
 | .Dropouts |         | per visit                                      |
 | \<Dose\>  |         |                                                |
 | \<Visit\> |         |                                                |
-+-----------+---------+------------------------------------------------+
-| Mean Beta | 1       | The mean of the estimates of the coefficient   |
-|           |         | of baseline adjustment                         |
-+-----------+---------+------------------------------------------------+
-| SE beta   | 1       | The standard error of the estimates of the     |
-|           |         | coefficient of baseline adjustment             |
-+-----------+---------+------------------------------------------------+
-| Mean      | 1       | The mean of the estimate of the mean of the    |
-| Baseline  |         | baseline score                                 |
-+-----------+---------+------------------------------------------------+
-| SE Mean   | 1       | The standard error of the estimate of the mean |
-| Baseline  |         | of the baseline score                          |
-+-----------+---------+------------------------------------------------+
-| SD        | 1       | The mean of the estimate of the SD of the      |
-| Baseline  |         | baseline score                                 |
-+-----------+---------+------------------------------------------------+
-| SE SD     | 1       | The standard error of the estimate of the SD   |
-| Baseline  |         | of the baseline score                          |
-+-----------+---------+------------------------------------------------+
-| True Mean | 1       | The true mean of the baseline score            |
-| Baseline  |         | (accounting for possible truncation)           |
-+-----------+---------+------------------------------------------------+
-| True SD   | 1       | The true SD of the baseline score (accounting  |
-| Baseline  |         | for possible truncation)                       |
-+-----------+---------+------------------------------------------------+
-| BAC Mean  | 1       | If a hierarchical prior for Control is being   |
-|           |         | used this is the mean (over the simulations)   |
-|           |         | of the posterior estimate of the mean of the   |
-|           |         | Bayesian Augmented Control (Hierarchical       |
-|           |         | Prior) distribution of mean control responses. |
-+-----------+---------+------------------------------------------------+
-| SE of BAC | 1       | If a hierarchical prior for Control is being   |
-| Mean      |         | used this is the standard error (over the      |
-|           |         | simulations) of the posterior estimate of the  |
-|           |         | mean of the Bayesian Augmented Control         |
-|           |         | (Hierarchical Prior) distribution of mean      |
-|           |         | control responses.                             |
-+-----------+---------+------------------------------------------------+
-| BAC Tau   | 1       | If a hierarchical prior for Control is being   |
-|           |         | used this is the mean (over the simulations)   |
-|           |         | of the posterior estimate of the SD of the     |
-|           |         | Bayesian Augmented Control (Hierarchical       |
-|           |         | Prior) distribution of mean control responses. |
-+-----------+---------+------------------------------------------------+
-| SE of BAC | 1       | If a hierarchical prior for Control is being   |
-| Tau       |         | used this is the standard error (over the      |
-|           |         | simulations) of the posterior estimate of the  |
-|           |         | SD of the Bayesian Augmented Control           |
-|           |         | (Hierarchical Prior) distribution of mean      |
-|           |         | control responses.                             |
-+-----------+---------+------------------------------------------------+
-| BAAC Mean | 1       | If a hierarchical prior for Active Comparator  |
-|           |         | is being used this is the mean (over the       |
-|           |         | simulations) of the posterior estimate of the  |
-|           |         | mean of the Bayesian Augmented Active          |
-|           |         | Comparator (Hierarchical Prior) distribution   |
-|           |         | of mean active comparator responses.           |
-+-----------+---------+------------------------------------------------+
-| SE of     | 1       | If a hierarchical prior for Active Comparator  |
-| BAAC Mean |         | is being used this is the standard error (over |
-|           |         | the simulations) of the posterior estimate of  |
-|           |         | the mean of the Bayesian Augmented Active      |
-|           |         | Comparator (Hierarchical Prior) distribution   |
-|           |         | of mean control responses.                     |
-+-----------+---------+------------------------------------------------+
-| BAAC Tau  | 1       | If a hierarchical prior for Active Comparator  |
-|           |         | is being used this is the mean (over the       |
-|           |         | simulations) of the posterior estimate of the  |
-|           |         | SD of the Bayesian Augmented Active Comparator |
-|           |         | (Hierarchical Prior) distribution of mean      |
-|           |         | active comparator responses.                   |
-+-----------+---------+------------------------------------------------+
-| SE of     | 1       | If a hierarchical prior for Active Comparator  |
-| BAAC Tau  |         | is being used this is the standard error (over |
-|           |         | the simulations) of the posterior estimate of  |
-|           |         | the SD of the Bayesian Augmented Active        |
-|           |         | Comparator (Hierarchical Prior) distribution   |
-|           |         | of mean active comparator responses.           |
 +-----------+---------+------------------------------------------------+
 | Mean      | 1       | The mean, over the simulations, of the overall |
 | Duration  |         | duration of the trials, from first person      |
@@ -1723,215 +1628,7 @@ column headings.
 | Columns   |         |                                                |
 +-----------+---------+------------------------------------------------+
 
-: Contents of the summary.csv file for continuous simulations.
-
-### Dichotomous
-
-+-----------+---------+------------------------------------------------+
-| Column    | Number  | Description                                    |
-| Title     | of      |                                                |
-|           | columns |                                                |
-+===========+=========+================================================+
-| Project   | 1       | The name of the facts file                     |
-+-----------+---------+------------------------------------------------+
-| Scenario  | 1       | The name of the scenario                       |
-+-----------+---------+------------------------------------------------+
-| Timestamp | 1       | The time the simulations were run              |
-+-----------+---------+------------------------------------------------+
-| Version   | 1       | The version of FACTS that was used to run the  |
-|           |         | simulations                                    |
-+-----------+---------+------------------------------------------------+
-| NSim      | 1       | The number of simulation run.                  |
-+-----------+---------+------------------------------------------------+
-| Random    | 1       | The random number seed                         |
-| Number    |         |                                                |
-| Seed      |         |                                                |
-+-----------+---------+------------------------------------------------+
-| No. Subj  | 1       | The mean, over the simulations, of the total   |
-|           |         | number of subjects recruited in the trial.     |
-+-----------+---------+------------------------------------------------+
-| SE Subj.  | 1       | The standard error of the total number of      |
-|           |         | subjects recruited into the trials.            |
-+-----------+---------+------------------------------------------------+
-| No.Subj   | 1       | The 80^th^ percentile, over the simulations,   |
-| 80%ile    |         | of the total number of subjects recruited in   |
-|           |         | the trial.                                     |
-+-----------+---------+------------------------------------------------+
-| Ppn       | 1       | The proportion of simulations that were        |
-| Overall   |         | successful (P(ES) + P(LS))                     |
-| Success   |         |                                                |
-+-----------+---------+------------------------------------------------+
-| Ppn       | 1       | The proportion of simulations that were futile |
-| Overall   |         | (P(EF) + P(LF))                                |
-| Futility  |         |                                                |
-+-----------+---------+------------------------------------------------+
-| P(ES)     | 1       | The proportion of simulations that stopped     |
-|           |         | early for success.                             |
-+-----------+---------+------------------------------------------------+
-| P(LS)     | 1       | The proportion of simulations that did not     |
-|           |         | stop early, and were successful on final       |
-|           |         | evaluation.                                    |
-+-----------+---------+------------------------------------------------+
-| P(LF)     | 1       | The proportion of simulations that did not     |
-|           |         | stop early, and were futile on final           |
-|           |         | evaluation.                                    |
-+-----------+---------+------------------------------------------------+
-| P(EF)     | 1       | The proportion of simulations that stopped     |
-|           |         | early for futility.                            |
-+-----------+---------+------------------------------------------------+
-| SFFF      | 1       | The proportion of simulations that stopped     |
-|           |         | early for success, but at final analysis were  |
-|           |         | futile (Success-Futility 'flip-flops').        |
-+-----------+---------+------------------------------------------------+
-| FSFF      | 1       | The proportion of simulations that stopped     |
-|           |         | early for futility, but at final analysis were |
-|           |         | successful (Futility- Success 'flip-flops').   |
-+-----------+---------+------------------------------------------------+
-| Undec.    | 1       | The proportion of simulations that did not     |
-|           |         | stop early, and met neither the success or     |
-|           |         | futility final evaluation criteria and hence   |
-|           |         | are counted as 'undecided'.                    |
-+-----------+---------+------------------------------------------------+
-| Unused    | 3       | Three unused columns for other outcome types.  |
-+-----------+---------+------------------------------------------------+
-| Early     | 1       | This is the mean early decision time (over the |
-| Success   |         | simulations stopped early for success), it is  |
-| Time      |         | the time from the start of the trial to the    |
-|           |         | interim where early success was declared. It   |
-|           |         | does not include the subsequent follow up      |
-|           |         | time.                                          |
-+-----------+---------+------------------------------------------------+
-| Mean      | D       | The mean (over the simulations) of the number  |
-| Alloc     |         | of subjects allocated to each treatment arm.   |
-| \<Dose\>  |         |                                                |
-+-----------+---------+------------------------------------------------+
-| SE Alloc  | D       | The standard error (over the simulations) of   |
-| \<Dose\>  |         | the number of subjects allocated to each       |
-|           |         | treatment arm.                                 |
-+-----------+---------+------------------------------------------------+
-| Mean Resp | D       | The mean of the estimates of response of each  |
-| \<Dose\>  |         | treatment arm.                                 |
-+-----------+---------+------------------------------------------------+
-| SE Resp   | D       | The standard error, over the simulations, of   |
-| \<Dose\>  |         | the estimate of response of each treatment     |
-|           |         | arm.                                           |
-+-----------+---------+------------------------------------------------+
-| True Mean | D       | The true response for each treatment arm used  |
-| resp      |         | when sampling the simulated subject responses. |
-| \<Dose\>  |         |                                                |
-+-----------+---------+------------------------------------------------+
-| Mean      | D\*V    | These are only calculated and written out if   |
-| Longmod   |         | the Time Course Hierarchical or ITP            |
-| Resp:     |         | longitudinal models are being used.            |
-| \<Dose\>  |         |                                                |
-| \<Visit\> |         | This is the mean (over the simulations) of the |
-|           |         | estimate of the mean response for a particular |
-|           |         | dose at a particular visit.                    |
-+-----------+---------+------------------------------------------------+
-| SE Mean   | D\*V    | This is the standard error (over the           |
-| Longmod   |         | simulations) of the longitudinal model         |
-| Resp:     |         | estimate of the response at intermediate       |
-| \<Dose\>  |         | visits (see above)                             |
-| \<Visit\> |         |                                                |
-+-----------+---------+------------------------------------------------+
-| Mean      | D       | The mean number of completers for each         |
-| Complete  |         | treatment arm                                  |
-| \<Dose\>  |         |                                                |
-+-----------+---------+------------------------------------------------+
-| Mean      | D       | The mean number of complete information (as    |
-| Complete  |         | specified by the interim information type on   |
-| Info      |         | the Interims tab) for each treatment arm       |
-| \<Dose\>  |         |                                                |
-+-----------+---------+------------------------------------------------+
-| No        | D\*V    | The mean number of dropouts per treatment arm  |
-| .Dropouts |         | per visit                                      |
-| \<Dose\>  |         |                                                |
-| \<Visit\> |         |                                                |
-+-----------+---------+------------------------------------------------+
-| BAC Mean  | 1       | If a hierarchical prior for Control is being   |
-|           |         | used this is the mean (over the simulations)   |
-|           |         | of the posterior estimate of the mean of the   |
-|           |         | Bayesian Augmented Control (Hierarchical       |
-|           |         | Prior) distribution of mean control responses. |
-+-----------+---------+------------------------------------------------+
-| SE of BAC | 1       | If a hierarchical prior for Control is being   |
-| Mean      |         | used this is the standard error (over the      |
-|           |         | simulations) of the posterior estimate of the  |
-|           |         | mean of the Bayesian Augmented Control         |
-|           |         | (Hierarchical Prior) distribution of mean      |
-|           |         | control responses.                             |
-+-----------+---------+------------------------------------------------+
-| BAC Tau   | 1       | If a hierarchical prior for Control is being   |
-|           |         | used this is the mean (over the simulations)   |
-|           |         | of the posterior estimate of the SD of the     |
-|           |         | Bayesian Augmented Control (Hierarchical       |
-|           |         | Prior) distribution of mean control responses. |
-+-----------+---------+------------------------------------------------+
-| SE of BAC | 1       | If a hierarchical prior for Control is being   |
-| Tau       |         | used this is the standard error (over the      |
-|           |         | simulations) of the posterior estimate of the  |
-|           |         | SD of the Bayesian Augmented Control           |
-|           |         | (Hierarchical Prior) distribution of mean      |
-|           |         | control responses.                             |
-+-----------+---------+------------------------------------------------+
-| BAAC Mean | 1       | If a hierarchical prior for Active Comparator  |
-|           |         | is being used this is the mean (over the       |
-|           |         | simulations) of the posterior estimate of the  |
-|           |         | mean of the Bayesian Augmented Active          |
-|           |         | Comparator (Hierarchical Prior) distribution   |
-|           |         | of mean active comparator responses.           |
-+-----------+---------+------------------------------------------------+
-| SE of     | 1       | If a hierarchical prior for Active Comparator  |
-| BAAC Mean |         | is being used this is the standard error (over |
-|           |         | the simulations) of the posterior estimate of  |
-|           |         | the mean of the Bayesian Augmented Active      |
-|           |         | Comparator (Hierarchical Prior) distribution   |
-|           |         | of mean control responses.                     |
-+-----------+---------+------------------------------------------------+
-| BAAC Tau  | 1       | If a hierarchical prior for Active Comparator  |
-|           |         | is being used this is the mean (over the       |
-|           |         | simulations) of the posterior estimate of the  |
-|           |         | SD of the Bayesian Augmented Active Comparator |
-|           |         | (Hierarchical Prior) distribution of mean      |
-|           |         | active comparator responses.                   |
-+-----------+---------+------------------------------------------------+
-| SE of     | 1       | If a hierarchical prior for Active Comparator  |
-| BAAC Tau  |         | is being used this is the standard error (over |
-|           |         | the simulations) of the posterior estimate of  |
-|           |         | the SD of the Bayesian Augmented Active        |
-|           |         | Comparator (Hierarchical Prior) distribution   |
-|           |         | of mean active comparator responses.           |
-+-----------+---------+------------------------------------------------+
-| Mean      | 1       | The mean, over the simulations, of the overall |
-| Duration  |         | duration of the trials, from first person      |
-|           |         | first visit, to last person last visit.        |
-+-----------+---------+------------------------------------------------+
-| Ppn Arms  | D       | The proportion of the simulations in which     |
-| Dropped   |         | each arm was dropped. These will be zero if    |
-| \<Dose\>  |         | arm dropping is not selected as the means of   |
-|           |         | adaptive allocation.                           |
-+-----------+---------+------------------------------------------------+
-| Mean LPFV | 1       | The mean, over the simulations, of the accrual |
-| time      |         | period of the trials, from first person first  |
-|           |         | visit, to last person first visit (LPFV).      |
-+-----------+---------+------------------------------------------------+
-| Ppn       | 1       | The proportion of the simulations where the    |
-| Correct   |         | correct arm has been selected, where an arm is |
-| Arm       |         | deemed "correct" based on whether it was       |
-|           |         | marked as "Should Succeed" for the relevant    |
-|           |         | scenario on the VSR tab.                       |
-+-----------+---------+------------------------------------------------+
-| Ppn       | 1       | The proportion of the simulations where the    |
-| Incorrect |         | incorrect correct arm has been selected, where |
-| Arm       |         | an arm is deemed "incorrect" based on whether  |
-|           |         | it wasn't marked as "Should Succeed" for the   |
-|           |         | relevant scenario on the VSR tab.              |
-+-----------+---------+------------------------------------------------+
-| QOI       |         | See next section.                              |
-| Columns   |         |                                                |
-+-----------+---------+------------------------------------------------+
-
-: Contents of the summary.csv file for dichotomous simulations.
+: Contents of the summary.csv file for ordinal simulations.
 
 :::
 
@@ -1948,169 +1645,6 @@ design. The columns in the following order:
 | Target Probabilities | The summary file contains the proportion of times (over the simulations) each dose had the greatest probability of being the target. |
 | Decision QOIs | The summary file contains the mean (over the simulations) of the final value of the decision QOI at the target. |
 
-## Contents of Summary_freq_{missingnessType}.csv
-
-There is a frequentist summary file for each type of treatment of
-missing values.
-
-The first line is a header line, starting with a '#', containing the
-FACTS GUI version number, the name of the FACTS file, the name of the
-scenario, and the time stamp of the start of the simulation.
-
-The second line is a header line, starting with a '#', containing the following
-column headings.
-
-:::{.panel-tabset}
-
-### Continuous
-
-+----------+---------+------------------------------------------------+
-| Column   | Number  | Description                                    |
-| Title    | of      |                                                |
-|          | columns |                                                |
-+==========+=========+================================================+
-| Mean     | D       | The mean response per dose.                    |
-| Theta    |         |                                                |
-| \<Dose\> |         |                                                |
-+----------+---------+------------------------------------------------+
-| SE Theta | D       | The standard error of the response per dose    |
-| \<Dose\> |         |                                                |
-+----------+---------+------------------------------------------------+
-| Mean     | 1       | The mean of the estimate of the baseline       |
-| Beta     |         | coefficient.                                   |
-| (b       |         |                                                |
-| aseline) |         |                                                |
-+----------+---------+------------------------------------------------+
-| SE Mean  | 1       | The standard error of the estimate of the      |
-| Beta     |         | baseline coefficient                           |
-| (b       |         |                                                |
-| aseline) |         |                                                |
-+----------+---------+------------------------------------------------+
-| Ppn      | 1       | The proportion of simulations where at least   |
-| Signif   |         | one of the unadjusted p-values is less than    |
-|          |         | the user specified one-sided alpha.            |
-+----------+---------+------------------------------------------------+
-| Ppn      | D       | For each treatment arm, the proportion of      |
-| Signif   |         | simulations where the unadjusted p-value is    |
-| \<Dose\> |         | less than the user specified one-sided alpha.  |
-|          |         |                                                |
-|          |         | The marginal probability of significance per   |
-|          |         | dose (using unadjusted p-values.               |
-+----------+---------+------------------------------------------------+
-| Bias     | D       | The difference between the estimated mean      |
-| \<Dose\> |         | response and the true (simulated) mean         |
-|          |         | response per dose                              |
-+----------+---------+------------------------------------------------+
-| Coverage | D       | The proportion of simulations where the        |
-| \<Dose\> |         | unadjusted confidence interval for the         |
-|          |         | response contains the true mean response used  |
-|          |         | to simulate subject responses.                 |
-+----------+---------+------------------------------------------------+
-| Ppn      | 1       | The proportion of simulations where at least   |
-| Signif   |         | one of the Dunnett adjusted p-values is less   |
-| Dunnett  |         | than the user specified one-sided alpha.       |
-+----------+---------+------------------------------------------------+
-| Ppn      | D       | For each treatment arm, the proportion of      |
-| Signif   |         | simulations where the Dunnett adjusted p-value |
-| Dunnett  |         | is less than the user specified one-sided      |
-| \<Dose\> |         | alpha.                                         |
-+----------+---------+------------------------------------------------+
-| Coverage | D       | The proportion of simulations where the        |
-| Dunnett  |         | Dunnett adjusted confidence interval contains  |
-| \<Dose\> |         | the true mean response used to simulate        |
-|          |         | subjects responses.                            |
-+----------+---------+------------------------------------------------+
-| Ppn      | 1       | The proportion of simulations where at least   |
-| Signif   |         | one of the Bonferroni adjusted p-values is     |
-| Bonf     |         | less than the user specified one-sided alpha.  |
-+----------+---------+------------------------------------------------+
-| Ppn      | D       | For each treatment arm, the proportion of      |
-| Signif   |         | simulations where the Bonferroni adjusted      |
-| Bonf     |         | p-value is less than the user specified        |
-| \<Dose\> |         | one-sided alpha.                               |
-+----------+---------+------------------------------------------------+
-| Coverage | D       | The proportion of simulations where the        |
-| Bonf     |         | Bonferroni adjusted confidence interval        |
-| \<Dose\> |         | contains the true mean response used to        |
-|          |         | simulate subjects responses.                   |
-+----------+---------+------------------------------------------------+
-| Ppn      | 1       | The proportion of simulations where the trend  |
-| Signif   |         | test p-value is less than the user specified   |
-| Trend    |         | one-sided alpha.                               |
-+----------+---------+------------------------------------------------+
-
-: Contents of the summary_freq_{missingnessType}.csv file for continuous simulations.
-
-### Dichotomous
-
-+----------+---------+------------------------------------------------+
-| Column   | Number  | Description                                    |
-| Title    | of      |                                                |
-|          | columns |                                                |
-+==========+=========+================================================+
-| Mean     | D       | The mean response per dose.                    |
-| Theta    |         |                                                |
-| \<Dose\> |         |                                                |
-+----------+---------+------------------------------------------------+
-| SE Theta | D       | The standard error of the response per dose    |
-| \<Dose\> |         |                                                |
-+----------+---------+------------------------------------------------+
-| Ppn      | 1       | The proportion of simulations where at least   |
-| Signif   |         | one of the unadjusted p-values is less than    |
-|          |         | the user specified one-sided alpha.            |
-+----------+---------+------------------------------------------------+
-| Ppn      | D       | For each treatment arm, the proportion of      |
-| Signif   |         | simulations where the unadjusted p-value is    |
-| \<Dose\> |         | less than the user specified one-sided alpha.  |
-|          |         |                                                |
-|          |         | The marginal probability of significance per   |
-|          |         | dose (using unadjusted p-values).               |
-+----------+---------+------------------------------------------------+
-| Bias     | D       | The difference between the estimated mean      |
-| \<Dose\> |         | response and the true (simulated) mean         |
-|          |         | response per dose                              |
-+----------+---------+------------------------------------------------+
-| Coverage | D       | The proportion of simulations where the        |
-| \<Dose\> |         | unadjusted confidence interval for the         |
-|          |         | response contains the true mean response used  |
-|          |         | to simulate subject responses.                 |
-+----------+---------+------------------------------------------------+
-| Ppn      | 1       | The proportion of simulations where at least   |
-| Signif   |         | one of the Dunnett adjusted p-values is less   |
-| Dunnett  |         | than the user specified one-sided alpha.       |
-+----------+---------+------------------------------------------------+
-| Ppn      | D       | For each treatment arm, the proportion of      |
-| Signif   |         | simulations where the Dunnett adjusted p-value |
-| Dunnett  |         | is less than the user specified one-sided      |
-| \<Dose\> |         | alpha.                                         |
-+----------+---------+------------------------------------------------+
-| Coverage | D       | The proportion of simulations where the        |
-| Dunnett  |         | Dunnett adjusted confidence interval contains  |
-| \<Dose\> |         | the true mean response used to simulate        |
-|          |         | subjects responses.                            |
-+----------+---------+------------------------------------------------+
-| Ppn      | 1       | The proportion of simulations where at least   |
-| Signif   |         | one of the Bonferroni adjusted p-values is     |
-| Bonf     |         | less than the user specified one-sided alpha.  |
-+----------+---------+------------------------------------------------+
-| Ppn      | D       | For each treatment arm, the proportion of      |
-| Signif   |         | simulations where the Bonferroni adjusted      |
-| Bonf     |         | p-value is less than the user specified        |
-| \<Dose\> |         | one-sided alpha.                               |
-+----------+---------+------------------------------------------------+
-| Coverage | D       | The proportion of simulations where the        |
-| Bonf     |         | Bonferroni adjusted confidence interval        |
-| \<Dose\> |         | contains the true mean response used to        |
-|          |         | simulate subjects responses.                   |
-+----------+---------+------------------------------------------------+
-| Ppn      | 1       | The proportion of simulations where the trend  |
-| Signif   |         | test p-value is less than the user specified   |
-| Trend    |         | one-sided alpha.                               |
-+----------+---------+------------------------------------------------+
-
-: Contents of the summary_freq_{missingnessType}.csv file for dichotomous simulations.
-
-:::
 
 ## Contents of simulations.csv and weeksNNNNN.csv
 
@@ -2144,7 +1678,7 @@ criteria.
 
 :::{.panel-tabset}
 
-### Continuous
+### Ordinal
 
 | Column Title | Number of columns | In simulations file | In weeks file | Description |
 |----------|----------|--------|--------|--------------------------------|
@@ -2157,78 +1691,26 @@ criteria.
 | Early Success Time | 1 | ✔ | ✔ | This is the time to the early success decision (-9999 if there was no early success decision). The from the start of the trial to the interim where the early success conditions were first met. It does not include the subsequent follow up time. |
 | Alloc \<Dose\> | D | ✔ | ✔ | The number of subjects allocated to each arm. |
 | Pr(Alloc) \<Dose\> | D | ✔ | ✔ | The probability of allocation to the different arms following the interim. |
-| Mean resp \<Dose\> | D | ✔ | ✔ | The estimated response of each treatment arm. |
-| SD Mean resp \<Dose\> | D | ✔ | ✔ | The standard deviation of the estimate of response of each treatment arm. |
-| True Mean resp \<Dose\> | D | ✔ | ✔ | The true mean response of each treatment arm for this simulation. |
-| True SD resp \<Dose\> | D | ✔ | ✔ | The true SD of the response of each treatment arm for this simulation |
-| Sigma | 1 | ✔ | ✔ | The pooled estimate of the SD of the response across all the treatment arms |
-| SD_Sigma | 1 | ✔ | ✔ | The SD of the pooled estimate of the SD of the response across all the treatment arms |
-| Beta | 1 | ✔ | ✔ | The estimate of 'Beta' the baseline adjustment coefficient, if baseline adjustment is being used. |
-| SD_Beta | 1 | ✔ | ✔ | The SD of the estimate of 'Beta' the baseline adjustment coefficient. |
-| Mean Baseline | 1 | ✔ | ✔ | The estimate of the mean baseline score. |
-| SE Mean Baseline | 1 | ✔ | ✔ | The standard error of the estimate of the mean baseline score. |
-| SD Baseline | 1 | ✔ | ✔ | The estimate of the SD of the baseline score. |
-| True Mean Baseline | 1 | ✔ | ✔ | The true mean of the simulated baseline score |
-| True SD Baseline | 1 | ✔ | ✔ | The true SD of the simulated baseline score |
-| Mean Raw Response \<Dose\> | D | ✔ | ✔ | The observed mean response on each treatment arm (unadjusted by any modeling). |
-| SE Mean Raw Response \<Dose\> | D | ✔ | ✔ | The SE of the estimate of the mean raw response on each dose. |
+| Mean resp \<Dose\> | D | ✔ | ✔ | The posterior mean of a quantity summarizing each treatment arm. If cumulative logistic modeling is used, this is the log odds ratio.  If Dirichlet modeling is used, this is the expected utility. |
+| SD Mean resp \<Dose\> | D | ✔ | ✔ | The standard deviation of the estimate of either the log odds ratio or the expected utility (see above) for each treatment arm. |
+| log OR (lower CI) \<Dose\> | D | ✔ | ✔ | The lower bound of a 95% credible interval for the log odds ratio, only when cumulative logistic modeling is used. |
+| log OR (upper CI) \<Dose\> | D | ✔ | ✔ | The upper bound of a 95% credible interval for the log odds ratio, only when cumulative logistic modeling is used. |
+| True Mean resp \<Dose\> | D | ✔ | ✔ | The true expected utility of each treatment arm for this simulation. |
+| True SD resp \<Dose\> | D | ✔ | ✔ | The true SD of the utility of each treatment arm for this simulation |
+| Mean Raw Response \<Dose\> | D | ✔ | ✔ | The observed mean utility on each treatment arm (unadjusted by any modeling). |
+| SE Mean Raw Response \<Dose\> | D | ✔ | ✔ | The SE of the estimate of the expected utility on each dose. |
 | Complete \<Dose\> | D | ✔ | ✔ | The number of completed subjects on each treatment arm at the time of the analysis. |
 | Complete Information \<Dose\> | D | ✔ | ✔ | The number of subject who count as complete for the purposes of timing interims -- whether complete or opportunity to complete and at which visit is as defined on the Interims tab. If interims are by enrolment then CompleteInformation is the number of subjects that have completed -- final endpoint data is available. |
 | #Dropouts \<Dose\> \<Visit\> | D * V | ✔ | ✔ | The number of subjects dropped out on each treatment arm and each visit. |
+| Mean P \<Dose\> \<Outcome\> | D * K |  ✔ | ✔ | Posterior mean of the probability of each ordinal outcome for each arm |
+| SD P \<Dose\> \<Outcome\> | D * K |  ✔ | ✔ | Posterior SD of the probability of each ordinal outcome for each arm |
+| N \<Dose\> \<Outcome\> | D * K | ✔ | ✔ | Number of subjects for each treatment arm and outcome. |
 | DR Param \<Param\> | 10 | ✔ | ✔ | The estimate of the mean value of each of the response model parameters. The response models require up to 10 parameters, most less. The model parameters are labeled $\alpha_1$, $\alpha_2$, .. the subscripts corresponding to the index "\<Param\>". |
 | Sd DR Param \<Param\> | 4 | ✔ | ✔ | The standard deviation of the estimate of the mean value of the corresponding response model parameter. |
-| Longmod_ \<Model\> \<Parameter\> \<Visit\> | LM * LMP * V | ✔ | ✔ | The estimate of the mean value of each of the longitudinal model parameters. The number of models depends on the number of "model instances" the user has specified. For linear regression the parameters reported are: - Alpha -- per visit -- the mean estimate of the constant offset in the change in response from this visit to the final visit - Beta -- per visit -- the mean estimate of the coefficient of change in response from this visit to the final visit - Lambda -- per visit -- the mean estimate of the SD of the residual error term in the predicted final visit response based on the response at this visit. For time course hierarchical the parameters reported are: - Alpha -- per visit -- the mean estimate of the exponential coefficient of the proportion of the dose response and per-subject response seen at this visit.. - Lambda -- per visit -- the mean estimate of the SD of the residual error term in the predicted final visit response based on the response at this visit. - Tau -- the mean estimate of the SD of the per subject random effect For ITP the parameters are: - K -- per model -- the mean estimate of the ITP shape parameter - Tau -- per model - the mean estimate of the SD of the per subject random effect - Lambda -- per model -- the mean estimate of the Sd of the residual error. - Omega -- per treatment arm -- the mean estimate of the mean treatment arm effect. For LOCF & Kernel Density there are no estimated parameters. |
-| Longmod Resp: \<Dose\> \<Visit\> | D * V | ✔ | ✔ | These are only calculated and written out if the Time Course Hierarchical or ITP longitudinal models are being used. This is the mean response for a particular dose at a particular visit. |
-| BAC Mean | 1 | ✔ | ✔ | This is the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses. |
-| BAC Mean SD | 1 | ✔ | ✔ | This is the SD of the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses. |
-| BAC Tau | 1 | ✔ | ✔ | This is the posterior estimate of the SD of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses. |
-| BAC Tau SD | 1 | ✔ | ✔ | This is the SD of the posterior estimate of the SD of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses. |
-| BAAC Mean | 1 | ✔ | ✔ | This is the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses. |
-| BAAC Mean SD | 1 | ✔ | ✔ | This is the SD of the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean comparator responses. |
-| BAAC Tau | 1 | ✔ | ✔ | This is the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses. |
-| BAAC Tau SD | 1 | ✔ | ✔ | This is the SD of the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses. |
 | Duration | 1 | ✔ | ✔ | The time in weeks to the analysis shown. |
 | Arm Drop Time \<Dose\> | D | ✔ | ✔ | For each treatment arm, the time in weeks when it was decided to drop the arm. |
 | LPFV | 1 | ✔ | ✔ | The time in weeks to the last patient first visit. |
 | QOI Columns | | ✔ | ✔ | See next section. |
-
-### Dichotomous
-
-| Column Title | Number of columns | In simulations file | In weeks file | Description |
-|----------|----------|--------|--------|--------------------------------|
-| # Weeks (Duration) | 1 | | ✔ | The week of the analysis |
-| #Sim | 1 | ✔ | | The number of the simulation |
-| LastInterim | 1 | ✔ | | The index of the last interim performed the index of the interim immediately before the final interim (index '999'). Note this is not necessarily the interim when the trial stopped if the design includes follow-up after stopping |
-| #Subjects | 1 | ✔ | ✔ | The number of subjects recruited in the simulation |
-| Outcome | 1 | ✔ | ✔ | A flag categorizing final study outcome:<br>1 = Early success<br>2 = Late success<br>3 = Late futility<br>4 = Early futility<br>5 = Success to futility flip-flop<br>6 = Futility to success flip-flop<br>7 = Inconclusive |
-| Early Success Time | 1 | ✔ | ✔ | This is the time to the early success decision (-9999 if there was no early success decision). The from the start of the trial to the interim where the early success conditions were first met. It does not include the subsequent follow up time |
-| Alloc \<Dose\> | D | ✔ | ✔ | The number of subjects allocated to each arm |
-| Pr(Alloc) \<Dose\> | D | ✔ | ✔ | The probability of allocation to the different arms following the interim |
-| Mean resp \<Dose\> | D | ✔ | ✔ | The estimated response of each treatment arm |
-| SD resp \<Dose\> | D | ✔ | ✔ | The standard deviation of the estimate of response of each treatment arm |
-| Mean resp (lower CI) \<Dose\> | D | ✔ | ✔ | The lower bound of the 95% Credible Interval of the estimate of response for each treatment arm |
-| Mean resp (upper CI) \<Dose\> | D | ✔ | ✔ | The upper bound of the 95% Credible Interval of the estimate of response for each treatment arm |
-| True Mean resp \<Dose\> | D | ✔ | ✔ | The true mean response of each treatment arm for this simulation |
-| Mean Raw Response \<Dose\> | D | ✔ | ✔ | The observed rate of response on each treatment arm (unadjusted by any modeling) |
-| Complete \<Dose\> | D | ✔ | ✔ | The number of completed subjects on each treatment arm at the time of the analysis |
-| Complete Information \<Dose\> | D | ✔ | ✔ | The number of subjects that have achieved the information criteria as specified on the Interims tab. May be the number enrolled, complete, or with the opportunity to complete. If complete or opportunity to complete, then the visit that should be complete is also specified.|
-| #Dropouts \<Dose\> \<Visit\> | D * V | ✔ | ✔ | The number of subjects dropped out on each treatment arm and each visit |
-| DR Param \<Param\> | 4 | ✔ | ✔ | The estimate of the mean value of each of the response model parameters. The response models require up to 4 parameters, some less. The model parameters are labeled $\alpha_1$, $\alpha_2$, .. the subscripts corresponding to the column their value appears in here |
-| Sd DR Param \<Param\> | 4 | ✔ | ✔ | The standard deviation of the estimate of the mean value of the corresponding response model parameter |
-| Longmod_ \<Model\> \<Parameter\> \<Visit\> | LM * LMP * V | ✔ | ✔ | The estimate of the mean value of each of the longitudinal model parameters. The number of models depends on the number of "model instances" the user has specified. Each value is reported per visit unless otherwise stated.<br>For Beta-Binomial the parameters reported are:<br>•	Alpha0 &  Beta 0 – The beta binomial alpha & beta parameters for the probability that the final result will be 1 if the result at the visit is 0<br>•	Prob01 – the mean probability of the Beta(Alpha0, Beta0) – the probability of 1 being the final result if the result at the visit is 0<br>•	Alpha1 &  Beta 1 – The beta binomial alpha & beta parameters for the probability that the final result will be 1 if the result at the visit is 1<br>•	Prob11 – the mean probability of the Beta(Alpha1, Beta1) – the probability of 1 being the final result if the result at the visit is 1<br>For logistic regression the parameters reported are: <br>•	Prob11 – the probability of 1 being the final result if the result at the visit is 1and <br>•	Prob01 – the probability of 1 being the final result if the result at the visit is 0<br>For restricted Markov the parameters reported are:<br>•	Alpha0 – Alpha for state 0<br>•	AlphaS – Alpha for stable state<br>•	Alpha1 – Alpha for state 1<br>•	Prob0 – Transition probability to state 0<br>•	ProbS – Probability of remaining stable<br>•	Prob1 – Transition probability to state 1<br>(values are for the transition to the next visit, so thre are no values for the final visit)<br>If using a dichotomized continuous response, these columns will be for the selected continuous longitudinal model:<br>For linear regression the parameters reported are:<br>•	Alpha – the mean estimate of the constant offset in the change in response from this visit to the final visit<br>•	Beta – the mean estimate of the coefficient of change in response from this visit to the final visit<br>•	Lambda – the mean estimate of the SD of the residual error term in the predicted final visit response based on the response at this visit.<br>For ITP the parameters are:<br>•	K – single value per model – the mean estimate of the ITP shape parameter<br>•	Tau – single value per model - the mean estimate of the SD of the per subject random effect<br>•	Lambda – single value per model – the mean estimate of the Sd of the residual error.<br>•	Omega – per treatment arm not visit – the mean estimate of the mean treatment arm effect.<br>For LOCF & Kernel Density there are no estimated parameters. |
-| Longmod Resp: \<Dose\> \<Visit\> | D * V | ✔ | ✔ | These are only calculated and written out if the ITP longitudinal model is being used for a dichotomized continuous endpoint.<br>This is the mean response for a particular dose at a particular visit. |
-| BAC Mean | 1 | ✔ | ✔ | This is the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses |
-| BAC Mean SD | 1 | ✔ | ✔ | This is the SD of the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses |
-| BAC Tau | 1 | ✔ | ✔ | This is the posterior estimate of the SD of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses |
-| BAC Tau SD | 1 | ✔ | ✔ | This is the SD of the posterior estimate of the SD of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses |
-| BAAC Mean | 1 | ✔ | ✔ | This is the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses |
-| BAAC Mean SD | 1 | ✔ | ✔ | This is the SD of the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean comparator responses |
-| BAAC Tau | 1 | ✔ | ✔ | This is the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses |
-| BAAC Tau SD | 1 | ✔ | ✔ | This is the SD of the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses |
-| Duration | 1 | ✔ | ✔ | The time in weeks to the analysis shown |
-| Arm Drop Time \<Dose\> | D | ✔ | ✔ | For each treatment arm, the time in weeks when it was decided to drop the arm |
-| LPFV | 1 | ✔ | ✔ | The time in weeks to the last patient first visit |
-| QOI Columns | | ✔ | ✔ | See next section.|
 
 :::
 
@@ -2246,36 +1728,6 @@ design. The columns are grouped in the following order:
 | Decision QOIs | The value of the decision QOI at the target. |
 | Success Futile | A flag for each QOI decision criteria indicating if the decision QOI was evaluated and compared to a threshold at the interim (weeks file) or final analysis (simulation file). The flag value is -1 if the decision QOI was not evaluated, 0 if it did not meet the threshold and 1 if it did. |
 | Success / Futile Combined | Flags indicating if the interim or final analysis determined success or futility taking all the factors defined for Success/Futility into account: 0 if the conditions were not met, 1 it the conditions were met. If success and futility conditions have been defined that are not mutually exclusive and both sets of combined conditions are met, FACTS will pick one of the outcomes as met but not the other. In order to discourage defining Success and Futility rules that can both be true FACTS does not guarantee which outcome will be selected. |
-
-## Contents of Simulations_freq_{missingnessType}.csv, Weeks_freq_{missingnessType}.csv
-
-These file contain the frequentist results after an interim analysis
-(weeks file) or final analysis (simulations file), apart for the first
-column, the columns are the same in the two types of file, and the same
-across the different methods for treating missing data.
-
-| Column | Number of columns | Description |
-|---------|---------|---------------|
-| # Trial | 1 | The number of the simulation (simulations_freq_...csv only) |
-| # Weeks | 1 | The week of the interim (weeks_freq_...csv only) |
-| Theta | D | Unadjusted estimate of response per treatment arm |
-| Theta SD | D | The SD of the estimate of response per treatment arm |
-| Trt Effect | D | The relative size of the treatment effect compared to control per arm (treatment effect for control is always 0). The direction of the comparison takes into account whether a response represents a subject's condition improving or worsening, so that a positive treatment effect shows the response on the dose is better than on control. |
-| t-Stat | D | The t-test statistic per treatment arm (for control this is always 0) |
-| p-Value | D | The unadjusted t-test p-value per arm (for control this is always 0) |
-| lower CI | D | The unadjusted lower bound of the alpha confidence interval of the estimated treatment effect per treatment arm (for control this is always 0). |
-| upper CI | D | The unadjusted upper bound of the alpha confidence interval of the estimated treatment effect per treatment arm (for control this is always 0). |
-| Min p-Value | 1 | The smallest of the t-test p-values |
-| p-Value Dunnett | D | The Dunnett adjusted t-test p-value per arm (for control this is always 0). |
-| lower CI Dunnett | D | The Dunnett adjusted lower bound of the alpha confidence interval of the estimated treatment effect (for control this is always 0). |
-| upper CI Dunnett | D | The Dunnett adjusted upper bound of the alpha confidence interval of the estimated treatment effect (for control this is always 0). |
-| Min p-Value Dunnett | 1 | The smallest of the Dunnett adjusted p-values. |
-| p-Value Bonf | D | The Bonferroni adjusted t-test p-value per arm. |
-| lower-CI Bonf | D | The Bonferroni adjusted lower bound of the alpha confidence interval of the estimated treatment effect (for control this is always 0). |
-| upper-CI Bonf | D | The Bonferroni adjusted upper bound of the alpha confidence interval of the estimated treatment effect (for control this is always 0). |
-| Min p-Value Bonf | 1 | The smallest of the Bonferroni adjusted t-test value per arm. |
-| t-Stat trend | 1 | The t statistic from the trend test. |
-| p-Value trend | 1 | The p-value from the trend test. |
 
 ## Contents of PatientsNNNNN.csv
 
