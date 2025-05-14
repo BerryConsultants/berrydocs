@@ -2787,7 +2787,7 @@ Figure&nbsp;64: The windows file explorer when opened to the directory containin
 <section id="contents-of-patientsnnnnn.csv" class="level2">
 <h2 class="anchored" data-anchor-id="contents-of-patientsnnnnn.csv">Contents of PatientsNNNNN.csv</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-36-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-36-1" role="tab" aria-controls="tabset-36-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-36-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-36-2" role="tab" aria-controls="tabset-36-2" aria-selected="false">Dichotomous</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-36-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-36-1" role="tab" aria-controls="tabset-36-1" aria-selected="true">Ordinal</a></li></ul>
 <div class="tab-content">
 <div id="tabset-36-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-36-1-tab">
 <table class="caption-top table">
@@ -2842,77 +2842,20 @@ Figure&nbsp;64: The windows file explorer when opened to the directory containin
 <tr class="even">
 <td>Visit &lt;Visit&gt;</td>
 <td>V</td>
-<td>Subject’s response at each visit.</td>
+<td>Subject’s response at each visit; possible values are 1 through the number of ordinal values.</td>
 </tr>
 </tbody>
 </table>
-</div>
-<div id="tabset-36-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-36-2-tab">
-<table class="caption-top table">
-<colgroup>
-<col style="width: 27%">
-<col style="width: 27%">
-<col style="width: 45%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Column</th>
-<th>Number of columns</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Subject</td>
-<td>1</td>
-<td>The subject id number, starting at 1.</td>
-</tr>
-<tr class="even">
-<td>Region</td>
-<td>1</td>
-<td>Which region the subject was recruited in.</td>
-</tr>
-<tr class="odd">
-<td>Date</td>
-<td>1</td>
-<td>The date, in weeks from the start of the trial, of the subject’s baseline visit and randomization.</td>
-</tr>
-<tr class="even">
-<td>Dose</td>
-<td>1</td>
-<td>The index number (1, …) of the treatment arm the subject belongs to.</td>
-</tr>
-<tr class="odd">
-<td>LastVisit#</td>
-<td>1</td>
-<td>The index of the last visit for which the subjects data was collected, if the subject did not complete all of its visits it could be because they dropped-out, the subject’s treatment arm was dropped (and there was no follow-up), or the study stopped early (and there was no follow-up).</td>
-</tr>
-<tr class="even">
-<td>Dropout</td>
-<td>1</td>
-<td>Whether the subject dropped out of the trial (1) or not (0) before reaching their final visit.</td>
-</tr>
-<tr class="odd">
-<td>Baseline</td>
-<td>1</td>
-<td>Always -9999 since there’s no baseline in dichotomous response trials.</td>
-</tr>
-<tr class="even">
-<td>Visit &lt;Visit&gt;</td>
-<td>V</td>
-<td>Subject’s response at each visit.</td>
-</tr>
-</tbody>
-</table>
+<p>At present, the ordinal engine does not feature longitudinal modeling so there is only one visit and only the final endpoint is given.</p>
 </div>
 </div>
 </div>
 </section>
 <section id="contents-of-mcmcnnnnn.csv" class="level2">
 <h2 class="anchored" data-anchor-id="contents-of-mcmcnnnnn.csv">Contents of MCMCNNNNN.csv</h2>
-<p>The MCMC file if requested for output by the user, contains all the MCMC samples for the fitted parameters in the design. There is one row per sample (including the burnin) and the samples from all the analyses in the simulation are included. The first two columns are the analysis index and the sample (within analysis) index. The remaining columns are the parameters whose sample values are being reported, the number and constituents of these columns are highly variable depending on design of the statistical analysis.</p>
+<p>The MCMC file if requested for output by the user, contains all the MCMC samples for the fitted parameters in the design. There is one row per sample (including the burnin) and the samples from all the analyses in the simulation are included. The first two columns are the analysis index and the sample (within analysis) index. The remaining columns are the parameters whose sample values are being reported, the number and constituents of these columns depend in particular on whether cumulative logistic modeling or Dirichlet modeling has been selected for the ordinal outcome.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-37-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-37-1" role="tab" aria-controls="tabset-37-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-37-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-37-2" role="tab" aria-controls="tabset-37-2" aria-selected="false">Dichotomous</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-37-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-37-1" role="tab" aria-controls="tabset-37-1" aria-selected="true">Ordinal</a></li></ul>
 <div class="tab-content">
 <div id="tabset-37-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-37-1-tab">
 <table class="caption-top table">
@@ -2940,116 +2883,19 @@ Figure&nbsp;64: The windows file explorer when opened to the directory containin
 <td>The index of the sample within the analysis.</td>
 </tr>
 <tr class="odd">
-<td>Theta &lt;Dose&gt;</td>
+<td>Theta[Arm]</td>
 <td>D</td>
-<td>The estimate of the mean response for each dose, based on the dose response model fitted.</td>
+<td>(Cumulative logistic modeling only). The estimate of the log odds ratio for each arm, based on the dose response model fitted. The control arm has Theta1 = 0.</td>
 </tr>
 <tr class="even">
-<td>Sigma</td>
-<td>1</td>
-<td>The estimate of the SD of the endpoint.</td>
+<td>P0[Outcome]</td>
+<td>K</td>
+<td>(Cumulative logistic modeling). Estimates of the probability of each ordinal outcome for the control arm. The outcome probabilities for the other arms are derived from these control arm probabilities and the Theta parameters above.</td>
 </tr>
 <tr class="odd">
-<td>Beta</td>
-<td>1</td>
-<td>If baseline is included in the simulated data and using the “Baseline Adjusted Model”, this is the value of “Beta”, the baseline coefficient.</td>
-</tr>
-<tr class="even">
-<td>A &lt;1-8&gt; / Tau</td>
-<td>P</td>
-<td>If the dose response model estimates parameters then the samples of these are listed next. The number and name of the parameters will vary depending on the model being fitted. Check the Design &gt; Dose Response tab for a listing of the parameters.</td>
-</tr>
-<tr class="odd">
-<td>Longmod &lt;Model&gt; &lt;Param&gt; &lt;Visit&gt;</td>
-<td>L*P*V</td>
-<td>If the analysis includes longitudinal modelling then the samples of the parameters of the longitudinal models are output. The number of models depends on the number of different longitudinal fits the user has specified (one over all arms, one for control and one for all treatment arms, model all arms separately, etc.), the number of parameters the model has, and if these are fitted per visit (which depends on the model being fitted), then the number of visits.</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="tabset-37-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-37-2-tab">
-<p>If using a dichotomized continuous variable, then the parameters for the LM are the same as for the continuous model MCMC output listed in the Continuous tab.</p>
-<p>If using a dichotomous longitudinal model, then the following parameters are output in the MCMC file.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 27%">
-<col style="width: 27%">
-<col style="width: 45%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Column</th>
-<th>Number of columns</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Analysis</td>
-<td>1</td>
-<td>The index of the analysis (interim) in the simulation.</td>
-</tr>
-<tr class="even">
-<td>Sample</td>
-<td>1</td>
-<td>The index of the sample within the analysis.</td>
-</tr>
-<tr class="odd">
-<td>Pi &lt;Dose&gt;</td>
-<td>D</td>
-<td>The estimate of the response rate for each dose, based on the dose response model fitted.</td>
-</tr>
-<tr class="even">
-<td>A &lt;1-8&gt; / Tau</td>
-<td>P</td>
-<td>If the dose response model estimates parameters then the samples of these are listed next. The number and name of the parameters will vary depending on the model being fitted. Check the Design &gt; Dose Response tab for a listing of the parameters.</td>
-</tr>
-<tr class="odd">
-<td>Longmod &lt;Model&gt; &lt;Param&gt; &lt;Visit&gt;</td>
-<td>L*P*V</td>
-<td>If the analysis includes longitudinal modelling then the samples of the parameters of the longitudinal models are output. The number of models depends on the number of different longitudinal fits the user has specified (one over all arms, one for control and one for all treatment arms, model all arms separately, etc.), the number of parameters the model has, and if these are fitted per visit (which depends on the model being fitted), then the number of visits.</td>
-</tr>
-</tbody>
-</table>
-<p>If using a restricted markov model, then the following parameters are output in the MCMC file.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 27%">
-<col style="width: 27%">
-<col style="width: 45%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Column</th>
-<th>Number of columns</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Analysis</td>
-<td>1</td>
-<td>The index of the analysis (interim) in the simulation.</td>
-</tr>
-<tr class="even">
-<td>Sample</td>
-<td>1</td>
-<td>The index of the sample within the analysis.</td>
-</tr>
-<tr class="odd">
-<td>Pi &lt;Dose&gt;</td>
-<td>D</td>
-<td>The estimate of the response rate for each dose, based on the dose response model fitted.</td>
-</tr>
-<tr class="even">
-<td>A &lt;1-8&gt; / Tau</td>
-<td>P</td>
-<td>If the dose response model estimates parameters then the samples of these are listed next. The number and name of the parameters will vary depending on the model being fitted. Check the Design &gt; Dose Response tab for a listing of the parameters.</td>
-</tr>
-<tr class="odd">
-<td>Longmod &lt;Model&gt; &lt;Param&gt; &lt;Visit&gt;</td>
-<td>L*P*V</td>
-<td>Currently the values of Alpha0, Alpha1, AlphaS (the parameters to the Dirichlet distribution) are (unnecessarily – these values are not sampled) output, along with the values for P0, P1 and PS the transition probabilities of each model at each visit.</td>
+<td>P0[Arm][Outcome]</td>
+<td>D * K</td>
+<td>(Dirichlet modeling). Estimates of the probability of each ordinal outcome for each arm.</td>
 </tr>
 </tbody>
 </table>
