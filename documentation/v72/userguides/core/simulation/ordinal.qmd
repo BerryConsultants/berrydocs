@@ -1733,7 +1733,7 @@ design. The columns are grouped in the following order:
 
 :::{.panel-tabset}
 
-### Continuous
+### Ordinal
 
 | Column | Number of columns | Description |
 |---------|---------|---------------|
@@ -1744,20 +1744,10 @@ design. The columns are grouped in the following order:
 | LastVisit# | 1 | The index of the last visit for which the subjects data was collected, if the subject did not complete all of its visits it could be because they dropped-out, the subject's treatment arm was dropped (and there was no follow-up), or the study stopped early (and there was no follow-up). |
 | Dropout | 1 | Whether the subject dropped out of the trial (1) or not (0) before reaching their final visit. |
 | Baseline | 1 | Subject baseline response, if simulated. If not simulated, then fixed at -9999. |
-| Visit \<Visit\> | V | Subject's response at each visit. |
+| Visit \<Visit\> | V | Subject's response at each visit; possible values are 1 through the number of ordinal values. |
 
-### Dichotomous
-
-| Column | Number of columns | Description |
-|---------|---------|---------------|
-| Subject | 1 | The subject id number, starting at 1. |
-| Region  | 1 | Which region the subject was recruited in. |
-| Date    | 1 | The date, in weeks from the start of the trial, of the subject's baseline visit and randomization. |
-| Dose    | 1 | The index number (1, ...) of the treatment arm the subject belongs to. |
-| LastVisit# | 1 | The index of the last visit for which the subjects data was collected, if the subject did not complete all of its visits it could be because they dropped-out, the subject's treatment arm was dropped (and there was no follow-up), or the study stopped early (and there was no follow-up). |
-| Dropout | 1 | Whether the subject dropped out of the trial (1) or not (0) before reaching their final visit. |
-| Baseline | 1 | Always -9999 since there's no baseline in dichotomous response trials. |
-| Visit \<Visit\> | V | Subject's response at each visit. |
+At present, the ordinal engine does not feature longitudinal modeling so there is 
+only one visit and only the final endpoint is given.  
 
 :::
 
@@ -1769,49 +1759,20 @@ sample (including the burnin) and the samples from all the analyses in
 the simulation are included. The first two columns are the analysis
 index and the sample (within analysis) index. The remaining columns are
 the parameters whose sample values are being reported, the number and
-constituents of these columns are highly variable depending on design of
-the statistical analysis.
+constituents of these columns depend in particular on whether cumulative 
+logistic modeling or Dirichlet modeling has been selected for the ordinal 
+outcome.  
 
 :::{.panel-tabset}
 
-### Continuous
+### Ordinal
 
 | Column | Number of columns | Description |
 |---------|---------|---------------|
 | Analysis | 1 | The index of the analysis (interim) in the simulation. |
 | Sample | 1 | The index of the sample within the analysis. |
-| Theta \<Dose\> | D | The estimate of the mean response for each dose, based on the dose response model fitted. |
-| Sigma | 1 | The estimate of the SD of the endpoint. |
-| Beta | 1 | If baseline is included in the simulated data and using the "Baseline Adjusted Model", this is the value of "Beta", the baseline coefficient. |
-| A <1-8> / Tau | P | If the dose response model estimates parameters then the samples of these are listed next. The number and name of the parameters will vary depending on the model being fitted. Check the Design > Dose Response tab for a listing of the parameters. |
-| Longmod \<Model\> \<Param\> \<Visit\> | L\*P\*V | If the analysis includes longitudinal modelling then the samples of the parameters of the longitudinal models are output. The number of models depends on the number of different longitudinal fits the user has specified (one over all arms, one for control and one for all treatment arms, model all arms separately, etc.), the number of parameters the model has, and if these are fitted per visit (which depends on the model being fitted), then the number of visits. |
-
-### Dichotomous
-
-If using a dichotomized continuous variable, then the parameters for
-the LM are the same as for the continuous model MCMC output listed in
-the Continuous tab.
-
-If using a dichotomous longitudinal model, then the following parameters
-are output in the MCMC file.
-
-| Column | Number of columns | Description |
-|---------|---------|---------------|
-| Analysis | 1 | The index of the analysis (interim) in the simulation. |
-| Sample | 1 | The index of the sample within the analysis. |
-| Pi \<Dose\> | D | The estimate of the response rate for each dose, based on the dose response model fitted. |
-| A <1-8> / Tau | P | If the dose response model estimates parameters then the samples of these are listed next. The number and name of the parameters will vary depending on the model being fitted. Check the Design > Dose Response tab for a listing of the parameters. |
-| Longmod \<Model\> \<Param\> \<Visit\> | L\*P\*V | If the analysis includes longitudinal modelling then the samples of the parameters of the longitudinal models are output. The number of models depends on the number of different longitudinal fits the user has specified (one over all arms, one for control and one for all treatment arms, model all arms separately, etc.), the number of parameters the model has, and if these are fitted per visit (which depends on the model being fitted), then the number of visits. |
-
-If using a restricted markov model, then the following parameters
-are output in the MCMC file.
-
-| Column | Number of columns | Description |
-|---------|---------|---------------|
-| Analysis | 1 | The index of the analysis (interim) in the simulation. |
-| Sample | 1 | The index of the sample within the analysis. |
-| Pi \<Dose\> | D | The estimate of the response rate for each dose, based on the dose response model fitted. |
-| A <1-8> / Tau | P | If the dose response model estimates parameters then the samples of these are listed next. The number and name of the parameters will vary depending on the model being fitted. Check the Design > Dose Response tab for a listing of the parameters. |
-| Longmod \<Model\> \<Param\> \<Visit\> | L\*P\*V | Currently the values of Alpha0, Alpha1, AlphaS (the parameters to the Dirichlet distribution) are (unnecessarily – these values are not sampled) output, along with the values for P0, P1 and PS the transition probabilities of each model at each visit. |
+| Theta[Arm] | D | (Cumulative logistic modeling only).  The estimate of the log odds ratio for each arm, based on the dose response model fitted. The control arm has Theta1 = 0. |
+| P0[Outcome] | K | (Cumulative logistic modeling). Estimates of the probability of each ordinal outcome for the control arm. The outcome probabilities for the other arms are derived from these control arm probabilities and the Theta parameters above. |
+| P0[Arm][Outcome] | D * K | (Dirichlet modeling).  Estimates of the probability of each ordinal outcome for each arm. |
 
 :::
