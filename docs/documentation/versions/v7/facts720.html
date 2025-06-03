@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -35,10 +35,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../../site_libs/bootstrap/bootstrap-5e3d804025be65b29583b827833ef31d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -756,6 +756,7 @@ ul.task-list li input[type="checkbox"] {
 <li>In Staged designs, the “Mirror Stage 1 Longitudinal Model in Stage 2” on the Design &gt; Longitudinal tab will be fully visible.</li>
 <li>In Core and Staged designs, designs created with FACTS 6.1 or older and loaded in FACTS 7.2 will now correctly generate frequentist output files for backward compatability.</li>
 <li>FACTS will now correctly handling the display of QOI simulation results when loading an existing Core Multiple Endpoint design.</li>
+<li>In Staged design, Stage 2 adaptive allocation now defaults to all treatments except Treatment 1 as adaptive.</li>
 </ul>
 </section>
 <section id="facts-enrichment-design-improvements" class="level1">
@@ -772,6 +773,7 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li>In mTPI designs, cohort expansion columns present in the summary file will now be displayed as “-9999” (the N/A code) instead of empty or “0” entries when the underlying design does not have cohort expansion enabled.</li>
 <li>In mTPI designs, packetised simulations will now correctly display the simulation number in the resulting simulations.csv file, instead of showing duplicate simulation numbers.</li>
+<li>In mTPI designs, the final selected MTD is now reported correctly in all instances.</li>
 </ul>
 </section>
 <section id="general-improvements" class="level1">
@@ -1025,6 +1027,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -1135,6 +1139,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
+      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
