@@ -50,3 +50,38 @@ When you are done making changes and building the new website locally, please `g
 The website is deployed using [*Github pages*](https://pages.github.com). The settings in the *Github* repository automatically deploy the contents of the `/docs` folder of the `main` branch to [`docs.berryconsultants.com`](docs.berryconsultants.com). Any changes to the contents of the `/docs` folder on the `main` branch will be picked up immediately by *Github* once changes have been git pushed, the website will be rebuilt and the changes should be visible within a few minutes. Please note that depending on the nature of the changes, they might take a little longer to be picked up (at most 24h). 
 
 By default, the website deploys to [BerryConsultants.github.io/berrydocs](BerryConsultants.github.io/berrydocs). Having a `CNAME` in place means an alias is created for [docs.berryconsultants.com](docs.berryconsultants.com).
+
+## Update FACTS version (major or second digit)
+
+A python script `updateVersion.py` exists in the root folder for this purpose. For all further steps, make sure you have terminal open in the root folder of `berrydocs`. In order run the script, `ruamel.yaml` needs to be installed. If you haven't already, install it using
+
+```
+pip install ruamel.yaml
+```
+
+or possibly 
+
+```
+python3 -m ensurepip --upgrade
+python3 -m pip install --user ruamel.yaml
+```
+
+If neither of these work, make sure you have Python installed and can run Python command line code. 
+
+In order to upgrade from one FACTS version to the next (only affects major or second digit upgrades), run
+
+```
+python bump_version.py v72 v73
+```
+
+or possibly 
+
+```
+python3 bump_version.py v72 v73
+```
+
+where **v72** and **v73** correspond to the most recent and the new FACTS version number respectively. 
+
+This command will duplicate the sidebar entries for the "Documentation" section of the most recent version and change all the links to point to the .qmd files of the new version. It also updates the links in `/documention/index.qmd` to point to the most recent user guides.
+
+Please note that if between two versions not only the contents of the user guides were changed, but new user guides were added (as in new `.qmd` files were added), they will still need to manually linked in the `_quarto.yml` file after the above code has been run.
