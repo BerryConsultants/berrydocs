@@ -1,23 +1,38 @@
 #!/usr/bin/env python3
-import sys
-import re
-import copy
+import sys, re, copy
 from ruamel.yaml import YAML
+from ruamel.yaml.comments import CommentedMap, CommentedSeq
 
 def bump_scalars(node, old_tag, new_tag):
-    if isinstance(node, dict):
-        for k, v in list(node.items()):
-            new_k = k.replace(old_tag, new_tag) if isinstance(k, str) else k
-            if new_k is not k:
-                node[new_k] = node.pop(k)
-                k = new_k
-            bump_scalars(v, old_tag, new_tag)
-    elif isinstance(node, list):
-        for i, v in enumerate(node):
-            if isinstance(v, str):
-                node[i] = v.replace(old_tag, new_tag)
+    """
+    Recursively walk a ruamel.yaml node (CommentedMap or CommentedSeq),
+    replacing old_tag→new_tag in ALL string keys and values.
+    """
+    # mapping
+    if isinstance(node, CommentedMap):
+        for key, val in list(node.items()):
+            # 1) fix the key
+            new_key = key.replace(old_tag, new_tag) if isinstance(key, str) else key
+            # 2) recurse or replace the value
+            if isinstance(val, (CommentedMap, CommentedSeq)):
+                bump_scalars(val, old_tag, new_tag)
+                new_val = val
+            elif isinstance(val, str):
+                new_val = val.replace(old_tag, new_tag)
             else:
-                bump_scalars(v, old_tag, new_tag)
+                new_val = val
+            # 3) reassign if key changed
+            if new_key != key:
+                del node[key]
+            node[new_key] = new_val
+
+    # sequence
+    elif isinstance(node, CommentedSeq):
+        for i, item in enumerate(node):
+            if isinstance(item, (CommentedMap, CommentedSeq)):
+                bump_scalars(item, old_tag, new_tag)
+            elif isinstance(item, str):
+                node[i] = item.replace(old_tag, new_tag)
 
 def main():
     if len(sys.argv) != 3:
@@ -25,55 +40,48 @@ def main():
         sys.exit(1)
 
     prev_tag, new_tag = sys.argv[1], sys.argv[2]
-    # derive human titles "Version 7.1" etc.
-    raw_prev = prev_tag.lstrip("v")
-    raw_new  = new_tag.lstrip("v")
-    prev_version = f"{raw_prev[0]}.{raw_prev[1:]}"
-    new_version  = f"{raw_new[0]}.{raw_new[1:]}"
-    prev_title   = f"Version {prev_version}"
-    new_title    = f"Version {new_version}"
+    # build human titles "7.1" from "v71"
+    p, n = prev_tag.lstrip("v"), new_tag.lstrip("v")
+    prev_title = f"Version {p[0]}.{p[1:]}"
+    new_title  = f"Version {n[0]}.{n[1:]}"
 
     yaml = YAML()
     yaml.preserve_quotes = True
-    doc = yaml.load(open("_quarto.yml", "r"))
+    doc = yaml.load(open("_quarto.yml"))
 
-    # 1️⃣ Find the Documentation block under website → sidebar
+    # locate the Documentation block in website → sidebar
     sidebar = doc["website"]["sidebar"]
     for entry in sidebar:
         if entry.get("id") == "Documentation":
-            docs_entry = entry
+            docs = entry
             break
     else:
         sys.exit("❌ Couldn’t find `id: Documentation` under website.sidebar")
 
-    contents = docs_entry["contents"]
+    cont = docs["contents"]
 
-    # 2️⃣ Locate the existing previous-version section
-    for idx, sec in enumerate(contents):
-        if not isinstance(sec, dict):
-            continue
-        if sec.get("section") == prev_title:
-            prev_idx = idx
+    # find the old-version section
+    for idx, sec in enumerate(cont):
+        if isinstance(sec, dict) and sec.get("section") == prev_title:
+            old_idx = idx
             break
     else:
         sys.exit(f"❌ Couldn’t find a `section: {prev_title}` under Documentation")
 
-    old_sec = contents[prev_idx]
-
-    # 3️⃣ Deep-copy it, bump title & paths
-    new_sec = copy.deepcopy(old_sec)
+    # copy, relabel, and bump every path in the copy
+    new_sec = copy.deepcopy(cont[old_idx])
     new_sec["section"] = new_title
     bump_scalars(new_sec, prev_tag + "/", new_tag + "/")
 
-    # 4️⃣ Insert the new-version block before the old one
-    contents.insert(prev_idx, new_sec)
+    # insert the new-version block
+    cont.insert(old_idx, new_sec)
 
-    # 5️⃣ Write back the updated YAML
+    # write back
     with open("_quarto.yml", "w") as f:
         yaml.dump(doc, f)
     print(f"✔️  Inserted `{new_title}` block into `_quarto.yml`")
 
-    # 6️⃣ Finally, regex-patch the QMD file
+    # finally, regex-patch the QMD
     import pathlib
     qmd = pathlib.Path("documentation/index.qmd")
     text = qmd.read_text()
