@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -1364,12 +1384,36 @@ Figure&nbsp;4: Toxicity Virtual Subject Response (bCRM)
 <h1>Design</h1>
 <section id="options-tab" class="level2">
 <h2 class="anchored" data-anchor-id="options-tab">Options tab</h2>
-<p>The mTPI method has two parameters that can be specified</p>
+<p>The first option to choose in the Design &gt; Options tab is the underlying algorithm to be used for the escalation, de-escalation and overdose rules. The choices are:</p>
 <ul>
-<li><p>The first is an option to prevent re-escalating to a dose (the “DU” or Do not Use category in the diagram) if the posterior probability that the toxicity rate is above the target toxicity plus the delta: p<sub>T</sub>+ε<sub>U</sub> (on the Study &gt; Study Info tab this is the “Upper Bound” parameter) exceeds a specified threshold (0.95 is the default).</p></li>
-<li><p>The second is an option that allows an early stopping rule to be specified that if the dose to be allocated next already has the maximum number of subjects on it then it is declared the MTD. Setting this value shrinks the size of the table displayed.</p></li>
+<li>BOIN <span class="citation" data-cites="yuan2016bayesian">(<a href="#ref-yuan2016bayesian" role="doc-biblioref">Yuan et al. 2016</a>)</span></li>
+<li>mTPI <span class="citation" data-cites="ji2010modified">(<a href="#ref-ji2010modified" role="doc-biblioref">Ji et al. 2010</a>)</span></li>
+<li>mTPI-2 <span class="citation" data-cites="guo2017bayesian">(<a href="#ref-guo2017bayesian" role="doc-biblioref">Guo et al. 2017</a>)</span></li>
+<li>i3+3 <span class="citation" data-cites="liu2020i3">(<a href="#ref-liu2020i3" role="doc-biblioref">M. Liu, Wang, and Ji 2020</a>)</span></li>
+<li>3+3 <span class="citation" data-cites="liu2013up">(<a href="#ref-liu2013up" role="doc-biblioref">S. Liu, Cai, and Ning 2013</a>)</span></li>
 </ul>
-<p>Given the target toxicity rate and the boundaries specified on the Study &gt; Study Info tab, and the parameters specified here the table of mTPI dosing decisions is displayed. This shows the dosing decision given the number of subject treated at the current dose and the number of toxicities observed:</p>
+<div id="fig-figOptionsDesigns" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-figOptionsDesigns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/Screenshot 2025-06-27 at 16.00.34.png" id="fig-figOptionsDesigns" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-figOptionsDesigns-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5
+</figcaption>
+</figure>
+</div>
+<p>Options that are common to all algorithms are:</p>
+<ul>
+<li>Max Number of Cohorts: This in conjunction with the cohort size gives the maximum sample size of the trial. After the selected number of cohorts have been included, no further cohorts will be included and the MTD will be selected according to the respective algorithm.</li>
+<li>Cohort Size: The number of trial participants included in each cohort. In 3+3, this defaults to “3” and cannot be changed. The maximum sample size of the trial is simply: Max Trial Size (cohorts) * Cohort Size.</li>
+<li>Cohort Expansion: The user can specify that after the dose escalation phase of the trial has completed, the simulation is to include an ‘expansion cohort’ (allocated at the final estimate of the MTD) and how large that expansion cohort will be.</li>
+</ul>
+<p>The further options depend on the chosen design algorithm chosen. Please select the algorithm of interest to learn more. If you are interested in mTPI, mTPI-2, BOIN or i3+3, please select “Non 3+3” in the first stage.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Non 3+3</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">3+3</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>Given all the options specified, the matrix of dosing decisions is displayed on the right hand side. This shows the dosing decision given the number of subject treated at the current dose and the number of toxicities observed:</p>
 <blockquote class="blockquote">
 <p>E Escalate</p>
 <p>S Stay</p>
@@ -1382,37 +1426,59 @@ Figure&nbsp;4: Toxicity Virtual Subject Response (bCRM)
 <img src="deUGattachments/media/image28.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig28-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5: mTPI Design tab
+Figure&nbsp;6: mTPI Design tab
 </figcaption>
 </figure>
 </div>
-<p>For any design, including “3+3”, study simulation will always stop when the maximum number of subjects has been achieved.</p>
-<p>The study simulation may also stop early when the following conditions that have been enabled by the user are met:</p>
+<p>As an example, if the value of row 2, column 6 is “E”, the algorithm would want us to escalate to the next dose if we had observed 2 toxicities in 6 trial participants.</p>
+<p>Additional options include:</p>
 <ul>
-<li><p>MTD finding (CRM (Toxicity), N-CRM and bCRM only)</p>
+<li><p>Maximum probability that dose exceeds target toxicity: This is an option to prevent re-escalating to a dose (the “DU” or Do not Use category in the decision matrix) if the posterior probability (based on a Beta-Binomial model per dose) that the toxicity rate is above the target toxicity is greater than the selected value (0.95 is the default).</p></li>
+<li><p>Stop if next dose already has X subjects: This is an option that allows an early stopping rule to be specified that if the dose to be allocated next already has the maximum number of subjects on it then it is declared the MTD. Setting this value shrinks the size of the decision matrix.</p></li>
+<li><p>Target Toxicity boundaries: The user specifies target toxicity rate, as well as the lower and upper acceptable bounds on the toxicity rate, effectively creating four distinct buckets for doses:</p>
 <ul>
-<li><p>the user-specified minimum number of subjects are allocated to the MTD</p></li>
-<li><p>AND the following optional rules either ANDed or ORed together.</p>
-<ul>
-<li><p>The number of dose levels in the specified confidence interval meets the specified the threshold</p></li>
-<li><p>There is a dose with a probability of being the MTD that is greater than the specified threshold.</p></li>
-<li><p>The minimum number of cohorts have been accrued</p></li>
-</ul></li>
-</ul></li>
-<li><p>MED finding (CRM (Efficacy) and bCRM only)</p>
-<ul>
-<li><p>the user-specified maximum number of subjects are allocated to the MED</p></li>
-<li><p>the number of dose levels in the confidence interval meets the specified number</p></li>
-<li><p>there is a dose with a probability of being MED that is greater than the specified threshold</p></li>
-<li><p>The minimum number of cohorts have been accrued</p></li>
-</ul></li>
-<li><p>mTPI when the user specified number of subjects are already allocated to the next dose to be allocated – this is specified on the mTPI Design tab.</p></li>
+<li>Underdosing: Doses with a toxicity rate falling into the [0,lower bound] bucket</li>
+<li>Target: Doses with a toxicity rate falling into the (lower bound,target] bucket</li>
+<li>Excess Toxicity: Doses with a toxicity rate falling into the (Target,upper bound] bucket</li>
+<li>Unacceptable Toxicity: Doses with a toxicity rate falling into the (Upper bound,1] bucket</li>
 </ul>
+<p>These bounds are then used in the different algorithms to create the decision table.</p></li>
+</ul>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+BOIN
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>BOIN has extra options compared to mTPI, mTPI-2 and i3+3:</p>
+<ul>
+<li>Use default BOIN bounds: Whether or not the lower and upper toxicity bound should be calculated automatically using the BOIN defaults (lower bound = 0.6*target, upper bound = 1.4*target), or whether they are chosen by the user.</li>
+<li>Stay when seeing 1/3 toxicities: Whether or not to overwrite the algorithm’s decision to stay at the current dose level when seeing 1 DLT in 3 trial participants. This is useful to mimic the behavior of 3+3 which is often expected by clinicians.</li>
+<li>De-escalate when seeing 2/6 toxicities: Whether or not to overwrite the algorithm’s decision to de-escalate from the current dose level when seeing 2 DLTs in 6 trial participants. This is useful to mimic the behavior of 3+3 which is often expected by clinicians.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<ul>
+<li>Initial dose index: The user may specify the dose level that the first cohort will be allocated to. Might be useful in cases where we believe there is a (small) chance the initial cohort will experience DLTs. In a real world situation, observing too many DLTs on the first dose level likely terminates the study, whereas if we had started at dose level 2, we have a fall back dose level to de-escalate to.</li>
+<li>Include final validation cohort: Whether to include an additional cohort at the chosen MTD after the original 3+3 algorithm has terminated.</li>
+</ul>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="simulation" class="level1">
 <h1>Simulation</h1>
-<p>The Simulation tab allows the user to execute simulations for each of the scenarios specified for the study. The user may choose the number of simulations, whether to execute locally or on the Grid, and modify the random number seeds (<a href="#fig-fig36" class="quarto-xref">Figure&nbsp;6</a>).</p>
+<p>The Simulation tab allows the user to execute simulations for each of the scenarios specified for the study. The user may choose the number of simulations, whether to execute locally or on the Grid, and modify the random number seeds (<a href="#fig-fig36" class="quarto-xref">Figure&nbsp;7</a>).</p>
 <p>If completed results are available, the <em>actual</em> number of simulations run for each scenario is reported in one of the first columns of the results table. The value displayed in the “Number of Simulations” control is the number of simulations that <em>will be</em> run if the user clicks on the ‘Simulate’ button.</p>
 <div id="fig-fig36" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1420,7 +1486,7 @@ Figure&nbsp;5: mTPI Design tab
 <img src="deUGattachments/media/image36.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig36-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6: Simulation
+Figure&nbsp;7: Simulation
 </figcaption>
 </figure>
 </div>
@@ -1481,7 +1547,7 @@ Figure&nbsp;6: Simulation
 <img src="deUGattachments/media/image37.png" id="fig-fig37" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig37-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7
+Figure&nbsp;8
 </figcaption>
 </figure>
 </div>
@@ -1500,14 +1566,14 @@ Figure&nbsp;7
 </section>
 <section id="detailed-simulation-results" class="level2">
 <h2 class="anchored" data-anchor-id="detailed-simulation-results">Detailed Simulation Results</h2>
-<p>After simulation has completed and simulation results have been loaded, the user may examine detailed results for any scenario with simulation data in the table by double-clicking on the row. A separate window (as in <a href="#fig-fig38" class="quarto-xref">Figure&nbsp;8</a>) will reveal more detailed results about the simulation.</p>
+<p>After simulation has completed and simulation results have been loaded, the user may examine detailed results for any scenario with simulation data in the table by double-clicking on the row. A separate window (as in <a href="#fig-fig38" class="quarto-xref">Figure&nbsp;9</a>) will reveal more detailed results about the simulation.</p>
 <div id="fig-fig38" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-fig38-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="deUGattachments/media/image38.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig38-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8: Detailed Simulation Results
+Figure&nbsp;9: Detailed Simulation Results
 </figcaption>
 </figure>
 </div>
@@ -1518,7 +1584,7 @@ Figure&nbsp;8: Detailed Simulation Results
 <img src="deUGattachments/media/image39.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig39-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9: bCRM Parametric Joint Toxicity &amp; Efficacy VSR - Gumbel Model
+Figure&nbsp;10: Detailed Cohort Results
 </figcaption>
 </figure>
 </div>
@@ -1532,7 +1598,7 @@ Figure&nbsp;9: bCRM Parametric Joint Toxicity &amp; Efficacy VSR - Gumbel Model
 <img src="deUGattachments/media/image40.png" id="fig-fig40" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig40-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;10
+Figure&nbsp;11
 </figcaption>
 </figure>
 </div>
@@ -1554,7 +1620,7 @@ Figure&nbsp;10
 <table class="caption-top table">
 <colgroup>
 <col style="width: 36%">
-<col style="width: 63%">
+<col style="width: 62%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1594,10 +1660,10 @@ Figure&nbsp;10
 <p>These are the columns displayed on the simulations tab after simulations are completed, the can also be displayed in the separate “Highlights” results window.</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 25%">
-<col style="width: 14%">
-<col style="width: 18%">
-<col style="width: 40%">
+<col style="width: 20%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 36%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1693,10 +1759,10 @@ Figure&nbsp;10
 <h2 class="anchored" data-anchor-id="allocations-observed">Allocations, Observed</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 25%">
-<col style="width: 14%">
-<col style="width: 18%">
-<col style="width: 40%">
+<col style="width: 20%">
+<col style="width: 19%">
+<col style="width: 19%">
+<col style="width: 36%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1780,7 +1846,7 @@ Figure&nbsp;10
 <img src="deUGattachments/media/image41.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig41-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;11: Summary Graph Window
+Figure&nbsp;12: Summary Graph Window
 </figcaption>
 </figure>
 </div>
@@ -1792,7 +1858,7 @@ Figure&nbsp;11: Summary Graph Window
 <img src="deUGattachments/media/image42.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig42-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;12: Allocation Box and Whisker plot
+Figure&nbsp;13: Allocation Box and Whisker plot
 </figcaption>
 </figure>
 </div>
@@ -1809,8 +1875,8 @@ Figure&nbsp;12: Allocation Box and Whisker plot
 <h2 class="anchored" data-anchor-id="mtd-distribution">MTD Distribution</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
+<col style="width: 48%">
+<col style="width: 48%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1820,16 +1886,16 @@ Figure&nbsp;12: Allocation Box and Whisker plot
 </thead>
 <tbody>
 <tr class="odd">
-<td><img src="deUGattachments/media/image46.png" id="fig-fig46" class="img-fluid"></td>
-<td><img src="deUGattachments/media/image47.png" id="fig-fig47" class="img-fluid"></td>
+<td><img src="deUGattachment s/media/image46.png" id="fig-fig46" class="img-fluid"></td>
+<td><img src="deUGattachment s/media/image47.png" id="fig-fig47" class="img-fluid"></td>
 </tr>
 <tr class="even">
 <td><strong>CRM Efficacy, bCRM - MED</strong></td>
 <td><strong>bCRM – OSD and TE</strong></td>
 </tr>
 <tr class="odd">
-<td><img src="deUGattachments/media/image48.png" id="fig-fig48" class="img-fluid"></td>
-<td><img src="deUGattachments/media/image49.png" id="fig-fig49" class="img-fluid"></td>
+<td><img src="deUGattachment s/media/image48.png" id="fig-fig48" class="img-fluid"></td>
+<td><img src="deUGattachment s/media/image49.png" id="fig-fig49" class="img-fluid"></td>
 </tr>
 </tbody>
 </table>
@@ -1839,8 +1905,8 @@ Figure&nbsp;12: Allocation Box and Whisker plot
 <h2 class="anchored" data-anchor-id="toxicity-and-allocation-obs-tox-and-alloc-obs-efficacy-and-allocation">“Toxicity and Allocation” / “Obs Tox and Alloc” / “Obs Efficacy and Allocation”</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
+<col style="width: 48%">
+<col style="width: 48%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1850,8 +1916,8 @@ Figure&nbsp;12: Allocation Box and Whisker plot
 </thead>
 <tbody>
 <tr class="odd">
-<td><img src="deUGattachments/media/image50.png" id="fig-fig50" class="img-fluid"></td>
-<td><img src="deUGattachments/media/image51.png" id="fig-fig51" class="img-fluid"></td>
+<td><img src="deUGattachment s/media/image50.png" id="fig-fig50" class="img-fluid"></td>
+<td><img src="deUGattachment s/media/image51.png" id="fig-fig51" class="img-fluid"></td>
 </tr>
 </tbody>
 </table>
@@ -1865,7 +1931,7 @@ Figure&nbsp;12: Allocation Box and Whisker plot
 <img src="deUGattachments/media/image53.png" id="fig-fig53" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig53-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;13
+Figure&nbsp;14
 </figcaption>
 </figure>
 </div>
@@ -1875,22 +1941,16 @@ Figure&nbsp;13
 <h2 class="anchored" data-anchor-id="simulation-allocation-history">Simulation Allocation History</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
+<col style="width: 48%">
+<col style="width: 48%">
 </colgroup>
-<thead>
-<tr class="header">
-<th><img src="deUGattachments/media/image54.png" id="fig-fig54" class="img-fluid"></th>
-<th><img src="deUGattachments/media/image55.png" id="fig-fig55" class="img-fluid"></th>
-</tr>
-</thead>
 <tbody>
 <tr class="odd">
 <td>3+3 version, CRM Toxicity, bCRM</td>
 <td>CRM Ordinal</td>
 </tr>
 <tr class="even">
-<td><img src="deUGattachments/media/image56.png" id="fig-fig56" class="img-fluid"></td>
+<td><img src="deUGattachment s/media/image56.png" id="fig-fig56" class="img-fluid"></td>
 <td></td>
 </tr>
 <tr class="odd">
@@ -1906,8 +1966,8 @@ Figure&nbsp;13
 <h2 class="anchored" data-anchor-id="cohort-responses">Cohort Responses</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
+<col style="width: 48%">
+<col style="width: 48%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -1917,15 +1977,15 @@ Figure&nbsp;13
 </thead>
 <tbody>
 <tr class="odd">
-<td><img src="deUGattachments/media/image57.png" id="fig-fig57" class="img-fluid"></td>
-<td><img src="deUGattachments/media/image58.png" id="fig-fig58" class="img-fluid"></td>
+<td><img src="deUGattachment s/media/image57.png" id="fig-fig57" class="img-fluid"></td>
+<td><img src="deUGattachment s/media/image58.png" id="fig-fig58" class="img-fluid"></td>
 </tr>
 <tr class="even">
 <td><strong>bCRM</strong></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td><img src="deUGattachments/media/image59.png" id="fig-fig59" class="img-fluid"></td>
+<td><img src="deUGattachment s/media/image59.png" id="fig-fig59" class="img-fluid"></td>
 <td></td>
 </tr>
 </tbody>
@@ -1942,7 +2002,7 @@ Figure&nbsp;13
 <img src="deUGattachments/media/image60.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig60-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;14: MTD change on expansion graph
+Figure&nbsp;15: MTD change on expansion graph
 </figcaption>
 </figure>
 </div>
@@ -1971,7 +2031,7 @@ Figure&nbsp;14: MTD change on expansion graph
 <img src="deUGattachments/media/image61.png" id="fig-fig61" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig61-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;15
+Figure&nbsp;16
 </figcaption>
 </figure>
 </div>
@@ -1992,8 +2052,8 @@ Figure&nbsp;15
 <p>Each aggregated file begins with the following extra columns, followed by the columns from the original csv file:</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 33%">
-<col style="width: 66%">
+<col style="width: 31%">
+<col style="width: 65%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -2030,10 +2090,27 @@ Figure&nbsp;15
 </table>
 
 
+
 </section>
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-guo2017bayesian" class="csl-entry" role="listitem">
+Guo, Wentian, Sue-Jane Wang, Shengjie Yang, Henry Lynn, and Yuan Ji. 2017. <span>“A Bayesian Interval Dose-Finding Design addressingOckham’s Razor: mTPI-2.”</span> <em>Contemporary Clinical Trials</em> 58: 23–33.
+</div>
+<div id="ref-ji2010modified" class="csl-entry" role="listitem">
+Ji, Yuan, Ping Liu, Yisheng Li, and B Nebiyou Bekele. 2010. <span>“A Modified Toxicity Probability Interval Method for Dose-Finding Trials.”</span> <em>Clinical Trials</em> 7 (6): 653–63.
+</div>
+<div id="ref-liu2020i3" class="csl-entry" role="listitem">
+Liu, Meizi, Sue-Jane Wang, and Yuan Ji. 2020. <span>“The I3+ 3 Design for Phase i Clinical Trials.”</span> <em>Journal of Biopharmaceutical Statistics</em> 30 (2): 294–304.
+</div>
+<div id="ref-liu2013up" class="csl-entry" role="listitem">
+Liu, Suyu, Chunyan Cai, and Jing Ning. 2013. <span>“Up-and-down Designs for Phase i Clinical Trials.”</span> <em>Contemporary Clinical Trials</em> 36 (1): 218–27.
+</div>
+<div id="ref-yuan2016bayesian" class="csl-entry" role="listitem">
+Yuan, Ying, Kenneth R Hess, Susan G Hilsenbeck, and Mark R Gilbert. 2016. <span>“Bayesian Optimal Interval Design: A Simple and Well-Performing Design for Phase i Oncology Trials.”</span> <em>Clinical Cancer Research</em> 22 (17): 4291–301.
+</div>
+</div></section></div></main> <!-- /main -->
 <!-- footer.html -->
 
 <!-- FontAwesome for icons -->
