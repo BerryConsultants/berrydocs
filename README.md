@@ -82,6 +82,6 @@ python3 bump_version.py v72 v73
 
 where **v72** and **v73** correspond to the most recent and the new FACTS version number respectively. 
 
-This command will duplicate the sidebar entries for the "Documentation" section of the most recent version and change all the links to point to the .qmd files of the new version. It also updates the links in `/documention/index.qmd` to point to the most recent user guides.
+This command will duplicate the sidebar entries for the "Documentation" section of the most recent version and change all the links to point to the .qmd files of the new version. It also updates the links in `/documention/index.qmd` to point to the most recent user guides. You will still have to manually create the release notes in `/documention/versions/`.
 
 Please note that if between two versions not only the contents of the user guides were changed, but new user guides were added (as in new `.qmd` files were added), they will still need to manually linked in the `_quarto.yml` file after the above code has been run. Also note that in order for the site to link properly, you will have to run `quarto render` at least once after the version update.
