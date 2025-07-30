@@ -78,9 +78,9 @@ The methods implemented are:
 
 See the papers for details, but a summary of the methods is given here.
 
-All these methods start allocating at the given dose (currently this is always the lowest dose), and allocate in cohorts of a fixed size (3+3 can only use cohorts of 3, the other methods allow a different cohort size to be specified). After each cohort they consider all the data on the dose just tested (but unlike the CRM not other doses) and decide whether to Escalate, Stay or De-Escalate.
+All these methods start allocating at a given dose (currently in FACTS this is always the lowest dose), and allocate in cohorts of a fixed size (3+3 can only use cohorts of 3, the other methods allow a different cohort size to be specified). After each cohort they consider all the data on the dose just tested (but unlike the CRM not other doses) and decide whether to Escalate ("E), Stay ("S") or De-Escalate ("D").
 
-In all these methods (except 3+3) the decisions are based on a specified target toxicity rate and target interval around that rate. How they make that decision is the principal difference between the methods, and these are described in method specific sub-sections below.
+In all these methods (except 3+3) the decisions are based on a specified target toxicity rate $p_T$ and target interval around that rate ($p_T \in [p_L, p_U]$, note that $p_T$ need not be at the center of this interval). How they make that decision is the principal difference between the methods, and these are described in method specific sub-sections below.
 
 All (except 3+3) share in the following:
 
@@ -90,19 +90,19 @@ All (except 3+3) share in the following:
 
 - At the end of the trial, MTD selection is after isotonic regression performed as follows:
 
-  + Calculate the posterior mean toxicity rate at each dose, assuming a Beta(0.005, 0.005) prior (BOIN simply uses the observed rate)
+  + Calculate the toxicity rate estimate at each dose (BOIN uses the observed rates, all others use the posterior mean toxicity, assuming a Beta(0.005, 0.005) prior and an independent Beta-Binomial model).
   
-  + Impose monotonicity using isotonic regression (pool adjacent violators): where monotonicity is violated, the estimate of toxicity at the two doses are replaced with their weighted average (The weight is the posterior variance of the estimate).
+  + Impose monotonicity using isotonic regression (pool adjacent violators): where monotonicity is violated, the estimates of toxicity at the respective doses are replaced with their average.
   
-  + We then select the dose with isotonically transformed posterior mean toxicity rate closest to the target toxicity rate.
+  + We then select the dose with isotonically transformed toxicity rate estimate closest to the target toxicity rate.
   
-  + If there is a tie, if the toxicity rate is above the target toxicity rate then the lower dose is selected, if the toxicity rate is below the target toxicity rate then the higher dose is selected.
+  + If there is a tie, if the toxicity rate estimate is above the target toxicity rate then the lower dose is selected, if the toxicity rate estimate is below the target toxicity rate then the higher dose is selected.
 
 ## mTPI
 
 The E, S, D decision rule uses the Beta-Binomial distribution of the toxicity rate on a dose with a prior of Beta(0.001, 0.001). The Unit Probability Mass (UPM) is then calculated for three intervals: the interval below the target toxicity band, the interval corresponding to the target toxicity band and the interval above the target toxicity band. The UPM is the probability mass of the area divided by the length of the interval. The decision is then based on the interval with the highest UPM, E if its below the target toxicity band, S if it is the target toxicity band and D if its above the target toxicity band.
 
-Figure 1 is taken from [@guo2017bayesian]. It shows the UPM in the target interval and above the target interval. It also illustrates what was perceived as a problem with the mTPI method, that gave rise to the development separately of mTPI-2, i3+3 and BOIN. With a target toxicity rate of 0.3 and target band of [0.25, 0.35], with 6 observations on a dose of which 3 had experienced a Dose Limiting Toxicity (DLT), the decision by the mTPI method is to Stay. It was generally considered that this was not safe decision.
+Below @fig-fig1 is taken from @guo2017bayesian. It shows the UPM in the target interval and above the target interval. It also illustrates what was perceived as a problem with the mTPI method, that gave rise to the development separately of mTPI-2, i3+3 and BOIN. With a target toxicity rate of 0.3 and target band of [0.25, 0.35], with 6 observations on a dose of which 3 had experienced a Dose Limiting Toxicity (DLT), the decision by the mTPI method is to Stay. It was generally considered that this was not safe decision.
 
 ![UPM in mTPI](deUGattachments/media/UPM-of-mTPI-method.png){#fig-fig1}
 
@@ -110,27 +110,27 @@ Figure 1 is taken from [@guo2017bayesian]. It shows the UPM in the target interv
 
 The E, S, D decision rule of mTPI-2 modifies that of mTPI by dividing the probability range into strips of equal width. The strips (with the possible exception of the first and the last whihc may need to be smaller) are the same width as the target toxicity band) and divide up the range above and below that band. The Unit Probability Mass (UPM) is then calculated for each of these strips and the strip with the highest UPM found. The decision is then based on the strip with the highest UPM, E if its below the target toxicity band, S if it is the target toxicity band and D if its above the target toxixcity band.
 
-Figure 2 is taken from [@guo2017bayesian]. It shows the UPM for various strips with a target toxicity rate of 0.3 and target band of [0.25, 0.35], with 6 observations on a dose of which 3 had experienced a Dose Limiting Toxicity (DLT), the decision by the mTPI-2 method is to De-escalate.
+Below @fig-fig2 is taken from @guo2017bayesian. It shows the UPM for various strips with a target toxicity rate of 0.3 and target band of [0.25, 0.35], with 6 observations on a dose of which 3 had experienced a Dose Limiting Toxicity (DLT), the decision by the mTPI-2 method is to De-escalate.
 
 ![UPM in mTPI](deUGattachments/media/UPM-of-mTPI-2-method.png){#fig-fig2}
 
 ## i3+3
 
-i3+3 bases its E, S, D decisions simply on the observed toxicity rate. If the target Toxicity Band is [p~T~-ε~1~, p~T~+ε~2~]:x is the number of observed toxicities at dose d, and n the total number of observations, then
+i3+3 bases its E, S, D decisions simply on the observed toxicity rate. If $x$ is the number of observed toxicities at dose $d$, and $n$ the total number of observations, then
 
-- If x/n < p~T~-ε~1~ then escalated to the next dose.
+- If $\frac{x}{n}< p_L$, then escalated to the next dose (E).
 
-- Else if p~T~-ε~1~ < x/n < p~T~+ε~2~ then stay at this dose
+- Else if $p_L < \frac{x}{n} < p_U$, then stay at this dose (S)
 
-- Else if p~T~+ε~2~ < x/n then
+- Else if $p_U < \frac{x}{n}$, then
 
-  + If (x-1)/n < p~T~-ε~1~ then stay at this dose.
+  + If $\frac{x-1}{n} < p_L$, then stay at this dose (S).
 
-  + Else de-escalate.
+  + Else, de-escalate (D).
 
 ## BOIN
 
-BOIN uses a formula to calculate the “optimal” boundaries λ~l~, λ~u~ to test against based on the target Toxicity Band [p~T~-ε~1~, p~T~+ε~2~] that minimize incorrect (E, S, D) decisions. Labeling the desired upper and lower bounds of the interval [p~l~, p~u~], the optimal boundaries are given by:
+Based on the target Toxicity Band [$p_L$, $p_U$], BOIN uses a formula to calculate the “optimal” boundaries $\lambda_l$, $\lambda_u$ to compare the observed toxicity rates to, which minimize incorrect (E, S, D) decisions:
 $$
 \lambda_l = \frac{log \left(\frac{1-p_l}{{1-p_T}} \right)}{log\left(\frac{p_T(1-p)}{p_l(1-p_T)}\right)}
 $$
@@ -139,13 +139,14 @@ $$
 \lambda_u = \frac{log \left(\frac{1-p_T}{{1-p_u}} \right)}{log\left(\frac{p_u(1-p_T)}{p_T(1-p_u)}\right)}
 $$
 
-If x is the number of observed toxicities at dose d, and n the total number of observations, then
+If $x$ is the number of observed toxicities at dose $d$, and $n$ the total number of observations, then
 
-- If x/n < λ~l~ then escalate to the next dose.
+- If $\frac{x}{n} < \lambda_l$ then escalate to the next dose (E).
 
-- Else if λ~l~ < x/n < λ~u~ then stay at this dose.
+- Else if $\lambda_l < \frac{x}{n} < \lambda_u$ then stay at this dose (S).
 
-- Else if λ~u~ < x/n then de-escalate
+- Else if $\lambda_u < \frac{x}{n}$ then de-escalate (D).
+
 
 # The FACTS Rules-Based Dose Escalation GUI
 
