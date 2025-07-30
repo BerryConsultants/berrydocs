@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-import sys, re, copy
+import sys, re, copy, shutil
 from ruamel.yaml import YAML
 from ruamel.yaml.comments import CommentedMap, CommentedSeq
+import pathlib
 
 def bump_scalars(node, old_tag, new_tag):
     """
@@ -33,6 +34,7 @@ def bump_scalars(node, old_tag, new_tag):
                 bump_scalars(item, old_tag, new_tag)
             elif isinstance(item, str):
                 node[i] = item.replace(old_tag, new_tag)
+
 
 def main():
     if len(sys.argv) != 3:
@@ -76,19 +78,28 @@ def main():
     # insert the new-version block
     cont.insert(old_idx, new_sec)
 
-    # write back
+    # write back to YAML
     with open("_quarto.yml", "w") as f:
         yaml.dump(doc, f)
     print(f"✔️  Inserted `{new_title}` block into `_quarto.yml`")
 
-    # finally, regex-patch the QMD
-    import pathlib
+    # regex-patch the QMD
     qmd = pathlib.Path("documentation/index.qmd")
     text = qmd.read_text()
-    text = re.sub(r"v\d+/", f"{new_tag}/", text)
+    text = re.sub(r"v\d+\/", f"{new_tag}/", text)
     qmd.write_text(text)
     print(f"✔️  Updated `documentation/index.qmd` → all paths now use `{new_tag}/`")
 
+    # copy documentation directory contents from old to new
+    src_dir = pathlib.Path("documentation") / prev_tag
+    dst_dir = pathlib.Path("documentation") / new_tag
+    if dst_dir.exists():
+        sys.exit(f"❌ Destination folder `{dst_dir}` already exists")
+    try:
+        shutil.copytree(src_dir, dst_dir)
+        print(f"✔️  Copied documentation from `{src_dir}` to `{dst_dir}`")
+    except Exception as e:
+        sys.exit(f"❌ Error copying documentation: {e}")
+
 if __name__ == "__main__":
     main()
-
