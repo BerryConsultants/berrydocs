@@ -53,7 +53,7 @@ By default, the website deploys to [BerryConsultants.github.io/berrydocs](BerryC
 
 ## Update FACTS version (major or second digit)
 
-A python script `updateVersion.py` exists in the root folder for this purpose. For all further steps, make sure you have terminal open in the root folder of `berrydocs`. In order run the script, `ruamel.yaml` needs to be installed. If you haven't already, install it using
+A python script `updateVersion.py` exists in the root folder for this purpose. For all further steps, make sure you have a terminal open in the root folder of `berrydocs`. In order to run the script, `ruamel.yaml` needs to be installed. If you haven't already, install it using
 
 ```
 pip install ruamel.yaml
