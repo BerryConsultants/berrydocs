@@ -71,13 +71,13 @@ If neither of these work, make sure you have Python installed and can run Python
 In order to upgrade from one FACTS version to the next (only affects major or second digit upgrades), run
 
 ```
-python bump_version.py v72 v73
+python updateVersion.py v72 v73
 ```
 
 or possibly 
 
 ```
-python3 bump_version.py v72 v73
+python3 updateVersion.py v72 v73
 ```
 
 where **v72** and **v73** correspond to the most recent and the new FACTS version number respectively. 
