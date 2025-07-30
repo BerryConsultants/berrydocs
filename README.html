@@ -94,19 +94,25 @@ Whenever you want to add new pages, the workflow differs slightly depending on t
 </section>
 <section id="update-facts-version-major-or-second-digit" class="level2">
 <h2 class="anchored" data-anchor-id="update-facts-version-major-or-second-digit">Update FACTS version (major or second digit)</h2>
-<p>A python script <code>updateVersion.py</code> exists in the root folder for this purpose. For all further steps, make sure you have a terminal open in the root folder of <code>berrydocs</code>. In order to run the script, <code>ruamel.yaml</code> needs to be installed. If you haven’t already, install it using</p>
+<p>Two python scripts <code>createFilesForNewVersion.py</code> and <code>linkFilesInNewVersion.py</code> exist in the root folder for this purpose. For all further steps, make sure you have a terminal open in the root folder of <code>berrydocs</code>. In order to run the script, <code>ruamel.yaml</code> needs to be installed. If you haven’t already, install it using</p>
 <pre><code>pip install ruamel.yaml</code></pre>
 <p>or possibly</p>
 <pre><code>python3 -m ensurepip --upgrade
 python3 -m pip install --user ruamel.yaml</code></pre>
 <p>If neither of these work, make sure you have Python installed and can run Python command line code.</p>
-<p>In order to upgrade from one FACTS version to the next (only affects major or second digit upgrades), run</p>
-<pre><code>python updateVersion.py v72 v73</code></pre>
+<p>Right after a release and the completion of all documentation pertaining to this version, you want to duplicate all user guides for the next version and make sure the internal links change accordingly, as well as create an empty release notes file.</p>
+<p>Assuming the old version was 7.2 and the new version is 7.3, you can achieve this via</p>
+<pre><code>python createFilesForNewVersion.py v72 v73</code></pre>
 <p>or possibly</p>
-<pre><code>python3 updateVersion.py v72 v73</code></pre>
+<pre><code>python3 createFilesForNewVersion.py v72 v73</code></pre>
+<p>Please make sure to insert the correct version numbers.</p>
+<p>Once all the documentation has been updated and you are ready to link to the new user guides on the live site, run</p>
+<pre><code>python linkFilesInNewVersion.py v72 v73</code></pre>
+<p>or possibly</p>
+<pre><code>python3 linkFilesInNewVersion.py v72 v73</code></pre>
 <p>where <strong>v72</strong> and <strong>v73</strong> correspond to the most recent and the new FACTS version number respectively.</p>
-<p>This command will duplicate the sidebar entries for the “Documentation” section of the most recent version and change all the links to point to the .qmd files of the new version. It also updates the links in <code>/documention/index.qmd</code> to point to the most recent user guides. You will still have to manually create the release notes in <code>/documention/versions/</code>.</p>
-<p>Please note that if between two versions not only the contents of the user guides were changed, but new user guides were added (as in new <code>.qmd</code> files were added), they will still need to manually linked in the <code>_quarto.yml</code> file after the above code has been run. Also note that in order for the site to link properly, you will have to run <code>quarto render</code> at least once after the version update.</p>
+<p>This command will duplicate the sidebar entries for the “Documentation” section of the most recent version. It also updates the links in <code>/documention/index.qmd</code> to point to the most recent user guides. It also links up the new release notes.</p>
+<p>Please note that if between two versions not only the contents of the user guides were changed, but new user guides were added (as in new <code>.qmd</code> files were added), they will still need to manually linked in the <code>_quarto.yml</code> file after the above code has been run. Also note that in order for the site to link properly, you will have to run <code>quarto render</code> at least once after the linking update.</p>
 </section>
 </section>
 

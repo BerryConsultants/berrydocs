@@ -53,7 +53,7 @@ By default, the website deploys to [BerryConsultants.github.io/berrydocs](BerryC
 
 ## Update FACTS version (major or second digit)
 
-A python script `updateVersion.py` exists in the root folder for this purpose. For all further steps, make sure you have a terminal open in the root folder of `berrydocs`. In order to run the script, `ruamel.yaml` needs to be installed. If you haven't already, install it using
+Two python scripts `createFilesForNewVersion.py` and `linkFilesInNewVersion.py` exist in the root folder for this purpose. For all further steps, make sure you have a terminal open in the root folder of `berrydocs`. In order to run the script, `ruamel.yaml` needs to be installed. If you haven't already, install it using
 
 ```
 pip install ruamel.yaml
@@ -68,20 +68,36 @@ python3 -m pip install --user ruamel.yaml
 
 If neither of these work, make sure you have Python installed and can run Python command line code. 
 
-In order to upgrade from one FACTS version to the next (only affects major or second digit upgrades), run
+Right after a release and the completion of all documentation pertaining to this version, you want to duplicate all user guides for the next version and make sure the internal links change accordingly, as well as create an empty release notes file. 
+
+Assuming the old version was 7.2 and the new version is 7.3, you can achieve this via
 
 ```
-python updateVersion.py v72 v73
+python createFilesForNewVersion.py v72 v73
 ```
 
 or possibly 
 
 ```
-python3 updateVersion.py v72 v73
+python3 createFilesForNewVersion.py v72 v73
+```
+
+Please make sure to insert the correct version numbers.
+
+Once all the documentation has been updated and you are ready to link to the new user guides on the live site, run
+
+```
+python linkFilesInNewVersion.py v72 v73
+```
+
+or possibly 
+
+```
+python3 linkFilesInNewVersion.py v72 v73
 ```
 
 where **v72** and **v73** correspond to the most recent and the new FACTS version number respectively. 
 
-This command will duplicate the sidebar entries for the "Documentation" section of the most recent version and change all the links to point to the .qmd files of the new version. It also updates the links in `/documention/index.qmd` to point to the most recent user guides. You will still have to manually create the release notes in `/documention/versions/`.
+This command will duplicate the sidebar entries for the "Documentation" section of the most recent version. It also updates the links in `/documention/index.qmd` to point to the most recent user guides. It also links up the new release notes.
 
-Please note that if between two versions not only the contents of the user guides were changed, but new user guides were added (as in new `.qmd` files were added), they will still need to manually linked in the `_quarto.yml` file after the above code has been run. Also note that in order for the site to link properly, you will have to run `quarto render` at least once after the version update.
+Please note that if between two versions not only the contents of the user guides were changed, but new user guides were added (as in new `.qmd` files were added), they will still need to manually linked in the `_quarto.yml` file after the above code has been run. Also note that in order for the site to link properly, you will have to run `quarto render` at least once after the linking update.
