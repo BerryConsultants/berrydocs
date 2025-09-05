@@ -1,0 +1,3079 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Multiple Endpoint Output</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../../">
+<link href="../../../../../media/FACTS_icon.png" rel="icon" type="image/png">
+<script src="../../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../../site_libs/bootstrap/bootstrap-e92fb617ac39cba344ec42fdd1c3682a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<!-- Roboto Serif -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
+
+<!-- Roboto Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WLMVE7GR4S');
+</script>
+
+
+<link rel="stylesheet" href="../../../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../../../media/FACTSLogo.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../introduction/index.html"> 
+<span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../documentation/index.html"> 
+<span class="menu-text">Documentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../get/index.html"> 
+<span class="menu-text">Get FACTS</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../contact/index.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Multiple Endpoint Output</h1>
+            <p class="subtitle lead">Description of the simulation tab and the results generated by simulations of multiple endpoints.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#graphs-of-simulation-results" id="toc-graphs-of-simulation-results" class="nav-link active" data-scroll-target="#graphs-of-simulation-results">Graphs of Simulation Results</a>
+  <ul>
+  <li><a href="#per-scenario-graphs" id="toc-per-scenario-graphs" class="nav-link" data-scroll-target="#per-scenario-graphs">Per Scenario Graphs</a>
+  <ul class="collapse">
+  <li><a href="#utility-and-subjects-allocation" id="toc-utility-and-subjects-allocation" class="nav-link" data-scroll-target="#utility-and-subjects-allocation">Utility and Subjects Allocation</a></li>
+  <li><a href="#estimated-utility-and-target-selection-graphs" id="toc-estimated-utility-and-target-selection-graphs" class="nav-link" data-scroll-target="#estimated-utility-and-target-selection-graphs">Estimated utility and Target Selection graphs</a></li>
+  <li><a href="#utility-boxplot" id="toc-utility-boxplot" class="nav-link" data-scroll-target="#utility-boxplot">Utility Boxplot</a></li>
+  <li><a href="#per-sim-utility-and-subject-allocation" id="toc-per-sim-utility-and-subject-allocation" class="nav-link" data-scroll-target="#per-sim-utility-and-subject-allocation">Per Sim: Utility and Subject Allocation</a></li>
+  <li><a href="#per-sim-utility-and-qoi" id="toc-per-sim-utility-and-qoi" class="nav-link" data-scroll-target="#per-sim-utility-and-qoi">Per Sim: Utility and QOI</a></li>
+  <li><a href="#per-interim-utility-alloc-utility-dist" id="toc-per-interim-utility-alloc-utility-dist" class="nav-link" data-scroll-target="#per-interim-utility-alloc-utility-dist">Per interim: Utility Alloc, Utility Dist</a></li>
+  </ul></li>
+  <li><a href="#across-scenario-graphs" id="toc-across-scenario-graphs" class="nav-link" data-scroll-target="#across-scenario-graphs">Across Scenario Graphs</a></li>
+  </ul></li>
+  <li><a href="#viewing-simulation-results-in-the-simulations-tab" id="toc-viewing-simulation-results-in-the-simulations-tab" class="nav-link" data-scroll-target="#viewing-simulation-results-in-the-simulations-tab">Viewing Simulation Results in the Simulations Tab</a>
+  <ul>
+  <li><a href="#summary-per-scenario" id="toc-summary-per-scenario" class="nav-link" data-scroll-target="#summary-per-scenario">Summary per Scenario</a>
+  <ul class="collapse">
+  <li><a href="#highlights" id="toc-highlights" class="nav-link" data-scroll-target="#highlights">Highlights</a></li>
+  <li><a href="#allocation" id="toc-allocation" class="nav-link" data-scroll-target="#allocation">Allocation</a></li>
+  <li><a href="#utility" id="toc-utility" class="nav-link" data-scroll-target="#utility">Utility</a></li>
+  <li><a href="#probabilities" id="toc-probabilities" class="nav-link" data-scroll-target="#probabilities">Probabilities</a></li>
+  <li><a href="#endpoint-response" id="toc-endpoint-response" class="nav-link" data-scroll-target="#endpoint-response">&lt;Endpoint&gt; Response</a></li>
+  <li><a href="#endpoint-probabilities" id="toc-endpoint-probabilities" class="nav-link" data-scroll-target="#endpoint-probabilities">&lt;Endpoint&gt; Probabilities</a></li>
+  <li><a href="#endpoint-baseline-continuous-endpoints-only" id="toc-endpoint-baseline-continuous-endpoints-only" class="nav-link" data-scroll-target="#endpoint-baseline-continuous-endpoints-only">&lt;Endpoint&gt; Baseline – Continuous Endpoints Only</a></li>
+  <li><a href="#endpoint-observed" id="toc-endpoint-observed" class="nav-link" data-scroll-target="#endpoint-observed">&lt;Endpoint&gt; Observed</a></li>
+  <li><a href="#endpoint-model-params" id="toc-endpoint-model-params" class="nav-link" data-scroll-target="#endpoint-model-params">&lt;Endpoint&gt; Model Params</a></li>
+  <li><a href="#frequentist-results-missingness-endpoint" id="toc-frequentist-results-missingness-endpoint" class="nav-link" data-scroll-target="#frequentist-results-missingness-endpoint">Frequentist Results (&lt;Missingness&gt; &lt;Endpoint&gt;)</a></li>
+  </ul></li>
+  <li><a href="#detailed-per-simulation-results" id="toc-detailed-per-simulation-results" class="nav-link" data-scroll-target="#detailed-per-simulation-results">Detailed Per Simulation Results</a></li>
+  </ul></li>
+  <li><a href="#output-files" id="toc-output-files" class="nav-link" data-scroll-target="#output-files">Output Files</a>
+  <ul>
+  <li><a href="#contents-of-summary.csv" id="toc-contents-of-summary.csv" class="nav-link" data-scroll-target="#contents-of-summary.csv">Contents of summary.csv</a></li>
+  <li><a href="#contents-of-summary_freq_missing_endpoint.csv" id="toc-contents-of-summary_freq_missing_endpoint.csv" class="nav-link" data-scroll-target="#contents-of-summary_freq_missing_endpoint.csv">Contents of Summary_freq_&lt;missing&gt;_&lt;Endpoint&gt;.csv</a></li>
+  <li><a href="#contents-of-simulations.csv-and-weeksnnnnn.csv" id="toc-contents-of-simulations.csv-and-weeksnnnnn.csv" class="nav-link" data-scroll-target="#contents-of-simulations.csv-and-weeksnnnnn.csv">Contents of simulations.csv and weeksNNNNN.csv</a></li>
+  <li><a href="#contents-of-simulations_freq_missingness_endpoint.csv-weeks_freq_missingness_endpoint.csv" id="toc-contents-of-simulations_freq_missingness_endpoint.csv-weeks_freq_missingness_endpoint.csv" class="nav-link" data-scroll-target="#contents-of-simulations_freq_missingness_endpoint.csv-weeks_freq_missingness_endpoint.csv">Contents of Simulations_freq_&lt;missingness&gt;_&lt;Endpoint&gt;.csv, Weeks_freq_&lt;missingness&gt;_&lt;Endpoint&gt;.csv</a></li>
+  <li><a href="#contents-of-patientsnnnnn.csv" id="toc-contents-of-patientsnnnnn.csv" class="nav-link" data-scroll-target="#contents-of-patientsnnnnn.csv">Contents of PatientsNNNNN.csv</a></li>
+  <li><a href="#contents-of-mcmcnnnnn.csv" id="toc-contents-of-mcmcnnnnn.csv" class="nav-link" data-scroll-target="#contents-of-mcmcnnnnn.csv">Contents of MCMCNNNNN.csv</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+
+
+
+
+
+<section id="graphs-of-simulation-results" class="level1">
+<h1>Graphs of Simulation Results</h1>
+<p>To enable swift visualization and analysis of the simulation results, FACTS has a number of pre-defined graphs it can display. Full and detailed simulation results are available in ‘.csv’ format files that can be loaded into other analysis tools allowing any aspect of the simulation to be explored. These files are described <a href="#output-files">below</a>.</p>
+<p>The graphs in the multiple endpoint engine are largely the same as the graphs in the single endpoint engine, except that the graphs from the single endpoint core engines that show responses for an endpoint now have a control allowing for the selection of which endpoint the plot should be made for.</p>
+<p>This page will attempt to highlight differences between the single endpoint and the multiple endpoint engines, largely focusing on plots that do not exist in the single endpoint output. See <a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#graphs-of-simulation-results">Continuous/Dichotomous Simulation Output</a> for full details about the single endpoint graphs in FACTS.</p>
+<section id="per-scenario-graphs" class="level2">
+<h2 class="anchored" data-anchor-id="per-scenario-graphs">Per Scenario Graphs</h2>
+<p>Many of the multiple endpoint graphs are repeated from single endpoint, potentially with the ability to view for any of the simulated endpoints. When the endpoint to use can be selected in the controls for a plot, it is common that the utility can also be selected instead of an endpoint. This will allow for assessment of the distribution of the combined utility in addition to the response estimates for the individual endpoints. The repeated graphs are listed here:</p>
+<ul>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#allocation-box-and-whisker-plot">Allocation Box and Whisker Plot</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#response-and-subject-allocation">&lt;Endpoint&gt; Response and Subject Allocation</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#response-and-target-selection-graphs">&lt;Endpoint&gt; Response and Target Selection</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#per-dose-qois-box-and-whisker-plots">Per Dose: QOI Box and Whisker Plots</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#target-response-by-sample-size-scatter-plot">Target Response by Sample Size Scatter Plot</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#cumulative-operating-characteristics-plot">Cumulative Operating Characteristics Plot</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#time-course-for-stopping">Time Course for Stopping</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#time-course-for-arm-dropping">Time Course for Arm Dropping/Retention</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#arm-retention-proportion">Arm Retention Proportion</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#freq-psignificance">Frequentist P(significance)</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#frequentist-response-and-significance">Frequentist Response and Significance</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#per-sim-response-and-subject-alloc">Per Sim: &lt;Endpoint&gt; Response Alloc</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#per-sim-posterior-quantities">Per Sim: &lt;Endpoint&gt; Response Dist</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#per-interim-response-graphs">Per Interim: &lt;Endpoint&gt; Response Alloc</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#per-interim-response-graphs">Per Interim: &lt;Endpoint&gt; Response Dist</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#explore-successfutility-criteria">Explore Final Success/Futility Criteria</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#explore-early-successfutility-criteria">Explore Early Success/Futility Criteria</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#explore-arm-dropping-criteria">Explore Arm Dropping Criteria</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#successfutility-stopping-contours">Explore Success/Futility Contours</a></p></li>
+</ul>
+<section id="utility-and-subjects-allocation" class="level3">
+<h3 class="anchored" data-anchor-id="utility-and-subjects-allocation">Utility and Subjects Allocation</h3>
+<div id="fig-51me" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-51me-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/multendpt/media/image51.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-51me-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Utility and Subject Allocation.
+</figcaption>
+</figure>
+</div>
+<p>This graph displays a histogram of the mean subject allocation and a line graph of the mean estimated utility. These plots show:</p>
+<ul>
+<li><p>The blue bars show the mean number of subjects allocated to each arm over the simulations.</p></li>
+<li><p>The green dashed line is the average of the mean estimate of utility over the simulations</p></li>
+<li><p>The black line is the true utility of the combination of the underlying response profiles being simulated for all the endpoints.</p></li>
+<li><p>The green vertical lines around the green dashed line shows the range of the central 95% of mean estimates of utility over the simulations.</p></li>
+</ul>
+</section>
+<section id="estimated-utility-and-target-selection-graphs" class="level3">
+<h3 class="anchored" data-anchor-id="estimated-utility-and-target-selection-graphs">Estimated utility and Target Selection graphs</h3>
+<div id="fig-5253me" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-5253me-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-5253me" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-52me" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-52me-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/multendpt/media/image52.png" class="img-fluid figure-img" data-ref-parent="fig-5253me">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-52me-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Utility and Ppn Greatest Pr(UMax)
+</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="fig-5253me" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div id="fig-53me" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-fig figure">
+<div aria-describedby="fig-53me-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/multendpt/media/image53.png" class="img-fluid figure-img" data-ref-parent="fig-5253me">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-subfloat-caption quarto-subfloat-fig" id="fig-53me-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Utility and Ppn Greatest Pr(UMin absolute: Delta=0.5)
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-5253me-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2
+</figcaption>
+</figure>
+</div>
+<p>These plots show the utility of the true simulated response profiles and the mean and 95% spread of the mean estimate of utility ratios along with bars showing the proportion of simulations the different treatment arms are the finally selected target:</p>
+<ul>
+<li><p>The dose with the maximum utility (left)</p></li>
+<li><p>The Minimum Acceptable Utility Dose (Umin), the dose most likely to be the minimum dose that exceeds the Clinically Significant Minimum Utility (CSMU) of 0.5 (right)</p></li>
+</ul>
+</section>
+<section id="utility-boxplot" class="level3">
+<h3 class="anchored" data-anchor-id="utility-boxplot">Utility Boxplot</h3>
+<p>This box and whisker plot shows the distribution of the estimate of utility for each dose:</p>
+<div id="fig-65me" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-65me-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/multendpt/media/image65.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-65me-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Utility Boxplot
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="per-sim-utility-and-subject-allocation" class="level3">
+<h3 class="anchored" data-anchor-id="per-sim-utility-and-subject-allocation">Per Sim: Utility and Subject Allocation</h3>
+<p>This set of graphs show the final utility analysis at the end of individual simulations.</p>
+<div id="fig-72me" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-72me-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/multendpt/media/image72.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-72me-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Estimated Utility for all endpoints and overall, as well as the number of subjects allocated to each arm.
+</figcaption>
+</figure>
+</div>
+<p>These graphs includes a control that allows the user to select which simulation to graph the results from.</p>
+<p>On each graph</p>
+<ul>
+<li><p>The black line shows the ‘True’ overall utility of the response profiles being simulated.</p></li>
+<li><p>The green solid line shows the estimate of overall utility</p></li>
+<li><p>The green dashed lines show the boundaries of the 95% credible interval for the estimate of utility.</p></li>
+<li><p>The additional lines (here khaki, blue and brown) show the estimates of utility of the individual endpoints.</p></li>
+<li><p>The blue bars show the number of subjects finally allocated to each arm.</p></li>
+</ul>
+</section>
+<section id="per-sim-utility-and-qoi" class="level3">
+<h3 class="anchored" data-anchor-id="per-sim-utility-and-qoi">Per Sim: Utility and QOI</h3>
+<p>This set of graphs show the final utility analysis at the end of individual simulations. This is the graph that’s shown when the Endpoint control is chosen to be “Utility” in the “Per Sim: Utility/Response Dist” plotting controls.</p>
+<div id="fig-73me" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-73me-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/multendpt/media/image73.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-73me-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Estimated Utility for all endpoints and overall, as well as the estimate of a chosen QOI
+</figcaption>
+</figure>
+</div>
+<p>On each graph</p>
+<ul>
+<li><p>The black line shows the ‘True’ overall utility of the response profiles being simulated.</p></li>
+<li><p>The green solid line shows the estimate of overall utility</p></li>
+<li><p>The green dashed lines show the boundaries of the 95% credible interval for the estimate of utility.</p></li>
+<li><p>The additional lines (here khaki, blue and brown) show the estimates of utility of the individual endpoints.</p></li>
+<li><p>The blue bars show the final values of a selected Utility QOI.</p></li>
+</ul>
+</section>
+<section id="per-interim-utility-alloc-utility-dist" class="level3">
+<h3 class="anchored" data-anchor-id="per-interim-utility-alloc-utility-dist">Per interim: Utility Alloc, Utility Dist</h3>
+<p>This is an identical set of graphs to the <a href="#per-sim-utility-and-subject-allocation">Per Sim: Utility and Subject Allocation</a> and <a href="#per-sim-utility-and-qoi">Per Sim: Utility and QOI</a> plots, except that in addition to the control to select which simulation to graph the results from, there is a control to select which interim within the simulation to graph the results from. These graphs are only available for those simulations for which ‘weeks’ files have been output (by default the first 100). number of files to be read and subsequent processing of the data.</p>
+</section>
+</section>
+<section id="across-scenario-graphs" class="level2">
+<h2 class="anchored" data-anchor-id="across-scenario-graphs">Across Scenario Graphs</h2>
+<p>The Across Scenario graphs for the multiple endpoint engine are the same as the graphs available in the individual continuous and dichotomous engines.</p>
+<p>For reference, these are:</p>
+<ul>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#selected-arms">Selected Arms</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#qoi-box-plots">QOI Box Plots</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#ppn-success">Ppn Success</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#response">Response/Utility</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#allocation">Allocation</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#interim-vs-final-scatter-plot">Interim vs Final Scatter Plot</a></p></li>
+<li><p><a href="../../../../../documentation/v80/userguides/core/simulation/contanddichot.html#receiver-operating-characteristics">Receiver Operating Characteristics</a></p></li>
+</ul>
+<p>The only differences from the single endpoint across scenario graphs are:</p>
+<ul>
+<li><p>QOI Box Plots graph now has Utility as a selectable endpoint and the utility QOIs are available to be plotted</p></li>
+<li><p>Respnnse/Utility is the same as the single endpoint Response graph, except that Utility is a selectable endpoint</p></li>
+<li><p>Interim vs Final Scatter Plot now has utility QOIs</p></li>
+<li><p>Receiver Operating Characteristics plots now have utility QOIs.</p></li>
+</ul>
+</section>
+</section>
+<section id="viewing-simulation-results-in-the-simulations-tab" class="level1">
+<h1>Viewing Simulation Results in the Simulations Tab</h1>
+<p>After simulations have been run, FACTS provides a table for assessing the output from the simulations. While everything that FACTS displays in the table on the Simulation tab is available in output files, FACTS does a substantial amount of “beautifying” of results in its built-in table. This entails changes like converting numeric outcome scores to readable text and using descriptive names for QOI columns.</p>
+<p>The main table has 1 line per scenario, and shows the summary of all simulations run for each scenario. These lines show values that are stored in the summary.csv file.</p>
+<p>More detailed simulation output, providing a row per simulation run, is accessibile by double clicking on any row of the output table. This row-per-simulation output is what is stored in the simulations.csv files.</p>
+<p>Additional detail is available for simulations that have a weeks file by right clicking on a simulation in the simulation summary window and selecting “Weeks Results”. See the Results Output section of the Simulation tab to specify the number of weeks files to be output.</p>
+<section id="summary-per-scenario" class="level2">
+<h2 class="anchored" data-anchor-id="summary-per-scenario">Summary per Scenario</h2>
+<p>By default, only a subset of all columns of output are provided when simulations are complete. This set of columns is called “Highlights.” To get access to further columns, you can right click anywhere on the simulation output table and click “Summary Results: ….” for whichever set of columns you would like to see. There is a “Summary Results: All” option that will provide a pop up containing every column available for summary results.</p>
+<p>The following sections break down which columns are available by sorting to which column subset.</p>
+<section id="highlights" class="level3">
+<h3 class="anchored" data-anchor-id="highlights">Highlights</h3>
+<p>These are the columns displayed on the simulations tab after simulations are completed, the can also be displayed in the separate “Highlights” results window.</p>
+<table class="caption-top table">
+<caption>The columns that are displayed by default in the simulations tab after multiple endpoint simulations have been run.</caption>
+<colgroup>
+<col style="width: 9%">
+<col style="width: 6%">
+<col style="width: 84%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Select</td>
+<td>1</td>
+<td>Not an output column, this column contains check box to allow the user to select which scenario to simulate. The ‘Select All’ button causes them all to be checked.</td>
+</tr>
+<tr class="even">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="odd">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Dose Response’,</p>
+<p>’Virtual Subject Response &gt; Explicitly Defined &gt; Control Hazard rates,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Predictor’,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="even">
+<td>Random Number Seed</td>
+<td>1</td>
+<td>Base random number seed used to perform the simulations.</td>
+</tr>
+<tr class="odd">
+<td>Num Sims</td>
+<td>1</td>
+<td>The number of simulations that were run to produce the displayed results.</td>
+</tr>
+<tr class="even">
+<td>Mean Subj.</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the number of subjects recruited in this scenario.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Overall Success</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped for success, either early success or late success (as defined below).</td>
+</tr>
+<tr class="even">
+<td>Ppn Early Success</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped early for success (and did not regress to futility in the final analysis – though they might have regressed to ‘inconclusive’).</td>
+</tr>
+<tr class="odd">
+<td>Ppn Late Success</td>
+<td>1</td>
+<td>This is the proportion of simulations that did not stop early but were successful in the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Ppn Overall Futility</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped for futility, either early futility or late futility (as defined below).</td>
+</tr>
+<tr class="odd">
+<td>Ppn Late Futility</td>
+<td>1</td>
+<td>This is the proportion of simulations that did not stop early but were futile in the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Ppn Early Futility</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped early for futility (and did not regress to success in the final analysis – though they might have regressed to ‘inconclusive’).</td>
+</tr>
+<tr class="odd">
+<td>Ppn Succ -&gt; Fut Flipflop</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped early for success but regressed to futility in the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Ppn Fut -&gt; Succ Flipflop</td>
+<td>1</td>
+<td>This is the proportion of simulations that stopped early for futility but regressed to success in the final analysis.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Inconclusive</td>
+<td>1</td>
+<td>This is the proportion of simulations that did not stop early and were neither successful nor futile in the final analysis.</td>
+</tr>
+<tr class="even">
+<td>Early Success Time</td>
+<td>1</td>
+<td>This is the average time to an early decision to stop for success (i.e.&nbsp;the time excluding final follow up) over those simulations that did decide early to stop for success.</td>
+</tr>
+<tr class="odd">
+<td>Mean Trt. &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the mean (over the simulations) of the hazard ratio of the treatment arms to control. The HZ for the control arm is always 1.</td>
+</tr>
+<tr class="even">
+<td>Mean Duration</td>
+<td>1</td>
+<td>The mean over the simulations of the total duration from the start of enrolment to end of follow up.</td>
+</tr>
+<tr class="odd">
+<td>PPn Arms Drop: &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the number of times (over the simulations) that each arm was dropped.</td>
+</tr>
+<tr class="even">
+<td>Mean LP Enrolled</td>
+<td>1</td>
+<td>This is the mean, in weeks (over the simulations) of the duration of the trial from first patient first visit to Last Patient First Visit (i.e.&nbsp;the duration of accrual).</td>
+</tr>
+<tr class="odd">
+<td>Ppn Correct Arm</td>
+<td>1</td>
+<td>The proportion of simulations that met the success criteria and selected (by the target QOI specified on the Study &gt; Variant tab) one of the arms marked as “should succeed” on the Virtual Subject Response &gt; Explicitly Defined &gt; Dose Response tab</td>
+</tr>
+<tr class="even">
+<td>Ppn Incorrect Arm</td>
+<td>1</td>
+<td>The proportion of simulations that met the success criteria and selected (by the target QOI specified on the Study &gt; Variant tab) one of the arms <strong>not</strong> marked as “should succeed” on the Virtual Subject Response &gt; Explicitly Defined &gt; Dose Response tab</td>
+</tr>
+<tr class="odd">
+<td>Version</td>
+<td>1</td>
+<td>The FACTS version number at the time the simulations were run.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="allocation" class="level3">
+<h3 class="anchored" data-anchor-id="allocation">Allocation</h3>
+<p>By right clicking and selecting the allocation columns, a pop-out will appear that provides the following columns.</p>
+<table class="caption-top table">
+<caption>The allocation columns provided in FACTS output for multiple endpoint trials.</caption>
+<colgroup>
+<col style="width: 12%">
+<col style="width: 10%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Dose Response’,</p>
+<p>’Virtual Subject Response &gt; Explicitly Defined &gt; Control Hazard rates,</p>
+<p>‘Virtual Subject Response &gt; Explicitly Defined &gt; Predictor’,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="odd">
+<td>Mean Subj.</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the number of subjects recruited in this scenario.</td>
+</tr>
+<tr class="even">
+<td>SD Mean Subj.</td>
+<td>1</td>
+<td>This is the standard deviation across the simulations of the number of subjects recruited.</td>
+</tr>
+<tr class="odd">
+<td>80%-ile Subj</td>
+<td>1</td>
+<td>This is the eightieth percentile across the simulations of the number of subjects recruited into the trial.</td>
+</tr>
+<tr class="even">
+<td>Mean Alloc.: &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the mean (over the simulations) of the number of subjects recruited into each arm in this scenario.</td>
+</tr>
+<tr class="odd">
+<td>SD Alloc.: &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the SD of the means (over the simulations) of the number of subjects allocated to each treatment arm.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="utility" class="level3">
+<h3 class="anchored" data-anchor-id="utility">Utility</h3>
+<table class="caption-top table">
+<caption>The utility columns provided in FACTS output for multiple endpoint trials.</caption>
+<colgroup>
+<col style="width: 9%">
+<col style="width: 7%">
+<col style="width: 82%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>’Virtual Subject Response &gt; Composite,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="odd">
+<td>Mean Utility: &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the mean (over the simulations) of the posterior estimate of the overall utility of this dose, this is the utility of each endpoint at the dose, combined using the specified utility combination method.</td>
+</tr>
+<tr class="even">
+<td>SD Utility: &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the SD (over the simulations) of the posterior estimate of the overall utility of this dose.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="probabilities" class="level3">
+<h3 class="anchored" data-anchor-id="probabilities">Probabilities</h3>
+<table class="caption-top table">
+<caption>The Utility QOIs, which are visible when Probabilities columns are selected in simulation output for multiple endpoint trials.</caption>
+<colgroup>
+<col style="width: 5%">
+<col style="width: 7%">
+<col style="width: 86%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>’Virtual Subject Response &gt; Composite,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;QOI&gt; &lt;Dose&gt;</td>
+<td>One per arm per Utility QOI</td>
+<td><p>For each Utility Posterior Probability QOI this is the mean over the simulations of the estimate of the posterior probability of the QOI for each dose.</p>
+<p>For each Utility Target QOI this is the proportion of simulations where this dose was selected at the end of the trial as the dose with the greatest probability of meeting the target condition.</p>
+<p>The probability that each dose is the target at the end of a simulated trial is its marginal probability (the number of times it was the dose closest to the target in the MCMC sampling of the analysis at the end of the trial). The Max Utility target is always identifiable, so the Ppn(target) should sum to 1 across the doses.</p>
+<p>A Umin target is not guaranteed to be identifiable, if no dose meets the CSMU criteria in any MCMC sample so all doses have a 0 probability of having greater utility than Control then no dose is the Umin. So the sum of each Ppn(target) QOI across the doses should sum to between 0 and 1 inclusive.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="endpoint-response" class="level3">
+<h3 class="anchored" data-anchor-id="endpoint-response">&lt;Endpoint&gt; Response</h3>
+<p>The columns that appear when selecting &lt;Endpoint&gt; Response vary depending on whether the selected endpoint is continuous or dichotomous.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Dichotomous</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<table class="caption-top table">
+<caption>The columns provided if selecting endpoint specific response for a continuous endpoint.</caption>
+<colgroup>
+<col style="width: 10%">
+<col style="width: 4%">
+<col style="width: 84%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>’Virtual Subject Response &gt; Composite,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="odd">
+<td>Mean Response (&lt;Endpoint&gt;): &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the mean (over the simulations) of the estimate of the response on this endpoint on this dose.</td>
+</tr>
+<tr class="even">
+<td>SD Response (&lt;Endpoint&gt;): &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the standard deviation (over the simulations) of the estimate of the response on this endpoint on this dose.</td>
+</tr>
+<tr class="odd">
+<td>Mean Sigma (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the estimate of the standard deviation of the response (across all doses) on this endpoint.</td>
+</tr>
+<tr class="even">
+<td>SD Mean Sigma (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>This is the standard deviation (over the simulations) of the estimate of the standard deviation of the response (across all doses) on this endpoint</td>
+</tr>
+<tr class="odd">
+<td>True Mean Resp (&lt;Endpoint&gt;): &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the true change from baseline / response rate from which the simulation data was sampled.</td>
+</tr>
+<tr class="even">
+<td>True SD Resp.: &lt;Dose&gt;</td>
+<td>1</td>
+<td>If the endpoint is continuous these columns are included and report the true standard deviation of the simulated response. If baseline and “baseline adjustment of the simulated subject response” is used, this reported SD will include that impact of that and be different from the value(s) for sigma entered on the VSR &gt; Dose Response tab.</td>
+</tr>
+<tr class="odd">
+<td>Mean Utility (&lt;Endpoint&gt;): &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the mean (over the simulations) of the posterior estimate of the utility of this endpoint on this dose.</td>
+</tr>
+<tr class="even">
+<td>SD Utility (&lt;Endpoint&gt;): &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the SD (over the simulations) of the posterior estimate of the overall utility of this dose.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<table class="caption-top table">
+<caption>The columns provided if selecting endpoint specific response for a dichotomous endpoint.</caption>
+<colgroup>
+<col style="width: 20%">
+<col style="width: 9%">
+<col style="width: 69%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>’Virtual Subject Response &gt; Composite,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="odd">
+<td>Mean Response (&lt;Endpoint&gt;): &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the mean (over the simulations) of the estimate of the response on this endpoint on this dose.</td>
+</tr>
+<tr class="even">
+<td>SD Response (&lt;Endpoint&gt;): &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the standard deviation (over the simulations) of the estimate of the response on this endpoint on this dose.</td>
+</tr>
+<tr class="odd">
+<td>True Mean Resp (&lt;Endpoint&gt;): &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the true change from baseline / response rate from which the simulation data was sampled.</td>
+</tr>
+<tr class="even">
+<td>Mean Utility (&lt;Endpoint&gt;): &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the mean (over the simulations) of the posterior estimate of the utility of this endpoint on this dose.</td>
+</tr>
+<tr class="odd">
+<td>SD Utility (&lt;Endpoint&gt;): &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the SD (over the simulations) of the posterior estimate of the overall utility of this dose.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="endpoint-probabilities" class="level3">
+<h3 class="anchored" data-anchor-id="endpoint-probabilities">&lt;Endpoint&gt; Probabilities</h3>
+<table class="caption-top table">
+<caption>The endpoint specific QOI columns for simulation output in the multiple endpoint engine.</caption>
+<colgroup>
+<col style="width: 4%">
+<col style="width: 9%">
+<col style="width: 85%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>’Virtual Subject Response &gt; Composite,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;QOI&gt; &lt;Dose&gt;</td>
+<td>One per arm per QOI defined on this endpoint</td>
+<td><p>For each Posterior Probability and Predictive Probability QOI defined on this endpoint, this is the mean over the simulations of the estimate of the probability of the QOI for each dose. (P-value QOIs are reported in the frequentist results table).</p>
+<p>For each Target QOI this is the proportion of simulations where this dose was selected at the end of the trial as the dose with the greatest probability of meeting the target condition.</p>
+<p>The probability that each dose is the target at the end of a simulated trial is its marginal probability (the number of times it was the dose closest to the target in the MCMC sampling of the analysis at the end of the trial). The target of having the Max response on this endpoint, or some fraction of it (EDq) is always identifiable, so the Ppn(target) for these QOIs will sum to 1 across the doses.</p>
+<p>An MED target is not guaranteed to be identifiable, if no dose meets the CSD criteria in any MCMC sample so all doses have a 0 probability of having a response greater than Control (or AC) by the CSD then no dose is the MED. So the sum of each Ppn(target) QOI across the doses should sum to between 0 and 1 inclusive.</p>
+<p>Decision QOI’s are not reported here separately, but their component QOIs – the vector of values and target QOI used to select from them are.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="endpoint-baseline-continuous-endpoints-only" class="level3">
+<h3 class="anchored" data-anchor-id="endpoint-baseline-continuous-endpoints-only">&lt;Endpoint&gt; Baseline – Continuous Endpoints Only</h3>
+<table class="caption-top table">
+<caption>The baseline columns shown when &lt;Endpoint&gt; Baseline is selected. Only available for continuous endpoints.</caption>
+<colgroup>
+<col style="width: 15%">
+<col style="width: 8%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>’Virtual Subject Response &gt; Composite,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="odd">
+<td>Mean Baseline Beta (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>If a baseline adjusted dose response model is being used then this is the mean (over the simulations) of the estimate of the baseline adjustment parameter ‘Beta’.</td>
+</tr>
+<tr class="even">
+<td>SD Baseline Beta (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>If a baseline adjusted dose response model is being used then this is the standard deviation (over the simulations) of the estimate of the baseline adjustment parameter ‘Beta’.</td>
+</tr>
+<tr class="odd">
+<td>Mean Baseline (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the mean observed baseline score.</td>
+</tr>
+<tr class="even">
+<td>SD Baseline (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>This is the standard deviation (over the simulations) of the mean observed baseline score.</td>
+</tr>
+<tr class="odd">
+<td>True Mean Baseline (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>This is the true mean of the baseline distribution used to simulate the baseline scores.</td>
+</tr>
+<tr class="even">
+<td>True SD Baseline (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>This is the true standard deviation of the distribution used to simulate the baseline scores.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="endpoint-observed" class="level3">
+<h3 class="anchored" data-anchor-id="endpoint-observed">&lt;Endpoint&gt; Observed</h3>
+<table class="caption-top table">
+<caption>The columns shown when &lt;Endpoint&gt; Observed is selected.</caption>
+<colgroup>
+<col style="width: 10%">
+<col style="width: 8%">
+<col style="width: 80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>’Virtual Subject Response &gt; Composite,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="odd">
+<td>Mean Complete &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the mean (over the simulations) of the number of subjects recruited per arm which have had their endpoint observed in this scenario.</td>
+</tr>
+<tr class="even">
+<td>Mean Complete Info &lt;Dose&gt;</td>
+<td>One per arm</td>
+<td>This is the mean (over the simulations) of information observed per arm as defined on the Interims tab (Subjects enrolled, Complete Data at Specified Visit, Opportunity to Complete at Specified Visit) in this scenario.</td>
+</tr>
+<tr class="odd">
+<td>Mean Dropouts &lt;Dose&gt;<br>
+&lt;Visit&gt;</td>
+<td>One per arm per visit</td>
+<td>This is the mean (over the simulations) of dropouts per arm per visit in this scenario.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="endpoint-model-params" class="level3">
+<h3 class="anchored" data-anchor-id="endpoint-model-params">&lt;Endpoint&gt; Model Params</h3>
+<table class="caption-top table">
+<caption>The columns shown when &lt;Endpoint&gt; Model Params is selected for a specific endpoint.</caption>
+<colgroup>
+<col style="width: 12%">
+<col style="width: 8%">
+<col style="width: 79%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>’Virtual Subject Response &gt; Composite,</p>
+<p>This is the same name as used for the results directory</p></td>
+</tr>
+<tr class="odd">
+<td>BAC Mean (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="even">
+<td>SD BAC Mean (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>This is the SD (over the simulations) of the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="odd">
+<td>BAC Tau (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the posterior estimate of the SD of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="even">
+<td>SD BAC Tau (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>This is the SD (over the simulations) of the posterior estimate of the SD of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="odd">
+<td>BAAC Mean (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses.</td>
+</tr>
+<tr class="even">
+<td>SD BAAC Mean (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>This is the SD (over the simulations) of the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="odd">
+<td>BAAC Tau (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses.</td>
+</tr>
+<tr class="even">
+<td>SD BAAC Tau (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>This is the SD (over the simulations) of the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="frequentist-results-missingness-endpoint" class="level3">
+<h3 class="anchored" data-anchor-id="frequentist-results-missingness-endpoint">Frequentist Results (&lt;Missingness&gt; &lt;Endpoint&gt;)</h3>
+<table class="caption-top table">
+<caption>The columns available when selecting Frequentist results for a specific endpoint and missingness handling method.</caption>
+<colgroup>
+<col style="width: 19%">
+<col style="width: 6%">
+<col style="width: 71%">
+<col style="width: 2%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td><p>This column gives the name of the scenario, concatenating together the profile names from the following tabs:</p>
+<p>‘Execution &gt; Accrual’,</p>
+<p>‘Execution &gt; Dropout Rate’,</p>
+<p>’Virtual Subject Response &gt; Composite,</p>
+<p>This is the same name as used for the results directory</p></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Mean Theta (&lt;Missingness&gt; &lt;Endpoint&gt;) &lt;Dose&gt;</td>
+<td></td>
+<td>The mean response per dose.</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>SD Mean Theta (&lt;Missingness&gt; &lt;Endpoint&gt;) &lt;Dose&gt;</td>
+<td></td>
+<td>The standard error of the response per dose</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Ppn Signif (&lt;Missingness&gt; &lt;Endpoint&gt;) &lt;Dose&gt;</td>
+<td>D</td>
+<td>For each treatment arm, the proportion of | simulations where the unadjusted p-value is | less than the user specified one-sided alpha. | | The marginal probability of significance per | dose (using unadjusted p-values).</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Bias (&lt;Missingness&gt; &lt;Endpoint&gt;) &lt;Dose&gt;</td>
+<td>D</td>
+<td>The difference between the estimated mean response and the true (simulated) mean response per dose</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Coverage (&lt;Missingness&gt; &lt;Endpoint&gt;) &lt;Dose&gt;</td>
+<td>D</td>
+<td>The proportion of simulations where the unadjusted confidence interval for the treatment difference compared to control contains the true mean treatment difference compared to control used to simulate subject responses.</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Ppn Signif Dunnett (&lt;Missingness&gt; &lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>For each treatment arm, the proportion of simulations where at least one of the Dunnett adjusted p-value is less than the user specified one-sided alpha.</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Ppn Signif Dunnett (&lt;Missingness&gt; &lt;Endpoint&gt;) &lt;Dose&gt;</td>
+<td>D</td>
+<td>For each treatment arm, the proportion of simulations where the Dunnett adjusted p-value is less than the user specified one-sided alpha.</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Coverage Dunnett (&lt;Missingness&gt; &lt;Endpoint&gt;) &lt;Dose&gt;</td>
+<td>D</td>
+<td>The proportion of simulations where the Dunnett adjusted confidence interval for the treatment difference compared to control contains the true mean treatment difference compared to control used to simulate subjects responses.</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Ppn Signif Bonf (&lt;Missingness&gt; &lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>The proportion of simulations where at least one of the Bonferroni adjusted p-values is less than the user specified one-sided alpha.</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Ppn Signif Bonf (&lt;Missingness&gt; &lt;Endpoint&gt;) &lt;Dose&gt;</td>
+<td>D</td>
+<td>For each treatment arm, the proportion of simulations where the Bonferroni adjusted p-value is less than the user specified one-sided alpha.</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Coverage Bonf (&lt;Missingness&gt; &lt;Endpoint&gt;) &lt;Dose&gt;</td>
+<td>D</td>
+<td>The proportion of simulations where the Bonferroni adjusted confidence interval contains the true mean response used to simulate subjects responses.</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Ppn Signif Trend (&lt;Missingness&gt; &lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>The proportion of simulations where the trend test p-value is less than the user specified one-sided alpha.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="detailed-per-simulation-results" class="level2">
+<h2 class="anchored" data-anchor-id="detailed-per-simulation-results">Detailed Per Simulation Results</h2>
+<p>After simulation has completed and simulation results have been loaded, the user may examine detailed results for any scenario with simulations output in the table by double-clicking on the appropriate row. A separate window pops up and displays the results for each individual simulation. This is a “prettier” view of the contents of the “simulations.csv” file, which is described below. The simulations results are partitioned into the same results groupings as the summary results. These can be accessed from the “right click” menu, along with opening the results folder, opening the weeks file for a particular simulation and opening the simulated patients file for a particular simulation (where a “weeks” file or a “patients” file has been output).</p>
+<div id="fig-101me" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-101me-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/multendpt/media/image101.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-101me-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: The simulation results pop out viewer showing simulation highlights.
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="output-files" class="level1">
+<h1>Output Files</h1>
+<p>Instead of viewing simulation output on the Simulation tab within FACTS, the output is all contained within easily accessible files saved the the user’s local machine. FACTS stores the results of simulations as ‘.csv’ files under a Results folder. For each row in the simulations table, there is a folder named by the profiles that make up the scenario, which contains the corresponding ‘.csv’ files.</p>
+<div id="fig-windowsexplorerme" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-windowsexplorerme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/multendpt/media/image102.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-windowsexplorerme-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: The windows file explorer when opened to the directory containing simulation output.
+</figcaption>
+</figure>
+</div>
+<p>These files can be opened using Microsoft Excel or any text editor. Excel, and many other apps, takes out a file lock on any file it has open, while a FACTS results file is open in another piece of software it cannot be deleted or modified by FACTS. The most common cause for an error to be reported when simulating trials in FACTS is because the user has one of the previous results files is still open in Excel.</p>
+<p>In the scenario directory there are the following types of results file:</p>
+<p><strong>Summary.csv</strong> Contains a single row of data that summarizes the simulation results. This is the source of the shown on the simulations tab.</p>
+<p><span class="custom-tooltip"><strong>Summary_freq_bocf_&lt;Endpoint&gt;.csv,</strong> <span class="tooltip-text">Continuous only.</span> </span> <strong>Summary_freq_locf_&lt;Endpoint&gt;.csv,</strong> <strong>Summary_freq_ignore_&lt;Endpoint&gt;.csv,</strong> <span class="custom-tooltip"><strong>Summary_freq_fail_&lt;Endpoint&gt;.csv,</strong> <span class="tooltip-text">Dichotomous only.</span> </span> Contains a single row of data that summarizes the frequentist results. A file is output for each endpoint for which frequentist analysis is enabled, and for each of the different method for dealing with missing data that are selected on the Frequentist Analysis tab: BOCF if the endpoint is continuous and the baseline score is being simulated, “fail” for dichotomous, LOCF and “ignore” (referred to as PP (Per-Protocol) in the GUI).</p>
+<p><strong>Simulations.csv</strong> Contains one row per simulation describing the final state of each simulation for every trial simulated.</p>
+<p><span class="custom-tooltip"><strong>Simulations_freq_bocf_&lt;Endpoint&gt;.csv,</strong> <span class="tooltip-text">Continuous only.</span> </span> <strong>Simulations_freq_locf_&lt;Endpoint&gt;.csv,</strong> <strong>Simulations_freq_ignore_&lt;Endpoint&gt;.csv,</strong> <span class="custom-tooltip"><strong>Simulations_freq_fail_&lt;Endpoint&gt;.csv,</strong> <span class="tooltip-text">Dichotomous only.</span> </span> Contains one row per simulation describing the final frequentist analysis of each simulation for every trial simulated. A file is output for each endpoint for which frequentist analysis is enabled, and for each of the different methods for dealing with missing data that are applicable</p>
+<p><strong>PatientsNNNNN.csv</strong> Contains one row per patient in a simulation, where NNNNN is the number of the simulation. By default this file is written out only for the first simulation, but this can be changed on the simulations tab.</p>
+<p><strong>WeeksNNNNN.csv</strong> Contains one row for each cohort during a simulation where NNN is the number of the simulation. By default this file is written only for the first 100 simulations, but this can be changed via the simulation tab. The values in the last row of the cohorts file will be the same as the final values for that simulation in the simulations file.</p>
+<p><span class="custom-tooltip"> <strong>weeks_freq_bocf_&lt;Endpoint&gt;_NNNNN.csv,</strong> <span class="tooltip-text">Continuous only.</span> </span> <strong>weeks_freq_locf_&lt;Endpoint&gt;_NNNN.csv,</strong> <strong>weeks_freq_ignore_&lt;Endpoint&gt;_NNNN.csv,</strong> <span class="custom-tooltip"> <strong>weeks_freq_fail_&lt;Endpoint&gt;_NNNNN.csv,</strong> <span class="tooltip-text">Dichotomous only.</span> </span> Contains one row for each interim during a simulation where NNNNN is the number of the simulation. A file is output for each endpoint for which frequentist analysis is enabled, for each simulation for which a frequentist “weeks file” is to be output, and for each of the different methods for dealing with missing data that are applicable.</p>
+<section id="contents-of-summary.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-summary.csv">Contents of summary.csv</h2>
+<p>The first two lines are header lines, starting with a ‘#’, containing the column headings. The first line contains the lengthy “human readable” form of the QOI names, the second line contains the shorter “computer readable” alternate QOI names. For columns that are not QOI values, the column names are the same in the two rows.</p>
+<table class="caption-top table">
+<caption>Contents of the summary.csv file for the multiple endpoint engine.</caption>
+<colgroup>
+<col style="width: 9%">
+<col style="width: 8%">
+<col style="width: 81%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Project</td>
+<td>1</td>
+<td>The name of the “.facts” file – not including the file extension.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td>The scenario name as used in FACTS – made by concatenating the names of the various profiles that make up the scenario</td>
+</tr>
+<tr class="odd">
+<td>Timestamp</td>
+<td>1</td>
+<td>The time the simulations started</td>
+</tr>
+<tr class="even">
+<td>Version</td>
+<td>1</td>
+<td>The overall version of FACTS that ran the simulations (not the version of the specific design engine)</td>
+</tr>
+<tr class="odd">
+<td>NSim</td>
+<td>1</td>
+<td>The number of simulation runs.</td>
+</tr>
+<tr class="even">
+<td>No.&nbsp;Subj</td>
+<td>1</td>
+<td>The mean, over the simulations, of the total number of subjects recruited in the trial.</td>
+</tr>
+<tr class="odd">
+<td>SE Subj.</td>
+<td>1</td>
+<td>The standard error of the total number of subjects recruited into the trials.</td>
+</tr>
+<tr class="even">
+<td>No.subj 80%-ile</td>
+<td>1</td>
+<td>The 80<sup>th</sup> percentile, over the simulations, of the total number of subjects recruited in the trial.</td>
+</tr>
+<tr class="odd">
+<td>P(ES)</td>
+<td>1</td>
+<td>The proportion of simulations that stopped early for success.</td>
+</tr>
+<tr class="even">
+<td>P(LS)</td>
+<td>1</td>
+<td>The proportion of simulations that did not stop early, and were successful on final evaluation.</td>
+</tr>
+<tr class="odd">
+<td>P(LF)</td>
+<td>1</td>
+<td>The proportion of simulations that did not stop early, and were futile on final evaluation.</td>
+</tr>
+<tr class="even">
+<td>P(EF)</td>
+<td>1</td>
+<td>The proportion of simulations that stopped early for futility.</td>
+</tr>
+<tr class="odd">
+<td>SFFF</td>
+<td>1</td>
+<td>The proportion of simulations that stopped early for success, but at final analysis were futile (Success-Futility ‘flip-flops’).</td>
+</tr>
+<tr class="even">
+<td>FSFF</td>
+<td>1</td>
+<td>The proportion of simulations that stopped early for futility, but at final analysis were successful (Futility- Success ‘flip-flops’).</td>
+</tr>
+<tr class="odd">
+<td>Undec.</td>
+<td>1</td>
+<td>The proportion of simulations that did not stop early, and met neither the success or futility final evaluation criteria and hence are counted as ‘undecided’.</td>
+</tr>
+<tr class="even">
+<td>Unused</td>
+<td>3</td>
+<td>Three unused columns for other outcome types.</td>
+</tr>
+<tr class="odd">
+<td>Early Success Time</td>
+<td>1</td>
+<td>This is the mean early decision time (over the simulations stopped early for success), it is the time from the start of the trial to the interim where early success was declared. It does not include the subsequent follow up time.</td>
+</tr>
+<tr class="even">
+<td>Mean Alloc &lt;Dose&gt;</td>
+<td>D</td>
+<td>The mean (over the simulations) of the number of subjects allocated to each treatment arm.</td>
+</tr>
+<tr class="odd">
+<td>SE Alloc &lt;Dose&gt;</td>
+<td>D</td>
+<td>The standard error (over the simulations) of the number of subjects allocated to each treatment arm.</td>
+</tr>
+<tr class="even">
+<td>No.&nbsp;Dropouts &lt;Dose&gt;</td>
+<td>D</td>
+<td>The mean (over the simulations) of the number of dropouts for each treatment arm.</td>
+</tr>
+<tr class="odd">
+<td>Mean Util &lt;Dose&gt;</td>
+<td>D</td>
+<td>This is the mean (over the simulations) of the posterior estimate of the utility of this dose.</td>
+</tr>
+<tr class="even">
+<td>SE Util &lt;Dose&gt;</td>
+<td>D</td>
+<td>This is the SD (over the simulations) of the posterior estimate of the utility of this dose.</td>
+</tr>
+<tr class="odd">
+<td>Mean Resp &lt;Endpoint&gt;&lt;Dose&gt;</td>
+<td>D per endpoint</td>
+<td>This is the mean (over the simulations) of the estimate of the response on this endpoint on this dose.</td>
+</tr>
+<tr class="even">
+<td>SE Resp &lt;Dose&gt;</td>
+<td>D per endpoint</td>
+<td>This is the standard deviation (over the simulations) of the estimate of the response on this endpoint on this dose.</td>
+</tr>
+<tr class="odd">
+<td>Mean Sigma</td>
+<td>1 per continuous endpoint</td>
+<td>This is the mean (over the simulations) of the estimate of the standard deviation of the response (across all doses) on this endpoint.</td>
+</tr>
+<tr class="even">
+<td>SE Mean Sigma</td>
+<td>1 per continuous endpoint</td>
+<td>This is the standard deviation (over the simulations) of the estimate of the standard deviation of the response (across all doses) on this endpoint</td>
+</tr>
+<tr class="odd">
+<td>True Mean resp &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per endpoint</td>
+<td>This is the true change from baseline / response rate from which the simulation data was sampled.</td>
+</tr>
+<tr class="even">
+<td>True SD resp &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per endpoint</td>
+<td>If the endpoint is continuous these columns are included and report the true standard deviation of the simulated response. If baseline and “baseline adjustment of the simulated subject response” is used, this reported SD will include that impact of that and be different from the value(s) for sigma entered on the VSR &gt; Dose Response tab.</td>
+</tr>
+<tr class="odd">
+<td>Mean Longmod Resp: &lt;Dose&gt;<br>
+&lt;Visit&gt;</td>
+<td>One per arm per visit per endpoint</td>
+<td><p>These are only calculated and written out if the Time Course Hierarchical or ITP longitudinal models are being used.</p>
+<p>This is the mean (over the simulations) of the estimate of the mean response for a particular dose at a particular visit, based on the independent estimate of the dose response (omega_d), scaled by the longitudinal model’s estimate of the proportion of the final effect observed at the visit.</p></td>
+</tr>
+<tr class="even">
+<td>SE Mean Longmod Resp: &lt;Dose&gt;<br>
+&lt;Visit&gt;</td>
+<td>One per arm per visit per endpoint</td>
+<td>This is the SD ( over the simulations) of the longitudinal model estimate of the response at intermediate visits (see above)</td>
+</tr>
+<tr class="odd">
+<td>Mean Util &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per endpoint</td>
+<td>This is the mean (over the simulations) of the mean estimate of the utility of this endpoint on this dose.</td>
+</tr>
+<tr class="even">
+<td>SE Util &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per endpoint</td>
+<td>This is the standard error (over the simulations) of the mean estimate of the utility of this endpoint on this dose.</td>
+</tr>
+<tr class="odd">
+<td>Mean Beta &lt;Endpoint&gt;</td>
+<td>1 per continuous endpoint</td>
+<td>If a baseline adjusted dose response model is being used then this is the mean (over the simulations) of the estimate of the baseline adjustment parameter ‘Beta’.</td>
+</tr>
+<tr class="even">
+<td>SE Beta &lt;Endpoint&gt;</td>
+<td>1 per continuous endpoint</td>
+<td>If a baseline adjusted dose response model is being used then this is the standard error (over the simulations) of the estimate of the baseline adjustment parameter ‘Beta’.</td>
+</tr>
+<tr class="odd">
+<td>Mean Baseline &lt;Endpoint&gt;</td>
+<td>1 per continuous endpoint</td>
+<td>This is the mean (over the simulations) of the mean observed baseline score.</td>
+</tr>
+<tr class="even">
+<td>SE Mean Baseline &lt;Endpoint&gt;</td>
+<td>1 per continuous endpoint</td>
+<td>This is the standard error (over the simulations) of the mean observed baseline score.</td>
+</tr>
+<tr class="odd">
+<td>SD Baseline &lt;Endpoint&gt;</td>
+<td>1 per continuous endpoint</td>
+<td>This is the mean (over the simulations) of the SD of the observed baseline score.</td>
+</tr>
+<tr class="even">
+<td>SE SD Baseline &lt;Endpoint&gt;</td>
+<td>1 per continuous endpoint</td>
+<td>This is the standard error (over the simulations) of the mean of the observed baseline score.</td>
+</tr>
+<tr class="odd">
+<td>True Mean Baseline &lt;Endpoint&gt;</td>
+<td>1 per continuous endpoint</td>
+<td>This is the true mean of the baseline distribution used to simulate the baseline scores.</td>
+</tr>
+<tr class="even">
+<td>True SD Baseline &lt;Endpoint&gt;</td>
+<td>1 per continuous endpoint</td>
+<td>This is the true SD of the baseline distribution used to simulate the baseline score.</td>
+</tr>
+<tr class="odd">
+<td>BAC Mean (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>If a hierarchical prior for Control is being used this is the mean (over the simulations) of the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="even">
+<td>SE of BAC Mean (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>If a hierarchical prior for Control is being used this is the standard error (over the simulations) of the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="odd">
+<td>BAC Tau (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>If a hierarchical prior for Control is being used this is the mean (over the simulations) of the posterior estimate of the SD of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="even">
+<td>SE of BAC Tau (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>If a hierarchical prior for Control is being used this is the standard error (over the simulations) of the posterior estimate of the SD of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="odd">
+<td>BAAC Mean (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>If a hierarchical prior for Active Comparator is being used this is the mean (over the simulations) of the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses.</td>
+</tr>
+<tr class="even">
+<td>SE of BAAC Mean (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>If a hierarchical prior for Active Comparator is being used this is the standard error (over the simulations) of the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="odd">
+<td>BAAC Tau (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>If a hierarchical prior for Active Comparator is being used this is the mean (over the simulations) of the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses.</td>
+</tr>
+<tr class="even">
+<td>SE of BAAC Tau (&lt;Endpoint&gt;)</td>
+<td>1</td>
+<td>If a hierarchical prior for Active Comparator is being used this is the standard error (over the simulations) of the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses.</td>
+</tr>
+<tr class="odd">
+<td>Mean Duration</td>
+<td>1</td>
+<td>The mean, over the simulations, of the overall duration of the trials, from first person first sit, to last person last visit.</td>
+</tr>
+<tr class="even">
+<td>Ppn Arms Dropped &lt;Dose&gt;</td>
+<td>D</td>
+<td>The proportion of the simulations in which each arm was dropped. These will be zero if arm dropping is not selected as the means of adaptive location.</td>
+</tr>
+<tr class="odd">
+<td>Mean LPFV time</td>
+<td>1</td>
+<td>The mean, over the simulations, of the accrual period of the trials, from first person first sit, to last person first visit (LPFV).</td>
+</tr>
+<tr class="even">
+<td colspan="3"><strong>QOI Columns</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>QOI Columns</strong> depend on the QOIs that have been defined for this design. The columns are grouped, so that first all of the Utility QOIs are listed, then all of the Endpoint 1 QOIs are listed, and so on. Within the utility or an endpoint group, the QOIs are arranged in the following order:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 45%">
+<col style="width: 54%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Statistic</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Posterior Probabilities</td>
+<td>The summary file contains the mean (over the simulations) of the posterior probability for each dose.</td>
+</tr>
+<tr class="even">
+<td>Predictive Probabilities</td>
+<td>The summary file contains the mean (over the simulations) of the predictive probability for each dose.</td>
+</tr>
+<tr class="odd">
+<td>P-Values</td>
+<td>The summary file contains the mean (over the simulations) of the p-value for each dose.</td>
+</tr>
+<tr class="even">
+<td>Target Probabilities</td>
+<td>The summary file contains the proportion of times (over the simulations) each dose had the greatest probability of being the target.</td>
+</tr>
+<tr class="odd">
+<td>Decision QOIs</td>
+<td>The summary file contains the mean (over the simulations) of the final value of the decision QOI at the target.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="contents-of-summary_freq_missing_endpoint.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-summary_freq_missing_endpoint.csv">Contents of Summary_freq_&lt;missing&gt;_&lt;Endpoint&gt;.csv</h2>
+<p>There is a frequentist summary file for each type of treatment of missing values for each endpoint.</p>
+<p>The first line is a header line, starting with a ‘#’, containing the FACTS GUI version number, the name of the FACTS file, the name of the scenario, and the time stamp of the start of the simulation.</p>
+<p>The second line is a header line, starting with a ‘#’, containing the following column headings.</p>
+<table class="caption-top table">
+<caption>The contents of the Summary_freq_&lt;missing&gt;_&lt;Endpoint&gt;.csv file.</caption>
+<colgroup>
+<col style="width: 13%">
+<col style="width: 12%">
+<col style="width: 73%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Mean Theta &lt;Dose&gt;</td>
+<td>D</td>
+<td>The mean response per dose.</td>
+</tr>
+<tr class="even">
+<td>SE Mean Theta &lt;Dose&gt;</td>
+<td>D</td>
+<td>The standard error of the response per dose</td>
+</tr>
+<tr class="odd">
+<td>Mean Beta (baseline)</td>
+<td>1 if endpoint continuous</td>
+<td>The mean of the estimate of the baseline coefficient.</td>
+</tr>
+<tr class="even">
+<td>SE Mean Beta (baseline)</td>
+<td>1 if endpoint continuous</td>
+<td>The standard error of the estimate of the baseline coefficient</td>
+</tr>
+<tr class="odd">
+<td>Ppn Signif</td>
+<td>1</td>
+<td>The proportion of simulations where at least one of the unadjusted p-values is less than the user specified one-sided alpha.</td>
+</tr>
+<tr class="even">
+<td>Ppn Signif &lt;Dose&gt;</td>
+<td>D</td>
+<td><p>For each treatment arm, the proportion of simulations where the unadjusted p-value is less than the user specified one-sided alpha.</p>
+<p>The marginal probability of significance per dose (using unadjusted p-values.</p></td>
+</tr>
+<tr class="odd">
+<td>Bias &lt;Dose&gt;</td>
+<td>D</td>
+<td>The difference between the mean response and the true (simulated) response per dose</td>
+</tr>
+<tr class="even">
+<td>Coverage &lt;Dose&gt;</td>
+<td>D</td>
+<td>The proportion of simulations where the unadjusted confidence interval for the response contains the true response rate used to simulate subject responses.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Signif Dunnett</td>
+<td>1</td>
+<td>The proportion of simulations where at least one of the Dunnett adjusted p-values is less than the user specified one-sided alpha.</td>
+</tr>
+<tr class="even">
+<td>Ppn Signif Dunnett &lt;Dose&gt;</td>
+<td>D</td>
+<td>For each treatment arm, the proportion of simulations where the Dunnett adjusted p-value is less than the user specified one-sided alpha.</td>
+</tr>
+<tr class="odd">
+<td>Coverage Dunnett &lt;Dose&gt;</td>
+<td>D</td>
+<td>The proportion of simulations where the Dunnett adjusted confidence interval contains the true response rate used to simulate subjects responses.</td>
+</tr>
+<tr class="even">
+<td>Ppn Signif Bonf</td>
+<td>1</td>
+<td>The proportion of simulations where at least one of the Bonferroni adjusted p-values is less than the user specified one-sided alpha.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Signif Bonf &lt;Dose&gt;</td>
+<td>D</td>
+<td>For each treatment arm, the proportion of simulations where the Bonferroni adjusted p-value is less than the user specified one-sided alpha.</td>
+</tr>
+<tr class="even">
+<td>Coverage Bonf &lt;Dose&gt;</td>
+<td>D</td>
+<td>The proportion of simulations where the Bonferroni adjusted confidence interval contains the true response rate used to simulate subjects responses.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Signif Trend</td>
+<td>1</td>
+<td>The proportion of simulations where the trend test p-value is less than the user specified one-sided alpha.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="contents-of-simulations.csv-and-weeksnnnnn.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-simulations.csv-and-weeksnnnnn.csv">Contents of simulations.csv and weeksNNNNN.csv</h2>
+<p>The simulations.csv file holds the FACTS summary of the final analysis for each simulation (one per row).</p>
+<p>The weeksNNNNN.csv file holds the FACTS summary of every analysis for the NNNNN<sup>th</sup> simulation. It contains a row for each interim in the trial and a row for the final analysis (Interim number 999).</p>
+<p>The final analysis occurs after all the planned data is collected. If the trial does not stop early, the final analysis occurs after full follow-up for all subjects. If the trial does stop early at an interim analysis, then the timing of the final analysis depends on the status of the check boxes on the <a href="../../../../../documentation/v80/userguides/core/design/interims.html#subject-follow-up-options">Interims tab</a>. If follow-up is collected after the particular interim decision, then an analysis after full follow-up of the subjects recruited up to the point of the interim when the stopping decision was taken. If there is no follow-up intended after the interim analysis decision, then the final analysis occurs immediately (at the same time as the interim analysis), and the final analysis criteria are checked.</p>
+<p>The first line is a header line, starting with a ‘#’, containing the FACTS GUI version number, the name of the FACTS file, the name of the scenario, and the time stamp of the start of the simulation.</p>
+<p>The second line is a header line, starting with a ‘#’, containing the following column headings.</p>
+<p>Most of the columns are common to the two file types, but the weeks file does not contain columns for the ‘final’ values of the evaluation criteria.</p>
+<table class="caption-top table">
+<caption>The contents of the simulations.csv file and the weeksNNNNN.csv file for the multiple endpoint engine.</caption>
+<colgroup>
+<col style="width: 13%">
+<col style="width: 9%">
+<col style="width: 5%">
+<col style="width: 4%">
+<col style="width: 65%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Column Title</td>
+<td>Number of columns</td>
+<td>In simulations file</td>
+<td>In weeks file</td>
+<td>Description</td>
+</tr>
+<tr class="even">
+<td># Weeks (Duration)</td>
+<td>1</td>
+<td></td>
+<td>✔</td>
+<td>The week of the analysis.</td>
+</tr>
+<tr class="odd">
+<td>#Sim</td>
+<td>1</td>
+<td>✔</td>
+<td></td>
+<td>The number of the simulation.</td>
+</tr>
+<tr class="even">
+<td>LastInterim</td>
+<td>1</td>
+<td>✔</td>
+<td></td>
+<td>The index of the last interim performed the index of the interim immediately before the final interim (index 999). Note this is not necessarily the interim when the trial stopped if the design includes follow-up after stopping.</td>
+</tr>
+<tr class="odd">
+<td>#Subjects</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The number of subjects recruited in the simulation.</td>
+</tr>
+<tr class="even">
+<td>Outcome</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td><p>A flag categorizing final study outcome:</p>
+<ol type="1">
+<li><p>= Early success</p></li>
+<li><p>= Late success</p></li>
+<li><p>= Late futility</p></li>
+<li><p>= Early futility</p></li>
+<li><p>= Success to futility flip-flop</p></li>
+<li><p>= Futility to success flip-flop</p></li>
+<li><p>= Inconclusive</p></li>
+</ol></td>
+</tr>
+<tr class="odd">
+<td>Mean Utility &lt;Dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The mean estimate of utility per dose</td>
+</tr>
+<tr class="even">
+<td>SD Utility &lt;Dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The SD of the estimate of utility</td>
+</tr>
+<tr class="odd">
+<td>Early Success</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the time to the early success decision (-9999 if there was no early success decision). The from the start of the trial to the interim where the early success conditions were first met. It does not include the subsequent follow up time.</td>
+</tr>
+<tr class="even">
+<td>Alloc &lt;Dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The number of subjects allocated to each arm.</td>
+</tr>
+<tr class="odd">
+<td>Pr(Alloc) &lt;Dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The probability of allocation to the different arms following the interim.</td>
+</tr>
+<tr class="even">
+<td>Complete &lt;Dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>The number of subjects on each dose that have completed – final endpoint data is available.</td>
+</tr>
+<tr class="odd">
+<td>Complete Information &lt;Dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td><p>The number of subject who count as complete for the purposes of timing interims – whether complete or opportunity to complete and at which visit is as defined on the Interims tab.</p>
+<p>If interims are by enrolment then CompleteInformation is the number of subjects that have completed – final endpoint data is available.</p></td>
+</tr>
+<tr class="even">
+<td>#Dropouts &lt;Dose&gt; &lt;Visit&gt;</td>
+<td>D*V</td>
+<td>✔</td>
+<td>✔</td>
+<td>The number of subjects that have dropped out on each arm at each visit</td>
+</tr>
+<tr class="odd">
+<td>Mean resp &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The estimated response of each treatment arm.</td>
+</tr>
+<tr class="even">
+<td>SD resp &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The standard deviation of the estimate of response of each treatment arm.</td>
+</tr>
+<tr class="odd">
+<td>True Mean resp &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The true mean response of each treatment arm for this simulation.</td>
+</tr>
+<tr class="even">
+<td>True SD resp &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The true SD of the response of each treatment arm for this simulation</td>
+</tr>
+<tr class="odd">
+<td>Sigma &lt;Endpoint&gt;</td>
+<td>1 per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The pooled estimate of the SD of the response across all the treatment arms</td>
+</tr>
+<tr class="even">
+<td>SD Sigma &lt;Endpoint&gt;</td>
+<td>1 per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The SD of the pooled estimate of the SD of the response across all the treatment arms</td>
+</tr>
+<tr class="odd">
+<td>Beta &lt;Endpoint&gt;</td>
+<td>1 per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The estimate of Beta the baseline adjustment coefficient, if baseline adjustment is being used.</td>
+</tr>
+<tr class="even">
+<td>SD Beta &lt;Endpoint&gt;</td>
+<td>1 per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The SD of the estimate of Beta the baseline adjustment coefficient.</td>
+</tr>
+<tr class="odd">
+<td>Mean Baseline &lt;Endpoint&gt;</td>
+<td>1 per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The estimate of the mean baseline score.</td>
+</tr>
+<tr class="even">
+<td>SE Mean Baseline &lt;Endpoint&gt;</td>
+<td>1 per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The standard error of the estimate of the mean baseline score.</td>
+</tr>
+<tr class="odd">
+<td>SD Baseline &lt;Endpoint&gt;</td>
+<td>1 per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The estimate of the SD of the baseline score.</td>
+</tr>
+<tr class="even">
+<td>True Mean Baseline &lt;Endpoint&gt;</td>
+<td>1 per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The true mean of the simulated baseline score</td>
+</tr>
+<tr class="odd">
+<td>True SD Baseline &lt;Endpoint&gt;</td>
+<td>1 per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The true SD of the simulated baseline score</td>
+</tr>
+<tr class="even">
+<td>Mean Utility &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The mean estimate of the utility of this endpoint</td>
+</tr>
+<tr class="odd">
+<td>SD Utility &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The SD of the estimate of utility of this endpoint</td>
+</tr>
+<tr class="even">
+<td>Mean Raw Response &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The mean raw response based solely on the observed data on each dose.</td>
+</tr>
+<tr class="odd">
+<td>SE mean Raw Response &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The SE of the estimate of the mean raw response on each dose.</td>
+</tr>
+<tr class="even">
+<td>Complete &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The number of subjects with final data on this endpoint on each arm at the end of the trial / time of the interim.</td>
+</tr>
+<tr class="odd">
+<td>DR Param &lt;Endpoint&gt; &lt;Param&gt;</td>
+<td>10 per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The estimate of the mean value of each of the response model parameters. The response models require up to 10 parameters, most less. The model parameters are labeled α<sub>1</sub>, α<sub>2</sub>, .. the subscripts corresponding to the column index &lt;Param&gt;.</td>
+</tr>
+<tr class="even">
+<td>Sd DR Param &lt;Endpoint&gt; &lt;Param&gt;</td>
+<td>10 per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The standard deviation of the estimate of the mean value of the corresponding response model parameter.</td>
+</tr>
+<tr class="odd">
+<td>Longmod &lt;Endpoint&gt; &lt;Model&gt; &lt;Param&gt; &lt;Visit&gt;</td>
+<td>LM*LMP*V per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td><p>The estimate of the mean value of each of the longitudinal model parameters. The number of models depends on the number of model instances the user has specified.</p>
+<p>For linear regression the parameters reported are:</p>
+<ul>
+<li><p>Alpha – per visit – the mean estimate of the constant offset in the change in response from this visit to the final visit</p></li>
+<li><p>Beta – per visit – the mean estimate of the coefficient of change in response from this visit to the final visit</p></li>
+<li><p>Lambda – per visit – the mean estimate of the SD of the residual error term in the predicted final visit response based on the response at this visit.</p></li>
+</ul>
+<p>For time course hierarchical the parameters reported are:</p>
+<ul>
+<li><p>Alpha – per visit – the mean estimate of the exponential coefficient of the proportion of the dose response and per-subject response seen at this visit..</p></li>
+<li><p>Lambda – per visit – the mean estimate of the SD of the residual error term in the predicted final visit response based on the response at this visit.</p></li>
+<li><p>Tau – the mean estimate of the SD of the per subject random effect</p></li>
+</ul>
+<p>For ITP the parameters are:</p>
+<ul>
+<li><p>K – per model – the mean estimate of the ITP shape parameter</p></li>
+<li><p>Tau – per model - the mean estimate of the SD of the per subject random effect</p></li>
+<li><p>Lambda – per model – the mean estimate of the Sd of the residual error.</p></li>
+<li><p>Omega – per treatment arm – the mean estimate of the mean treatment arm effect.</p></li>
+</ul>
+<p>For LOCF &amp; Kernel Density there are no estimated parameters.</p></td>
+</tr>
+<tr class="even">
+<td>Longmod Resp &lt;Endpoint&gt; &lt;Dose&gt; &lt;Visit&gt;</td>
+<td>D*V per continuous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td><p>These are only calculated and written out if the Time Course Hierarchical or ITP longitudinal models are being used.</p>
+<p>This is the mean response for a particular dose at a particular visit.</p></td>
+</tr>
+<tr class="odd">
+<td>Mean resp &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per dichotomous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The estimated response of each treatment arm.</td>
+</tr>
+<tr class="even">
+<td>SD resp &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per dichotomous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The standard deviation of the estimate of response of each treatment arm.</td>
+</tr>
+<tr class="odd">
+<td>Mean resp (loser CI) &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per dichotomous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The lower bound of the 95% Credible Interval of the estimate of response for each treatment arm.</td>
+</tr>
+<tr class="even">
+<td>Mean resp (upper CI) &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per dichotomous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The upper bound of the 95% Credible Interval of the estimate of response for each treatment arm.</td>
+</tr>
+<tr class="odd">
+<td>True Mean resp &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per dichotomous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The true response rate of each treatment arm for this simulation.</td>
+</tr>
+<tr class="even">
+<td>Mean Utility &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per dichotomous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The mean estimate of the utility of this endpoint</td>
+</tr>
+<tr class="odd">
+<td>SD Utility &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per dichotomous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The SD of the estimate of utility of this endpoint</td>
+</tr>
+<tr class="even">
+<td>Mean Raw Response &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per dichotomous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The mean raw response based solely on the observed data on each dose.</td>
+</tr>
+<tr class="odd">
+<td>Complete &lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D per dichotomous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The number of subjects with final data on each arm at the end of the trial / time of the interim.</td>
+</tr>
+<tr class="even">
+<td>DR Param &lt;Endpoint&gt; &lt;Param&gt;</td>
+<td>4 per dichotomous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The estimate of the mean value of each of the response model parameters. The response models require up to 4 parameters, some less. The model parameters are labeled α<sub>1</sub>, α<sub>2</sub>, .. the subscripts corresponding to the column their value appears in here.</td>
+</tr>
+<tr class="odd">
+<td>Sd DR Param &lt;Endpoint&gt; &lt;Param&gt;</td>
+<td>4 per dichotomous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td>The standard deviation of the estimate of the mean value of the corresponding response model parameter.</td>
+</tr>
+<tr class="even">
+<td>Longmod &lt;Endpoint&gt; &lt;Model&gt; &lt;Visit&gt;</td>
+<td>LM*LMP*V per dichotomous endpoint</td>
+<td>✔</td>
+<td>✔</td>
+<td><p>The estimate of the mean value of each of the longitudinal model parameters. The number of models depends on the number of model instances the user has specified.</p>
+<p>For Beta-Binomial the parameters reported are:</p>
+<ul>
+<li><p>Alpha0 &amp; Beta 0 – The beta binomial alpha &amp; beta parameters for the probability that the final result will be 1 if the result at the visit is 0</p></li>
+<li><p>Prob01 – the mean probability of the Beta(Alpha0, Beta0) – the probability of 1 being the final result if the result at the visit is 0</p></li>
+<li><p>Alpha1 &amp; Beta 1 – The beta binomial alpha &amp; beta parameters for the probability that the final result will be 1 if the result at the visit is 1</p></li>
+<li><p>Prob11 – the mean probability of the Beta(Alpha1, Beta1) – the probability of 1 being the final result if the result at the visit is 1</p></li>
+</ul>
+<p>For logistic regression the parameters reported are:</p>
+<ul>
+<li><p>Prob11 – the probability of 1 being the final result if the result at the visit is 1and</p></li>
+<li><p>Prob01 – the probability of 1 being the final result if the result at the visit is 0</p></li>
+</ul>
+<p>For restricted Markov the parameters reported are:</p>
+<ul>
+<li><p>Alpha0 – Alpha for state 0</p></li>
+<li><p>AlphaS – Alpha for stable state</p></li>
+<li><p>Alpha1 – Alpha for state 1</p></li>
+<li><p>Prob0 – Transition probability to state 0</p></li>
+<li><p>ProbS – Probability of remaining stable</p></li>
+<li><p>Prob1 – Transition probability to state 1</p></li>
+</ul>
+<p>(values are for the transition to the next visit, so there are no values for the final visit)</p></td>
+</tr>
+<tr class="odd">
+<td>BAC Mean &lt;Endpoint&gt;</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="even">
+<td>BAC Mean SD &lt;Endpoint&gt;</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the SD of the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="odd">
+<td>BAC Tau &lt;Endpoint&gt;</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the posterior estimate of the SD of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="even">
+<td>BAC Tau SD &lt;Endpoint&gt;</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the SD of the posterior estimate of the SD of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="odd">
+<td>BAAC Mean &lt;Endpoint&gt;</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses.</td>
+</tr>
+<tr class="even">
+<td>BAAC Mean SD &lt;Endpoint&gt;</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the SD of the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean control responses.</td>
+</tr>
+<tr class="odd">
+<td>BAAC Tau &lt;Endpoint&gt;</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses.</td>
+</tr>
+<tr class="even">
+<td>SD BAAC Tau &lt;Endpoint&gt;</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>This is the SD of the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses.</td>
+</tr>
+<tr class="odd">
+<td>Duration</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The time in weeks to the analysis shown.</td>
+</tr>
+<tr class="even">
+<td>Arm Drop Time &lt;Dose&gt;</td>
+<td>D</td>
+<td>✔</td>
+<td>✔</td>
+<td>For each treatment arm, the time in weeks when it was decided to drop the arm.</td>
+</tr>
+<tr class="odd">
+<td>LPFV</td>
+<td>1</td>
+<td>✔</td>
+<td>✔</td>
+<td>The time in weeks to the last patient first visit.</td>
+</tr>
+<tr class="even">
+<td><strong>QOI Columns</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>QOI Columns</strong> depend on the QOIs that have been defined for this design. The columns are grouped, so that first all of the Utility QOIs are listed, then all of the Endpoint 1 QOIs are listed, and so on. Within the utility or an endpoint group, the QOIs are arranged in the following order:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 72%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>QOI Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Posterior Probabilities</td>
+<td>The posterior probability for each QOI for each dose.</td>
+</tr>
+<tr class="even">
+<td>Predictive Probabilities</td>
+<td>The predictive probability for each QOI for each dose.</td>
+</tr>
+<tr class="odd">
+<td>P-Values</td>
+<td>The p-value for each QOI for each dose.</td>
+</tr>
+<tr class="even">
+<td>Target Probabilities</td>
+<td>The probability of being the target for each QOI for each dose.</td>
+</tr>
+<tr class="odd">
+<td>Decision QOIs</td>
+<td>The value of the decision QOI at the target.</td>
+</tr>
+<tr class="even">
+<td>Success Futile</td>
+<td>A flag for each QOI decision criteria indicating if the decision QOI was evaluated and compared to a threshold at the interim (weeks file) or final analysis (simulation file). The flag value is -1 if the decision QOI was not evaluated, 0 if it did not meet the threshold and 1 if it did.</td>
+</tr>
+<tr class="odd">
+<td>Success / Futile Combined</td>
+<td>Flags indicating if the interim or final analysis determined success or futility taking all the factors defined for Success/Futility into account: 0 if the conditions were not met, 1 it the conditions were met. If success and futility conditions have been defined that are not mutually exclusive and both sets of combined conditions are met, FACTS will pick one of the outcomes as met but not the other. In order to discourage defining Success and Futility rules that can both be true FACTS does not guarantee which outcome will be selected.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="contents-of-simulations_freq_missingness_endpoint.csv-weeks_freq_missingness_endpoint.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-simulations_freq_missingness_endpoint.csv-weeks_freq_missingness_endpoint.csv">Contents of Simulations_freq_&lt;missingness&gt;_&lt;Endpoint&gt;.csv, Weeks_freq_&lt;missingness&gt;_&lt;Endpoint&gt;.csv</h2>
+<p>These file contain the frequentist results after an interim analysis (weeks file) or final analysis (simulations file), apart for the first column, the columns are the same in the two types of file, and the same across the different methods for treating missing data and different endpoints.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 27%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td># Trial</td>
+<td>1</td>
+<td>The number of the simulation (simulations_freq_…csv only)</td>
+</tr>
+<tr class="even">
+<td># Weeks</td>
+<td>1</td>
+<td>The week of the interim (weeks_freq_ only)</td>
+</tr>
+<tr class="odd">
+<td>Theta</td>
+<td>D</td>
+<td>Unadjusted estimate of response per treatment arm</td>
+</tr>
+<tr class="even">
+<td>Theta SD</td>
+<td>D</td>
+<td>The SD of the estimate of response per treatment arm</td>
+</tr>
+<tr class="odd">
+<td>Trt Effect</td>
+<td>D</td>
+<td>The relative size of the treatment effect compared to control per arm (treatment effect for control is always 0). The direction of the comparison takes into account whether a response represents a subject’s condition improving or worsening, so that a positive treatment effect shows the response on the dose is better than on control.</td>
+</tr>
+<tr class="even">
+<td>t-Stat</td>
+<td>D</td>
+<td>The t-test statistic per treatment arm (for control this is always 0)</td>
+</tr>
+<tr class="odd">
+<td>p-Value</td>
+<td>D</td>
+<td>The unadjusted t-test p-value per arm (for control this is always 0)</td>
+</tr>
+<tr class="even">
+<td>lower CI</td>
+<td>D</td>
+<td>The unadjusted lower bound of the alpha confidence interval of the estimated treatment effect per treatment arm (for control this is always 0).</td>
+</tr>
+<tr class="odd">
+<td>upper CI</td>
+<td>D</td>
+<td>The unadjusted upper bound of the alpha confidence interval of the estimated treatment effect per treatment arm (for control this is always 0).</td>
+</tr>
+<tr class="even">
+<td>Min p-Value</td>
+<td>1</td>
+<td>The smallest of the t-test p-values</td>
+</tr>
+<tr class="odd">
+<td>p-Value Dunnett</td>
+<td>D</td>
+<td>The Dunnett adjusted t-test p-value per arm (for control this is always 0).</td>
+</tr>
+<tr class="even">
+<td>lower CI Dunnett</td>
+<td>D</td>
+<td>The Dunnett adjusted lower bound of the alpha confidence interval of the estimated treatment effect (for control this is always 0).</td>
+</tr>
+<tr class="odd">
+<td>upper CI Dunnett</td>
+<td>D</td>
+<td>The Dunnett adjusted upper bound of the alpha confidence interval of the estimated treatment effect (for control this is always 0).</td>
+</tr>
+<tr class="even">
+<td>Min p-Value Dunnett</td>
+<td>1</td>
+<td>The smallest of the Dunnett adjusted p-values.</td>
+</tr>
+<tr class="odd">
+<td>p-Value Bonf</td>
+<td>D</td>
+<td>The Bonferroni adjusted t-test p-value per arm.</td>
+</tr>
+<tr class="even">
+<td>lower-CI Bonf</td>
+<td>D</td>
+<td>The Bonferroni adjusted lower bound of the alpha confidence interval of the estimated treatment effect (for control this is always 0).</td>
+</tr>
+<tr class="odd">
+<td>upper-CI Bonf</td>
+<td>D</td>
+<td>The Bonferroni adjusted upper bound of the alpha confidence interval of the estimated treatment effect (for control this is always 0).</td>
+</tr>
+<tr class="even">
+<td>Min p-Value Bonf</td>
+<td>1</td>
+<td>The smallest of the Bonferroni adjusted t-test value per arm.</td>
+</tr>
+<tr class="odd">
+<td>t-Stat trend</td>
+<td>1</td>
+<td>The t statistic from the trend test.</td>
+</tr>
+<tr class="even">
+<td>p-Value trend</td>
+<td>1</td>
+<td>The p-value from the trend test.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="contents-of-patientsnnnnn.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-patientsnnnnn.csv">Contents of PatientsNNNNN.csv</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 14%">
+<col style="width: 69%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Column Title</th>
+<th style="text-align: left;">Number of columns</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">#Subject</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The subject id number, starting at 1.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Region</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Which region the subject was recruited in</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">DateInWeeks</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The date, in weeks, from the start of the trial, of the subject’s baseline visit and randomization.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dose</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The index number (1, …) of the treatment arm the subject belongs to.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LastVisit Overall</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The time of the last observation of the subject – the index of the visit of the observation from the overall visit list. NOTE this is the index of the last visit using the overall visit index (index of all visits). E.g. for a patient with 6 visits (index: 1, 2, …6), and an endpoint observed on 3 visits: visits 2, 4 and 6 of the overall schedule, if that patients last observed data was the second time this endpoint was observed (last visit for that endpoint will be “2”), the last visit overall will be “4”.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dropout</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Whether the subject dropped out of the trial (1) or not (0) before reaching their final visit.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LastVisit &lt;Endpoint&gt;</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The time of the last observation of this endpoint – the index of the visit of the observation from the visit list for the endpoint</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Baseline &lt;Endpoint&gt;</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The baseline score for the subject, if baseline is simulated. If no baseline, or the endpoint is dichotomous, then this column is -9999.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Response &lt;Endpoint&gt; &lt;Visit&gt;</td>
+<td style="text-align: left;">V</td>
+<td style="text-align: left;">One column per visit from the visit list from the endpoint, recording the observed endpoint value at that visit.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="contents-of-mcmcnnnnn.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-mcmcnnnnn.csv">Contents of MCMCNNNNN.csv</h2>
+<p>The MCMC file, if requested for output by the user, contains all the MCMC samples for the estimated responses for each arm on each endpoint. There is one row per sample (including the burnin) and the samples from all the analyses in the simulation are included. The first two columns are the analysis index and the sample (within analysis) index. The next set of columns are the MCMC samples for the first endpoint. This includes response rate estimates and, if the endpoint is continuous, a sigma. Then, various longitudinal model parameters are reported if used for that endpoint.</p>
+<p>Then second endpoint’s MCMC columns begin, again providing response estimates with or without sigma and longitudinal model parameters (if used). The other endpoints proceed in kind.</p>
+<p>The first two columns are:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 27%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Analysis</td>
+<td>1</td>
+<td>The index of the analysis (interim) in the simulation.</td>
+</tr>
+<tr class="even">
+<td>Sample</td>
+<td>1</td>
+<td>The index of the sample within the analysis.</td>
+</tr>
+</tbody>
+</table>
+<p>Then, the endpoint specific output is provided for each endpoint. For a particular endpoint index, &lt;Endpoint&gt;, the columns output are:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Dichotomous</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 27%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Theta_&lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D</td>
+<td>The estimate of the mean response for each dose, based on the dose response model fitted.</td>
+</tr>
+<tr class="even">
+<td>Sigma_&lt;Endpoint&gt;</td>
+<td>1</td>
+<td>The estimate of the SD of the endpoint.</td>
+</tr>
+<tr class="odd">
+<td>Beta_&lt;Endpoint&gt;</td>
+<td>1</td>
+<td>If baseline is included in the simulated data and using the “Baseline Adjusted Model”, this is the value of “Beta”, the baseline coefficient.</td>
+</tr>
+<tr class="even">
+<td>A&lt;1-8&gt;_&lt;Endpoint&gt; / Tau_&lt;Endpoint&gt;</td>
+<td>P</td>
+<td>If the dose response model estimates parameters then the samples of these are listed next. The number and name of the parameters will vary depending on the model being fitted. Check the Design &gt; Dose Response tab for a listing of the parameters.</td>
+</tr>
+<tr class="odd">
+<td>Longmod_&lt;Endpoint&gt; &lt;model&gt; &lt;Param&gt; &lt;Visit&gt;</td>
+<td>L*P*V</td>
+<td>If the analysis includes longitudinal modelling then the samples of the parameters of the longitudinal models are output. The number of models depends on the number of different longitudinal fits the user has specified (one over all arms, one for control and one for all treatment arms, model all arms separately, etc.), the number of parameters the model has, and if these are fitted per visit (which depends on the model being fitted), then the number of visits.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>If using a dichotomized continuous variable, then the parameters for the LM are the same as for the continuous model MCMC output listed in the Continuous tab.</p>
+<p>If using a dichotomous longitudinal model, then the following parameters are output in the MCMC file.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 27%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Pi_&lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D</td>
+<td>The estimate of the response rate for each dose, based on the dose response model fitted.</td>
+</tr>
+<tr class="even">
+<td>A&lt;1-8&gt;_&lt;Endpoint&gt; / Tau_&lt;Endpoint&gt;</td>
+<td>P</td>
+<td>If the dose response model estimates parameters then the samples of these are listed next. The number and name of the parameters will vary depending on the model being fitted. Check the Design &gt; Dose Response tab for a listing of the parameters.</td>
+</tr>
+<tr class="odd">
+<td>Longmod_&lt;Endpoint&gt; &lt;model&gt; &lt;Param&gt; &lt;Visit&gt;</td>
+<td>L*P*V</td>
+<td>If the analysis includes longitudinal modelling then the samples of the parameters of the longitudinal models are output. The number of models depends on the number of different longitudinal fits the user has specified (one over all arms, one for control and one for all treatment arms, model all arms separately, etc.), the number of parameters the model has, and if these are fitted per visit (which depends on the model being fitted), then the number of visits.</td>
+</tr>
+</tbody>
+</table>
+<p>If using a restricted markov model for the endpoint, then the following columns are output in the MCMC file for that endpoint.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 27%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Pi_&lt;Endpoint&gt; &lt;Dose&gt;</td>
+<td>D</td>
+<td>The estimate of the response rate for each dose, based on the dose response model fitted.</td>
+</tr>
+<tr class="even">
+<td>A&lt;1-8&gt;<em>&lt;Endpoint&gt; / Tau</em>&lt;Endpoint&gt;</td>
+<td>P</td>
+<td>If the dose response model estimates parameters then the samples of these are listed next. The number and name of the parameters will vary depending on the model being fitted. Check the Design &gt; Dose Response tab for a listing of the parameters.</td>
+</tr>
+<tr class="odd">
+<td>Longmod_&lt;Endpoint&gt; &lt;model&gt; &lt;Param&gt; &lt;Visit&gt;</td>
+<td>L*P*V</td>
+<td>Currently the values of Alpha0, Alpha1, AlphaS (the parameters to the Dirichlet distribution) are (unnecessarily – these values are not sampled) output, along with the values for P0, P1 and PS the transition probabilities of each model at each visit.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<!-- footer.html -->
+
+<!-- FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pF6W3...<truncated>...Q==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+<style>
+
+  /* Make all footer icons the same color */
+  footer .fab,
+  footer .fas,
+  footer svg {
+    color: #125740;           /* ← pick whatever color your share-icons are using */
+    fill: currentColor;    /* ensures the SVG Bluesky icon matches */
+  }
+
+  /* Prevent links from overriding that color */
+  footer a {
+    color: inherit;
+  }
+
+  /* Share menu positioning */
+  #share-wrapper { position: relative; }
+  #share-menu {
+    display: none;
+    position: absolute;
+    bottom: 3rem;               /* float above the footer */
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px #125740;
+    gap: 1rem;
+    z-index: 100;
+  }
+  body.menu-open #share-menu { display: flex; }
+  #share-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* Left column: text + social permalinks */
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+  }
+  .footer-left p { margin: 0; }
+  .footer-left a.social {
+    color: inherit;
+    text-decoration: none;
+  }
+  .footer-left a.social i { font-size: 1.2em; }
+  
+  
+    /* Text color left */
+  .footer-left p > a {
+    color: #125740;
+  }
+
+  /* Text color last item */
+  footer > p:last-child a {
+    color: #125740;
+  }
+  
+    /* Link hover colors */
+  .footer-left p > a:hover,
+  footer > p:last-child a:hover {
+    color: #11A473;
+    text-decoration: underline;
+  }
+  
+</style>
+
+<footer style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
+  
+  <!-- Left: Berry Consultants + social permalinks -->
+  <div class="footer-left">
+    <p>
+      © <a href="https://www.berryconsultants.com">Berry Consultants</a>
+    </p>
+    <a href="https://twitter.com/BerryConsultant" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on X">
+      <i class="fab fa-x"></i>
+    </a>
+    <a href="https://www.linkedin.com/company/berry-consultants-llc" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on LinkedIn">
+      <i class="fab fa-linkedin"></i>
+    </a>
+    <a href="https://www.youtube.com/c/berryconsultants" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on YouTube">
+      <i class="fab fa-youtube"></i>
+    </a>
+  </div>
+
+  <!-- Center: share toggle + popup -->
+  <div id="share-wrapper">
+    <button id="share-toggle" aria-label="Share this page">
+      <i class="fas fa-share-alt" style="font-size:1.6em;"></i>
+    </button>
+    <div id="share-menu">
+      <!-- share icons injected here -->
+    </div>
+  </div>
+
+  <!-- Right: How to Cite -->
+  <p style="margin: 0;">
+    <a href="../../../../../introduction/citation.html">Cite</a>
+  </p>
+</footer>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const url   = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+    const networks = [
+      { name: "X",        href: `https://twitter.com/intent/tweet?url=${url}&text=${title}`,          icon: `<i class="fab fa-x" style="font-size:1.4em;"></i>` },
+      { name: "LinkedIn", href: `https://www.linkedin.com/feed/?shareActive=true&text=${title}%20${url}`, icon: `<i class="fab fa-linkedin" style="font-size:1.4em;"></i>` },
+      { name: "Bluesky",  href: `https://bsky.app/intent/compose?text=${title}%20${url}`,              icon: `
+        <svg width="1.4em" height="1.4em" fill="currentColor" viewBox="0 0 600 530">
+          <path d="m135.72 44.03c66.496 49.921 138.02 151.14 164.28 205.46 26.262-54.316 97.782-155.54 164.28-205.46 47.98-36.021 125.72-63.892 125.72 24.795 0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.3797-3.6904-10.832-3.7077-7.8964-0.0174-2.9357-1.1937 0.51669-3.7077 7.8964-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.4491-163.25-81.433-5.9562-21.282-16.111-152.36-16.111-170.07 0-88.687 77.742-60.816 125.72-24.795z"/>
+        </svg>` },
+      { name: "Reddit",   href: `https://www.reddit.com/submit?url=${url}&title=${title}`,         icon: `<i class="fab fa-reddit" style="font-size:1.4em;"></i>` },
+      { name: "WhatsApp", href: `https://wa.me/?text=${title}%20${url}`,                             icon: `<i class="fab fa-whatsapp" style="font-size:1.4em;"></i>` },
+      { name: "Email",    href: `mailto:?subject=${title}&body=${title}%20${url}`,                    icon: `<i class="fas fa-envelope" style="font-size:1.4em;"></i>` }
+    ];
+
+    // inject share icons
+    const menu = document.getElementById("share-menu");
+    networks.forEach(net => {
+      const a = document.createElement("a");
+      a.href      = net.href;
+      a.target    = "_blank";
+      a.rel       = "noopener";
+      a.setAttribute("aria-label", `Share on ${net.name}`);
+      a.innerHTML = net.icon;
+      menu.appendChild(a);
+    });
+
+    // toggle menu
+    const toggle = document.getElementById("share-toggle");
+    toggle.addEventListener("click", e => {
+      e.stopPropagation();
+      document.body.classList.toggle("menu-open");
+    });
+
+    // close on outside click
+    document.addEventListener("click", () => {
+      document.body.classList.remove("menu-open");
+    });
+    menu.addEventListener("click", e => e.stopPropagation());
+  });
+</script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/docs\.berryconsultants\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
