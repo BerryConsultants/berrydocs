@@ -1,0 +1,178 @@
+---
+title: "Study Tab - Time-to-Event Endpoint"
+subtitle: "Description of the study tab for Time-to-Event trials."
+title-block-banner: '#125740'
+title-block-banner-color: white
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-title: "Table of Contents"
+    number-sections: false
+    number-depth: 4
+---
+
+# Study Info
+
+The Study Info sub-tab provides parameters for specifying rules and methods
+for common clinical trial simulation features. These include whether
+interim analyses will be simulated, if a predictor is used to impute
+subject event times, sample size, maximum number of events, follow-up times, and more.
+
+![The study tab for a time-to-event trial.](../coreUGattachments/tte/media/image3.png){#fig-studyt}
+
+## Design Options:
+
+### Enable adaptive features
+
+Whether the design is adaptive or fixed. If "adaptive features"
+are enabled, some adaptive specific parameters and tabs are added
+to the GUI, such as the tabs for defining interims, early
+stopping criteria, and adaptive allocation.
+
+### Include Predictor
+
+Whether an early predictor is to be included in the design. An
+early predictor can be a continuous or dichotomous outcome, or a
+precursor event. The user specifies whether higher score, a
+response, or precursor event is a positive or negative outcome
+for the subject (this is used in the comparison with the CSD --
+not in the relation between the predictor and the final event,
+that is solely down to the parameters entered on the virtual
+subject response tabs). For continuous or dichotomous
+predictors, the user specifies after what time (weeks after
+randomization) the predictor is observed. For all predictors a
+clinically significant difference can be specified which can be
+used to specify early stopping or final evaluation conditions on
+the predictor. If the predictor is continuous, the value is
+delta on the mean difference between a study arm and control, if
+dichotomous, the value is the difference in rate and if the
+predictor is a precursor event then the value is a clinically
+significant hazard ratio.
+
+If an early predictor is included, then a 'Predictor' tab is
+added to the Virtual Subject Response tabs, and a Predictor tab
+is added to the Design tabs, with a predictor Dose Response
+sub-tab and Relationship to Endpoint sub-tab.
+
+## Study Information
+
+### Maximum number of subjects
+
+The maximum number of subjects that can be recruited into the
+study and the maximum number of events to be observed (if there
+is a time-to-event predictor, the maximum events to be observed
+can be specified to be the predictor events).
+
+### Maximum number of events refers to
+
+Determine what counts as an event when determining when the trial should be stopped due to reaching the number of events specified in the "Maximum number of events" box. The options are "Final events" and "Predictor events."
+
+### Maximum number of events
+
+The maximum number of events (type of event specified above) allowed in the trial. When this value is reached the trial moves on to the final analysis stage.
+
+### Max follow-up per subject (wks)
+
+The maximum follow-up time per subject. No subject will be
+followed for longer than this. If the study does not stop
+early it will stop when every subject recruited has reached
+their maximum follow-up time or has had an event. With this
+option all subjects have the same maximum follow-up.
+
+### Follow-up after full enrollment (wks)
+
+The follow-up time after full enrolment. If the study does
+not stop early then it will stop the specified time after
+full enrolment or when every subject has had an event. With
+this option subjects recruited earlier may be follow-up for
+longer than subjects recruited later in the trial and the
+overall amount of exposure is maximized.
+
+### Events indicate
+
+Whether an event indicates a success (time to recovery) or a failure (death or progression) for a subject. The value specified here also dictates the direction of frequentist tests and predictive probabilities.
+
+### Recruit subjects
+
+Dictate whether subjects are recruited sequentially or
+deterministically.
+
+If recruited sequentially, the user recruitment will be
+simulated stochastically using a Poisson process, using the
+parameters specified on the Execution > Accrual tab.
+
+If recruited deterministically, the user specifies the recruitment
+date of every subject recruited by uploading a file of dates on
+the Execution > Accrual tab.
+
+# Visit tab
+
+If events can be observed and recorded whenever they occur (up to the end of
+follow-up), then there is no need to specify a visit schedule. If
+events can only be known at a visit, then knowledge of the timing of
+the event has to be censored by the visit schedule.
+
+The last visit in the schedule is taken to be when the final endpoint
+observed. Visits can be specified one at a time by entering the
+required week value for the visit and then clicking 'Add', or all at once by
+specifying a regularly spaced sequence: select 'Auto-Generate', enter
+the number of visits, the week of the first visit and the number of
+weeks between each visit and then click 'Generate'.
+
+Individual visits can be deleted by selecting them in the list and
+clicking 'Delete'. The default visit names can be edited by clicking
+the visit name and typing. The week and the index cannot be changed.
+Should it be necessary to change the week of a visit, the incorrect
+visit must be deleted and a new one with the correct week number
+added.
+
+![The Study > Visit tab.](../coreUGattachments/tte/media/image15.png){#fig-visitt}
+
+# Treatment Arms
+
+As with all FACTS Core engines, the Treatment Arms sub-tab provides an
+interface for specifying the various dose levels, Control and Additional
+Comparator arms. In time-to-event trials in FACTS the control arm must
+always be included and 2D dosing is not available.
+
+The user may add doses to the study either explicitly or by auto-generation.
+
+The index column provides the ordering of the doses, as well as the number
+that will be used to label the dose in dose response models and FACTS output.
+The dose name column is editable by the user, and is used to identify the
+doses in the VSR tab as well as in the simulation output shown on the Simulation
+tab. Effective Dose Strength ($v_d$) are the relative strength values of the doses,
+and are the values used in the dose response model analysis as $v_d$. The
+effective dose strengths have
+no units, but the proximity of doses to other doses will determine them amount of
+information sharing that occurs between doses in certain dose response models.
+Dose levels <span class="custom-tooltip"> may not be edited directly <span class="tooltip-text">The doses in the design become linked to many other parameters, if dose levels could be edited this could change the effective order of doses and keeping the other parameters settings associated with the right doses becomes problematic – in different circumstances the user might want values to stay with the particular treatment arm or stay with the particular slot in the treatment arm ranking. Forcing doses to be deleted and re-entered if their dose level changes </span> </span> -- to change a dose level, delete the entry and add a new
+dose with the correct level.
+
+![The Study > Treatment Arms tab.](../coreUGattachments/tte/media/image16.png){#fig-treatmentarmst}
+
+In time-to-event trials, "Include a control arm" must always be selected.
+
+If an active comparator arm is included, it can be compared against in posterior probability QOIs, and is
+always modelled independently in the dose response model. Active comparators
+can have subjects randomized to them as well has hierarchically modelling
+the arm based on external study data.
+
+# Variants
+
+On this tab the user can specify that a number of design variants should
+be created. Currently the only design feature that can be changed is the
+sample size (maximum number of subjects and events).
+
+If "multiple variants" is checked then the user can specify that
+simulations setups should be created for each simulation scenario with
+versions of the design with a different maximum number of subjects
+and/or events.
+
+The user enters the number of variants they wish to create. Then in the
+resulting table, enter different "Maximum Subjects" and "Maximum Events"
+for each variant. On the simulations tab FACTS will then create a copy
+of all the scenarios to run with each variant.
+
+![The Study > Variants tab.](../coreUGattachments/tte/media/image17.png){#fig-variantst}

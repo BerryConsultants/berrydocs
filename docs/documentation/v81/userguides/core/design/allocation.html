@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Allocation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../../">
+<link href="../../../../../media/FACTS_icon.png" rel="icon" type="image/png">
+<script src="../../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../../site_libs/bootstrap/bootstrap-e92fb617ac39cba344ec42fdd1c3682a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<!-- Roboto Serif -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
+
+<!-- Roboto Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WLMVE7GR4S');
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../../../media/FACTSLogo.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../introduction/index.html"> 
+<span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../documentation/index.html"> 
+<span class="menu-text">Documentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../get/index.html"> 
+<span class="menu-text">Get FACTS</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../contact/index.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Allocation</h1>
+            <p class="subtitle lead">Description of the Design &gt; Allocation tab.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#non-adaptive-designs" id="toc-non-adaptive-designs" class="nav-link active" data-scroll-target="#non-adaptive-designs">Non-adaptive designs</a></li>
+  <li><a href="#fixed-allocation" id="toc-fixed-allocation" class="nav-link" data-scroll-target="#fixed-allocation">Fixed Allocation</a></li>
+  <li><a href="#arm-dropping" id="toc-arm-dropping" class="nav-link" data-scroll-target="#arm-dropping">Arm Dropping</a>
+  <ul>
+  <li><a href="#randomization-ratio-and-blocking" id="toc-randomization-ratio-and-blocking" class="nav-link" data-scroll-target="#randomization-ratio-and-blocking">Randomization Ratio and Blocking</a></li>
+  <li><a href="#arm-dropping-criteria" id="toc-arm-dropping-criteria" class="nav-link" data-scroll-target="#arm-dropping-criteria">Arm Dropping Criteria</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a>
+  <ul class="collapse">
+  <li><a href="#max-number-of-arms-that-can-be-dropped-during-the-study" id="toc-max-number-of-arms-that-can-be-dropped-during-the-study" class="nav-link" data-scroll-target="#max-number-of-arms-that-can-be-dropped-during-the-study">Max number of arms that can be dropped during the study</a></li>
+  <li><a href="#prune-from-lowesthighest-dose" id="toc-prune-from-lowesthighest-dose" class="nav-link" data-scroll-target="#prune-from-lowesthighest-dose">Prune from lowest/highest dose</a></li>
+  <li><a href="#upon-arm-drop" id="toc-upon-arm-drop" class="nav-link" data-scroll-target="#upon-arm-drop">Upon arm drop</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#adaptive-allocation" id="toc-adaptive-allocation" class="nav-link" data-scroll-target="#adaptive-allocation">Adaptive Allocation</a>
+  <ul>
+  <li><a href="#adaptive-allocation-targets" id="toc-adaptive-allocation-targets" class="nav-link" data-scroll-target="#adaptive-allocation-targets">Adaptive Allocation Targets</a></li>
+  <li><a href="#tips-tricks-and-intuition" id="toc-tips-tricks-and-intuition" class="nav-link" data-scroll-target="#tips-tricks-and-intuition">Tips, Tricks, and Intuition</a>
+  <ul class="collapse">
+  <li><a href="#weighting-for-probability-vs-information" id="toc-weighting-for-probability-vs-information" class="nav-link" data-scroll-target="#weighting-for-probability-vs-information">Weighting for Probability vs Information</a></li>
+  <li><a href="#fixed-allocation-target" id="toc-fixed-allocation-target" class="nav-link" data-scroll-target="#fixed-allocation-target">Fixed Allocation Target</a></li>
+  <li><a href="#non-fixed-control-adaptive-allocation" id="toc-non-fixed-control-adaptive-allocation" class="nav-link" data-scroll-target="#non-fixed-control-adaptive-allocation">Non-fixed Control Adaptive Allocation</a></li>
+  <li><a href="#zero-out-allocation-probabilities" id="toc-zero-out-allocation-probabilities" class="nav-link" data-scroll-target="#zero-out-allocation-probabilities">Zero Out Allocation Probabilities</a></li>
+  </ul></li>
+  <li><a href="#adaptive-allocation-calculation-examples" id="toc-adaptive-allocation-calculation-examples" class="nav-link" data-scroll-target="#adaptive-allocation-calculation-examples">Adaptive Allocation Calculation Examples</a>
+  <ul class="collapse">
+  <li><a href="#simple-response-adaptive-randomization-example" id="toc-simple-response-adaptive-randomization-example" class="nav-link" data-scroll-target="#simple-response-adaptive-randomization-example">Simple Response Adaptive Randomization Example</a></li>
+  <li><a href="#using-static-weighting-example-ensuring-a-minimum-allocation-to-all-arms" id="toc-using-static-weighting-example-ensuring-a-minimum-allocation-to-all-arms" class="nav-link" data-scroll-target="#using-static-weighting-example-ensuring-a-minimum-allocation-to-all-arms">Using Static Weighting Example: Ensuring a minimum allocation to all arms</a></li>
+  <li><a href="#using-static-weighting-example-ensuring-a-minimum-allocation-to-top-dose" id="toc-using-static-weighting-example-ensuring-a-minimum-allocation-to-top-dose" class="nav-link" data-scroll-target="#using-static-weighting-example-ensuring-a-minimum-allocation-to-top-dose">Using Static Weighting Example: Ensuring a minimum allocation to top dose</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#deterministic-allocation" id="toc-deterministic-allocation" class="nav-link" data-scroll-target="#deterministic-allocation">Deterministic Allocation</a></li>
+  <li><a href="#cohort-recruitment" id="toc-cohort-recruitment" class="nav-link" data-scroll-target="#cohort-recruitment">Cohort recruitment</a>
+  <ul>
+  <li><a href="#early-stopping-only" id="toc-early-stopping-only" class="nav-link" data-scroll-target="#early-stopping-only">Early Stopping Only</a></li>
+  <li><a href="#adaptive-allocation-1" id="toc-adaptive-allocation-1" class="nav-link" data-scroll-target="#adaptive-allocation-1">Adaptive Allocation</a>
+  <ul class="collapse">
+  <li><a href="#adaptively-allocate-to-best-dose" id="toc-adaptively-allocate-to-best-dose" class="nav-link" data-scroll-target="#adaptively-allocate-to-best-dose">Adaptively allocate to best dose</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+
+
+
+
+
+<p>The options on allocation tab depend on whether an adaptive or non-adaptive design has been selected on the ‘Study &gt; Study Info’ tab, and if adaptive whether subjects are recruited sequentially or in cohorts.</p>
+<p>If the design is non-adaptive then the only allocation option is blocked with fixed allocation ratios.</p>
+<p>If the design is adaptive with Continuous or Deterministic recruitment, then there are 4 allocation options.</p>
+<ul>
+<li><p>Fixed allocation – Subjects are randomized in blocks with fixed allocation ratios that do not change at interim analyses. This allocation strategy can still be useful in an adaptive design when paired with early stopping.</p></li>
+<li><p>Arm dropping – which uses fixed allocation combined with the ability to drop under-performing treatment arms at any interim.</p></li>
+<li><p>Adaptive Allocation - dose response adaptive allocation. At every interim the randomization probabilities are modified based on the specified adaptive allocation targets.</p></li>
+<li><p>Deterministic Allocation – subjects are assigned treatments in an order specified in an external file that is imported into FACTS. This can be used to create a flexible randomization scheme in non-standard simulation scenarios.</p></li>
+</ul>
+<p>If the design is adaptive with cohort recruitment then there are 3 allocation options, all of which can be combined with early stopping:</p>
+<ul>
+<li><p>Fixed allocation – subjects are block allocated to treatments. The block distribution can be specified differently for the first cohort and the subsequent cohorts.</p></li>
+<li><p>Adaptive Allocation - dose response adaptive allocation, in which at every interim the randomization probabilities are modified based on the provided adaptive allocation targets.</p></li>
+<li><p>Adaptive Allocation – “best dose selection” after every interim the randomization for the next cohort is between the control and the dose that best meets the ‘target’ dose criteria.</p></li>
+</ul>
+<section id="non-adaptive-designs" class="level1">
+<h1>Non-adaptive designs</h1>
+<p>If the design is non-adaptive, then on this tab the user simply specifies the fixed allocation ratio to use between all the treatment arms for the duration of the study. The allocation is implemented using a blocking scheme – the block size is the sum of the allocation ratios entered and each arm is given the number of slots in the block corresponding to its allocation ratio. Consequently, the values entered must be integers.</p>
+<div id="fig-fixedtrialalloc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fixedtrialalloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image40.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fixedtrialalloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Fixed allocation block specification for a non-adaptive trial.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="fixed-allocation" class="level1">
+<h1>Fixed Allocation</h1>
+<p>If allocation is to be fixed, then on this tab the fixed allocation ratios and block size are specified. For each arm in the study allocation ratios are entered as for fixed designs, and allocation uses a block size that is the sum of the ratios. Fixed allocation works identically to the non-adaptive design randomization. The difference is that this Fixed allocation can be performed concurrently with interim analyses being performed.</p>
+<div id="fig-fixedalloc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fixedalloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image41.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fixedalloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Fixed allocation block specification for an adaptive trial.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="arm-dropping" class="level1">
+<h1>Arm Dropping</h1>
+<p>Adaptive arm dropping trials allow accruing data to inform the adaptive design that an arm, or a set of arms, can be dropped, meaning they no longer have subjects randomized to them. FACTS Core supports designs in which some number of arms that are clearly ineffective can be dropped. Designs where at an interim one or more arms are selected to be continued and all other arms are dropped can be simulated using FACTS Staged Designs.</p>
+<div id="fig-armdropping" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-armdropping-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image42.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-armdropping-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: The arm dropping allocation tab for an adaptive trial.
+</figcaption>
+</figure>
+</div>
+<section id="randomization-ratio-and-blocking" class="level2">
+<h2 class="anchored" data-anchor-id="randomization-ratio-and-blocking">Randomization Ratio and Blocking</h2>
+<p>In the Randomization Ratio and Blocking section of the Allocation tab the user inputs the components of randomization blocks that enroll from the onset of the study and until any arm is dropped. These blocks work like the Fixed Allocation tab blocks.</p>
+<p>Once an arm is dropped the “Upon arm drop:” option in the Setup section of the allocation tab will determine how randomization proceeds.</p>
+</section>
+<section id="arm-dropping-criteria" class="level2">
+<h2 class="anchored" data-anchor-id="arm-dropping-criteria">Arm Dropping Criteria</h2>
+<p>The user may select any combination of Bayesian “Per Dose” QOIs: Posterior Probabilities or Predictive Probabilities, or a Target Dose QOI. For each criteria selected (at least one must be selected), the user supplies a direction of comparison and probability threshold. If at any interim, any arm meets the specified arm dropping criteria, then that arm becomes a candidate for dropping. After all candidates are identified for dropping, the Setup rules determine which, if any, of the candidates will be dropped.</p>
+</section>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<p>A variety of rules are specified in the Setup section of the Allocation tab.</p>
+<section id="max-number-of-arms-that-can-be-dropped-during-the-study" class="level3">
+<h3 class="anchored" data-anchor-id="max-number-of-arms-that-can-be-dropped-during-the-study">Max number of arms that can be dropped during the study</h3>
+<p>The maximum number of arms that can be dropped – this can be set to from 0 to the number of active arms, the Control and Active Comparator are never dropped. This figure is the ‘maximum number of arms that can be dropped over the duration of the trial’. At any interim any number between 0 and the ’maximum number of arms can be dropped as long as this limit is not exceeded on the overall number of arms that would have been dropped.</p>
+<p>If the maximum number of arms that can be dropped is set to the number of study drug arms, then if all arms are dropped this is recorded as an “early termination for futility”.</p>
+</section>
+<section id="prune-from-lowesthighest-dose" class="level3">
+<h3 class="anchored" data-anchor-id="prune-from-lowesthighest-dose">Prune from lowest/highest dose</h3>
+<p>Arm dropping can be restricted to ‘pruning from the lowest dose’ and/or ‘pruning from the highest dose’. If ‘prune from the lowest dose’ is selected, then until the lowest dose meets the arm dropping criteria the second lowest dose cannot be dropped and so on. At an interim when the lowest dose <strong>does</strong> meet the arm dropping criteria, and the second dose does too, then the second dose can be dropped as well (and third and fourth …), it does not have to wait until the next interim. Pruning from the highest dose does the same thing, except that no dose can be dropped unless every larger dose will also be dropped.</p>
+<p>If no pruning is selected or pruning from both ends is selected, then the user must select to prioritize the higher or lower dose to cover the instance when more doses are candidates for dropping than are allowed to drop by the maximum threshold. If “Prioritize dropping the lowest dose” is selected then when forced to choose between two or more doses to drop, the one with the lowest effective dose strength will be dropped.</p>
+</section>
+<section id="upon-arm-drop" class="level3">
+<h3 class="anchored" data-anchor-id="upon-arm-drop">Upon arm drop</h3>
+<p>Finally, specify what is to be done with the unused subjects that would have been allocated to an arm that has now been dropped. There are three options:</p>
+<dl>
+<dt>Maintain study size, maintain combined block size of treatments</dt>
+<dd>
+Subjects that would have been allocated to arms that have been dropped are now randomized between all the remaining active treatment arms (excluding control and active comparator) using their original allocation ratios. For example, if the allocation ratio was 2:1:1:1 between Control and D1, D2 and D3, then after dropping D1 the block size remains size 5 (2 to Control and 1 to each of D2 and D3) with the <span class="math inline">\(5^{th}\)</span> slot being allocated 1:1 between the remaining two study arms D2 &amp; D3. Thus, the overall proportion of subjects on Control (and Active Comparator) is maintained.
+</dd>
+<dt>Maintain study size, reduce combined block size of treatments</dt>
+<dd>
+Subjects that would have been allocated to any arms that have been dropped are randomized between all remaining arms (including control) using a reduced total block size. Thus, if the allocation ratio was 2:1:1 between Control and D1 and D2, then after dropping D1 the block size drops to total size three: 2 to Control and 1 to D2.
+</dd>
+<dt>Decrease the study size, reduce combined block size of treatments</dt>
+<dd>
+Subjects that would have been allocated to any arms that have been dropped are no longer recruited, and the total sample size of the study is reduced; the remaining subjects are recruited using a reduced block. If interims are specified by number of subjects recruited, these interim sizes are reduced proportionally. As an example of this, if an arm that gets 20% of the randomization is dropped when there are 100 subjects enrolled, then if the next interim is scheduled at 200 subjects enrolled, it will actually be performed at 180 subjects enrolled.
+</dd>
+</dl>
+</section>
+</section>
+</section>
+<section id="adaptive-allocation" class="level1">
+<h1>Adaptive Allocation</h1>
+<p>In adaptive allocation, the relative probabilities of assigning each of the doses to a subject may change throughout the trial. The adaptive allocation method that FACTS supports is one in which the allocation ratio is modified at each interim to increase the allocation to doses that have the preferred characteristics.</p>
+<p>An adaptive allocation design has two phases: the “burn-in” before any adaptation takes place and the “adaptive phase”. The burn-in lasts until the first interim occurs, which is defined on the <a href="../../../../../documentation/v81/userguides/core/design/interims.html">Interims</a> tab. The adaptive phase lasts until the early stopping criteria are met or the maximum sample size is reached.</p>
+<div id="fig-RARalloc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-RARalloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image43.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-RARalloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Adaptive allocation tab for an adaptive trial.
+</figcaption>
+</figure>
+</div>
+<p>The table on the left hand side of the Adaptive Allocation tab allows for the specification of the allocation ratio during the burn-in period in the “Pre First Interim Allocation Ratio” column. The randomization during the burn-in period works exactly like Fixed Allocation with the provided randomization block.</p>
+<p>When the first interim analysis is reached the allocation strategy changes from fixed to adaptive, and the “Pre First Interim Allocation Ratio” column is ignored. When randomizing adaptively the total block size is specified below the table in the “Post first interim block size:” entry. The “Fix Alloc.” column check boxes should be checked for any dose that should not be adaptively randomized to, but should get <span class="custom-tooltip"> a fixed proportion of the randomization block <span class="tooltip-text">This is commonly done for the control arm and the active comparator in a trial that is randomizing adaptively.</span> </span>. When an arm is checked for having a fixed allocation its block contribution within the total block size must be specified. The sum of the fixed allocations must be smaller than the “Post first interim block size.”</p>
+<p>The slots that are in the block, but are not allocated to a fixed treatment are probabilistically assigned to one of the non-fixed treatments.</p>
+<p>If the Control arm is not given a fixed allocation, it is allocated to with an adaptive probability that is equal to the treatment arm with the highest weight.</p>
+<section id="adaptive-allocation-targets" class="level3">
+<h3 class="anchored" data-anchor-id="adaptive-allocation-targets">Adaptive Allocation Targets</h3>
+<p>Adaptive allocation probabilities can be driven by any combination of posterior probabilities, predictive probabilities, conditional powers, and target probability QOIs. The allocation ratio of each arm is a proportional to a function of the QOIs - simply, arms with higher QOIs have higher allocation probabilities.</p>
+<p>The way that the allocation probabilities are calculated is as follows.</p>
+<p>Suppose that <span class="math inline">\(M\)</span> QOIs are specified in the “Adaptive Allocation Targets” table. Call them <span class="math inline">\(W^{(1)}, \ldots, W^{(M)}\)</span>, and to index the <span class="math inline">\(m^{th}\)</span> QOI’s value for dose <span class="math inline">\(d\)</span> we use the notation <span class="math inline">\(W_d^{(m)}\)</span>. Then, the first step in calculating the allocation weights is to convert the QOIs <span class="math inline">\(W\)</span> to the allocation targets <span class="math inline">\(V\)</span>.</p>
+<p>Any adaptive allocation QOI <span class="math inline">\(W_d^{(m)}\)</span> that has “Weight For:” of Probability has an allocation target of <span class="math display">\[V_d^{(m)} = \left(W_d^{(m)}\right)^\gamma,\]</span> and if it has “Weight For:” of Information it has an allocation target of <span class="math display">\[V_d^{(m)} = \left[ \sqrt{\frac{W_d^{(m)} \text{Var} \left( \theta_{d} \right)}{n_{d} + 1}} \right]^{\gamma}\]</span> where <span class="custom-tooltip"> <span class="math inline">\(\gamma\)</span> is the value provided in “Raise allocation to power (<span class="math inline">\(\gamma\)</span>)” in FACTS <span class="tooltip-text">Note that it’s not the ‘Relative Weight’ provided when the Adaptive Allocation Target is specified.</span> </span>, <span class="math inline">\(n_d\)</span> is the number of subjects on enrolled on dose <span class="math inline">\(d\)</span>, and <span class="math inline">\(\text{Var}(\theta_d)\)</span> is the variance of the dose-response model mean estimate for arm <span class="math inline">\(d\)</span>.</p>
+<p>Then, when each dose has an allocation target <span class="math inline">\(V_d\)</span> for each of the <span class="math inline">\(M\)</span> QOIs, the allocation targets are combined in a linear combination to get the allocation weight. With <span class="math inline">\(M\)</span> allocation targets and Relative Weights <span class="math inline">\(\omega_m\)</span> provided when the allocation QOIs were specified: <span class="math display">\[\Omega_d = \sum_{m=1}^M (\omega_m V_{d}^{(m)})\]</span></p>
+<p>Once each dose has an allocation weight <span class="math inline">\(\Omega_d\)</span>, the set of <span class="math inline">\(\Omega\)</span>’s is renormalized so that they add to they add to the proportion of slots in the block that will be allocated to adaptively. These renormalized values are the adaptive randomization probabilities. If, after renormalization, any of the doses have a randomization probability less than the value entered in “Allocation probability set to zero for values less than:”, then the dose with the lowest randomization probability is set to 0 and the other randomization probabilities are renormalized again to sum to the proportion of slots in the block that will be allocated to adaptively. This process iterates until all doses have randomization probabilities above the threshold or only one non-fixed dose is being randomized to.</p>
+</section>
+<section id="tips-tricks-and-intuition" class="level3">
+<h3 class="anchored" data-anchor-id="tips-tricks-and-intuition">Tips, Tricks, and Intuition</h3>
+<section id="weighting-for-probability-vs-information" class="level4">
+<h4 class="anchored" data-anchor-id="weighting-for-probability-vs-information">Weighting for Probability vs Information</h4>
+<p>When weighting for probability, the allocation target is derived simply from the value of the QOI. Weighting for probability is ‘more aggressive’ in adapting in pursuit of the target. The risk with a probability-based weighting is never allocating again to an arm where the initial data is so poor that its initial probability of being the target is so low it is never allocated to again. So, it is appropriate when the available sample size is small (and risks must be taken), the number of study arms is small (so it is unlikely an arm will not be allocated to again), or the allocation during the burn-in is large and evenly distributed (so that having unrepresentative data is very unlikely).</p>
+<p>When weighting for information, the allocation target uses the value of the QOI, but is adjusted by the current variance of the dose response estimate and the number of subjects already allocated to the dose – an estimate of the additional information that would result from adding one more subject to that arm. Weighing for information will tend to spread the allocation around the most likely target, reducing the risk of never learning that dose is better than its initial data. If a dose response model is being used, allocation to doses around the target dose will contribute to the accuracy of the estimate of response on the target dose, but compared to the probability weighting will tend to result in fewer subjects allocated to the actual target dose.</p>
+<p>Whichever weighing rule is selected the adaptation can be further ‘sharpened’ or ‘softened’ by adjusting the power to which the allocation probability is raised. Setting the power to 0.5 will significantly soften the allocation, setting it to 2 will significantly sharpen it.</p>
+</section>
+<section id="fixed-allocation-target" class="level4">
+<h4 class="anchored" data-anchor-id="fixed-allocation-target">Fixed Allocation Target</h4>
+<p>Any Bayesian “Per Dose” QOI, or “Target Dose” QOI can be used to determine the adaptive allocation weights. In addition there is the option to use a static weighting – this is of course not adaptive! What it does do is allow an adaptive allocation to be combined with a “guaranteed minimum allocation” (see example discussion below). If a Static target is included, a small table is displayed the specification of the ratio of the division of the static weight between the study arms that are being adaptively allocated to.</p>
+</section>
+<section id="non-fixed-control-adaptive-allocation" class="level4">
+<h4 class="anchored" data-anchor-id="non-fixed-control-adaptive-allocation">Non-fixed Control Adaptive Allocation</h4>
+<p>If the control allocation ratio is not fixed when performing adaptive allocation, then the control arm gets a randomization ratio that targets matching the number of control subjects to the active arm with the most subjects.</p>
+<p>To derive the control allocation rate, let <span class="math inline">\(V_d\)</span> for <span class="math inline">\(d=1, 2, \ldots, D\)</span> be the allocation probabilities for each of the <span class="math inline">\(D\)</span> non-control dose arms (these may be obtained by calculating based on the probability or information criteria as described above or the fixed allocation proportion with respect to the block size), and let <span class="math inline">\(n_d\)</span> for <span class="math inline">\(d=1, 2, \ldots, D\)</span> be the number of subjects allocated to those arms.</p>
+<p>Then, the allocation target for the control arm <span class="math inline">\(V_0\)</span> is:</p>
+<p><span class="math display">\[V_{0} = \min\left\{\sum_{d = 1}^{D}{V_{d}\frac{(n_{d} + 1)}{(n_{0} + 1)}, \;\; \text{max} \{V_{1},V_{2},\ldots, V_{D}\} } \right\}\]</span></p>
+<p>Following fixing this control rate, the allocation probabilities for the non-fixed doses are renormalized to add up to the total non-fixed probability.</p>
+</section>
+<section id="zero-out-allocation-probabilities" class="level4">
+<h4 class="anchored" data-anchor-id="zero-out-allocation-probabilities">Zero Out Allocation Probabilities</h4>
+<p>If, at the end of the adaptive allocation probability calculation, any adaptively allocated arms have a randomization probability smaller than the value provided for “Allocation probability set to zero for values less than:”, then the allocation probabilities are adjusted.</p>
+<p>To adjust the probabilities, first the arm with the smallest randomization probability is given a fixed allocation rate of 0. Then, the remaining adaptively allocated arms have their allocation probabilities re-normalized to sum to the probability remaining after all fixed doses have been allocated. Then, if any doses remain below the zero-out threshold, then this process is repeated. Continue the repetition as necessary. If none of the allocation probabilities are below the threshold, then the allocation probabilities are set.</p>
+<p>If all non-fixed doses drop due to being below the threshold, then the probability is reallocated to the fixed doses. This can only happen if the fixed doses take up a large enough proportion of the slots in the block.</p>
+</section>
+</section>
+<section id="adaptive-allocation-calculation-examples" class="level3">
+<h3 class="anchored" data-anchor-id="adaptive-allocation-calculation-examples">Adaptive Allocation Calculation Examples</h3>
+<section id="simple-response-adaptive-randomization-example" class="level4">
+<h4 class="anchored" data-anchor-id="simple-response-adaptive-randomization-example">Simple Response Adaptive Randomization Example</h4>
+<p>Suppose you have a control and 3 active doses. The control arm is fixed to randomize <span class="math inline">\(3/10\)</span> slots in every block and a fixed 20% probability must be placed on the first active dose (dose A). So, the control arm gets 30% of the total allocation probability and dose A gets 20% of the total allocation. Suppose the target QOIs <span class="math inline">\(V_d\)</span>&nbsp;for the three active doses are 0.20, 0.20, and 0.60 and that we’re using probability weighting with weight 1 for all of them. The second two doses are the only doses with unknown randomization probabilities, so they split the amount of non-fixed allocation probability proportionally based on their <span class="math inline">\(V_d\)</span>.</p>
+<p>The allocation probability of the second active dose is <span class="math display">\[\left( 1 - (0.3 + 0.2) \right)*\left( \frac{0.2}{0.2 + 0.6} \right)\]</span> and the allocation probability of the third active dose is <span class="math display">\[\left( 1 - (0.3 + 0.2) \right)*\left( \frac{0.6}{0.2 + 0.6} \right)\]</span></p>
+<p>Thus, the final allocation probabilities for the control and the three active doses are: (0.3, 0.2, 0.125, 0.375).</p>
+<p>If any of the adaptively allocated probabilities are less than a user specified minimum (“Allocation probability set to zero for values less than….” in the GUI) then these probabilities would be set to zero and the resulting probability is reallocated among the non-fixed probability doses. If all non-fixed doses drop at this point, then the probability is reallocated to the fixed doses.</p>
+</section>
+<section id="using-static-weighting-example-ensuring-a-minimum-allocation-to-all-arms" class="level4">
+<h4 class="anchored" data-anchor-id="using-static-weighting-example-ensuring-a-minimum-allocation-to-all-arms">Using Static Weighting Example: Ensuring a minimum allocation to all arms</h4>
+<p>This example uses the static allocation QOI to allow adaptive randomization, but with a guaranteed minimum allocation of 10% to each of 5 study arms. Let us say that we want the adaptive allocation to be evenly divided between targeting an EDq and MED target.</p>
+<p>As there are 5 study arms, allocating 10% each amounts to 50% of the total. Thus, we could specify weights of 1 to the MED target, 1 to the EDq target, and 2 to the Static target, so the Static target gets 50% of the total weighting.</p>
+<p>However, this ignores the possible allocation to a Control arm. What we have achieved above either allocates 10% to each study arm if there is no Control arm, or if there is a Control arm, allocates 10% of the subjects <em>allocated to the study arms</em>, not 10% of the overall.</p>
+<p>Let us say that in addition to the 5 study arms you have a Control that we want to have 20% allocation and we want each study arm to have at least 10% of the overall allocation. The simplest way to specify this is to set a “Post first interim block size” of 10 and that 2 slots are allocated to Control. This leave 8 slots to be allocated across the treatment arms. We don’t want to allocate 1 out of 10 slots in the block to each using fixed allocation, because that 10% is all they would get. We need to allow them to be allocated to adaptively and use the Static target to ensure they get a minimum of 10%. We can achieve this by giving the static allocation a weight of 5 and divide a weight of 3 between the MED and EDq targets, so they get a weight of 1.5 each. Then, set all of the “Static Weights” to be 1 (any non-zero value would work) for each active arm.</p>
+<p>By doing this, the static allocation targets make up <span class="math inline">\(5\text{ arms }*\text{ weight of }5 = 25\)</span> parts of the weighted average and the MED and EDq combine to make up <span class="math inline">\(5\text{ arms }*\text{ weight of }3 = 15\)</span> parts. So, if an arm has an MED of 0 and EDq of 0 it is still guaranteed to get at least <span class="math inline">\(\frac{5}{(25 + 15)}*(1 - 0.2) = 0.1\)</span> of the total randomization.</p>
+</section>
+<section id="using-static-weighting-example-ensuring-a-minimum-allocation-to-top-dose" class="level4">
+<h4 class="anchored" data-anchor-id="using-static-weighting-example-ensuring-a-minimum-allocation-to-top-dose">Using Static Weighting Example: Ensuring a minimum allocation to top dose</h4>
+<p>Imagine an early Phase II Proof-of-Concept study that wants to compare 3 doses of the study drug (low, medium and high) to Control, and adaptively allocates to the dose with the maximum response. The study team also wish to ensure a minimum allocation to the top dose as they have a strong prior that it will have the maximum effect. They want to minimize the risk that the adaptive allocation avoids the top dose because of randomly poor results on that dose early on in the trial.</p>
+<p>The optimal allocation to control in a multi armed study is approximately <span class="math inline">\(\sqrt{N}:1:1:\ldots\)</span> where N is the number of study arms and in <span class="math inline">\(\sqrt{3}:1:1:1\)</span> the proportion on control would be 37%. Here we’ve rounded down to 30% rather than up to 40% to reflect a typical clinical teams desire to get more data on their study drug than Control.</p>
+<p>After the first interim, we specify allocation to be in blocks of 10 with the Control allocated to 3 slots in each block, the “Relative Weight:” on the Static target is 2 and the “Relative Weight:” on the Pr(Max) target is 5. So 50% of the allocation is adaptive targeting the dose with the Maximum response and 20% is fixed and allocated to the top dose by specifying that the static weighting “Ratio” is split 0:0:1 in the “Static Weights” table.</p>
+<div id="fig-fixedalloc2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fixedalloc2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image44.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fixedalloc2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Adaptive allocation with static weight allocation targets.
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+</section>
+<section id="deterministic-allocation" class="level1">
+<h1>Deterministic Allocation</h1>
+<p>The deterministic allocation option allows for the treatment assignments of subjects accrued into the simulated trials to be assigned without randomness based on an uploaded file. The file providing the assignments should be a comma separated .dat file with 2 columns, but no column labels.</p>
+<p>The first column should be an increasing, unique column of numbers from 1 to at least the maximum number of subjects that can be enrolled in the study. The second column should be the set of treatment assignments in order from 1 to the number of patient IDs. The treatment assignments are used in row order – they do not use the subject ID order. So, the first subject accrued in the study is given the assignment indicated by the first row, second column value, the second subject accrued in the study is given the assignment indicated by the second row, second column value, and so on.</p>
+<p>The treatment assignments column in the .dat file should always have a minimum value of 1 and a maximum of the number of total arms in the study. If there is a control arm in the study, then treatment assignment 1 corresponds to a control arm randomization. If there is no control arm in the study, then treatment assignment 1 in the .dat file corresponds to a subject randomized to the lowest active dose.</p>
+<div id="fig-detalloc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-detalloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image46.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-detalloc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Deterministic allocation tab allowing for uploading of an allocation file.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="cohort-recruitment" class="level1">
+<h1>Cohort recruitment</h1>
+<section id="early-stopping-only" class="level2">
+<h2 class="anchored" data-anchor-id="early-stopping-only">Early Stopping Only</h2>
+<p>If allocation is to be fixed the “Early Stopping Only” option should be selected. Then on this tab the fixed allocation ratios and block size are specified – for the first cohort and then for all subsequent cohorts. In each case the user specifies the number of each arm to allocate in each cohort and the sum must equal the size of the cohort.</p>
+<div id="fig-cohortES" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cohortES-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image47.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cohortES-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Cohort allocation tab with early stopping, but no adaptive allocation.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="adaptive-allocation-1" class="level2">
+<h2 class="anchored" data-anchor-id="adaptive-allocation-1">Adaptive Allocation</h2>
+<p>If allocation is to be adaptive the “Adaptive Allocation” option should be selected and then under “Subsequent Cohort Allocation” the “Allocate cohort by sampling from allocation vector” should be selected. Then on this tab</p>
+<ul>
+<li><p>The fixed allocation ratios and block size are specified for the first cohort. The user specifies the number of each arm to allocate and the sum must equal the size of the cohort.</p></li>
+<li><p>The user then specifies</p>
+<ul>
+<li><p>The fixed allocation to control</p></li>
+<li><p>The QOIs to be used to calculate the allocation ratios for the remaining subjects in the cohort as for adaptive allocation (see Adaptive Allocation above).</p></li>
+</ul></li>
+</ul>
+<div id="fig-cohortRAR" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cohortRAR-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image48.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cohortRAR-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: Cohort allocation tab adaptive allocation.
+</figcaption>
+</figure>
+</div>
+<section id="adaptively-allocate-to-best-dose" class="level3">
+<h3 class="anchored" data-anchor-id="adaptively-allocate-to-best-dose">Adaptively allocate to best dose</h3>
+<p>If allocation is to be adaptive, but at each cohort just Control and the “best dose” are to be allocated to, the “Adaptive Allocation” option should be selected and then under “Subsequent Cohort Allocation” the “Allocate cohort to single treatment (plus control)” should be selected. Then on this tab</p>
+<ul>
+<li><p>The fixed allocation ratios and block size are specified for the first cohort. The user specifies the number of each arm to allocate and the sum must equal the size of the cohort.</p></li>
+<li><p>The user then specifies</p>
+<ul>
+<li><p>The fixed allocation to control</p></li>
+<li><p>The QOIs to be used to calculate the allocation weighting to calculate for the non-Control arms, (see Adaptive Allocation above) and all the subjects not allocated to control will be allocated to this arm.</p></li>
+</ul></li>
+</ul>
+<div id="fig-cohortRARbest" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cohortRARbest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image49.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cohortRARbest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Cohort allocation tab with adaptive allocation allocating to only the best dose.
+</figcaption>
+</figure>
+</div>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<!-- footer.html -->
+
+<!-- FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pF6W3...<truncated>...Q==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+<style>
+
+  /* Make all footer icons the same color */
+  footer .fab,
+  footer .fas,
+  footer svg {
+    color: #125740;           /* ← pick whatever color your share-icons are using */
+    fill: currentColor;    /* ensures the SVG Bluesky icon matches */
+  }
+
+  /* Prevent links from overriding that color */
+  footer a {
+    color: inherit;
+  }
+
+  /* Share menu positioning */
+  #share-wrapper { position: relative; }
+  #share-menu {
+    display: none;
+    position: absolute;
+    bottom: 3rem;               /* float above the footer */
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px #125740;
+    gap: 1rem;
+    z-index: 100;
+  }
+  body.menu-open #share-menu { display: flex; }
+  #share-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* Left column: text + social permalinks */
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+  }
+  .footer-left p { margin: 0; }
+  .footer-left a.social {
+    color: inherit;
+    text-decoration: none;
+  }
+  .footer-left a.social i { font-size: 1.2em; }
+  
+  
+    /* Text color left */
+  .footer-left p > a {
+    color: #125740;
+  }
+
+  /* Text color last item */
+  footer > p:last-child a {
+    color: #125740;
+  }
+  
+    /* Link hover colors */
+  .footer-left p > a:hover,
+  footer > p:last-child a:hover {
+    color: #11A473;
+    text-decoration: underline;
+  }
+  
+</style>
+
+<footer style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
+  
+  <!-- Left: Berry Consultants + social permalinks -->
+  <div class="footer-left">
+    <p>
+      © <a href="https://www.berryconsultants.com">Berry Consultants</a>
+    </p>
+    <a href="https://twitter.com/BerryConsultant" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on X">
+      <i class="fab fa-x"></i>
+    </a>
+    <a href="https://www.linkedin.com/company/berry-consultants-llc" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on LinkedIn">
+      <i class="fab fa-linkedin"></i>
+    </a>
+    <a href="https://www.youtube.com/c/berryconsultants" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on YouTube">
+      <i class="fab fa-youtube"></i>
+    </a>
+  </div>
+
+  <!-- Center: share toggle + popup -->
+  <div id="share-wrapper">
+    <button id="share-toggle" aria-label="Share this page">
+      <i class="fas fa-share-alt" style="font-size:1.6em;"></i>
+    </button>
+    <div id="share-menu">
+      <!-- share icons injected here -->
+    </div>
+  </div>
+
+  <!-- Right: How to Cite -->
+  <p style="margin: 0;">
+    <a href="../../../../../introduction/citation.html">Cite</a>
+  </p>
+</footer>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const url   = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+    const networks = [
+      { name: "X",        href: `https://twitter.com/intent/tweet?url=${url}&text=${title}`,          icon: `<i class="fab fa-x" style="font-size:1.4em;"></i>` },
+      { name: "LinkedIn", href: `https://www.linkedin.com/feed/?shareActive=true&text=${title}%20${url}`, icon: `<i class="fab fa-linkedin" style="font-size:1.4em;"></i>` },
+      { name: "Bluesky",  href: `https://bsky.app/intent/compose?text=${title}%20${url}`,              icon: `
+        <svg width="1.4em" height="1.4em" fill="currentColor" viewBox="0 0 600 530">
+          <path d="m135.72 44.03c66.496 49.921 138.02 151.14 164.28 205.46 26.262-54.316 97.782-155.54 164.28-205.46 47.98-36.021 125.72-63.892 125.72 24.795 0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.3797-3.6904-10.832-3.7077-7.8964-0.0174-2.9357-1.1937 0.51669-3.7077 7.8964-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.4491-163.25-81.433-5.9562-21.282-16.111-152.36-16.111-170.07 0-88.687 77.742-60.816 125.72-24.795z"/>
+        </svg>` },
+      { name: "Reddit",   href: `https://www.reddit.com/submit?url=${url}&title=${title}`,         icon: `<i class="fab fa-reddit" style="font-size:1.4em;"></i>` },
+      { name: "WhatsApp", href: `https://wa.me/?text=${title}%20${url}`,                             icon: `<i class="fab fa-whatsapp" style="font-size:1.4em;"></i>` },
+      { name: "Email",    href: `mailto:?subject=${title}&body=${title}%20${url}`,                    icon: `<i class="fas fa-envelope" style="font-size:1.4em;"></i>` }
+    ];
+
+    // inject share icons
+    const menu = document.getElementById("share-menu");
+    networks.forEach(net => {
+      const a = document.createElement("a");
+      a.href      = net.href;
+      a.target    = "_blank";
+      a.rel       = "noopener";
+      a.setAttribute("aria-label", `Share on ${net.name}`);
+      a.innerHTML = net.icon;
+      menu.appendChild(a);
+    });
+
+    // toggle menu
+    const toggle = document.getElementById("share-toggle");
+    toggle.addEventListener("click", e => {
+      e.stopPropagation();
+      document.body.classList.toggle("menu-open");
+    });
+
+    // close on outside click
+    document.addEventListener("click", () => {
+      document.body.classList.remove("menu-open");
+    });
+    menu.addEventListener("click", e => e.stopPropagation());
+  });
+</script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/docs\.berryconsultants\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
