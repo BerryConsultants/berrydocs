@@ -1,0 +1,127 @@
+---
+title: "A Formula to Aid in Enrichment Decisions in Seamless Phase II-III Clinical Trials"
+description: "A suggested approach to help guide enrichment designs"
+bibliography: ../../references.bib
+author:
+  - name: Todd Graves
+    url: https://www.berryconsultants.com/team-members/todd-graves-phd
+    affiliation: Berry Consultants
+    affiliation-url: https://berryconsultants.com/
+date: 02-02-2026
+categories: [Adaptive Bayesian Design, Enrichment Designs] # self-defined categories
+draft: false # setting this to `true` will prevent your post from appearing on your listing page until you're ready!
+image: "attachments/2026-02-02-DAWNADR.png"
+---
+
+```{r}
+#| label: load-packages
+#| include: false
+
+library(tidyverse)
+```
+
+## Prologue
+
+Some authors write blog posts that are interesting to a wide audience and that help to draw positive attention to their other materials. *This is not one of those posts.* This post is here because the material is not important enough to be published in a peer-reviewed journal, but the idea described here has been used in several trials we have designed, and we are sometimes asked to explain. If you arrived here because someone deliberately pointed you to this specific article because you are learning the details of a clinical trial with an enrichment design that used this formula, by all means proceed! On the other hand, you may have have arrived here because you like Berry Consultants' other online material. In that case you have excellent taste! and I encourage you to read all of their other online material at least once before returning to this one.
+
+## Motivation
+
+Suppose we want to run a seamless Phase II-III trial where one of the goals of the learning stage is to identify the subpopulation of the original study population who benefit from treatment. We would like to conduct periodic trial updates where we use accumulating data to decide whether to stop enrolling patients from certain pre-specified subgroups. If a subgroup is excluded, the patients previously randomized in that subgroup will also be excluded from the pivotal final analysis. So there will be some incentive to drop randomly poor data to give ourselves a better chance at a significant final result. But we would prefer not to overreact, and an eventual efficacious result is more valuable if it applies to a large population.
+
+Therefore, we propose to conduct the final analysis at a certain significance level $\alpha^*$ if the final analysis includes the entire population, but to punish reckless enrichment decisions by requiring a more rigorous significance level if the final analysis is on a reduced population. We require a formula for adjusting the significance level as a function of the amount of population enrichment that we previously performed. We will make enrichment decisions during the trial using Bayesian predictive probabilities of eventual trial success, where these predictive probability calculations include the final analysis penalties for enrichment, to discourage rash enrichment. The value $\alpha^*$ will be tuned through simulation to achieve a desired Type I error probability when the experimental treatment is exactly as good as the standard of care in all subpopulations.
+
+This note describes such a formula which was created for the [**DAWN**](https://www.nejm.org/doi/full/10.1056/NEJMoa1706442 "DAWN") trial in endovascular therapy for stroke patients. The data collected in DAWN were spectacularly favorable to the device relative to standard of care and the result was to extend the indication to the entire study population. But before we knew that we were going to be collecting overwhelming data, we created a trial design with innovative features that turned out not to be needed.
+
+As sometimes happens during the trial design phase, the formula was developed in some haste so that a time-consuming batch of simulations could be started. The formula passed the laugh test, and has been used in subsequent trial designs as well, but we do not claim that it has been demonstrated to have any optimality properties.
+
+## Simplest example, and associated math
+
+In the simplest example of this problem, consider a one-arm trial with two subpopulations and a single interim analysis. At the time of the interim analysis, we have $N_1$ unit variance Gaussian observations from subpopulation 1, and $N_2$ unit variance Gaussian observations from subpopulation 2. All patients in both subpopulations have received the experimental treatment, and if the treatment is beneficial, the true means of the observations will be larger than the historical control mean of zero. At the interim analysis, we have two options:
+
+1.  (Call this option $I = 1$). We can discard subpopulation 2, enroll $N_3$ more patients from subpopulation 1, and conduct a final analysis testing whether the mean of the $N_1 + N_3$ patients from subpopulation 1 is positive.
+
+2.  (Call this option $I = 2$). We can keep both subpopulations, enroll $N_3$ more patients from a mixture of subpopulations 1 and 2, and conduct a final analysis testing whether the mean of all $N_1 + N_2 + N_3$ observations is positive.
+
+    Let $Z_1$ be the sum of the first $N_1$ observations from subpopulation 1, $Z_2$ be the analogous sum for the first $N_2$ observations from subpopulation 2. In case 1, the final normal theory test declares efficacy if
+
+    $$\frac{Z_1 + Z_{3,1}}{\sqrt{N_1+N_3}} > t_1 $$
+
+    where $Z_{3,1}$ is the sum of the final $N_3$ observations from subpopulation 1, and where $t_1$ is a critical value. In case 2, the test declares efficacy if $$ \frac{Z_1 + Z_2 + Z_{3,2}}{\sqrt{N_1 + N_2 + N_3}}>t_2 $$
+
+where $Z_{3,2}$ is the sum of the final $N_3$ observations from the mixture of subpopulation 1 and 2, and $t_2$ is another critical value.
+
+**Our goal is to determine a useful relationship between** $t_1$ **and** $t_2$**.** If $t_1%$ is large, we are requiring particularly strong data in subpopulation 1 to declare efficacy, so enrichment to subpopulation 1 is discouraged.
+
+Define $\mu_1$ and $\mu_2$ so that given the choice $I_1$, the distribution of $Z_{3,1}$ is $N(\mu_1 N_3, N_3)$, and similarly that given $I_2$, the distribution of $Z_{3,2}$ is $N(\mu_2 N_3, N_3)$. Then, at the time of the interim analysis, the probabilities of an eventual successful final analysis ("Win"), conditional on each possible decision, is
+
+$$
+Pr_\mu\{\mbox{Win}|I=1,Z_1,Z_2\} = \Phi\left(\mu_1\sqrt{N_3} + \frac{Z_1}{\sqrt{N_3}} -t_1\sqrt{1+\frac{N_1}{N_3}}\right)
+$$
+
+and
+
+$$
+Pr_\mu\{\mbox{Win}|I=2,Z_1,Z_2\} = \Phi\left(\mu_2\sqrt{N_3} + \frac{Z_1+Z_2}{\sqrt{N_3}} -t_2\sqrt{1+\frac{N_1+N_2}{N_3}}\right).
+$$
+
+An interesting special case is $\mu_1 = \mu_2$. In this case, the interim analysis decision that maximizes the probability of an eventual Win is to enrich ($I=1$) if and only if
+
+$$
+-\frac{Z_2}{\sqrt{N_3}} + t_2\sqrt{1+\frac{N_1+N_2}{N_3}} > t_1\sqrt{1+\frac{N_1}{N_3}}
+$$
+
+or equivalently
+
+$$
+-Z_2 + t_2\sqrt{N_1+N_2+N_3} > t_1\sqrt{N_1+N_3}.
+$$
+
+If we now choose
+
+$$ t_1 = t_2 \sqrt{1 + \frac{N_2}{N_1+N_3}},$$
+
+then the rule that maximizes the probability of Win is to keep subpopulation 2 if and only if $Z_2<0$, i.e. if the data from subpopulation 2 are even a little bit positive. This simple relationship between critical values $t_1$ and $t_2$ is what we internally call "Graves' formula." It can be applied in more general circumstances, for example with two arms, with more than 2 subpopulations and/or with more than two interim analyses. In more general cases we interpret the numerator $N_2$ as the number of patients who are enrolled but ultimately excluded from the primary efficacy analysis because they belong to subpopulations that are enriched out. The denominator is the number of patients who are included in the final analysis. The more unfavorable data that is thrown away, the more spectacular the data in the final analysis must be to declare efficacy for the remaining subpopulation.
+
+Now it is time to mention two claims that we are emphatically NOT making about Graves' formula:
+
+-   The formula does NOT analytically control Type I error. For example, suppose that we desire 2.5% Type I error and we naïvely take $t_2 = \Phi^{-1}(0.975) = 1.96$. For a simple example suppose that the interim analysis takes place with $75$ patients in each subpopulation, and the final analysis will take place after another 150 patients after the interim. Then $N_1 = 75, N_2 = 75$, and $N_3 = 150$, and $t_1 = 2.263$ which corresponds to testing at the $\Phi(-2.263) = 0.0118$ level if we enrich out the $75$ patients in subpopulation 2. But a design using these $t_1$ and $t_2$ will certainly have higher than $2.5\%$ Type I error. One must generally use simulation to compute the value of $t_2$ (and corresponding value of $t_1 = t_2 \sqrt{1 + \frac{N_2}{N_1+N_3}}$) that yields the desired Type I error probability.
+
+-   The enrichment rule where we keep any subpopulation with (even slightly) favorable data is NOT claimed to be optimal.
+
+The potential theoretical benefit of Graves' formula is that if you use it and you use any rule to decide whether to enrich, the Type I error for your enrichment strategy is bounded above by the Type I error for the enrichment strategy that drops any subpopulation with (even slightly) negative data. For the Gaussian case, the probability of positive data is 0.5 in the null case, which may be analytically convenient.
+
+As suggested earlier, we have found that the formula is appealing when Bayesian predictive probabilities are used to make enrichment decisions. At the interim analysis, we compute the predictive probability of a successful analysis at the end of the current trial assuming no enrichment, where we get to use the relatively lenient critical value. Then we also compute the predictive probability of a successful analysis at the end of the trial assuming enrichment, where we get to exclude patients from a subpopulation from the final analysis and where we get to restrict future enrollment to patients from subpopulations where we expect to continue to gather favorable data, but where we are compelled to use a rigorous critical value in the final analysis. In the DAWN trial for example, we required the predictive probability assuming enrichment to exceed the non-enriched predictive probability by at least $10\%$ before we would enrich. Trial simulations can then be used to evaluate whether the design performs well with respect to deciding to enrich when the truth is that only a subset of the patient population benefits from treatment, and whether the design is appropriately reluctant to enrich in scenarios where all patients benefit.
+
+## Some additional derivations
+
+For the simple case of two subpopulations and a single interim analysis, we can easily work out the joint probability of enrichment and trial success under the null hypothesis:
+
+\begin{eqnarray*}
+ Pr_0 \{I=1 \mbox{ and Win} \} & = &  \int_{-\infty}^\infty \phi(z_1 | 0, N_1) \mbox{Pr}_0\{I=1\} \Phi\left(\frac{z_1}{\sqrt{N_3}} - t_1 \sqrt{1+\frac{N_1}{N_3}}\right) dz_1 \\
+& = & \Phi\left( \frac{t_2\sqrt{N_1+N_2+N_3} - t_1\sqrt{N_1+N_3}}{\sqrt{N_2}} \right) \Phi(-t_1) \\
+ & = & \Phi(-t_1) / 2.
+\end{eqnarray*}
+
+This probability $\Phi(-t_1)/2$ is less than $\Phi(-t_2)/2$ which will in turn be less than $\alpha/2$ where $\alpha$ is the desired Type I error probability, so less than half of $\alpha$ is "spent" on the enrichment event.
+
+Considering the case where there are nonzero treatment effects, $E(Z_1) = \delta_1 N_1$ and $E(Z_2) = \delta_2 N_2$, we still get a simple formula for the probability that we both enrich and win (in this case we also have $E(Z_3) = \delta_1 N_3$):
+
+\begin{eqnarray*}
+\mbox{Pr}_\delta  \{ I = 1 \mbox{ and Win} \} & = &  \Phi\left(-\delta_2 \sqrt{N_2} + t_2 \sqrt{1+\frac{N_1+N_3}{N_2}} - t_1 \sqrt{\frac{N_1+N_3}{N_2}}\right) \times \\
+  & & \int_{-\infty}^\infty \phi(z_1 | \delta_1N_1, N_1) \Phi\left(\delta_1\sqrt{N_3} + \frac{z_1}{\sqrt{N_3}} -t_1\sqrt{1+\frac{N_1}{N_3}}\right) dz_1 \\
+  & = & \Phi\left(-\delta_2 \sqrt{N_2} + t_2 \sqrt{1+\frac{N_1+N_3}{N_2}} - t_1 \sqrt{\frac{N_1+N_3}{N_2}}\right) \Phi\left(\delta_1 \sqrt{N_1+N_3} - t_1\right) \\
+  & = & \Phi(-\delta_2 \sqrt{N_2}) \Phi(\delta_1\sqrt{N_1+N_3} - t_1).
+\end{eqnarray*}
+
+Finally, in the null case, we can reduce the joint probability of not enriching and winning:
+
+\begin{eqnarray*}
+\mbox{Pr}_0 \{ I = 2 \mbox{ and Win}\} & = & \int_0^\infty \phi(z_2 | 0, N_2) \Phi\left(\frac{z_2}{\sqrt{N_1 + N_3}} - t_2\sqrt{1+\frac{N_2}{N_1+N_3}}\right) dz_2 \\
+& = & \int_0^\infty \phi(y) \Phi(y\sqrt{\beta} - t_2\sqrt{1+\beta}) dy.
+\end{eqnarray*}
+
+Here $\beta = \frac{N_2}{N_1+N_3}$. In combination with the expression for $Pr_0\{I=1 \mbox{ and Win}\}$, this expression may be helpful in searching for candidate values of $t_2$ to achieve a given Type I error before simulation.
+
+## Summary
+
+We have presented a formula for adjusting the critical value in the final analysis of an adaptive trial with population enrichment, to penalize aggressive enrichment decisions by requiring stronger evidence of efficacy on the subpopulation that remains. We have found it useful in our trials and hope you do as well, and/or that you find ways to improve on it.
