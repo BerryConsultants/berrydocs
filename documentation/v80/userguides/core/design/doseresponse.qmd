@@ -37,7 +37,7 @@ responses are used to achieve this.
 # Continuous, Dichotomous, Time-To-Event, and Ordinal
 
 With the exception of two dose response models specific to a dichotomous
-endpoint, and the Dirichlet modeling capability for an ordinal endpoint, 
+endpoint, and the Dirichlet modeling capability for an ordinal endpoint,
 the same dose response modeling facilities are available for all endpoints.
 
 Let there be D total doses including the control arm if it exists. For
@@ -90,29 +90,29 @@ piece-wise exponential.
 
 ## Ordinal
 
-In the ordinal case the final endpoint for the $i^{th}$ participant can take on any of $K$ different values $1, 2, \ldots, K$. If the $i^{th}$ participant has been allocated to the control arm $(d_i = 0)$ then 
+In the ordinal case the final endpoint for the $i^{th}$ participant can take on any of $K$ different values $1, 2, \ldots, K$. If the $i^{th}$ participant has been allocated to the control arm $(d_i = 0)$ then
 $$ Y_i \sim \mbox{Categorical}(p^0_1,p^0_2,\ldots,p^0_K), $$
 that is:
 $$ \mbox{Pr}\left\{Y_i = k | d_i = 0 \right\} = p^0_k$$
-where $0 \leq p^0_k \leq 1$, $\sum_{k=1}^K p^0_k = 1$.  
+where $0 \leq p^0_k \leq 1$, $\sum_{k=1}^K p^0_k = 1$.
 
-If the $i^{th}$ participant is assigned to arm $d_i = d$, then 
+If the $i^{th}$ participant is assigned to arm $d_i = d$, then
 $$ \mbox{Pr}\left\{Y_i = k | d_i = d \right\} = p^d_k$$
-When the user selects ordinal modeling with independent Dirichlet distributions, then the ordinal outcome 
-probabilities $p^d_k$ for the other arms can vary freely (they are not functions of the control arm probabilities). 
+When the user selects ordinal modeling with independent Dirichlet distributions, then the ordinal outcome
+probabilities $p^d_k$ for the other arms can vary freely (they are not functions of the control arm probabilities).
 
 When the user has selected the cumulative logistic family, the $d^{th}$ arm has a log-odds ratio parameter $\theta_d$
-such that 
-$$\mbox{logit Pr}\{Y_i \leq k | d_i = d\} = \mbox{logit Pr}\{Y_i \leq k | d_i = 0\} - \theta_d = \alpha_k - \theta_d 
+such that
+$$\mbox{logit Pr}\{Y_i \leq k | d_i = d\} = \mbox{logit Pr}\{Y_i \leq k | d_i = 0\} - \theta_d = \alpha_k - \theta_d
 \mbox{ for } k=1,\ldots,K-1$$
-where $\mbox{logit}(p) = \log\{p/(1-p)\}$ and where we have defined 
-$\alpha_1 \leq \alpha_2 \cdots \leq \alpha_{K-1}$ by 
-$\alpha_k = \mbox{logit} \left( \sum_{j=1}^k p^0_j \right)$.  
+where $\mbox{logit}(p) = \log\{p/(1-p)\}$ and where we have defined
+$\alpha_1 \leq \alpha_2 \cdots \leq \alpha_{K-1}$ by
+$\alpha_k = \mbox{logit} \left( \sum_{j=1}^k p^0_j \right)$.
 
-If $\theta_d > 0$, small values of the ordinal endpoint are less likely for arm $d$ than they are for control.  
-In other words, if small values of the ordinal endpoint are desirable, then an arm $d$ with $\theta_d < 0$ is 
-beneficial compared to control.  On the other hand if large values of the ordinal endpoint are desirable, then 
-$\theta_d > 0$ implies that arm $d$ is beneficial relative to control.  
+If $\theta_d > 0$, small values of the ordinal endpoint are less likely for arm $d$ than they are for control.
+In other words, if small values of the ordinal endpoint are desirable, then an arm $d$ with $\theta_d < 0$ is
+beneficial compared to control.  On the other hand if large values of the ordinal endpoint are desirable, then
+$\theta_d > 0$ implies that arm $d$ is beneficial relative to control.
 
 :::
 
@@ -173,23 +173,23 @@ When the primary endpoint is time-to-event, the response rate on the control arm
 
 ## Ordinal
 
-If the response is ordinal and the user has selected cumulative logistic modeling, $\theta_d$ is 
-the log odds ratio for arm $d$ compared to the control arm.  The control arm parameter $\theta_0 = 0$ by definition.  
+If the response is ordinal and the user has selected cumulative logistic modeling, $\theta_d$ is
+the log odds ratio for arm $d$ compared to the control arm.  The control arm parameter $\theta_0 = 0$ by definition.
 
-If the user has selected independent Dirichlet modeling, then there is no parameter $\theta_d$.  
+If the user has selected independent Dirichlet modeling, then there is no parameter $\theta_d$.
 
-As of the initial release of the FACTS Ordinal Engine, the control arm is never included in the dose-response model, 
-and two-dimensional models are not supported.  
+As of the initial release of the FACTS Ordinal Engine, the control arm is never included in the dose-response model,
+and two-dimensional models are not supported.
 
 The prior distribution for the control arm probabilities is
 $$ (p^0_1, p^0_2, \ldots p^0_K) \sim \mbox{Dirichlet}\left( a^0_1, a^0_2, \ldots, a^0_K \right) $$
-where $a^0_k>0$ for $k=1,2,\ldots,K$.  
+where $a^0_k>0$ for $k=1,2,\ldots,K$.
 
 If the user selects independent Dirichlet modeling, then each arm $d$ has its own Dirichlet prior distribution
 $$ (p^d_1, p^d_2, \ldots p^d_K) \sim \mbox{Dirichlet}\left( a^d_1, a^d_2, \ldots, a^d_K \right) $$
-If non-informative priors for the $a^d_k$s are desired, Berger, Bernardo, and Sun 
-("Overall Objective Priors", Bayesian Analysis 2015), recommend using $a^d_k$ of approximately $0.8/K$ for $k=1,2,\ldots,K$.  
-A common informative approach is to interpret the $a^d_k$ as numbers of patients observed in each category in a similar previous study.  
+If non-informative priors for the $a^d_k$s are desired, Berger, Bernardo, and Sun
+("Overall Objective Priors", Bayesian Analysis 2015), recommend using $a^d_k$ of approximately $0.8/K$ for $k=1,2,\ldots,K$.
+A common informative approach is to interpret the $a^d_k$ as numbers of patients observed in each category in a similar previous study.
 :::
 
 Some, but not all, of the dose response models use the effective dose
@@ -203,9 +203,9 @@ between the study drug arms and the control arm and/or the active
 comparator arm. The doses are modelled as independent and normally
 distributed with a prior of:
 
-$$\theta_d \sim \text{N}(\mu_d, \nu_d^2)$$
+$$\theta_d \sim \text{N}(\mu_d, \tau_d^2)$$
 
-Where $\mu_d$ and $\nu_d^2$ are specified
+Where $\mu_d$ and $\tau_d$ are specified
 in FACTS and can either be the same or vary across arms.
 
 This model is useful:
@@ -248,7 +248,7 @@ borrow information between them. With trials with multiple arms of the
 same treatment at different doses it is usually more advantageous to fit
 a dose response model.
 
-##  Simple NDLM
+##  Normal Dynamic Linear Model
 
 The Normal Dynamic Linear Model (NDLM) estimates the final endpoint as a
 smoothed curve across doses included in the model. Doses are tied
@@ -259,22 +259,22 @@ follows:
 
 Let doses $d=d', \ldots, D$ be doses in the dose response model and
 $\theta_d$ be the estimated dose response for dose $d$. The
-initial dose $d'=1$ if there is no control or control is
-included in the dose response model, and $d'=2$ if the
+initial dose $d_I=1$ if there is no control or control is
+included in the dose response model, and $d_I=2$ if the
 control arm is modeled separately.
 
-The dose response of the first dose, $d'$, has a prior of:
+The dose response of the first dose, $d_I$, has a prior of:
 
-$$\theta_{d'} \sim N\left(\mu_{d'},\tau^2_{d'}\right)$$
+$$\theta_{d_I} \sim N\left(\mu_{I},\tau^2_{I}\right)$$
 
-where $\mu_{d'}$ and $\tau_{d'}^2$ are
+where $\mu_I$ and $\tau_I^2$ are
 specified directly in FACTS. Subsequent dose response estimates
-$\theta_{d'+1}, \ldots, \theta_D$ have priors
+$\theta_{d_{I+1}}, \ldots, \theta_D$ have priors
 centered at the previous dose response with variances based on the
 distance between the dose $d$ strength and the dose $d-1$ strength.
 Specifically,
 
-$$\theta_d \sim N\left(\theta_{d-1},\tau^2_{d-1}\right) \text{ for } d=d'+1, \ldots, D$$
+$$\theta_d \sim N\left(\theta_{d-1},\tau^2_{d-1}\right) \text{ for } d=d_I+1, \ldots, D$$
 
 where for dose strengths $\nu_d$ and $\nu_{d-1}$,
 $\tau_{d-1}^2$ is defined as
@@ -283,17 +283,17 @@ $$\tau^2_{d-1}=\tau^2\left(\nu_d-\nu_{d-1}\right)$$
 The prior distribution for the “drift” parameter, which controls the
 amount of smoothing is:
 
-$$\tau^{2}\sim IG\left( \frac{\tau_{n}}{2},\frac{\tau_{\mu}^{2}\tau_{n}}{2} \right)$$
+$$\tau^{2}\sim IG\left( \frac{n_\tau}{2},\frac{m_\tau^2 n_\tau}}{2} \right)$$
 
-where $\tau_\mu$ and $\tau_n$ are specified in the Dose
+where $m_\tau$ and $n_\tau$ are specified in the Dose
 Response tab in FACTS under Model Parameters. [See here](../../../../../concepts/facts/InverseGammaDistribution.qmd "Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.") for help with specifying an inverse gamma distribution with center and weight.
 
 In the continuous case the residual error around the estimated dose
 response is
 
-$$\sigma^{2}\sim IG\left( \frac{\sigma_{n}}{2},\frac{\sigma_{\mu}^{2}\sigma_{n}}{2} \right)$$
+$$\sigma^{2}\sim IG\left( \frac{n_\sigma}{2},\frac{m_\sigma^{2}n_\sigma}{2} \right)$$
 
-where $\sigma_\mu$ and $\sigma_n$ are specified on the Dose
+where $m_\sigma$ and $n_\sigma$ are specified on the Dose
 Response tab in FACTS under Error Parameters.
 
 The Simple NDLM is generally a good model to use when the shape of the
@@ -350,7 +350,7 @@ subject data would not suggest this to be the case.
 
 :::
 
-## Monotonic NDLM
+## Monotonic Normal Dynamic Linear Model
 
 The Monotonic NDLM endpoint model is similar to the NDLM in the sense
 that it smooths dose response estimates using neighboring doses, but is
@@ -363,19 +363,21 @@ The use of this model is generally limited to endpoints where a strong
 presumption of increasing/decreasing response with dose is reasonable –
 such as a biomarker or a toxicity endpoint.
 
-Let doses $d = d', \ldots, D$ be doses in the dose response model and
+Let doses $d = d_I, \ldots, D$ be doses in the dose response model and
 $\theta_d$ be the estimated dose response for dose $d$. The
-initial dose $d'=1$ if there is no control or control is
-included in the dose response model, and $d'=2$ if the
+initial dose $d_I=1$ if there is no control or control is
+included in the dose response model, and $d_I=2$ if the
 control arm is modeled separately. The following model is the
-monotonically positive NDLM:
+monotonically increasing NDLM:
 
-$$\theta_{d'} \sim N\left(\mu_{d'},\tau^2_{d'}\right)$$
+$$\theta_{d'} \sim N\left(\mu_{I},\tau^2_{I}\right)$$
 
 and
 
-$$\theta_d \sim N^+\left(\theta_{d-1},\tau^2_{d-1}\right) \mbox{ for } d = d', \ldots, D,$$
-where $\tau_{d-1}^2$ is defined as in the NDLM, and
+$$\theta_d \sim N^+\left(\theta_{d-1},\tau^2_{d-1}\right) \mbox{ for } d = d_{I+1}, \ldots, D,$$
+where
+$$\tau^2_{d-1}=\tau^2\left(\nu_d-\nu_{d-1}\right)$$
+as in the standard NDLM, and
 $X \sim \text{N}^+(\mu, \sigma^2)$ refers to a positive
 truncated normal distribution with density function:
 
@@ -385,7 +387,7 @@ The result of this dose-response model is that the curve is
 monotonically increasing, in that $\theta_d>\theta_{d-1}$.
 
 The monotonically decreasing NDLM is similar except:
-$$\theta_d \sim N^-\left(\theta_{d-1},\tau^2_{d-1}\right) \mbox{ for } d = d', \ldots, D,$$
+$$\theta_d \sim N^-\left(\theta_{d-1},\tau^2_{d-1}\right) \mbox{ for } d = d_{I+1}, \ldots, D,$$
 
 where $X \sim \text{N}^-(\mu, \sigma^2)$ refers to a negative
 truncated normal distribution:
@@ -396,37 +398,37 @@ The result of this dose-response model is that the curve is
 monotonically decreasing, in that
 $\theta_d<\theta_{d-1}$.
 
-## Second Order NDLM
+## Second Order Normal Dynamic Linear Model
 
 The second order NDLM serves as a “smoother” similar to the
-NDLM, however it tends to smooth toward a linear fit with a slope (the
-NDLM itself tends to shrink each dose’s fit toward its neighbors, while
-the second order NDLM prefers any trend in the neighbors).
+standard NDLM, however it tends to smooth toward a linear fit with a slope. The
+standard NDLM tends to shrink each dose’s fit toward its neighbors, while
+the second order NDLM prefers any trend in the neighbors.
 
-Let doses $d=d', \ldots, D$ be doses in the dose response model and $\theta_d$ be the estimated dose response for dose $d$. The
-initial dose $d'=1$ if there is no control arm or control
-is included in the dose response model, and $d'=2$ if the
-control arm is modelled separately. The initial dose $d'$ is modeled:
+Let doses $d=d_I, \ldots, D$ be doses in the dose response model and $\theta_d$ be the estimated dose response for dose $d$. The
+initial dose $d_I=1$ if there is no control arm or control
+is included in the dose response model, and $d_I=2$ if the
+control arm is modelled separately. The initial dose $d_I$ is modeled:
 
-$$\theta_{d'} \sim N\left(\mu_{0},\tau^2_{0}\right)$$
+$$\theta_{d_I} \sim N\left(\mu_{I},\tau^2_{I}\right)$$
 
-where $\mu_0$ and $\tau_0^2$ are specified
+where $\mu_I$ and $\tau_I$ are specified
 directly in FACTS.
 
-In the case of a time-to-event endpoint, the initial dose $d'$ is the control arm, and has a $\theta_{d'}= 0$ by definition, so no prior distribution is needed.
+In the case of a time-to-event endpoint, the initial dose $d_I$ is the control arm, and has a $\theta_{d_I}= 0$ by definition, so no prior distribution is needed.
 
 The prior distribution for the dose response for the dose directly after
 the initial dose is specified on the difference between the $d'$ and
 $d'+1$ level doses:
 
-$$\theta_{d'+1} - \theta_{d'} \sim N\left(\mu_{1},\tau^2_{1}\right)$$
+$$\theta_{d_I+1} - \theta_{d_I} \sim N\left(\mu_{II},\tau^2_{II}\right)$$
 
 Successive doses are then modeled based on differences in slope between
 the dose and the two doses below them. Let:
 
-$$\theta_{d} = \theta_{d - 1} + \Delta_{d}\zeta_{d} + \frac{\Delta_{d}}{\Delta_{d - 1}}\left( \theta_{d - 1} - \theta_{d - 2} \right)$$
+$$\theta_{d} = \theta_{d - 1} + \Delta \nu_{d}\omega_d + \frac{\Delta_{d}}{\Delta_{d - 1}}\left( \theta_{d - 1} - \theta_{d - 2} \right)$$
 
-for doses $d=d'+2,\ldots,D$, where
+for doses $d=d_I+2,\ldots,D$, where
 $\Delta_d=\nu_d-\nu_{d-1}$ and $\Delta_{d-1}=\nu_{d-1}-\nu_{d-2}$.
 The priors for the dose response smoothing terms $\zeta_d$ are:
 
