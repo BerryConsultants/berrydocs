@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Dose Response Models</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../../">
+<link href="../../../../../media/FACTS_icon.png" rel="icon" type="image/png">
+<script src="../../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../../site_libs/bootstrap/bootstrap-e92fb617ac39cba344ec42fdd1c3682a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<!-- Roboto Serif -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
+
+<!-- Roboto Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WLMVE7GR4S');
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../../../media/FACTSLogo.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../introduction/index.html"> 
+<span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../documentation/index.html"> 
+<span class="menu-text">Documentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../get/index.html"> 
+<span class="menu-text">Get FACTS</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../contact/index.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Dose Response Models</h1>
+            <p class="subtitle lead">Description of the available dose response models in FACTS Core.</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#continuous-dichotomous-time-to-event-and-ordinal" id="toc-continuous-dichotomous-time-to-event-and-ordinal" class="nav-link active" data-scroll-target="#continuous-dichotomous-time-to-event-and-ordinal">Continuous, Dichotomous, Time-To-Event, and Ordinal</a></li>
+  <li><a href="#dose-response-models" id="toc-dose-response-models" class="nav-link" data-scroll-target="#dose-response-models">Dose Response Models</a>
+  <ul>
+  <li><a href="#independent-dose-model" id="toc-independent-dose-model" class="nav-link" data-scroll-target="#independent-dose-model">Independent Dose Model</a></li>
+  <li><a href="#independent-beta-binomial-model-dichotomous-only" id="toc-independent-beta-binomial-model-dichotomous-only" class="nav-link" data-scroll-target="#independent-beta-binomial-model-dichotomous-only">Independent Beta-Binomial Model (Dichotomous Only)</a></li>
+  <li><a href="#simple-ndlm" id="toc-simple-ndlm" class="nav-link" data-scroll-target="#simple-ndlm">Simple NDLM</a></li>
+  <li><a href="#monotonic-ndlm" id="toc-monotonic-ndlm" class="nav-link" data-scroll-target="#monotonic-ndlm">Monotonic NDLM</a></li>
+  <li><a href="#second-order-ndlm" id="toc-second-order-ndlm" class="nav-link" data-scroll-target="#second-order-ndlm">Second Order NDLM</a></li>
+  <li><a href="#parameter-logistic" id="toc-parameter-logistic" class="nav-link" data-scroll-target="#parameter-logistic">3-Parameter Logistic</a></li>
+  <li><a href="#hierarchical-logistic" id="toc-hierarchical-logistic" class="nav-link" data-scroll-target="#hierarchical-logistic">Hierarchical Logistic</a></li>
+  <li><a href="#sigmoid-model" id="toc-sigmoid-model" class="nav-link" data-scroll-target="#sigmoid-model">Sigmoid Model</a></li>
+  <li><a href="#u-shaped-model" id="toc-u-shaped-model" class="nav-link" data-scroll-target="#u-shaped-model">U-Shaped Model</a></li>
+  <li><a href="#plateau-model" id="toc-plateau-model" class="nav-link" data-scroll-target="#plateau-model">Plateau Model</a></li>
+  <li><a href="#parameter-exponential-logistic-dichotomous-only" id="toc-parameter-exponential-logistic-dichotomous-only" class="nav-link" data-scroll-target="#parameter-exponential-logistic-dichotomous-only">3 Parameter Exponential Logistic (Dichotomous Only)</a></li>
+  <li><a href="#hierarchical-model" id="toc-hierarchical-model" class="nav-link" data-scroll-target="#hierarchical-model">Hierarchical Model</a></li>
+  <li><a href="#linear-model" id="toc-linear-model" class="nav-link" data-scroll-target="#linear-model">Linear Model</a></li>
+  <li><a href="#hierarchical-linear-model" id="toc-hierarchical-linear-model" class="nav-link" data-scroll-target="#hierarchical-linear-model">Hierarchical Linear Model</a></li>
+  </ul></li>
+  <li><a href="#d-treatment-dose-response-models" id="toc-d-treatment-dose-response-models" class="nav-link" data-scroll-target="#d-treatment-dose-response-models">2D Treatment Dose Response Models</a>
+  <ul>
+  <li><a href="#d-continuous-factorial-model" id="toc-d-continuous-factorial-model" class="nav-link" data-scroll-target="#d-continuous-factorial-model">2D Continuous Factorial Model</a></li>
+  <li><a href="#d-discrete-factorial-model" id="toc-d-discrete-factorial-model" class="nav-link" data-scroll-target="#d-discrete-factorial-model">2D Discrete Factorial Model</a></li>
+  <li><a href="#d-ndlm" id="toc-d-ndlm" class="nav-link" data-scroll-target="#d-ndlm">2D NDLM</a>
+  <ul class="collapse">
+  <li><a href="#the-base-model-with-control-included" id="toc-the-base-model-with-control-included" class="nav-link" data-scroll-target="#the-base-model-with-control-included">The Base Model, with Control Included</a></li>
+  <li><a href="#fix-smoothing-ratio-for-row-factor-and-column-factor" id="toc-fix-smoothing-ratio-for-row-factor-and-column-factor" class="nav-link" data-scroll-target="#fix-smoothing-ratio-for-row-factor-and-column-factor">Fix smoothing ratio for row factor and column factor</a></li>
+  <li><a href="#control-not-in-model-no-zero-level-doses" id="toc-control-not-in-model-no-zero-level-doses" class="nav-link" data-scroll-target="#control-not-in-model-no-zero-level-doses">Control not in model, no zero-level doses</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#baseline-adjusted-dose-response-models-continuous-only" id="toc-baseline-adjusted-dose-response-models-continuous-only" class="nav-link" data-scroll-target="#baseline-adjusted-dose-response-models-continuous-only">Baseline Adjusted Dose Response Models (Continuous Only)</a></li>
+  <li><a href="#control-and-comparator-priors" id="toc-control-and-comparator-priors" class="nav-link" data-scroll-target="#control-and-comparator-priors">Control and Comparator Priors</a>
+  <ul>
+  <li><a href="#hierarchical-priors" id="toc-hierarchical-priors" class="nav-link" data-scroll-target="#hierarchical-priors">Hierarchical Priors</a>
+  <ul class="collapse">
+  <li><a href="#setting-priors-for-hierarchical-model-hyper-parameters" id="toc-setting-priors-for-hierarchical-model-hyper-parameters" class="nav-link" data-scroll-target="#setting-priors-for-hierarchical-model-hyper-parameters">Setting Priors for Hierarchical Model Hyper Parameters</a></li>
+  <li><a href="#bayesian-augmented-control-bac-example" id="toc-bayesian-augmented-control-bac-example" class="nav-link" data-scroll-target="#bayesian-augmented-control-bac-example">Bayesian Augmented Control (BAC) Example:</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#inverse-gamma-priors" id="toc-inverse-gamma-priors" class="nav-link" data-scroll-target="#inverse-gamma-priors">Inverse-gamma priors</a></li>
+  <li><a href="#handling-missing-data" id="toc-handling-missing-data" class="nav-link" data-scroll-target="#handling-missing-data">Handling Missing Data</a>
+  <ul>
+  <li><a href="#time-to-event-missingness" id="toc-time-to-event-missingness" class="nav-link" data-scroll-target="#time-to-event-missingness">Time-to-Event Missingness</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+
+
+
+
+
+<p>Dose response models in FACTS may be more accurately called final endpoint models. They create and model a relationship across the doses specified in the Treatment Arms tab. Often, but not always, the dose strength, called “Effective Dose Strength” in the Study &gt; Treatment Arms tab of FACTS, is used in the dose response models to determine the order of doses, and which doses are more related to others.</p>
+<p>The dose response models can be simple, and model the doses largely independently, as is done with the Independent Dose Model or the Independent Beta Binomial Model (dichotomous only). They can have logistic style models with interpretable parameters, like the 3-parameter logistic or the <span class="math inline">\(E_{max}\)</span> model (called Sigmoidal in FACTS). The dose response model can also be a model that creates a smooth, spline like, model over the doses using a normal dynamic linear model (NDLM), a monotonic NDLM, or a 2nd order NDLM.</p>
+<p>For all endpoints, we model the response at each dose, d, in terms of <span class="math inline">\(\theta_d\)</span> on a continuous scale, allowing a consistent and rich range of dose response models to be used for all endpoint types. Transformations (see below) of the dichotomous and time-to-event responses are used to achieve this.</p>
+<section id="continuous-dichotomous-time-to-event-and-ordinal" class="level1">
+<h1>Continuous, Dichotomous, Time-To-Event, and Ordinal</h1>
+<p>With the exception of two dose response models specific to a dichotomous endpoint, and the Dirichlet modeling capability for an ordinal endpoint, the same dose response modeling facilities are available for all endpoints.</p>
+<p>Let there be D total doses including the control arm if it exists. For any endpoint, the estimate of dose response model is called <span class="math inline">\(\theta_d\)</span> for a dose <span class="math inline">\(d \in \{1, \ldots , D\}\)</span>.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Dichotomous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Time-To-Event</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Ordinal</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>In the continuous dose response models the individual response or change from baseline (if it is being used) <span class="math inline">\(Y_i\)</span> of the <span class="math inline">\(i^{th}\)</span> subject allocated to dose <span class="math inline">\(d_i\)</span> is modeled: <span class="math display">\[
+Y_i \sim \text{N}(\theta_{d_i}, \sigma^2)
+\]</span></p>
+<p>The dose means <span class="math inline">\(\theta_{d}\)</span> have formulations depending on the selected dose response model.</p>
+<p>The variance <span class="math inline">\(\sigma^2\)</span> has an inverse-gamma prior. For a description in how FACTS elicits parameterizations for the Inverse Gamma distribution, <a href="../../../../../concepts/facts/InverseGammaDistribution.html" title="Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.">see here</a>.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>In the dichotomous case the final endpoint of the <span class="math inline">\(i^{th}\)</span> subject who has been allocated to dose <span class="math inline">\(d_i\)</span> is modeled:</p>
+<p><span class="math display">\[ Y_i \sim \text{Bernoulli}(P_{d_i}) \]</span> where <span class="math inline">\(P_{d_i}\)</span> is the probability of response for a subject on dose <span class="math inline">\(d_i\)</span>. The probability <span class="math inline">\(P_d\)</span> is modeled on the logit scale, so <span class="math display">\[P_{d} = \frac{e^{\theta_{d}}}{1 + e^{\theta_{d}}},\]</span> and <span class="math inline">\(\theta_d\)</span> is the log-odds ratio: <span class="math display">\[\theta_{d} = ln\left( \frac{P_{d}}{1 - P_{d}} \right)\]</span></p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p>In the time-to-event case, the time to a subject’s response, <span class="math inline">\(Y_i\)</span> is modeled as piece-wise exponentially distributed with hazard rates, <span class="math inline">\(\lambda_s\)</span>, for pieces <span class="math inline">\(s \in \{1,\ldots,S\}\)</span>. So,</p>
+<p><span class="math display">\[ Y_i \sim \text{PWExp}(\{\lambda_1,\ldots,\lambda_S\})\]</span></p>
+<p>for a subject on the control arm, and</p>
+<p><span class="math display">\[ Y_i \sim \text{PWExp}(\{\lambda_1 e^{\theta_d},\ldots,\lambda_S e^{\theta_d}\})\]</span></p>
+<p>for non-control doses. Then, <span class="math inline">\(\theta_d\)</span> is the log-hazard ratio <span class="math inline">\(\left( \ln\left( \frac{\lambda_{s}e^{\theta_{d}}}{\lambda_{s}} \right) = \ln\left( e^{\theta_{d}} \right) = \theta_{d} \right)\)</span> averaged over the observation time segments. This formulation implies a proportional treatment effect across the pieces of the piece-wise exponential.</p>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<p>In the ordinal case the final endpoint for the <span class="math inline">\(i^{th}\)</span> participant can take on any of <span class="math inline">\(K\)</span> different values <span class="math inline">\(1, 2, \ldots, K\)</span>. If the <span class="math inline">\(i^{th}\)</span> participant has been allocated to the control arm <span class="math inline">\((d_i = 0)\)</span> then <span class="math display">\[ Y_i \sim \mbox{Categorical}(p^0_1,p^0_2,\ldots,p^0_K), \]</span> that is: <span class="math display">\[ \mbox{Pr}\left\{Y_i = k | d_i = 0 \right\} = p^0_k\]</span> where <span class="math inline">\(0 \leq p^0_k \leq 1\)</span>, <span class="math inline">\(\sum_{k=1}^K p^0_k = 1\)</span>.</p>
+<p>If the <span class="math inline">\(i^{th}\)</span> participant is assigned to arm <span class="math inline">\(d_i = d\)</span>, then <span class="math display">\[ \mbox{Pr}\left\{Y_i = k | d_i = d \right\} = p^d_k\]</span> When the user selects ordinal modeling with independent Dirichlet distributions, then the ordinal outcome probabilities <span class="math inline">\(p^d_k\)</span> for the other arms can vary freely (they are not functions of the control arm probabilities).</p>
+<p>When the user has selected the cumulative logistic family, the <span class="math inline">\(d^{th}\)</span> arm has a log-odds ratio parameter <span class="math inline">\(\theta_d\)</span> such that <span class="math display">\[\mbox{logit Pr}\{Y_i \leq k | d_i = d\} = \mbox{logit Pr}\{Y_i \leq k | d_i = 0\} - \theta_d = \alpha_k - \theta_d
+\mbox{ for } k=1,\ldots,K-1\]</span> where <span class="math inline">\(\mbox{logit}(p) = \log\{p/(1-p)\}\)</span> and where we have defined <span class="math inline">\(\alpha_1 \leq \alpha_2 \cdots \leq \alpha_{K-1}\)</span> by <span class="math inline">\(\alpha_k = \mbox{logit} \left( \sum_{j=1}^k p^0_j \right)\)</span>.</p>
+<p>If <span class="math inline">\(\theta_d &gt; 0\)</span>, small values of the ordinal endpoint are less likely for arm <span class="math inline">\(d\)</span> than they are for control.<br>
+In other words, if small values of the ordinal endpoint are desirable, then an arm <span class="math inline">\(d\)</span> with <span class="math inline">\(\theta_d &lt; 0\)</span> is beneficial compared to control. On the other hand if large values of the ordinal endpoint are desirable, then <span class="math inline">\(\theta_d &gt; 0\)</span> implies that arm <span class="math inline">\(d\)</span> is beneficial relative to control.</p>
+</div>
+</div>
+</div>
+<p>Each dose response model is parameterized in terms of <span class="math inline">\(\theta_d\)</span>, but each endpoint models this parameter on a different scale. The dichotomous dose response models are on the log-odds scale, and the time-to-event endpoint models are on the log hazard ratio. When specifying a prior distribution for a continuous endpoint dose response model the expected data mean and variance determine which priors should be considered non-informative. When estimating a probability in the dichotomous case, using a prior with standard deviation above, say, 10 leads to a diffuse distribution on the log-odds scale, but results in a prior distribution on the probability scale that is heavily peaked at 0 and 1. This can lead to undesirable model results and decisions being made in small sample size situations, and numerical instability in extreme cases. Similarly on the time-to-event scale, the prior put on the log-hazard ratio <span class="math inline">\(\theta_d\)</span> is exponentiated before being multiplied by the hazard rate, so diffuse priors on the log-hazard can have unexpected modeled results. Again, time-to-event <span class="math inline">\(\theta_d\)</span> priors that have standard deviations less than about 10 are generally acceptably diffuse for most situations while avoiding edge case curiosities.</p>
+</section>
+<section id="dose-response-models" class="level1">
+<h1>Dose Response Models</h1>
+<p>The Dose Response section of the Design tab allows the user to specify how to analyze the relationship between dose/treatment arm and the final response and hence estimate the values <span class="math inline">\(\theta_d\)</span>. The interpretation of <span class="math inline">\(\theta_d\)</span> depends on the nature of the endpoint:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Dichotomous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Time-To-Event</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false">Ordinal</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>Where the response is continuous, <span class="math inline">\(\theta_d\)</span> is the estimate of the mean response/change from baseline on treatment arm <span class="math inline">\(d\)</span>, and the common inter-subject variance of the response <span class="math inline">\(\sigma^2\)</span>, is also estimated.</p>
+<p>The response on the control arm, <span class="math inline">\(\theta_0\)</span>, is estimated either in the dose response model or modeled separately.</p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>Where the response is dichotomous, <span class="math inline">\(\theta_d\)</span> is the estimate of the log-odds of the probability of observing a response on the treatment arm <span class="math inline">\(d\)</span>.</p>
+<p>The response on the control arm, <span class="math inline">\(\theta_0\)</span>, is estimated either in the dose response model or modeled separately.</p>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<p>Where the response is time-to-event, <span class="math inline">\(\theta_d\)</span> is the estimate of the log hazard ratio compared to the control arm on the treatment arm <span class="math inline">\(d\)</span>.</p>
+<p>When the primary endpoint is time-to-event, the response rate on the control arm, <span class="math inline">\(\lambda\)</span>, is estimated and <span class="math inline">\(\theta_d\)</span> for <span class="math inline">\(d\in \{1,2,\ldots,D\}\)</span> is the log hazard of the response rate of each treatment arm compared to the control arm, so <span class="math inline">\(\theta_0\equiv 0\)</span>.</p>
+</div>
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<p>If the response is ordinal and the user has selected cumulative logistic modeling, <span class="math inline">\(\theta_d\)</span> is the log odds ratio for arm <span class="math inline">\(d\)</span> compared to the control arm. The control arm parameter <span class="math inline">\(\theta_0 = 0\)</span> by definition.</p>
+<p>If the user has selected independent Dirichlet modeling, then there is no parameter <span class="math inline">\(\theta_d\)</span>.</p>
+<p>As of the initial release of the FACTS Ordinal Engine, the control arm is never included in the dose-response model, and two-dimensional models are not supported.</p>
+<p>The prior distribution for the control arm probabilities is <span class="math display">\[ (p^0_1, p^0_2, \ldots p^0_K) \sim \mbox{Dirichlet}\left( a^0_1, a^0_2, \ldots, a^0_K \right) \]</span> where <span class="math inline">\(a^0_k&gt;0\)</span> for <span class="math inline">\(k=1,2,\ldots,K\)</span>.</p>
+<p>If the user selects independent Dirichlet modeling, then each arm <span class="math inline">\(d\)</span> has its own Dirichlet prior distribution <span class="math display">\[ (p^d_1, p^d_2, \ldots p^d_K) \sim \mbox{Dirichlet}\left( a^d_1, a^d_2, \ldots, a^d_K \right) \]</span> If non-informative priors for the <span class="math inline">\(a^d_k\)</span>s are desired, Berger, Bernardo, and Sun (“Overall Objective Priors”, Bayesian Analysis 2015), recommend using <span class="math inline">\(a^d_k\)</span> of approximately <span class="math inline">\(0.8/K\)</span> for <span class="math inline">\(k=1,2,\ldots,K\)</span>.<br>
+A common informative approach is to interpret the <span class="math inline">\(a^d_k\)</span> as numbers of patients observed in each category in a similar previous study.</p>
+</div>
+</div>
+</div>
+<p>Some, but not all, of the dose response models use the effective dose strength, <span class="math inline">\(\nu_d\)</span>, to model the dose response <span class="math inline">\(\theta_d\)</span>. The effective dose strength is specified on the Study &gt; Treatment Arms tab. It is always fixed at 0 for the control arm (<span class="math inline">\(\nu_0\equiv 0\)</span>).</p>
+<section id="independent-dose-model" class="level2">
+<h2 class="anchored" data-anchor-id="independent-dose-model">Independent Dose Model</h2>
+<p>The “Independent Dose Model” providing a simple pair-wise comparison between the study drug arms and the control arm and/or the active comparator arm. The doses are modelled as independent and normally distributed with a prior of:</p>
+<p><span class="math display">\[\theta_d \sim \text{N}(\mu_d, \nu_d^2)\]</span></p>
+<p>Where <span class="math inline">\(\mu_d\)</span> and <span class="math inline">\(\nu_d^2\)</span> are specified in FACTS and can either be the same or vary across arms.</p>
+<p>This model is useful:</p>
+<ul>
+<li><p>When there is only one or two experimental arms</p></li>
+<li><p>When the study drug arms don’t differ by dose but in other ways, so there is no ordered sequence of treatments – e.g.&nbsp;each arm is the study drug in combination with a different additional drug.</p></li>
+<li><p>For simulating simple trial designs</p></li>
+<li><p>For simulating a ‘conventional’ or ‘strawman’ design to compare more complex designs against</p></li>
+</ul>
+<p>Otherwise for trials with multiple related arms that differ by dose, it is usually more efficient to use a dose-response model.</p>
+</section>
+<section id="independent-beta-binomial-model-dichotomous-only" class="level2">
+<h2 class="anchored" data-anchor-id="independent-beta-binomial-model-dichotomous-only">Independent Beta-Binomial Model (Dichotomous Only)</h2>
+<p>This is a “no model” option similar to the above, but only available for the Dichotomous endpoint. Unlike any other dose response model, this model uses the beta distribution to model the probability of response directly rather than fitting a model to the log-odds of the probability.</p>
+<p>The final endpoint response <span class="math inline">\(Y_i\)</span> is modeled as:</p>
+<p><span class="math display">\[Y_i \sim \text{Bernoulli}(P_d)\]</span> where <span class="math inline">\(P_d\)</span> is the probability that a patient is a response at the final endpoint for subjects randomized to dose <span class="math inline">\(d\)</span>. With posterior</p>
+<p><span class="math display">\[P_d \sim \text{Beta}(\alpha_d + \text{responders}_d, \beta_d + \text{non-responders}_d)\]</span></p>
+<p>Where <span class="math inline">\(\alpha_d\)</span>, <span class="math inline">\(\beta_d\)</span> are the priors for the arm <span class="math inline">\(d\)</span>, <span class="math inline">\(\text{responders}_d\)</span> is the number of responders on arm <span class="math inline">\(d\)</span> and <span class="math inline">\(\text{non-responders}_d\)</span> is the number of non-responders on arm <span class="math inline">\(d\)</span>.</p>
+<p>This model has the advantages of an easier to understand prior, and better estimation of <span class="math inline">\(P_d\)</span> when the number of responders and non-responders is small (either is &lt; 5) compared to the log-odds model. As it’s a independent dose model, it is well suited to analyzing single arm, two arm or three arm trials, or trials where the experimental arms are unrelated, and so there is no basis on which to borrow information between them. With trials with multiple arms of the same treatment at different doses it is usually more advantageous to fit a dose response model.</p>
+</section>
+<section id="simple-ndlm" class="level2">
+<h2 class="anchored" data-anchor-id="simple-ndlm">Simple NDLM</h2>
+<p>The Normal Dynamic Linear Model (NDLM) estimates the final endpoint as a smoothed curve across doses included in the model. Doses are tied directly to their nearest neighbor, and the prior expectation for a dose is that it is equal to its neighboring doses, tending to a constant dose response across doses in the absence of data. The model is defined as follows:</p>
+<p>Let doses <span class="math inline">\(d=d', \ldots, D\)</span> be doses in the dose response model and <span class="math inline">\(\theta_d\)</span> be the estimated dose response for dose <span class="math inline">\(d\)</span>. The initial dose <span class="math inline">\(d'=1\)</span> if there is no control or control is included in the dose response model, and <span class="math inline">\(d'=2\)</span> if the control arm is modeled separately.</p>
+<p>The dose response of the first dose, <span class="math inline">\(d'\)</span>, has a prior of:</p>
+<p><span class="math display">\[\theta_{d'} \sim N\left(\mu_{d'},\tau^2_{d'}\right)\]</span></p>
+<p>where <span class="math inline">\(\mu_{d'}\)</span> and <span class="math inline">\(\tau_{d'}^2\)</span> are specified directly in FACTS. Subsequent dose response estimates <span class="math inline">\(\theta_{d'+1}, \ldots, \theta_D\)</span> have priors centered at the previous dose response with variances based on the distance between the dose <span class="math inline">\(d\)</span> strength and the dose <span class="math inline">\(d-1\)</span> strength. Specifically,</p>
+<p><span class="math display">\[\theta_d \sim N\left(\theta_{d-1},\tau^2_{d-1}\right) \text{ for } d=d'+1, \ldots, D\]</span></p>
+<p>where for dose strengths <span class="math inline">\(\nu_d\)</span> and <span class="math inline">\(\nu_{d-1}\)</span>, <span class="math inline">\(\tau_{d-1}^2\)</span> is defined as <span class="math display">\[\tau^2_{d-1}=\tau^2\left(\nu_d-\nu_{d-1}\right)\]</span></p>
+<p>The prior distribution for the “drift” parameter, which controls the amount of smoothing is:</p>
+<p><span class="math display">\[\tau^{2}\sim IG\left( \frac{\tau_{n}}{2},\frac{\tau_{\mu}^{2}\tau_{n}}{2} \right)\]</span></p>
+<p>where <span class="math inline">\(\tau_\mu\)</span> and <span class="math inline">\(\tau_n\)</span> are specified in the Dose Response tab in FACTS under Model Parameters. <a href="../../../../../concepts/facts/InverseGammaDistribution.html" title="Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.">See here</a> for help with specifying an inverse gamma distribution with center and weight.</p>
+<p>In the continuous case the residual error around the estimated dose response is</p>
+<p><span class="math display">\[\sigma^{2}\sim IG\left( \frac{\sigma_{n}}{2},\frac{\sigma_{\mu}^{2}\sigma_{n}}{2} \right)\]</span></p>
+<p>where <span class="math inline">\(\sigma_\mu\)</span> and <span class="math inline">\(\sigma_n\)</span> are specified on the Dose Response tab in FACTS under Error Parameters.</p>
+<p>The Simple NDLM is generally a good model to use when the shape of the likely dose response is unknown, but we would like to borrow information between a dose and its neighboring doses. No monotonicity or pre-determined shape is enforced by the Simple NDLM. The variance in dose response from dose to dose is updated based on the observed data, but as the number of doses in a trial is typically small, a moderately informative prior is often used.</p>
+<p>In a null scenario where the response on all the doses is the same as control, the simple NDLM reduces type-1 error. The estimate of <span class="math inline">\(\tau^2\)</span> tends towards zero and the estimate of the dose response tends to a flat line. The smoothing of the estimates of the response reduces the random fluctuations in the estimates from dose to dose and is a very effective counter to the problem of type-1 error inflation due to the multiplicity of doses being tested. A small prior for the mean value of <span class="math inline">\(\tau\)</span> will accentuate this effect. The price to be paid for this benefit is a tendency to underestimate large changes in response or where there is a peak in the response. This over-smoothing can reduce power. A prior for the mean of <span class="math inline">\(\tau\)</span> centered at large values will minimize over-smoothing, and a very large prior would simply remove any smoothing effect at all. A standard prior for the mean of <span class="math inline">\(\tau\)</span> would be the expected average change in response from dose to dose, scaled to take into account the differences in the specified effective dose strengths.</p>
+<p>Usually, the choice of prior for <span class="math inline">\(\tau^2\)</span> is tuned based on simulation results, trading off reducing type-1 error in the null case against loss of power and reduced estimate of maximum response in the effective scenario with the largest jump in response or steepest peak.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note on the use of an NDLM with doses without subjects
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>When using the NDLM model or any of its alternatives (2<span class="math inline">\(^{nd}\)</span> order or Monotonic NDLM), and including doses in a design that receive no subject allocation (ie. Allocation ratio set to 0), some important characteristics of the model should be considered in the interpretation of results. First, the NDLM model “borrows” information from neighboring doses, and therefore including unallocated intermediate doses will increase uncertainty in the fitted response. Information must “pass through” these intermediate doses, and uncertainty should be expected to increase as the number of intermediate unallocated doses between two allocated doses increases. Secondly, the NDLM model estimates the response at unallocated doses, but without subject data at these doses the uncertainty in the estimate can be considerably larger than doses with subject data. This high degree of uncertainty can lead to a vestigial probability that an unallocated dose is the target dose (<span class="fake-code-block">Pr(EDq)</span>, <span class="fake-code-block">Pr(MED)</span>, <span class="fake-code-block">Pr(Max)</span>) even though the mean response estimate and probabilities at neighboring doses with subject data would not suggest this to be the case.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="monotonic-ndlm" class="level2">
+<h2 class="anchored" data-anchor-id="monotonic-ndlm">Monotonic NDLM</h2>
+<p>The Monotonic NDLM endpoint model is similar to the NDLM in the sense that it smooths dose response estimates using neighboring doses, but is constrained to be either monotonically increasing or monotonically decreasing across doses. The direction of monotonicity depends on the value specified in the “Monotonic:” selection in the Model Parameters section of the Monotonic NDLM Dose Response page.</p>
+<p>The use of this model is generally limited to endpoints where a strong presumption of increasing/decreasing response with dose is reasonable – such as a biomarker or a toxicity endpoint.</p>
+<p>Let doses <span class="math inline">\(d = d', \ldots, D\)</span> be doses in the dose response model and <span class="math inline">\(\theta_d\)</span> be the estimated dose response for dose <span class="math inline">\(d\)</span>. The initial dose <span class="math inline">\(d'=1\)</span> if there is no control or control is included in the dose response model, and <span class="math inline">\(d'=2\)</span> if the control arm is modeled separately. The following model is the monotonically positive NDLM:</p>
+<p><span class="math display">\[\theta_{d'} \sim N\left(\mu_{d'},\tau^2_{d'}\right)\]</span></p>
+<p>and</p>
+<p><span class="math display">\[\theta_d \sim N^+\left(\theta_{d-1},\tau^2_{d-1}\right) \mbox{ for } d = d', \ldots, D,\]</span> where <span class="math inline">\(\tau_{d-1}^2\)</span> is defined as in the NDLM, and <span class="math inline">\(X \sim \text{N}^+(\mu, \sigma^2)\)</span> refers to a positive truncated normal distribution with density function:</p>
+<p><span class="math display">\[f_{X}(x) = \frac{1 - \Phi\left( - \frac{\mu}{\sigma} \right)}{\sqrt{2\pi}\sigma}\exp\left\{ - \frac{1}{2\sigma^{2}}(x - \mu)^{2} \right\} \text{ for } x&gt;0\]</span></p>
+<p>The result of this dose-response model is that the curve is monotonically increasing, in that <span class="math inline">\(\theta_d&gt;\theta_{d-1}\)</span>.</p>
+<p>The monotonically decreasing NDLM is similar except: <span class="math display">\[\theta_d \sim N^-\left(\theta_{d-1},\tau^2_{d-1}\right) \mbox{ for } d = d', \ldots, D,\]</span></p>
+<p>where <span class="math inline">\(X \sim \text{N}^-(\mu, \sigma^2)\)</span> refers to a negative truncated normal distribution:</p>
+<p><span class="math display">\[f_{X}(x) = \frac{\Phi\left( - \frac{\mu}{\sigma} \right)}{\sqrt{2\pi}\sigma}\exp\left\{ - \frac{1}{2\sigma^{2}}(x - \mu)^{2} \right\} \text{ for } x&lt;0\]</span></p>
+<p>The result of this dose-response model is that the curve is monotonically decreasing, in that <span class="math inline">\(\theta_d&lt;\theta_{d-1}\)</span>.</p>
+</section>
+<section id="second-order-ndlm" class="level2">
+<h2 class="anchored" data-anchor-id="second-order-ndlm">Second Order NDLM</h2>
+<p>The second order NDLM serves as a “smoother” similar to the NDLM, however it tends to smooth toward a linear fit with a slope (the NDLM itself tends to shrink each dose’s fit toward its neighbors, while the second order NDLM prefers any trend in the neighbors).</p>
+<p>Let doses <span class="math inline">\(d=d', \ldots, D\)</span> be doses in the dose response model and <span class="math inline">\(\theta_d\)</span> be the estimated dose response for dose <span class="math inline">\(d\)</span>. The initial dose <span class="math inline">\(d'=1\)</span> if there is no control arm or control is included in the dose response model, and <span class="math inline">\(d'=2\)</span> if the control arm is modelled separately. The initial dose <span class="math inline">\(d'\)</span> is modeled:</p>
+<p><span class="math display">\[\theta_{d'} \sim N\left(\mu_{0},\tau^2_{0}\right)\]</span></p>
+<p>where <span class="math inline">\(\mu_0\)</span> and <span class="math inline">\(\tau_0^2\)</span> are specified directly in FACTS.</p>
+<p>In the case of a time-to-event endpoint, the initial dose <span class="math inline">\(d'\)</span> is the control arm, and has a <span class="math inline">\(\theta_{d'}= 0\)</span> by definition, so no prior distribution is needed.</p>
+<p>The prior distribution for the dose response for the dose directly after the initial dose is specified on the difference between the <span class="math inline">\(d'\)</span> and <span class="math inline">\(d'+1\)</span> level doses:</p>
+<p><span class="math display">\[\theta_{d'+1} - \theta_{d'} \sim N\left(\mu_{1},\tau^2_{1}\right)\]</span></p>
+<p>Successive doses are then modeled based on differences in slope between the dose and the two doses below them. Let:</p>
+<p><span class="math display">\[\theta_{d} = \theta_{d - 1} + \Delta_{d}\zeta_{d} + \frac{\Delta_{d}}{\Delta_{d - 1}}\left( \theta_{d - 1} - \theta_{d - 2} \right)\]</span></p>
+<p>for doses <span class="math inline">\(d=d'+2,\ldots,D\)</span>, where <span class="math inline">\(\Delta_d=\nu_d-\nu_{d-1}\)</span> and <span class="math inline">\(\Delta_{d-1}=\nu_{d-1}-\nu_{d-2}\)</span>. The priors for the dose response smoothing terms <span class="math inline">\(\zeta_d\)</span> are:</p>
+<p><span class="math display">\[\zeta_d \sim \text{N}(0, \tau_2^2)\]</span> The smoothing is determined by the parameter <span class="math inline">\(\tau_2\)</span>. Small values of <span class="math inline">\(\tau_2\)</span> lead to more smoothing, while large values of <span class="math inline">\(\tau_2\)</span> lead to little information sharing between doses (above dose 1). Note that “small” and “large” is dependent on the scale of the doses. The prior on the smoothing parameter is:</p>
+<p><span class="math display">\[\tau_{2}^{2}\sim \text{IG}\left(\frac{\tau_{n}}{2},\frac{\tau_{\mu}^{2}\tau_{n}}{2} \right)\]</span></p>
+<p>where <span class="math inline">\(\tau_\mu\)</span> is a central value for <span class="math inline">\(\tau_2\)</span>, and <span class="math inline">\(\tau_n\)</span> is the prior weight. <a href="../../../../../concepts/facts/InverseGammaDistribution.html" title="Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.">See here</a> for help with specifying an inverse gamma distribution with center and weight.</p>
+<p>Note that that in this formulation, <span class="math inline">\(\tau_2^2\)</span> can be thought of as the deviation from linearity. The linear scaling of deviations thus leads to a conditional variance that scales as the square of the dose difference:</p>
+<p><span class="math display">\[\text{Var}[\theta_d \mid \theta_{d-1}, \theta_{d-2}]=\tau_2^2\cdot (\nu_d-\nu_{d-1})^2\]</span></p>
+<p>The second order NDLM, like the simple NDLM, is generally a good model to use when the shape of the likely dose response is unknown, but we would like to borrow information between a dose and its neighboring doses. No monotonicity or pre-determined shape is enforced by the Second Order NDLM. The variance in dose response from dose to dose is updated based on the observed data, but as the number of doses in a trial is typically small, a moderately informative prior is often used.</p>
+<p>In a null scenario where the response on all the doses is the same as control the Second Order NDLM, like the Simple NDLM, tends to reduce type-1 error. As the estimate of <span class="math inline">\(\tau^2\)</span> tends to zero the estimate of the dose response tends to a line (with non-zero slope if appropriate).</p>
+<p>The second order NDLM has more power than the Simple NDLM when the dose response is smooth, but will tend to shrink estimates to the control by more than the Simple NDLM if there are marked peaks or steps in the response. Because it borrows from two neighboring doses, it is better at estimating a response for a dose where there is no data than the simple NDLM can, and can be used with burn-in’s where not all doses have been allocated to, but doesn’t cope well if there are consecutive doses where there is no data.</p>
+<p>However, unlike the simple NDLMs where the variance structure is preserved if doses are added to or dropped from the design, this is not true for the 2<sup>nd</sup> order NLDM. Thus, if using the 2<sup>nd</sup> order NDLM and the doses that are available to the model are changed, then the parameters for the prior for <span class="math inline">\(\tau_2^2\)</span> may need to be re-visited.</p>
+<p>The simple NDLM is likely to be preferred where there are fewer doses (4-5), and the second order NDLM is often preferred when there are 7 or more (it will depend on the expected smoothness of the response – the smoother it is the more useful the second order NDLM will be).</p>
+<p>As with the simple NDLM, the choice of prior for <span class="math inline">\(\tau_2^2\)</span> can be tuned based on simulation results: balancing having a smaller prior that limits type-1 error in the null case, against having a larger prior that yields more power and better estimate of maximum response in the effective scenarios with the large jumps in response or pronounced peaks.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note on the Second Order NDLM before FACTS 4.0
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The second order NDLM described in this section is the version utilized in FACTS version 4.0 and later. The model labelled “Second Order NDLM” in versions before 4.0 is was maintained as the model labelled “Legacy 2nd Order NDLM” until the release of FACTS 7.1, at which time it was removed.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="parameter-logistic" class="level2">
+<h2 class="anchored" data-anchor-id="parameter-logistic">3-Parameter Logistic</h2>
+<p>The 3-parameter logistic dose response model estimates efficacy as a smooth curve using an intuitive parameterization. The dose response for a dose <span class="math inline">\(d\)</span> with effective dose strength <span class="math inline">\(\nu_d\)</span> is:</p>
+<p><span class="math display">\[\theta_{d} = a_{1} + \frac{a_{2}v_{d}}{v_{d} + a_{3}}\]</span></p>
+<p>Where the <span class="math inline">\(a\)</span> parameters have the following description:</p>
+<dl>
+<dt><span class="math inline">\(a_1\)</span></dt>
+<dd>
+the estimated dose response for a dose of strength 0
+</dd>
+<dt><span class="math inline">\(a_2\)</span></dt>
+<dd>
+the estimated change in dose response for a dose with strength ∞ when compared to a dose of strength 0.
+</dd>
+<dt><span class="math inline">\(a_3\)</span></dt>
+<dd>
+the estimated ED50, the dose that has 50% of the dose response maximum (<span class="math inline">\(a_2\)</span>)
+</dd>
+</dl>
+<p>The shape of the 3-parameter logistic curve can vary wildly based on the parameter values, but always starts at <span class="math inline">\(a_1\)</span> at dose strength 0 and monotonically increases to <span class="math inline">\(a_1+a_2\)</span> as the effective dose strength goes to infinity.</p>
+<p>The following independent prior distributions are assumed:</p>
+<p><span class="math display">\[a_1\sim \text{N}(\Lambda_1, \lambda_1^2)\]</span> <span class="math display">\[a_2\sim \text{N}(\Lambda_2, \lambda_2^2)\]</span> <span class="math display">\[a_3\sim \text{N}^+(\Lambda_3, \lambda_3^2)\]</span></p>
+<p>In the continuous case, the prior distribution for the error term in the 3-Parameter Logistic is Inverse Gamma:</p>
+<p><span class="math display">\[\sigma^{2}\sim IG\left( \frac{\sigma_{n}}{2},\frac{\sigma_{\mu}^{2}\sigma_{n}}{2} \right)\]</span></p>
+<p>An advantage of the 3-Parameter Logistic model is that it is has a small number of parameters that have defined, intuitive interpretations. Since there are few parameters it’s generally easy to estimate the parameters even on small amounts of data. Because of the limited flexibility of the logistic curve, the 3-parameter logistic model should only be used when there is evidence that it is appropriate. See the <a href="#hierarchical-logistic">Hierarchical Logistic</a> and <a href="#sigmoid-model">Sigmoid</a> (E<sub>max</sub>) models for dose response models with a similar pattern, but slightly more flexibility in shape.</p>
+</section>
+<section id="hierarchical-logistic" class="level2">
+<h2 class="anchored" data-anchor-id="hierarchical-logistic">Hierarchical Logistic</h2>
+<p>The <span class="custom-tooltip"> hierarchical logistic model <span class="tooltip-text">Scott Berry’s favorite dose response model.</span> </span> is an extension of the 3-parameter logistic with the form:</p>
+<p><span class="math display">\[\theta_{d} = a_{1} + \frac{a_{2}v_{d}}{v_{d} + a_{3}} + \zeta_{d}\]</span></p>
+<p>where <span class="math inline">\(\zeta_d\)</span> is a random intercept term that modifies <span class="math inline">\(a_1\)</span> differently for each dose under the constraint that all <span class="math inline">\(\zeta_d\)</span> must sum to 0.</p>
+<p>The additional term <span class="math inline">\(\zeta_d\)</span> is a per dose ‘off-curve’ effect. It allows for a secondary non-parametric dose effect over and above the logistic model. It has been used in circumstances in which there is actually some falling away of effect at the highest dose. This is an example mean fit from 100 simulations. The model fit and error bars are in green, and the true dose responses are shown by the black line.</p>
+<div id="fig-hierlog" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hierlog-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image22.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hierlog-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: An example of a fit from the hierarchical logistic model averaged over 100 simulations. The black line shows the truth, and the green line with error bars shows the model fits.
+</figcaption>
+</figure>
+</div>
+<p><span class="math inline">\(\zeta_d\)</span> is modelled as:</p>
+<p><span class="math display">\[\zeta_d \sim \text{N}(0, a_4^2)\]</span></p>
+<p>conditioned that</p>
+<p><span class="math display">\[\sum_{d}^{}\zeta_{d} = 0\]</span></p>
+<p>And <span class="math inline">\(a_4^2\)</span> has an inverse gamma prior:</p>
+<p><span class="math display">\[a_{4}^{2}\sim IG\left( \frac{\Lambda_{n}}{2},\frac{\Lambda_{\mu}^{2}\Lambda_{n}}{2} \right)\]</span></p>
+<p>The following independent prior distributions are assumed:</p>
+<p><span class="math display">\[a_1\sim \text{N}(\Lambda_1, \lambda_1^2)\]</span> <span class="math display">\[a_2\sim \text{N}(\Lambda_2, \lambda_2^2)\]</span> <span class="math display">\[a_3\sim \text{N}^+(\Lambda_3, \lambda_3^2)\]</span></p>
+<p>A typical recommended value for the center of the prior distribution of <span class="math inline">\(\alpha_4\)</span> is the largest expected likely deviation in true response from the underlying logistic with a weight of 1. The effect of this prior is then checked through simulation of a range of plausible dose response profiles, with a range of designs to check the sensitivity of the final estimate of response to this prior. Additionally, <a href="../../../../../concepts/facts/InverseGammaDistribution.html" title="Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.">see here</a> for help with specifying an inverse gamma distribution with center and weight.</p>
+<p>In this model, compared to the ‘plain’ 3-parameter logistic above, it is important that the true ED50 lies within the expected dose range, and that the prior for the ED50, <span class="math inline">\(a_3\)</span>, has the majority of its probability mass in the available dose range. For example, if the range of the effective dose strengths is from 0 to <span class="math inline">\(\nu_D\)</span> then a typical ‘weakly informative’ prior for <span class="math inline">\(a_3\)</span> would be:</p>
+<p><span class="math display">\[a_{3}\sim N^{+}\left( \frac{\nu_{D}}{2},\left( \frac{\nu_{D}}{2} \right)^{2} \right)\]</span></p>
+<p>Using a weaker prior, such as <span class="math inline">\(\text{N}^+(\nu_D, \nu_D^2)\)</span> leads to a more linear fit. With just this change to the prior for <span class="math inline">\(a_3\)</span> the average of the estimated of the mean response changes from the graph above to:</p>
+<div id="fig-hierlog2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hierlog2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image23.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hierlog2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: An example of hierarchical logistic model fits using a prior that results in a flatter dose response model fit.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="sigmoid-model" class="level2">
+<h2 class="anchored" data-anchor-id="sigmoid-model">Sigmoid Model</h2>
+<p>A sigmoid model (<span class="math inline">\(\text{E}_{\text{max}}\)</span>) provides a coherent parameterization of the dose response trend similar to the 3-parameter logistic, but with one extra shape parameter, <span class="math inline">\(a_4\)</span>.</p>
+<p>The model formula is:</p>
+<p><span class="math display">\[\theta_{d} = a_{1} + \frac{(a_{2} - a_{1})v_{d}^{a_{4}}}{{a_{3}}^{a_{4}} + v_{d}^{a_{4}}}\]</span></p>
+<p>The interpretation of the four parameters is:</p>
+<dl>
+<dt><span class="math inline">\(a_1\)</span></dt>
+<dd>
+the estimated dose response for a dose of strength 0
+</dd>
+<dt><span class="math inline">\(a_2\)</span></dt>
+<dd>
+the estimated dose response for a dose of strength <span class="math inline">\(\infty\)</span> (slight difference from Logistic models)
+</dd>
+<dt><span class="math inline">\(a_3\)</span></dt>
+<dd>
+the estimated ED50, the dose that has 50% of the dose response maximum attainable effect (<span class="math inline">\(a_2-a_1\)</span>)
+</dd>
+<dt><span class="math inline">\(a_4\)</span></dt>
+<dd>
+controls the slope of the dose response model at the ED50. A larger value of <span class="math inline">\(a_4\)</span> corresponds to a steeper slope. A value of <span class="math inline">\(a_4=1\)</span> makes the Sigmoid model equivalent to a Three Parameter Logistic model with <span class="math inline">\(a_2\)</span> equal to <span class="math inline">\(a_1 + a_2\)</span> from the Sigmoid model. A value of <span class="math inline">\(a_4\)</span> approaching 0 corresponds to a dose response model that is nearly flat at <span class="math inline">\(\frac{a_{1} + a_{2}}{2}\)</span>. By differentiation, it can be seen that the slope where the effective dose <span class="math inline">\(\nu_d=a_3\)</span> is <span class="math inline">\((a_{2} - a_{1})\frac{a_{4}}{4a_{3}}\)</span>.
+</dd>
+</dl>
+<p>The following independent prior distributions are assumed:</p>
+<p><span class="math display">\[a_1\sim \text{N}(\Lambda_1, \lambda_1^2)\]</span> <span class="math display">\[a_2\sim \text{N}(\Lambda_2, \lambda_2^2)\]</span> <span class="math display">\[a_3\sim \text{N}^+(\Lambda_3, \lambda_3^2)\]</span> <span class="math display">\[a_3\sim \text{N}^+(\Lambda_4, \lambda_4^2)\]</span></p>
+<p>The advantage of this model is that it is considerably more flexible than the logistic, but still more efficient to estimate than an NDLM. This model (if applicable) is ideal if the target is an Effective Dose (ED) such as an ED90. Estimating an ED requires estimating the response on control, the maximum response, and the gradient which is requires a lot of data to do well if using no model or a smoothing model such as one of the NDLMs. With the 4-parameter Sigmoid model (or 3-parameter logistic – but that has a more limited applicability due to being significantly less flexible in shape), it’s usually not an issue to estimate the EDx well.</p>
+<p>The caveats to using this model are:</p>
+<ul>
+<li><p>Whilst being much more flexible than the logistic, it still has model assumptions, in particular monotonicity, that must be met for this to be a reasonable model to be used.</p></li>
+<li><p>The curve is only well estimated if the true ED50 lies within the doses tested.</p></li>
+<li><p>Like the hierarchical logistic model above, the prior for <span class="math inline">\(a_3\)</span> should be weakly informative, with the majority of its probability mass in the available dose range. So similarly, if the range of the effective dose strengths is from 0 to <span class="math inline">\(\nu_D\)</span> then a typical ‘weakly informative’ prior for <span class="math inline">\(a_3\)</span> would be: <span class="math display">\[a_3 \sim N^{+}\left( \frac{\nu_{D}}{2},\left( \frac{\nu_{D}}{2} \right)^{2} \right)\]</span></p></li>
+</ul>
+<div id="fig-sigmoid" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sigmoid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image24.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sigmoid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Example of a sigmoid model with <span class="math inline">\(\alpha_1=5\)</span>, <span class="math inline">\(\alpha_2=10\)</span>, <span class="math inline">\(\alpha_3=3\)</span>, and <span class="math inline">\(\alpha_4=5\)</span>.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="u-shaped-model" class="level2">
+<h2 class="anchored" data-anchor-id="u-shaped-model">U-Shaped Model</h2>
+<p>The U-shaped model when the allows for an initial increase (decrease) in the dose response with dose, followed by a leveling out of the mean, then a decrease (increase). Whether the U-Shaped model increases then decreases or decreases then increases is specified by the user on the Dose Response tab. An example curve for this model is given in the figure below.</p>
+<p>The dose-response curve can be characterized in four different regions of doses. For the first region, which contains the lowest doses, <span class="math inline">\(0&lt;\nu_d&lt;p_{min}\)</span>, the dose-response curve is increasing (decreasing):</p>
+<p><span class="math display">\[\theta_{d} = \theta_{0} + S \cdot \delta \cdot \left( \frac{\nu_{d}}{p_{\min}} \right)^{\alpha}\]</span></p>
+<p>The next region is the plateau, where the dose-response curve is constant. For <span class="math inline">\(p_{min} &lt; \nu_d &lt; p_{min}+p_{width}\)</span>: <span class="math display">\[\theta_d=\theta_0 + S\cdot\delta\]</span> For the third region, the dose-response curve is decreasing (increasing). For <span class="math inline">\(p_{min}+p_{width} &lt; \nu_d &lt; p_{min}+p_{width} + w_{width}\)</span>,</p>
+<p><span class="math display">\[\theta_{d} = \theta_{0} + S \cdot \delta \cdot \left( 1 - \frac{\nu_{d} - \left( p_{\min} + p_{width} \right)}{w_{width}} \right)^{\beta}\]</span></p>
+<p>For the final region, the dose-response curve is again constant, at the same level as the zero-dose. For <span class="math inline">\(\nu_d &gt; p_{min}+p_{width} + w_{width}\)</span>, <span class="math display">\[\theta_d = \theta_0\]</span></p>
+<p>The parameters of the model are described below:</p>
+<ol type="1">
+<li><p><span class="math inline">\(S\)</span> is <span class="math inline">\(1\)</span> or <span class="math inline">\(-1\)</span>, as determined by the Model is increasing/decreasing radio buttons. <span class="math inline">\(S=1\)</span> if Model is Increasing is selected, indicating that the model starts increasing at low doses.</p></li>
+<li><p><span class="math inline">\(\theta_0\)</span> represents the zero-strength dose response. Its prior is: <span class="math display">\[\theta_0 \sim \text{N}(\mu_0, \sigma_0^2)\]</span></p></li>
+<li><p><span class="math inline">\(\delta\)</span> represents the maximal change in response from the zero-strength dose. It is restricted to be positive, and has a prior of: <span class="math display">\[\delta \sim \text{N}^+(\mu_\delta, \sigma_\delta^2)\]</span></p></li>
+<li><p><span class="math inline">\(p_{min}\)</span> represents the lowest dose at which the maximal change in response from the zero-strength is achieved. It is restricted to be positive, and has a prior of: <span class="math display">\[p_{min} \sim \text{N}^+(\mu_{min}, \sigma_{min}^2)\]</span></p></li>
+<li><p><span class="math inline">\(p_{width}\)</span> represents the width of the plateau – the region where all doses achieve maximal change in response from the zero-strength dose. It is restricted to be positive, and has a prior of: <span class="math display">\[p_{width} ~ \sim \text{N}^+(\mu_{width}, \sigma_{width}^2)\]</span></p></li>
+<li><p><span class="math inline">\(w_{width}\)</span> represents the width of the region for doses beyond the plateau, where response is returning to the zero-strength dose level. It is restricted to be positive, and has a prior of: <span class="math display">\[w_{width} ~ \sim \text{N}^+(\mu_{w}, \sigma_{w}^2)\]</span></p></li>
+<li><p><span class="math inline">\(\alpha\)</span> determines the rate of change of the dose response curve for doses below the plateau. Values less than <span class="math inline">\(1\)</span> indicate a rapid initial change from baseline, with slower change as the plateau is reached. Values greater than <span class="math inline">\(1\)</span> indicate a slow initial change from baseline, with more rapid change as the plateau is reached. To help avoid identifiability issues, <span class="math inline">\(\alpha\)</span> is restricted to be between <span class="math inline">\(10^{-1}\)</span> and <span class="math inline">\(10^{1}\)</span>. <span class="math inline">\(\alpha\)</span>’s prior is: <span class="math display">\[\alpha \sim \text{LN}^*(\mu_\alpha, \sigma_\alpha^2)\]</span> where <span class="math inline">\(\text{LN}^*()\)</span> represents the lognormal distribution with truncation constraints at <span class="math inline">\(10^{-1}\)</span> and <span class="math inline">\(10^{1}\)</span>.</p></li>
+<li><p><span class="math inline">\(\beta\)</span> determines the rate of change of the dose response curve for doses beyond the plateau. Values less than <span class="math inline">\(1\)</span> indicate a slow initial change from the plateau level, with more rapid change subsequently. Values greater than <span class="math inline">\(1\)</span> indicate a rapid initial change from the plateau level, with slower change subsequently. To help avoid identifiability issues, <span class="math inline">\(\beta\)</span> is restricted to be between <span class="math inline">\(10^{-1}\)</span> and <span class="math inline">\(10^{1}\)</span>. The prior on <span class="math inline">\(\beta\)</span> is: <span class="math display">\[\beta \sim \text{LN}^*(\mu_\beta, \sigma_\beta^2)\]</span></p></li>
+</ol>
+<p>The U-shaped model has seven free parameters, and thus it is inadvisable to use such a model for dose-finding trial designs that contain only a few dose levels. When a small number of doses are available, it may help to constrain the values of <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> by utilizing small standard deviations in the priors.</p>
+<div id="fig-ushaped" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ushaped-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image25.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ushaped-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: An example dose response curve for the U-shaped model. In this example, <span class="math inline">\(\alpha&lt;1\)</span> and <span class="math inline">\(\beta &gt; 1\)</span>.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="plateau-model" class="level2">
+<h2 class="anchored" data-anchor-id="plateau-model">Plateau Model</h2>
+<p>The plateau model is a special case of the U-shaped model, in which <span class="math inline">\(p_{width}=\infty\)</span>. That is, there is no return to baseline for high doses. This model eliminates three parameters from the U-Shaped model, since <span class="math inline">\(p_{width}\)</span>, <span class="math inline">\(w_{width}\)</span>, and <span class="math inline">\(\beta\)</span> are not used. See the figure below to see an example dose response model for the plateau model that mimics the beginning of the U-Shaped model above.</p>
+<div id="fig-plateau" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-plateau-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image26.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-plateau-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: An example dose response curve for the Plateau model.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="parameter-exponential-logistic-dichotomous-only" class="level2">
+<h2 class="anchored" data-anchor-id="parameter-exponential-logistic-dichotomous-only">3 Parameter Exponential Logistic (Dichotomous Only)</h2>
+<p>The 3-parameter exponential logistic model has the following structure:</p>
+<p><span class="math display">\[\theta_d = a_1 + a_2 \nu_d^{a_3}\]</span></p>
+<p>Where <span class="math inline">\(\nu_d\)</span> is the effective dose strength of dose <span class="math inline">\(d\)</span>. This is a logistic model for the dichotomous endpoint because <span class="math inline">\(\theta_d\)</span> is the log odds ratio of the probability of the response, <span class="math inline">\(P_d\)</span> at dose <span class="math inline">\(d\)</span>.</p>
+<p>The exponent parameter <span class="math inline">\(\alpha_3\)</span> allows the change in slope at the lower end of the curve to be asymmetric in comparison to the change in curve at the upper end of the curve.</p>
+<p>The priors for the parameters are:</p>
+<p><span class="math display">\[a_1\sim \text{N}(\Lambda_1, \lambda_1^2)\]</span> <span class="math display">\[a_2\sim \text{N}(\Lambda_2, \lambda_2^2)\]</span> <span class="math display">\[a_3\sim \text{N}^+(\Lambda_3, \lambda_3^2)\]</span> The interpretations of the parameters defining this model are:</p>
+<dl>
+<dt><span class="math inline">\(a_1\)</span></dt>
+<dd>
+the dose response for a dose with strength 0
+</dd>
+<dt><span class="math inline">\(a_2\)</span></dt>
+<dd>
+the slope associated with the exponentiated dose strength
+</dd>
+<dt><span class="math inline">\(a_3\)</span></dt>
+<dd>
+a shape parameter modifying the effective dose strength through exponentiation.
+</dd>
+</dl>
+<p>The figure below shows an example of two different 3-parameter exponential logistic model fits. Notably, the fit shown in green has an <span class="math inline">\(a_3\)</span> parameter greater than <span class="math inline">\(1\)</span>, which leads to faster increases of the response rate model as the effective dose strength increases.</p>
+<div id="fig-threeparamlogistic" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-threeparamlogistic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image27.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-threeparamlogistic-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Two different examples of 3-parameter exponential logistic model fits. The green model has an <span class="math inline">\(\alpha_3\)</span> parameter greater than 1, which leads to faster increases of the sigmoid model as the effective dose strength increases.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="hierarchical-model" class="level2">
+<h2 class="anchored" data-anchor-id="hierarchical-model">Hierarchical Model</h2>
+<p>Like the Independent Dose Model, the hierarchical model treats the arms as if they are an unordered set of treatments, but unlike the Independent Dose Model the Hierarchical Model shares information between doses included in the model. The hierarchical model is a way of encouraging the estimates of arm responses to be similar, and the degree of this encouragement can be controlled using parameters of the prior distribution. The hierarchical model assumes that the arm parameters are drawn from the same normal distribution:</p>
+<p><span class="math display">\[\theta_d \sim \text{N}(\mu, \tau^2)\]</span></p>
+<p>Where <span class="math inline">\(d\)</span> is the set of doses included in the model. The prior distributions for <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\tau^2\)</span> are</p>
+<p><span class="math inline">\(\mu \sim \text{N}(\Lambda_\mu, \lambda_\mu^2)\)</span></p>
+<p>and</p>
+<p><span class="math display">\[\tau^{2}\sim \text{IG}\left(\frac{\tau_{n}}{2},\frac{\tau_{\mu}^{2}\tau_{n}}{2} \right)\]</span></p>
+<p>where <span class="math inline">\(\tau_\mu\)</span> is a central value for <span class="math inline">\(\tau\)</span>, and <span class="math inline">\(\tau_n\)</span> is the prior weight. <span class="math inline">\(\tau^2\)</span> governs the amount of information shared between doses in the model. The estimates of the dose parameters can be encouraged to be close together by choosing a small value for <span class="math inline">\(\tau_\mu\)</span> and a large value for <span class="math inline">\(\tau_n\)</span>. <a href="../../../../../concepts/facts/InverseGammaDistribution.html" title="Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.">See here</a> for a tool to help understand the inverse gamma distribution specified by center and weight parameters.</p>
+<p>The control arm can be included in the hierarchical model if it is desired to encourage the experimental arms to be similar to the control arm, or excluded from it if the experimental arms are encouraged to be similar to each other but not necessarily to the control arm. This is not true with time-to-event data, when the control arm can only be excluded from the hierarchical model.</p>
+</section>
+<section id="linear-model" class="level2">
+<h2 class="anchored" data-anchor-id="linear-model">Linear Model</h2>
+<p>The linear model uses a strong assumption of exact linearity between the responses and the dose strengths. (For dichotomous models, the linearity is on the log-odds scale, and the linearity is on the log hazard ratio scale for TTE models.) The model is</p>
+<p><span class="math display">\[\theta_d=\alpha+\beta\nu_d\]</span> for all doses <span class="math inline">\(d\)</span> in the model. Both <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> are given normal prior distributions:</p>
+<p><span class="math display">\[\alpha \sim \text{N}(\Lambda_\alpha, \lambda_\alpha^2)\]</span> <span class="math display">\[\beta \sim \text{N}(\Lambda_\beta, \lambda_\beta^2)\]</span></p>
+<p>The linear model is appropriate when there is strong scientific knowledge that the shape of the response curve should be linear as a function of dose strength. Note that if an arm has a dose strength between two other arms in the model, its response will always be estimated to be between the responses of those two arms. As a result, the linear model may not be appropriate in combination with certain decision quantities such as <span class="fake-code-block">Pr(Max)</span>, because some doses are guaranteed to have probability zero of being the best arm. If the control arm is included in the linear model and it has the smallest dose value, then all experimental arms will always have exactly the same probability of being better than control.</p>
+<p>We recommend creating scenarios where the true parameters deviate from linearity and simulating them to test the robustness of a design based on the linear model.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For dichotomous models, the linear model replaces the 2-parameter logistic model available in FACTS versions before 6.4. The two models are identical.</p>
+</div>
+</div>
+</section>
+<section id="hierarchical-linear-model" class="level2">
+<h2 class="anchored" data-anchor-id="hierarchical-linear-model">Hierarchical Linear Model</h2>
+<p>A more flexible version of the linear model is the hierarchical linear model. This model encourages the arm responses to have a linear-like shape, but also includes a term allowing parameters to deviate from linearity when appropriate. The arm parameters satisfy the relationship</p>
+<p><span class="math display">\[\theta_d = \alpha + \beta \nu_d + \zeta_d\]</span> where the <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> parameters are as in the linear model, with prior distributions</p>
+<p><span class="math display">\[\alpha \sim \text{N}(\Lambda_\alpha, \lambda_\alpha^2)\]</span> <span class="math display">\[\beta \sim \text{N}(\Lambda_\beta, \lambda_\beta^2)\]</span> and the <span class="math inline">\(\zeta_d\)</span> parameters are the deviations from linearity. These deviations are assumed to have a normal distribution constrained so that their average value is zero:</p>
+<p><span class="math display">\[\zeta_d \sim \text{N}(0, \tau^2) \text{ with } \sum_d\zeta_d=0.\]</span></p>
+<p>The prior distribution for <span class="math inline">\(\tau^2\)</span> is</p>
+<p><span class="math display">\[\tau^{2}\sim\text{IG}\left(\frac{\tau_{n}}{2},\frac{\tau_{\mu}^{2}\tau_{n}}{2} \right)\]</span></p>
+<p>If <span class="math inline">\(\tau^2\)</span> is small, which can be encouraged by choosing <span class="math inline">\(\tau_\mu\)</span> to be small and <span class="math inline">\(\tau_n\)</span> to be large, then the dose parameter estimates will lie close to a line. <a href="../../../../../concepts/facts/InverseGammaDistribution.html" title="Widget for assessing how the center and weight parameters in FACTS impact the inverse gamma distribution.">See here</a> for help understanding FACTS’s parameterization of the inverse gamma distribution.</p>
+<p>The hierarchical linear model is a good choice when, for example, one expects a linear relationship between the dose strengths and the response but one is not prepared to assume exact linearity. It can also be a good way of encouraging, but not requiring, monotonicity in the response.</p>
+</section>
+</section>
+<section id="d-treatment-dose-response-models" class="level1">
+<h1>2D Treatment Dose Response Models</h1>
+<p>If on the Study &gt; Treatment Arms tab, the “Use 2D treatment arm model” option has been checked, the user may either use any of the 1D Dose Response options described above, or may use a dose response model specifically modelling the two dosing dimensions.</p>
+<p>If using one of the 1D dose response models, the effective dose strength <span class="math inline">\(\nu_d\)</span> is as specified by the user on the “Select doses to be used in the trial” tab. These calculated dose levels are forced to be distinct values, and this results in a 1D ordering of the combinations.</p>
+<p>There are also three 2D Dose Response models that can be used:</p>
+<ol type="1">
+<li><p>2D Continuous Factorial Model</p></li>
+<li><p>2D Discrete Factorial model</p></li>
+<li><p>2D NDLM</p></li>
+</ol>
+<p>These are described in the next sections.</p>
+<p>The 2D dose response models work with a slightly different notation to accommodate that treatments are defined as the combination of two factors. Rather than <span class="math inline">\(\theta_i\)</span> being the estimated mean of the dose response estimate for dose <span class="math inline">\(i\)</span>, the estimated dose response for the treatment created from row factor level <span class="math inline">\(r\)</span> and column factor level <span class="math inline">\(c\)</span> is denoted <span class="math inline">\(\theta_{rc}\)</span>. <span class="math inline">\(Y_{rc}\)</span> denotes the mean of the observed data in the cell.</p>
+<p>In the continuous case, the likelihood for the data is,</p>
+<p><span class="math display">\[Y_{rc} \sim \text{N}(\theta_{rc}, \sigma^2)\]</span> <span class="math display">\[\sigma^{2}\sim\text{IG}\left(\frac{\sigma_{n}}{2},\frac{\sigma_{\mu}^{2}\sigma_{n}}{2} \right)\]</span></p>
+<p>Where the form of <span class="math inline">\(\theta_{rc}\)</span> varies based on dose response model selection.</p>
+<p>Similarly, in the dichotomous case,</p>
+<p><span class="math display">\[Y_{rc} \sim \text{Bernoulli}(P_{rc})\]</span> <span class="math display">\[P_{rc} = \frac{e^{\theta_{rc}}}{1 + e^{\theta_{rc}}}\]</span></p>
+<section id="d-continuous-factorial-model" class="level2">
+<h2 class="anchored" data-anchor-id="d-continuous-factorial-model">2D Continuous Factorial Model</h2>
+<p>The 2D Continuous Factorial Model fits a regression on the dose response that uses the numeric dose strength as a continuous valued covariate. The dose response (with <span class="math inline">\(\eta_r\)</span> and <span class="math inline">\(\zeta_c\)</span> denoting dose strength of the row level and column level, respectively) is modeled as:</p>
+<p><span class="math display">\[\theta_{rc} = \alpha_0 + \alpha_1 \zeta_c + \alpha_2 \eta_r + \alpha_3\zeta_c \eta_r\]</span> With priors</p>
+<p><span class="math display">\[\alpha_0 \sim \text{N}(\mu_0, \sigma_0^2)\]</span> <span class="math display">\[\alpha_1 \sim \text{N}(\mu_1, \sigma_1^2)\]</span> <span class="math display">\[\alpha_2 \sim \text{N}(\mu_2, \sigma_2^2)\]</span> <span class="math display">\[\alpha_3 \sim \text{N}(\mu_3, \sigma_3^2)\]</span></p>
+<p>Then, <span class="math inline">\(\alpha_0\)</span> is the response at the control combination, <span class="math inline">\(\alpha_1\)</span> is the linear coefficient of the response to the column factor strengths <span class="math inline">\(\zeta_c\)</span>, and <span class="math inline">\(\alpha_2\)</span> is the linear coefficient of the response to the row factor strengths <span class="math inline">\(\eta_r\)</span>.</p>
+<p>The user has the option to simplify the model and exclude the interaction term <span class="math inline">\(\alpha_3\)</span>, which is the coefficient of the product of the two factor strengths.</p>
+<p>Note that despite being called “continuous” this dose response model applies to all endpoints. It’s called continuous because the coefficients act on the dose strengths as continuous measures of strength.</p>
+<div id="fig-2dcontinuousfactorial" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-2dcontinuousfactorial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image29.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2dcontinuousfactorial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: 2D Continuous Factorial Dose Response model specification page.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="d-discrete-factorial-model" class="level2">
+<h2 class="anchored" data-anchor-id="d-discrete-factorial-model">2D Discrete Factorial Model</h2>
+<p>The 2D Discrete Factorial Model fits a regression on the dose response that uses the dose strength as a factor covariate rather than a numeric dose strength. Each dose is an independent level within each row or column factor, so any dose is equidistant from all other doses</p>
+<p><span class="math display">\[\theta_{rc} = \alpha + \gamma_r + \beta_c\]</span></p>
+<p>With priors</p>
+<p><span class="math display">\[\alpha \sim \text{N}(\mu_\alpha, \sigma_\alpha^2)\]</span></p>
+<p><span class="math display">\[\beta_c \sim \text{N}(\mu_{\beta_c}, \sigma_{\beta_c}^2)\]</span> <span class="math display">\[\gamma_r \sim \text{N}(\mu_{\gamma_r}, \sigma_{\gamma_r}^2)\]</span></p>
+<p>The parameters associated with lowest level of each factor, <span class="math inline">\(\gamma_0\)</span> and <span class="math inline">\(\beta_0\)</span>, are constrained to be <span class="math inline">\(0\)</span>.</p>
+<div id="fig-2ddiscretefactorial" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-2ddiscretefactorial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image30.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2ddiscretefactorial-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: 2D Discrete Factorial Dose Response model specification page.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="d-ndlm" class="level2">
+<h2 class="anchored" data-anchor-id="d-ndlm">2D NDLM</h2>
+<p>The 2-D NDLM Model takes the idea of smoothing across doses that was used in the standard NDLM model, but smooths across row factors and column factors separately.</p>
+<section id="the-base-model-with-control-included" class="level3">
+<h3 class="anchored" data-anchor-id="the-base-model-with-control-included">The Base Model, with Control Included</h3>
+<p>The treatment effect for the combination of level <span class="math inline">\(r\)</span> in the row factor and level <span class="math inline">\(c\)</span> in the column factor is denoted as <span class="math inline">\(\theta_{rc}\)</span>, and <span class="math inline">\(Y_{rc}\)</span> is the observed data in that cell. The borrowing parameters are denoted as <span class="math inline">\(\phi\)</span> for the row factor smoothing, and <span class="math inline">\(\tau\)</span> for the column factor smoothing. The dose strengths are denoted as <span class="math inline">\(\nu_r\)</span> for the row factors, and <span class="math inline">\(\omega_c\)</span> for the column factors. Let <span class="math inline">\(\Delta \nu_r = \nu_r - \nu_{r-1}\)</span> and <span class="math inline">\(\Delta \omega_c = \omega_c - \omega_{c-1}\)</span> (for <span class="math inline">\(r&gt;0\)</span> and <span class="math inline">\(c&gt;0\)</span>). For notational convenience at the grid edge, let <span class="math inline">\(\theta_{-1, c} = 0\)</span>, <span class="math inline">\(\theta_{r,-1}\)</span>, <span class="math inline">\(\Delta\nu_0\equiv\infty\)</span>, and <span class="math inline">\(\Delta\omega_0\equiv\infty\)</span>.</p>
+<p>The 2-D NDLM Model <strong><em>with control included in the model</em></strong> can then be specified as:</p>
+<p><span class="math display">\[\theta_{0,0} \sim \text{N}(\mu_0, \tau_0^2)\]</span> <span class="math display">\[\theta_{rc} \sim \text{N}(\mu_{rc}, \tau_{rc}^2)\]</span> where</p>
+<p><span class="math display">\[\tau_{rc}^{2} = \left( \frac{1}{\mathrm{\Delta}\nu_{r}\phi^{2}} + \frac{1}{\mathrm{\Delta}\omega_{c}\tau^{2}} \right)^{- 1}\]</span></p>
+<p><span class="math display">\[\mu_{rc} = \tau_{rc}^{2}\left( \frac{\theta_{r - 1,c}}{\mathrm{\Delta}\nu_{r}\phi^{2}} + \frac{\theta_{r,c - 1}}{\mathrm{\Delta}\omega_{c}\tau^{2}} \right)\]</span></p>
+<p>with priors</p>
+<p><span class="math display">\[\tau^{2}\sim\text{IG}\left( \frac{\tau_{n}}{2},\frac{\tau_{\mu}^{2}\tau_{n}}{2} \right)\]</span></p>
+<p><span class="math display">\[\phi^{2}\sim\text{IG}\left( \frac{\phi_{n}}{2},\frac{\phi_{\mu}^{2}\phi_{n}}{2} \right)\]</span></p>
+<p>Note: that not all combinations of <span class="math inline">\(r\)</span> and <span class="math inline">\(c\)</span> will have data associated with them. However, FACTS will still evaluate the prior at all combinations. Thus, in the situation depicted below where the grayed-out point indicates a treatment combination with no allocation, <span class="math inline">\(\theta_{1,2}\)</span> is not modeled conditioned only on <span class="math inline">\(\theta_{1,1}\)</span>. <span class="math inline">\(\theta_{0,1}\)</span> also informs on <span class="math inline">\(\theta_{1,2}\)</span> via <span class="math inline">\(\theta_{0,2}\)</span>.</p>
+<div id="fig-2dndlmgrid" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-2dndlmgrid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image31.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2dndlmgrid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: 2D dosing grid example with no data for (0,2).
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="fix-smoothing-ratio-for-row-factor-and-column-factor" class="level3">
+<h3 class="anchored" data-anchor-id="fix-smoothing-ratio-for-row-factor-and-column-factor">Fix smoothing ratio for row factor and column factor</h3>
+<p>Optionally, the user might want to specify the row factor borrowing as a function of the column factor borrowing:</p>
+<p><span class="math display">\[\phi\equiv k \cdot \tau\]</span> where <span class="math inline">\(k\)</span> is a user-specified constant. This can be performed by selecting “Fixed smoothing ratio” in the <span class="math inline">\(\phi^2\)</span> prior specification area.</p>
+</section>
+<section id="control-not-in-model-no-zero-level-doses" class="level3">
+<h3 class="anchored" data-anchor-id="control-not-in-model-no-zero-level-doses">Control not in model, no zero-level doses</h3>
+<p>If neither treatment arm allows zero-level doses (e.g.&nbsp;like one would expect if the column factor represented doses and the row factor represented frequency), then a prior for the lowest dose would instead be needed as input from the GUI:</p>
+<p><span class="math display">\[\theta_{1,1} \sim \text{N}(\mu_1, \tau_1^2)\]</span></p>
+<div id="fig-2dndlm" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-2dndlm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image32.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2dndlm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: 2D NDLM Dose Response model specification page.
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+</section>
+<section id="baseline-adjusted-dose-response-models-continuous-only" class="level1">
+<h1>Baseline Adjusted Dose Response Models (Continuous Only)</h1>
+<p>If a baseline endpoint is simulated, the user has the option of adding a linear covariate effect to the dose response model. If the chosen dose response model states that for dose <span class="math inline">\(d\)</span>, <span class="math display">\[Y\sim \text{N}(\theta_d, \sigma^2)\]</span> then the distribution including the baseline adjustment term is <span class="math display">\[Y\sim \text{N}(\theta_d+\beta Z, \sigma^2)\]</span> where <span class="math inline">\(Z\)</span> is the standardized baseline value <span class="math inline">\(\left(Z=\frac{X-\bar X}{s_x}\right)\)</span>, and <span class="math inline">\(\beta\)</span> is an estimated parameter that is distinct from any parameter called <span class="math inline">\(\beta\)</span> within the dose response model.</p>
+<p>The baseline adjustment model uses a normal prior for <span class="math inline">\(\beta\)</span> for which the user enters a mean and standard deviation.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Technical Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The VSR based simulation of baseline is more general than the model adjustment for baseline (this is to allow baseline to be incorporated in a number of different ways). This means that the parameters entered in the VSR (for example the <span class="math inline">\(\beta\)</span> parameter) will not always match the corresponding parameter estimated in the dose response model.</p>
+<p>As a simple example, suppose we enter into the VSR response <span class="math inline">\(Y\sim \text{N}(\mu_Y, \sigma_Y^2)\)</span>, baseline <span class="math inline">\(X\sim \text{N}(\mu_X, \sigma_X^2)\)</span>, and use the baseline adjustment (<span class="math inline">\(c\)</span>, <span class="math inline">\(s\)</span>, and <span class="math inline">\(\beta_{VSR}\)</span> are user inputs) so the actual simulated response <span class="math inline">\(Y\)</span> is <span class="math inline">\(Y^{'} = Y + \beta_{VSR}\frac{X - c}{s}\)</span>.</p>
+<p>If the values of <span class="math inline">\(c\)</span> and <span class="math inline">\(s\)</span> used in the baseline adjustment are the same as the mean <span class="math inline">\(\mu_X\)</span> and standard deviation <span class="math inline">\(\sigma_X\)</span> of the simulated baseline, then the <span class="math inline">\(\beta_{VSR}\)</span> will converge to the estimated <span class="math inline">\(\beta\)</span> parameter as the sample size of the study increases. If <span class="math inline">\(c\ne\mu_X\)</span> or <span class="math inline">\(s\ne\sigma_X\)</span>, then the estimated <span class="math inline">\(\beta\)</span> will not converge to the <span class="math inline">\(\beta_{VSR}\)</span> used in data simulation. Additionally, if the baseline values are simulated from a truncated normal distribution, then the estimated <span class="math inline">\(\beta\)</span> will not converge to <span class="math inline">\(\beta_{VSR}\)</span>.</p>
+</div>
+</div>
+</section>
+<section id="control-and-comparator-priors" class="level1">
+<h1>Control and Comparator Priors</h1>
+<p>For <span class="custom-tooltip"> most <span class="tooltip-text">All continuous and dichotomous models except the U-shaped and Plateau models.</span> </span> dose response models the control arm can be modeled either as part of the dose response model or separately. If it is modeled separately, it may have a simple user specified Normal prior or a “historical” prior. A historical prior in FACTS is a hierarchical prior that models the response on control as coming from a distribution that also contains trial outcomes from external historical studies.</p>
+<p>The active comparator is always modeled separately, and as with a control arm modeled separately, it can be modeled with a user specified Normal prior or a “historical” prior.</p>
+<p>When a user specified Normal prior is used, the user specifies the mean and standard deviation of the prior normal distribution for <span class="math inline">\(\theta_0\)</span>. This is useful if the control response is not thought to be consistent with the model being used to model the study doses – for instance if using an NDLM and there might be a sharp step in response from control to the lowest dose.</p>
+<p>If “Hierarchical Prior” is selected for either the control arm or an Active Comparator arm, a “Hierarchical Priors” tab is created.</p>
+<section id="hierarchical-priors" class="level2">
+<h2 class="anchored" data-anchor-id="hierarchical-priors">Hierarchical Priors</h2>
+<p>If a hierarchical prior is used for either the Control or Active Comparator arm, then FACTS will estimate a prior for that arm using external data that the user provides. This prior is estimated through a hierarchical model, and then the in-study data collected on subjects randomized to that arm are used to estimate the posterior distribution for the arm.</p>
+<p>To specify a hierarchical prior, the user specifies the sufficient statistics from each historical study. These are:</p>
+<ul>
+<li><p>Continuous: the mean response and the SD of the response of the control or active comparator arm and the number of subjects observed.</p></li>
+<li><p>Dichotomous: the observed number of responders and the number of subjects observed in the study.</p></li>
+<li><p>Time-to-Event: the number of events and the amount of exposure within each bin in the piecewise model.</p></li>
+</ul>
+<p>The information from the historical studies can be ‘down-weighted’ by decreasing the effective information in the sample size. For continuous, this can be done by decreasing the sample size by a percentage. For dichotomous, both the number of responders and the number of subjects would be decreased by a percentage. For time-to-event, multiplying the number of events and the exposure by the same fraction will reduce the information in the study without changing the reported hazard rate.</p>
+<div id="fig-hierarchicalpriors" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-hierarchicalpriors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../coreUGattachments/CoreUserGuide/media/image34.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hierarchicalpriors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11: The Hierarchical Priors tab for a continuous study when both the Control and Active Comparator are given hierarchical priors.
+</figcaption>
+</figure>
+</div>
+<p>The hierarchical models for the control or active comparator rates are very similar across the endpoints. They are briefly described below.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Continuous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Dichotomous</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">Time-to-Event</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<p>The model used for incorporating data from previous trials is as follows:</p>
+<p><span class="math display">\[\theta_{0t} \sim \text{N}(\mu_0, \tau_0^2) \text{ for } \tau=0,1,2,\ldots,T\]</span> where <span class="math inline">\(\theta_{0t}\)</span> is the mean for the control arm in trial <span class="math inline">\(t\)</span> (<span class="math inline">\(t=0\)</span> for the current trial and <span class="math inline">\(t=1,2,\ldots,T\)</span> for previous trials). A user needs to specify appropriate priors for the hyper-parameters:</p>
+<p><span class="math display">\[\mu_0 \sim \text{N}(m_0, \sigma_0^2)\]</span> <span class="math display">\[\tau_0^2 \sim \text{IG}(a_0, b_0)\]</span></p>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<p>The model used for incorporating data from previous trials is as follows:</p>
+<p><span class="math display">\[\theta_{0t} \sim \text{N}(\mu_0, \tau_0^2) \text{ for } \tau=0,1,2,\ldots,T\]</span> where <span class="math inline">\(\theta_{0t}\)</span> is the log-odds for the control arm in trial <span class="math inline">\(t\)</span> (<span class="math inline">\(t=0\)</span> for the current trial; <span class="math inline">\(t=1,2,\ldots,T\)</span> for previous trials). A user needs to specify appropriate priors for the hyper-parameters:</p>
+<p><span class="math display">\[\mu_0 \sim \text{N}(m_0, \sigma_0^2)\]</span> <span class="math display">\[\tau_0^2 \sim \text{IG}(a_0, b_0)\]</span></p>
+<p>The prior distributions for the hyper-parameters of the hierarchical model. The hyper-parameters are the mean and standard deviation of Normal distribution for the log hazard ratios of the event rates of the historical studies and the current study.</p>
+</div>
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<p>The model used for incorporating data from previous trials is as follows:</p>
+<p><span class="math display">\[\lambda_{st}=\lambda_s \exp(\gamma_t) \text{ for } t=0,1,2,\ldots,T\]</span> where <span class="math inline">\(\lambda_{st}\)</span> is the hazard rate for the control arm in segment <span class="math inline">\(s\)</span> (<span class="math inline">\(s=1,2,\ldots,S\)</span>) for previous trial <span class="math inline">\(t\)</span> (<span class="math inline">\(t=1,2,\ldots,T\)</span>) and <span class="math inline">\(\lambda_{s0}\)</span> is the hazard rate for the current control arm in segment <span class="math inline">\(s\)</span>; <span class="math inline">\(\lambda_s\)</span> is a base hazard for segment <span class="math inline">\(s\)</span>; and <span class="math inline">\(\gamma_t\)</span> is the log hazard ratio between that base rate and the <span class="math inline">\(\lambda_{st}\)</span> values.</p>
+<p>The following hierarchical model is used</p>
+<p><span class="math display">\[\gamma_t \sim \text{N}(\mu_\gamma, \tau_\gamma^2) \text{ for } t=0,1,2,\ldots,T\]</span> Users specify priors for the hyper-parameters:</p>
+<p><span class="math display">\[\mu_\gamma \sim \text{N}(m_\gamma, t_\gamma^2)\]</span> <span class="math display">\[\tau^2 \sim \text{IG}(a_\gamma, b_\gamma)\]</span></p>
+<p>The formulation above is not identifiable as changes in <span class="math inline">\(\lambda_s\)</span> can be compensated for by changes in the <span class="math inline">\(\gamma_t\)</span> values (thus, one can use different combination of <span class="math inline">\(\lambda_s\)</span> and <span class="math inline">\(\gamma_t\)</span>, but acquire the same set of values <span class="math inline">\(\lambda_{st}\)</span> and thus the same likelihood). To avoid this difficulty, we use the above formulation but fix <span class="math inline">\(\gamma_0 = 0\)</span>. In addition to preserving the identifiability of the structure, this constraint allows <span class="math inline">\(\lambda_s\)</span> to have the interpretation of being the hazard rate for the current control arm, and thus the prior on <span class="math inline">\(\lambda_s\)</span> from the main dose response may be used as the prior for <span class="math inline">\(\lambda_s\)</span>.</p>
+</div>
+</div>
+</div>
+<section id="setting-priors-for-hierarchical-model-hyper-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="setting-priors-for-hierarchical-model-hyper-parameters">Setting Priors for Hierarchical Model Hyper Parameters</h3>
+<p>Unless the intent is to add information that is not included in the historic studies, the hyper parameters can and should be set so that they are ‘weak’ priors, centered on the expected values.</p>
+<p>In this case the following would be reasonable:</p>
+<ul>
+<li><p>Set the prior mean value for Mu as the mean of the mean responses on the control arm in the historic studies</p></li>
+<li><p>Set the prior SD for Mu equal to the average SD of response divided by the square root of the number of studies.</p></li>
+<li><p>Set the center for tau to the same value as the prior SD for Mu.</p></li>
+<li><p>Set the weight for tau to be &lt; 1.</p></li>
+</ul>
+<p>One can traverse the spectrum from ‘complete pooling of data’ to ‘completely separate analyses’ through the prior for tau. If the weight of the prior for tau is small (relative to the number of studies), then (unless set to a very extreme value) the mean of the prior for tau will have little impact and the degree of borrowing will depend on the observed data.</p>
+<p>To give some prior preference towards pooling or separate analysis the <strong>weight</strong> for tau has to be large (relative to the number of historic studies) – to have a design that is like pooling all the historic studies the mean for tau needs to be small (say 10% or less of the value suggested above). For there to be no borrowing from the historic studies the value for tau needs to be large (say 10x or more the value suggested above).</p>
+<p>The best way to understand the impact of the priors is try different values and run simulations.</p>
+</section>
+<section id="bayesian-augmented-control-bac-example" class="level3">
+<h3 class="anchored" data-anchor-id="bayesian-augmented-control-bac-example">Bayesian Augmented Control (BAC) Example:</h3>
+<p>It is easiest to study the impact of BAC in a simplified version of the trial being designed, for example use a 2 arm fixed design with ‘no model’, no adaptation, no longitudinal modeling, etc.</p>
+<p>For instance, in a continuous setting with an expected sample size of 50 on control, a mean response of 5 and an SD in the response of 2, looking at the effect of having 4 prior, similarly sized studies:</p>
+<table class="table">
+<caption>
+<p>
+External Study Sufficient Statistics
+</p>
+</caption>
+<colgroup>
+<col style="width: 24%">
+<col style="width: 22%">
+<col style="width: 30%">
+<col style="width: 22%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>
+</th>
+<th>
+Number of subjects
+</th>
+<th>
+Mean Response
+</th>
+<th>
+SD of Response
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+Study 1
+</td>
+<td>
+50
+</td>
+<td>
+4.76
+</td>
+<td>
+2
+</td>
+</tr>
+<tr class="even">
+<td>
+Study 2
+</td>
+<td>
+50
+</td>
+<td>
+4.93
+</td>
+<td>
+2
+</td>
+</tr>
+<tr class="odd">
+<td>
+Study 3
+</td>
+<td>
+50
+</td>
+<td>
+5.07
+</td>
+<td>
+2
+</td>
+</tr>
+<tr class="even">
+<td>
+Study 4
+</td>
+<td>
+50
+</td>
+<td>
+5.24
+</td>
+<td>
+2
+</td>
+</tr>
+</tbody>
+</table>
+<p>For simplicity we have just varied the means of the studies – they are all consistent with a normally distributed estimate, with mean of 5 and a standard error of <span class="math inline">\(\frac{2}{\sqrt{50}}\)</span>.</p>
+<p>By simulating a fixed trial with a sample size of 100 and fixed 1:1 allocation between control and a study arm we can easily observe the effects of a BAC on the control arm. Creating 6 VSR profiles with sigma = 2, and the same mean response for control and the study arm in each profile of: 4.53, 4.76, 5.07, 5.24 and 5.47 we can look at the bias of the final estimate and the shrinkage in the SD of the estimate that could be brought about by using BAC:</p>
+<table class="table">
+<caption>
+<p>
+Quick simulation study of how the hierarchical model for BAC effects estimates of the control rate under different true control rate scenarios.
+</p>
+</caption>
+<colgroup>
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 16%">
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 10%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>
+True Mean
+</th>
+<th>
+Raw mean
+</th>
+<th>
+Raw SD
+</th>
+<th>
+Estimate inc BAC
+</th>
+<th>
+SD inc BAC
+</th>
+<th>
+Bias
+</th>
+<th>
+Effective additional Subjects
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>
+4.53
+</td>
+<td>
+4.55
+</td>
+<td>
+0.28
+</td>
+<td>
+4.64
+</td>
+<td>
+0.255
+</td>
+<td>
+2.1%
+</td>
+<td>
+11.1
+</td>
+</tr>
+<tr class="even">
+<td>
+4.76
+</td>
+<td>
+4.78
+</td>
+<td>
+0.28
+</td>
+<td>
+4.83
+</td>
+<td>
+0.250
+</td>
+<td>
+1.0%
+</td>
+<td>
+13.5
+</td>
+</tr>
+<tr class="odd">
+<td>
+4.93
+</td>
+<td>
+4.95
+</td>
+<td>
+0.28
+</td>
+<td>
+4.96
+</td>
+<td>
+0.248
+</td>
+<td>
+0.2%
+</td>
+<td>
+14.3
+</td>
+</tr>
+<tr class="even">
+<td>
+5.07
+</td>
+<td>
+5.09
+</td>
+<td>
+0.28
+</td>
+<td>
+5.07
+</td>
+<td>
+0.248
+</td>
+<td>
+-0.4%
+</td>
+<td>
+14.2
+</td>
+</tr>
+<tr class="odd">
+<td>
+5.24
+</td>
+<td>
+5.26
+</td>
+<td>
+0.28
+</td>
+<td>
+5.20
+</td>
+<td>
+0.250
+</td>
+<td>
+-1.1%
+</td>
+<td>
+13.2
+</td>
+</tr>
+<tr class="even">
+<td>
+5.46
+</td>
+<td>
+5.49
+</td>
+<td>
+0.28
+</td>
+<td>
+5.38
+</td>
+<td>
+0.255
+</td>
+<td>
+-1.9%
+</td>
+<td>
+10.7
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note it is important to use the column “SD Mean resp 1” from the simulations file to see the SD of the estimate and not use the SD of the estimates in the summary table.</p>
+<p>The small shrinkage in the SD is more impressive when viewed in terms of how many additional subjects would have to be recruited to achieve the same shrinkage in the raw estimate. These are useful savings for small additional bias.</p>
+<p>The “effective additional subjects” was calculated: <span class="math display">\[\left( \frac{\text{True sigma}}{\text{AVG(SD Mean resp)}} \right)^{2} - \left( \frac{\text{True sigma}}{\text{AVG(SE Mean Raw Response)}} \right)^{2}\]</span> where in this example <span class="math inline">\(\text{True sigma}\)</span> was 2.</p>
+</section>
+</section>
+</section>
+<section id="inverse-gamma-priors" class="level1">
+<h1>Inverse-gamma priors</h1>
+<p>FACTS uses inverse-gamma priors for parameters of variance – these are conjugate and allow efficient computation and avoid problems of convergence. <a href="#gelman" title="Prior distributions for variance parameters in hierarchical models, Andrew Gelman, Bayesian Analysis 2006, 1, Number 3 pp 515-533.">Andrew Gelman’s 2006 paper</a> however notes a potential problem with this model, the problem is specifically</p>
+<ul>
+<li><p>When updating the estimate of the variance of a hierarchical model parameter there will be typically relative few actual data observations (e.g.&nbsp;relatively few historic studies for estimating the variance of the hyper parameter in a Bayesian Augmented Control model for the response on a control arm, and relatively few observations of the change in response from one dose to the next when using an NDLM dose-response model).</p></li>
+<li><p>The conventional ‘non-informative’ gamma-prior of IG(0.001, 0.001) has an effect when the observed variance is small, of over-shrinking the posterior estimate of variance.</p></li>
+</ul>
+<p>In FACTS this possibility arises in the dose response models in the context of priors for the <span class="math inline">\(\tau\)</span> parameter for the NDLM models and the <span class="math inline">\(a_4\)</span> parameter for the hierarchical logistic dose response model, where the number of observations is the number of doses or dose intervals.</p>
+<p>To avoid the problem reported by Gelman we recommend using a weakly informative prior. Using the settings that control how the inverse-gamma distribution is parameterized (Settings &gt; Options &gt; Gamma Distribution Parameters), use the ‘center and weight’ options and use a weight of 1, with a ‘reasonable’ expectation for the upper limit difference in the values being modeled entered as the center for the SD. The inverse gamma distribution is the prior of the variance, so the center parameter being specified is more correctly an expectation of the square root of the mean of the variance.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Help with Inverse Gamma specification
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We have created a tool that can help visualize the inverse gamma distribution and relate the center/weight parameterization, which FACTS uses by default, to the alpha/beta parameterization that is common.</p>
+<p><a href="../../../../../concepts/facts/InverseGammaDistribution.html">See here.</a></p>
+</div>
+</div>
+<p>This ‘reasonable’ upper limit for the difference is a value that a clinical team will usually have an intuition about: for the largest change in mean response from one dose to another for instance, it is (often)[## “If the trial has doses that are more closely spaced than usual, a smaller figure can be used.”] reasonable to assume that the upper limit for the expected change in response from one dose to the next is the ‘expected difference in effect size’ that might have been used to power the trial in a conventional setting.</p>
+<p>In the dose response setting the smoothing parameters like <span class="math inline">\(\tau\)</span> in the NDLM are nuisance parameters in the sense that they are necessary to estimate in order to get appropriate estimates of the dose response values, but are rarely of inferential interest on their own. This can ease some of the undue burden of setting a prior on <span class="math inline">\(\tau\)</span>. If it <span class="custom-tooltip"> gives estimates of the dose responses that look like you expect <span class="tooltip-text">This is subjective. The Per Sim: Response and Subject Alloc plot in FACTS can help assess this fit.</span> </span>, then it is generally good enough.</p>
+</section>
+<section id="handling-missing-data" class="level1">
+<h1>Handling Missing Data</h1>
+<p>FACTS allows a “pre-processing” step before fitting the dose response model that helps with handling of data that is missing due to dropouts. If a subject has incomplete data due to a dropout, the user may specify all dropouts have their unknown final endpoint treated as known with the following options:</p>
+<ol type="1">
+<li><p>BOCF (continuous only, requires baseline be simulated) – All dropouts are assumed to have a final endpoint equal to their observed baseline value.</p></li>
+<li><p>LOCF (continuous or dichotomous, requires longitudinal data be present) – All dropouts are assumed to have a final endpoint equal to their last observed visit value. If no post-baseline visits are available, but the subject has a baseline visit value, then the baseline values is carried forward to their final endpoint.</p></li>
+<li><p>Missing is failure (dichotomous only) – All dropouts are assumed to be failures (which may be coded as 0 or 1 depending on whether a response is considered a success).</p></li>
+</ol>
+<p>Subjects who are imputed in this pre-processing step have final endpoint values known and used for the purposes of estimating the dose response curve. However, these pre-processed final endpoint values are not used in the updating on the longitudinal model, which is based only on observed visit data.</p>
+<p>If the user does not specify one of the dropout imputation methods specified above, the dropout subjects and incomplete subjects (subjects who have not reached their final endpoint but are still continuing in the study) will have their final endpoints multiply imputed using Bayesian Multiple Imputation, described in the <a href="#longitudinalModeling">Longitudinal Modeling</a> section.</p>
+<p>Generally, patients with “no data” do not affect the posterior distribution, and thus are omitted from the analysis. However, one must take into account a subject can have no visit data but still have “data” based on these dropout imputation methods. For example, if one selects “missing as failure” and a patient drops out before any visit data is recorded, then the subject still supplies information through the dropout imputation (similarly for BOCF). However, if LOCF is selected and no visit data is available, there remains no information on the subject to be used for the LOCF dropout imputation, and thus these subjects are omitted from the analysis. All subjects are included if they either 1) have some visit data available, or 2) are dropouts before visit 1 with sufficient information to impute their final endpoint with this pre-processing step.</p>
+<section id="time-to-event-missingness" class="level2">
+<h2 class="anchored" data-anchor-id="time-to-event-missingness">Time-to-Event Missingness</h2>
+<p>For a time-to-event endpoint, as is the convention in this endpoint, subjects are observed up to the time they have an event (or the end of follow up), so no subject drops out after having had an event. Subjects that do drop-out are included in the analysis as not having had an event up to the last observation of the subject.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<!-- footer.html -->
+
+<!-- FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pF6W3...<truncated>...Q==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+<style>
+
+  /* Make all footer icons the same color */
+  footer .fab,
+  footer .fas,
+  footer svg {
+    color: #125740;           /* ← pick whatever color your share-icons are using */
+    fill: currentColor;    /* ensures the SVG Bluesky icon matches */
+  }
+
+  /* Prevent links from overriding that color */
+  footer a {
+    color: inherit;
+  }
+
+  /* Share menu positioning */
+  #share-wrapper { position: relative; }
+  #share-menu {
+    display: none;
+    position: absolute;
+    bottom: 3rem;               /* float above the footer */
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px #125740;
+    gap: 1rem;
+    z-index: 100;
+  }
+  body.menu-open #share-menu { display: flex; }
+  #share-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* Left column: text + social permalinks */
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+  }
+  .footer-left p { margin: 0; }
+  .footer-left a.social {
+    color: inherit;
+    text-decoration: none;
+  }
+  .footer-left a.social i { font-size: 1.2em; }
+  
+  
+    /* Text color left */
+  .footer-left p > a {
+    color: #125740;
+  }
+
+  /* Text color last item */
+  footer > p:last-child a {
+    color: #125740;
+  }
+  
+    /* Link hover colors */
+  .footer-left p > a:hover,
+  footer > p:last-child a:hover {
+    color: #11A473;
+    text-decoration: underline;
+  }
+  
+</style>
+
+<footer style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
+  
+  <!-- Left: Berry Consultants + social permalinks -->
+  <div class="footer-left">
+    <p>
+      © <a href="https://www.berryconsultants.com">Berry Consultants</a>
+    </p>
+    <a href="https://twitter.com/BerryConsultant" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on X">
+      <i class="fab fa-x"></i>
+    </a>
+    <a href="https://www.linkedin.com/company/berry-consultants-llc" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on LinkedIn">
+      <i class="fab fa-linkedin"></i>
+    </a>
+    <a href="https://www.youtube.com/c/berryconsultants" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on YouTube">
+      <i class="fab fa-youtube"></i>
+    </a>
+  </div>
+
+  <!-- Center: share toggle + popup -->
+  <div id="share-wrapper">
+    <button id="share-toggle" aria-label="Share this page">
+      <i class="fas fa-share-alt" style="font-size:1.6em;"></i>
+    </button>
+    <div id="share-menu">
+      <!-- share icons injected here -->
+    </div>
+  </div>
+
+  <!-- Right: How to Cite -->
+  <p style="margin: 0;">
+    <a href="../../../../../introduction/citation.html">Cite</a>
+  </p>
+</footer>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const url   = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+    const networks = [
+      { name: "X",        href: `https://twitter.com/intent/tweet?url=${url}&text=${title}`,          icon: `<i class="fab fa-x" style="font-size:1.4em;"></i>` },
+      { name: "LinkedIn", href: `https://www.linkedin.com/feed/?shareActive=true&text=${title}%20${url}`, icon: `<i class="fab fa-linkedin" style="font-size:1.4em;"></i>` },
+      { name: "Bluesky",  href: `https://bsky.app/intent/compose?text=${title}%20${url}`,              icon: `
+        <svg width="1.4em" height="1.4em" fill="currentColor" viewBox="0 0 600 530">
+          <path d="m135.72 44.03c66.496 49.921 138.02 151.14 164.28 205.46 26.262-54.316 97.782-155.54 164.28-205.46 47.98-36.021 125.72-63.892 125.72 24.795 0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.3797-3.6904-10.832-3.7077-7.8964-0.0174-2.9357-1.1937 0.51669-3.7077 7.8964-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.4491-163.25-81.433-5.9562-21.282-16.111-152.36-16.111-170.07 0-88.687 77.742-60.816 125.72-24.795z"/>
+        </svg>` },
+      { name: "Reddit",   href: `https://www.reddit.com/submit?url=${url}&title=${title}`,         icon: `<i class="fab fa-reddit" style="font-size:1.4em;"></i>` },
+      { name: "WhatsApp", href: `https://wa.me/?text=${title}%20${url}`,                             icon: `<i class="fab fa-whatsapp" style="font-size:1.4em;"></i>` },
+      { name: "Email",    href: `mailto:?subject=${title}&body=${title}%20${url}`,                    icon: `<i class="fas fa-envelope" style="font-size:1.4em;"></i>` }
+    ];
+
+    // inject share icons
+    const menu = document.getElementById("share-menu");
+    networks.forEach(net => {
+      const a = document.createElement("a");
+      a.href      = net.href;
+      a.target    = "_blank";
+      a.rel       = "noopener";
+      a.setAttribute("aria-label", `Share on ${net.name}`);
+      a.innerHTML = net.icon;
+      menu.appendChild(a);
+    });
+
+    // toggle menu
+    const toggle = document.getElementById("share-toggle");
+    toggle.addEventListener("click", e => {
+      e.stopPropagation();
+      document.body.classList.toggle("menu-open");
+    });
+
+    // close on outside click
+    document.addEventListener("click", () => {
+      document.body.classList.remove("menu-open");
+    });
+    menu.addEventListener("click", e => e.stopPropagation());
+  });
+</script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/docs\.berryconsultants\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

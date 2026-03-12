@@ -1,0 +1,2309 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2D-CRM</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../media/FACTS_icon.png" rel="icon" type="image/png">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-e92fb617ac39cba344ec42fdd1c3682a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<!-- Roboto Serif -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
+
+<!-- Roboto Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WLMVE7GR4S');
+</script>
+
+
+<link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../media/FACTSLogo.png" alt="" class="navbar-logo">
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../introduction/index.html"> 
+<span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../documentation/index.html"> 
+<span class="menu-text">Documentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../get/index.html"> 
+<span class="menu-text">Get FACTS</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../contact/index.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">2D-CRM</h1>
+            <p class="subtitle lead">2D Model-Based Dose Escalation</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <ul>
+  <li><a href="#purpose-of-this-document" id="toc-purpose-of-this-document" class="nav-link" data-scroll-target="#purpose-of-this-document">Purpose of this document</a></li>
+  <li><a href="#scope-of-this-document" id="toc-scope-of-this-document" class="nav-link" data-scroll-target="#scope-of-this-document">Scope of this document</a></li>
+  <li><a href="#citing-facts" id="toc-citing-facts" class="nav-link" data-scroll-target="#citing-facts">Citing FACTS</a></li>
+  </ul></li>
+  <li><a href="#facts-2d-crm-overview" id="toc-facts-2d-crm-overview" class="nav-link" data-scroll-target="#facts-2d-crm-overview">FACTS 2D-CRM Overview</a>
+  <ul>
+  <li><a href="#facts-7.0" id="toc-facts-7.0" class="nav-link" data-scroll-target="#facts-7.0">FACTS 7.0</a></li>
+  <li><a href="#facts-6.5" id="toc-facts-6.5" class="nav-link" data-scroll-target="#facts-6.5">FACTS 6.5</a></li>
+  <li><a href="#facts-6.4.1-changes-to-2d-crm" id="toc-facts-6.4.1-changes-to-2d-crm" class="nav-link" data-scroll-target="#facts-6.4.1-changes-to-2d-crm">FACTS 6.4.1 Changes to 2D-CRM</a></li>
+  <li><a href="#facts-6.4-changes-to-2d-crm" id="toc-facts-6.4-changes-to-2d-crm" class="nav-link" data-scroll-target="#facts-6.4-changes-to-2d-crm">FACTS 6.4 Changes to 2D-CRM</a></li>
+  <li><a href="#facts-6.3-changes-to-2d-crm" id="toc-facts-6.3-changes-to-2d-crm" class="nav-link" data-scroll-target="#facts-6.3-changes-to-2d-crm">FACTS 6.3 Changes to 2D-CRM</a></li>
+  <li><a href="#the-use-of-the-2d-crm-simulator-to-design-a-trial" id="toc-the-use-of-the-2d-crm-simulator-to-design-a-trial" class="nav-link" data-scroll-target="#the-use-of-the-2d-crm-simulator-to-design-a-trial">The use of the 2D-CRM simulator to design a trial</a></li>
+  <li><a href="#general-constraints-and-assumptions" id="toc-general-constraints-and-assumptions" class="nav-link" data-scroll-target="#general-constraints-and-assumptions">General constraints and assumptions</a></li>
+  <li><a href="#models-and-methods" id="toc-models-and-methods" class="nav-link" data-scroll-target="#models-and-methods">Models and Methods</a>
+  <ul class="collapse">
+  <li><a href="#sec-runins" id="toc-sec-runins" class="nav-link" data-scroll-target="#sec-runins">Run-in methods</a></li>
+  <li><a href="#escalation-methods" id="toc-escalation-methods" class="nav-link" data-scroll-target="#escalation-methods">Escalation methods</a></li>
+  </ul></li>
+  <li><a href="#outstanding-issues-absent-features" id="toc-outstanding-issues-absent-features" class="nav-link" data-scroll-target="#outstanding-issues-absent-features">Outstanding Issues / Absent Features</a></li>
+  </ul></li>
+  <li><a href="#the-facts-2d-crm-gui" id="toc-the-facts-2d-crm-gui" class="nav-link" data-scroll-target="#the-facts-2d-crm-gui">The FACTS 2D-CRM GUI</a></li>
+  <li><a href="#the-study-tabs" id="toc-the-study-tabs" class="nav-link" data-scroll-target="#the-study-tabs">The Study Tabs</a>
+  <ul>
+  <li><a href="#study-info" id="toc-study-info" class="nav-link" data-scroll-target="#study-info">Study Info</a></li>
+  <li><a href="#treatment-arms" id="toc-treatment-arms" class="nav-link" data-scroll-target="#treatment-arms">Treatment Arms</a></li>
+  <li><a href="#exclude" id="toc-exclude" class="nav-link" data-scroll-target="#exclude">Exclude</a></li>
+  </ul></li>
+  <li><a href="#the-virtual-subject-response-tabs" id="toc-the-virtual-subject-response-tabs" class="nav-link" data-scroll-target="#the-virtual-subject-response-tabs">The Virtual Subject Response Tabs</a>
+  <ul>
+  <li><a href="#explicitly-defined" id="toc-explicitly-defined" class="nav-link" data-scroll-target="#explicitly-defined">Explicitly Defined</a>
+  <ul class="collapse">
+  <li><a href="#parametric" id="toc-parametric" class="nav-link" data-scroll-target="#parametric">Parametric</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#the-design-tabs" id="toc-the-design-tabs" class="nav-link" data-scroll-target="#the-design-tabs">The Design Tabs</a>
+  <ul>
+  <li><a href="#start-up" id="toc-start-up" class="nav-link" data-scroll-target="#start-up">Start-up</a></li>
+  <li><a href="#dose-escalation" id="toc-dose-escalation" class="nav-link" data-scroll-target="#dose-escalation">Dose Escalation</a></li>
+  <li><a href="#response-model" id="toc-response-model" class="nav-link" data-scroll-target="#response-model">Response Model</a></li>
+  <li><a href="#prior-toxicities" id="toc-prior-toxicities" class="nav-link" data-scroll-target="#prior-toxicities">Prior Toxicities</a></li>
+  </ul></li>
+  <li><a href="#simulation-tab" id="toc-simulation-tab" class="nav-link" data-scroll-target="#simulation-tab">Simulation Tab</a>
+  <ul>
+  <li><a href="#to-run-simulations" id="toc-to-run-simulations" class="nav-link" data-scroll-target="#to-run-simulations">To run simulations</a></li>
+  <li><a href="#mcmc-settings" id="toc-mcmc-settings" class="nav-link" data-scroll-target="#mcmc-settings">MCMC Settings</a></li>
+  <li><a href="#how-many-simulations-to-run" id="toc-how-many-simulations-to-run" class="nav-link" data-scroll-target="#how-many-simulations-to-run">How many simulations to run?</a></li>
+  <li><a href="#simulation-results" id="toc-simulation-results" class="nav-link" data-scroll-target="#simulation-results">Simulation results</a></li>
+  <li><a href="#facts-grid-simulation-settings" id="toc-facts-grid-simulation-settings" class="nav-link" data-scroll-target="#facts-grid-simulation-settings">FACTS Grid Simulation Settings</a></li>
+  <li><a href="#detailed-simulation-results" id="toc-detailed-simulation-results" class="nav-link" data-scroll-target="#detailed-simulation-results">Detailed Simulation Results</a></li>
+  <li><a href="#cohort-simulation-results" id="toc-cohort-simulation-results" class="nav-link" data-scroll-target="#cohort-simulation-results">Cohort Simulation Results</a></li>
+  <li><a href="#aggregation" id="toc-aggregation" class="nav-link" data-scroll-target="#aggregation">Aggregation</a></li>
+  </ul></li>
+  <li><a href="#the-summary-results-columns" id="toc-the-summary-results-columns" class="nav-link" data-scroll-target="#the-summary-results-columns">The Summary Results Columns</a>
+  <ul>
+  <li><a href="#highlights" id="toc-highlights" class="nav-link" data-scroll-target="#highlights">Highlights</a></li>
+  <li><a href="#fitted-toxicity" id="toc-fitted-toxicity" class="nav-link" data-scroll-target="#fitted-toxicity">Fitted Toxicity</a></li>
+  <li><a href="#observed-toxicity" id="toc-observed-toxicity" class="nav-link" data-scroll-target="#observed-toxicity">Observed Toxicity</a></li>
+  <li><a href="#the-per-simulation-results" id="toc-the-per-simulation-results" class="nav-link" data-scroll-target="#the-per-simulation-results">The Per-Simulation Results</a></li>
+  </ul></li>
+  <li><a href="#graphs" id="toc-graphs" class="nav-link" data-scroll-target="#graphs">Graphs</a>
+  <ul>
+  <li><a href="#fitted-ppntoxicity" id="toc-fitted-ppntoxicity" class="nav-link" data-scroll-target="#fitted-ppntoxicity">Fitted Ppn(Toxicity)</a></li>
+  <li><a href="#ppntoxicity-bands" id="toc-ppntoxicity-bands" class="nav-link" data-scroll-target="#ppntoxicity-bands">Ppn(Toxicity Bands)</a></li>
+  <li><a href="#toxicity-summary-graph" id="toc-toxicity-summary-graph" class="nav-link" data-scroll-target="#toxicity-summary-graph">Toxicity Summary Graph</a></li>
+  <li><a href="#mean-prselected-mtt" id="toc-mean-prselected-mtt" class="nav-link" data-scroll-target="#mean-prselected-mtt">Mean Pr(Selected MTT)</a></li>
+  <li><a href="#mean-subject-allocation" id="toc-mean-subject-allocation" class="nav-link" data-scroll-target="#mean-subject-allocation">Mean Subject Allocation</a></li>
+  <li><a href="#mean-observed-prtoxicity" id="toc-mean-observed-prtoxicity" class="nav-link" data-scroll-target="#mean-observed-prtoxicity">Mean Observed Pr(Toxicity)</a></li>
+  <li><a href="#study-sizes-and-outcomes" id="toc-study-sizes-and-outcomes" class="nav-link" data-scroll-target="#study-sizes-and-outcomes">Study Sizes and Outcomes</a></li>
+  <li><a href="#fitted-prtoxicity-per-simulationper-cohort" id="toc-fitted-prtoxicity-per-simulationper-cohort" class="nav-link" data-scroll-target="#fitted-prtoxicity-per-simulationper-cohort">Fitted Pr(Toxicity) per simulation/per cohort</a></li>
+  <li><a href="#prtoxicity-band-per-simulationper-cohort" id="toc-prtoxicity-band-per-simulationper-cohort" class="nav-link" data-scroll-target="#prtoxicity-band-per-simulationper-cohort">Pr(Toxicity Band) per simulation/per cohort</a></li>
+  <li><a href="#summary-graph-per-simulationper-cohort" id="toc-summary-graph-per-simulationper-cohort" class="nav-link" data-scroll-target="#summary-graph-per-simulationper-cohort">Summary Graph per simulation/per cohort</a></li>
+  <li><a href="#subject-allocation-per-simulationper-cohort" id="toc-subject-allocation-per-simulationper-cohort" class="nav-link" data-scroll-target="#subject-allocation-per-simulationper-cohort">Subject Allocation per simulation/per cohort</a></li>
+  <li><a href="#observed-prtoxicity-per-simulationper-cohort" id="toc-observed-prtoxicity-per-simulationper-cohort" class="nav-link" data-scroll-target="#observed-prtoxicity-per-simulationper-cohort">Observed Pr(Toxicity) per simulation/per cohort</a></li>
+  <li><a href="#true-prtoxicity" id="toc-true-prtoxicity" class="nav-link" data-scroll-target="#true-prtoxicity">True Pr(Toxicity)</a></li>
+  </ul></li>
+  <li><a href="#analysis-tab" id="toc-analysis-tab" class="nav-link" data-scroll-target="#analysis-tab">Analysis Tab</a>
+  <ul>
+  <li><a href="#analysis-tab-graphs" id="toc-analysis-tab-graphs" class="nav-link" data-scroll-target="#analysis-tab-graphs">Analysis tab graphs</a>
+  <ul class="collapse">
+  <li><a href="#fitted-prtoxicity" id="toc-fitted-prtoxicity" class="nav-link" data-scroll-target="#fitted-prtoxicity">Fitted Pr(Toxicity)</a></li>
+  <li><a href="#prtoxicity-band" id="toc-prtoxicity-band" class="nav-link" data-scroll-target="#prtoxicity-band">Pr(Toxicity Band)</a></li>
+  <li><a href="#band-summary-graph" id="toc-band-summary-graph" class="nav-link" data-scroll-target="#band-summary-graph">Band Summary Graph</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#the-output-files" id="toc-the-output-files" class="nav-link" data-scroll-target="#the-output-files">The output files</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+
+
+
+
+
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<section id="purpose-of-this-document" class="level2">
+<h2 class="anchored" data-anchor-id="purpose-of-this-document">Purpose of this document</h2>
+<p>This document describes how use the FACTS Dose Escalation (DE) 2D-CRM design engine. It is intended for all end users of the system.</p>
+</section>
+<section id="scope-of-this-document" class="level2">
+<h2 class="anchored" data-anchor-id="scope-of-this-document">Scope of this document</h2>
+<p>This document covers the FACTS Dose Escalation 2D-CRM design engine user interface.</p>
+<p>This document does not address the internal workings of the design engines or algorithms, which are addressed in the associated Design Engine Specification. It also does not address the use of FACTS Core Designs or Enrichment Designs, which are covered in other User Guides.</p>
+<p>The screenshots provided are specific to a particular installation and may not reflect the exact layout of the information seen by any particular user. They were taken from FACTS 6 or later installed on Windows 10. Different versions of Windows or the use of different Windows themes will introduce some differences in appearance. The contents of each tab, however, will be consistent with the software.</p>
+</section>
+<section id="citing-facts" class="level2">
+<h2 class="anchored" data-anchor-id="citing-facts">Citing FACTS</h2>
+<p>Please cite FACTS wherever applicable using <a href="../../../introduction/citation.html">this citation</a>.</p>
+</section>
+</section>
+<section id="facts-2d-crm-overview" class="level1">
+<h1>FACTS 2D-CRM Overview</h1>
+<p>This user guide assumes some limited general familiarity with FACTS and concentrates on describing the interface for designs using the 2D-CRM approach. See the FACTS Dose Escalation user guide for a general introduction to the FACTS Dose Escalation user interface.</p>
+<p>The 2D-CRM is based on the method described in the paper <span class="citation" data-cites="neuenschwander2008critical">(<a href="#ref-neuenschwander2008critical" role="doc-biblioref">Neuenschwander, Branson, and Gsponer 2008</a>)</span>. It is designed for use in oncology phase 1 trials, and we understand has been used at Novartis for some trials of this type:</p>
+<ul>
+<li><p>Combinations of doses of two drugs are to be tested.</p></li>
+<li><p>Dosing starts at a (very) low dose combination, strongly believed to be safe.</p></li>
+<li><p>Usually after a cohort of subjects have completed their current dose, the dose to be used for the next cohort is selected. The selection of this dose is dictated by a combination of dose escalation rules, the estimate of the toxicity rate on the different doses and the target maximum tolerated toxicity, or toxicity band.</p></li>
+<li><p>The endpoint per subject is binary: toxicity observed or not.</p></li>
+<li><p>There are two predefined sets of doses to explore, one for each drug. Not all combinations may be permitted.</p></li>
+<li><p>There is limited sample size.</p></li>
+</ul>
+<section id="facts-7.0" class="level2">
+<h2 class="anchored" data-anchor-id="facts-7.0">FACTS 7.0</h2>
+<p>There have been no changes to 2D-CRM in FACTS 7.0.</p>
+</section>
+<section id="facts-6.5" class="level2">
+<h2 class="anchored" data-anchor-id="facts-6.5">FACTS 6.5</h2>
+<p>There have been no changes to 2D-CRM in FACTS 6.5.</p>
+</section>
+<section id="facts-6.4.1-changes-to-2d-crm" class="level2">
+<h2 class="anchored" data-anchor-id="facts-6.4.1-changes-to-2d-crm">FACTS 6.4.1 Changes to 2D-CRM</h2>
+<p>Compared to 6.4 there have been slight changes to address circumstances where the model could fail to converge, and parameter estimates could reach very large values. This was due to wanting to allow 0 doses in 2D-CRM, because in the 2D setting it is sometimes the case that there have been monotherapy escalation studies and there is a desire to incorporate this data in the 2D trial. To do this a 0 dose is included for the other drug so there are monotherapy combinations in the design (possibly excluded from being actually given during the 2D trial). This means the posterior parameter estimates from the monotherapy can be used for that drug’s prior, or the data from the monotherapy trial can be included as “Prior Toxicities”.</p>
+<p>Up to this release (6.4.1) there were two problems doing this:</p>
+<ol type="1">
+<li><p>Inherited from the N-CRM code, FACTS was still storing the logs of the dose strengths, so doses could not be 0, and the advice was to use small values instead such as 0.001.</p></li>
+<li><p>The presence of a combination with very small values for the transformed dose strength (and now 0 values) causes problems for the model’s stability, in particular when the dose strengths are 0 it becomes impossible for the model to have anything other than 0 DLT rate at the 0,0 combination.</p></li>
+</ol>
+<p>In FACTS 6.4.1 these problems have been addressed by the following changes:</p>
+<ol type="1">
+<li><p>FACTS now allows 0 strength doses.</p></li>
+<li><p>It there is any combination where both dose strengths after transformation are less than 0.001 then this combination must be excluded from the trial and can have no prior toxicities specified for it (however prior observations of no toxicities are allowed).</p></li>
+<li><p>If both drugs include 0 strength doses, the lower asymptote for the Response Model (the range is usually [0, 1]) must be raised slightly, e.g.&nbsp;to 0.0001.</p></li>
+</ol>
+<p>Restrictions 2 and 3 are checked when there is an attempt to run simulations, and if violated a warning message is displayed and the simulations not run.</p>
+</section>
+<section id="facts-6.4-changes-to-2d-crm" class="level2">
+<h2 class="anchored" data-anchor-id="facts-6.4-changes-to-2d-crm">FACTS 6.4 Changes to 2D-CRM</h2>
+<p>There were no changes to the 2D-CRM simulator for FACTS 6.4.</p>
+</section>
+<section id="facts-6.3-changes-to-2d-crm" class="level2">
+<h2 class="anchored" data-anchor-id="facts-6.3-changes-to-2d-crm">FACTS 6.3 Changes to 2D-CRM</h2>
+<p>There were no changes to the 2D-CRM simulator for FACTS 6.3.</p>
+</section>
+<section id="the-use-of-the-2d-crm-simulator-to-design-a-trial" class="level2">
+<h2 class="anchored" data-anchor-id="the-use-of-the-2d-crm-simulator-to-design-a-trial">The use of the 2D-CRM simulator to design a trial</h2>
+<p>The typical pattern of use of the simulator is as follows:</p>
+<ul>
+<li><p>Enter the constraints and objectives of the study: maximum sample size and the bounds of the different toxicity bands.</p></li>
+<li><p>Select the choice of and overdose control thresholds.</p></li>
+<li><p>Specify a small number of expected toxicity responses as VSR scenarios.</p></li>
+<li><p>Select the desired run-in and dose escalation rules.</p></li>
+<li><p>Specify an initial set of priors for the model.</p></li>
+<li><p>Run a small number of simulations (25 is usually adequate at this stage) of each scenario.</p></li>
+<li><p>Check the performance of the design:</p>
+<ul>
+<li><p>Do the majority of the final combinations being selected have an acceptable level of toxicity?</p></li>
+<li><p>Is the overall level of toxicity observed in the trial acceptable?</p></li>
+<li><p>In the scenarios where the performance is worst, observe the behavior in individual simulations.</p></li>
+</ul></li>
+<li><p>Try a number of modifications to the design and simulate each modification individually. Increasing the number of simulations (usually 100 is still adequate at this stage).</p></li>
+<li><p>Consider if more VSRs need to be included to check a greater range of possible actual toxicity rate patterns.</p></li>
+<li><p>Combine modifications with promising results and re-simulate, (usually 500 is an adequate number at this stage).</p></li>
+</ul>
+<p>The design changes that are typically considered are:</p>
+<ul>
+<li><p>Exclude low dose combinations that are certain to be too weak.</p></li>
+<li><p>Exclude high dose combinations that are certain to be too toxic.</p></li>
+<li><p>Modify the run-in to be more aggressive if it is taking too many subjects and cycles to reach the escalation phase.</p>
+<ul>
+<li><p>The ”Huang” diagonals method is the least aggressive, both the “Ivanova” and “Tri-axial” can skip some combinations, finally consider a user specified run-in sequence.</p></li>
+<li><p>The “Huang” and the “Tri-axial” can make use of the “multiple simultaneous cohorts” option in the run-in phase to test multiple combinations simultaneously.</p></li>
+</ul></li>
+<li><p>If the escalation phase is too aggressive – incurring too many toxicities or selecting combinations with high toxicity true toxicity too often - then options are:</p>
+<ul>
+<li><p>Make the run-in expand at the dose below observed toxicities, not at the toxicity</p></li>
+<li><p>Make the priors for the model less informative (if the priors are informative and predicting low toxicity at higher combinations), the greater uncertainty in the toxicity at higher doses may then result in the estimate of their toxicity exceeding the overdose control threshold.</p></li>
+<li><p>Make the priors for the model predict higher levels of toxicity.</p></li>
+<li><p>Increase the overdose control thresholds.</p></li>
+<li><p>Shift the toxicity band bounds downwards.</p></li>
+<li><p>Add prior toxicity data.</p></li>
+<li><p>Increase the number of subjects before escalation.</p></li>
+</ul></li>
+<li><p>If the escalation phase is not aggressive enough – selecting combinations with too low a toxicity too often - then options are:</p>
+<ul>
+<li><p>Make the run-in expand at the dose where toxicity observed not a dose below</p></li>
+<li><p>Make the priors for the model more informative (if the priors are uninformative) this will allow lack of toxicity on lower doses reduce the predicted toxicity at higher, untested doses, bringing the probability of toxicity at the higher doses below the dose escalation threshold.</p></li>
+<li><p>Make the priors for the model predict lower levels of toxicity.</p></li>
+<li><p>Lower the overdose control thresholds.</p></li>
+<li><p>Shift the toxicity band bounds upwards.</p></li>
+<li><p>Add prior toxicity data.</p></li>
+<li><p>Decrease the number of subjects before escalation.</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="general-constraints-and-assumptions" class="level2">
+<h2 class="anchored" data-anchor-id="general-constraints-and-assumptions">General constraints and assumptions</h2>
+<p>The design engine is limited to phase 1/2a designs with dichotomous endpoints toxicity/no-toxicity. There is no longitudinal modeling or analysis of covariates included. All results of a cohort are assumed to be available before the next cohort is treated.</p>
+</section>
+<section id="models-and-methods" class="level2">
+<h2 class="anchored" data-anchor-id="models-and-methods">Models and Methods</h2>
+<p>For a full description of the models and methods implemented in the 2D-CRM see the Software Specification document [Spec].</p>
+<p>In the current version there is a single statistical model used to analyse the data – the 5 parameter Bayesian Logistic Regression Model as described in <span class="citation" data-cites="neuenschwander2008critical">(<a href="#ref-neuenschwander2008critical" role="doc-biblioref">Neuenschwander, Branson, and Gsponer 2008</a>)</span>. The model is used to compute the posterior probability that the toxicity rate at each combination is in one of 4 toxicity bands – “underdosing”, “target toxicity”, “excess toxicity” and “unacceptable toxicity”. The boundaries between the bounds are settable by the user.</p>
+<p>The posterior probability that the rate is in the target toxicity rate is used to target the dose allocation – the method attempts to allocate to the Maximum Target Toxicity (MTT). The posterior probability that the rate is in the “excess toxicity” and “unacceptable” or just the “unacceptable” bands can be used to enforce an “overdose control”. Combinations with a posterior probability that exceed the specified threshold are excluded from selection or allocation.</p>
+<p>The dose combinations are explored in two phases:</p>
+<ol type="1">
+<li><p>Optionally the trial may begin with a “small cohort run-in” or the allocation of a single cohort to a specified combination. This phase ends when the sequence of combinations to explore is exhausted or excluded by combinations at which toxicities have been observed. There is no model fitting during this phase.</p></li>
+<li><p>The trial then proceeds looking for the dose combination with the highest probability of having a toxicity rate in the target toxicity range using dose escalation, limited by dose escalation rules.</p></li>
+</ol>
+<section id="sec-runins" class="level3">
+<h3 class="anchored" data-anchor-id="sec-runins">Run-in methods</h3>
+<p>There are 4 run-in methods available:</p>
+<dl>
+<dt>Contour</dt>
+<dd>
+This explores the reverse diagonals, assuming that the expected toxicity at the dose increments of the two doses are roughly equal.
+</dd>
+<dt>Row by row</dt>
+<dd>
+This explores the doses of drug 1 at the first dose of drug 2, then increments drug 2, steps back a specified number of doses in drug 1 and then increments through the doses of drug 1 again. This method favours escalation of drug 1 over escalation of drug 2.
+</dd>
+<dt>Tri-axial</dt>
+<dd>
+This explores the combinations on each axis and on the diagonal. For small numbers of dose increments it is similar to the Huang run-in. For larger numbers of dose increments it is more parsimonious.
+</dd>
+<dt>Custom</dt>
+<dd>
+This explores a specific sequence of combinations stopping when the first toxicity is observed or the sequence is completed.
+</dd>
+</dl>
+<p>Or run-in can be skipped.</p>
+<p>For more details see the Software Specification document [Spec].</p>
+</section>
+<section id="escalation-methods" class="level3">
+<h3 class="anchored" data-anchor-id="escalation-methods">Escalation methods</h3>
+<p>There are 4 escalation methods available. They all work in the same basic framework:</p>
+<ol type="1">
+<li><p>The dose combinations where sufficient subjects have been tested and lesser dose combinations are found.</p></li>
+<li><p>The dose combinations that can be escalated to beyond these are found.</p></li>
+<li><p>The dose combinations where the overdose control limits are exceeded are removed.</p></li>
+<li><p>The target dose combinations from the remaining set are selected according to the selected method.</p></li>
+</ol>
+<p>The 4 methods are:</p>
+<dl>
+<dt>Contour</dt>
+<dd>
+This explores every MTT on every row and every column (frequently these overlap, but not necessarily).
+</dd>
+<dt>Walk</dt>
+<dd>
+This explores the MTT that is at or adjacent to the last combination tested (excluding the dose that is an increment in both drugs from the last combination tested).
+</dd>
+<dt>Tri-axial</dt>
+<dd>
+This explores the MTT on each axis and on the diagonal. Once these have the required maximum subjects on MTT, any combinations off the axis and diagonal that are the MTT are explored.
+</dd>
+<dt>Allocate MTT</dt>
+<dd>
+This allocates to the combination that is the overall MTT of all the combinations that it is permitted to allocate to.
+</dd>
+</dl>
+</section>
+</section>
+<section id="outstanding-issues-absent-features" class="level2">
+<h2 class="anchored" data-anchor-id="outstanding-issues-absent-features">Outstanding Issues / Absent Features</h2>
+<p>Currently the most obvious absent features are:</p>
+<ul>
+<li><p>modeling of additional endpoints such as efficacy or drug exposure</p></li>
+<li><p>the modeling of ordinal toxicity</p></li>
+<li><p>the simulation of open enrolment where subjects are allocated on subject by subject basis as they become available for enrolment, with a limit on the number of subjects who can being treated but for whom final endpoint has not been observed.</p></li>
+</ul>
+</section>
+</section>
+<section id="the-facts-2d-crm-gui" class="level1">
+<h1>The FACTS 2D-CRM GUI</h1>
+<p>The FACTS 2D-CRM GUI conforms to the standard FACTS GUI layout, with information and displays divided across various standard tabs (<a href="#fig-fig3" class="quarto-xref">Figure&nbsp;1</a>).</p>
+<ul>
+<li><p>The Study Tab has sub-tabs for entering Study Information and specifying the Treatment Arms (doses) available in the study. This is where the user specifies the ‘given’ requirements, or constraints, of the trial to be designed.</p></li>
+<li><p>The Virtual Subject Response tab has sub-tabs for specifying Explicitly Defined response scenarios to simulate and loading External data files of simulated subject responses. This is where a set of different toxicity rates per dose are specified that should represent the expected ‘space’ of the expected dose-toxicity profiles for the compound being tested.</p></li>
+<li><p>The Design has sub-tabs for specifying the Start-up phase, the Dose Escalation phase, the Toxicity Response model and any prior toxicity data to include. These are the design choices open to the trial biostatistician. The expected consequences of these design choices are estimated by running simulations of the trials using the various virtual subject response profiles defined.</p></li>
+<li><p>On the Simulation Tab, the user controls and runs simulations and can view the simulation results.</p></li>
+<li><p>On the Analysis tab, the user can use the design to analyze a specific data set and report the result of fitting the specified toxicity response model and the recommended dose for the next cohort.</p></li>
+</ul>
+<div id="fig-fig3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image3.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Tab layout of FACTS
+</figcaption>
+</figure>
+</div>
+<p>Also on the menu bar, on the right hand side of the FACTS Window, is a button labeled “Notes”; clicking this button reveals a simple “notepad” window in which the user can maintain some simple notes that will be stored within the “.facts” file.</p>
+<div id="fig-fig4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image4.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: The ‘Notes’ button
+</figcaption>
+</figure>
+</div>
+<div id="fig-fig5" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image5.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Example design notes
+</figcaption>
+</figure>
+</div>
+<p>The notepad window comes with two further buttons: one to change the window to a free floating one that can be moved away from the FACTS window; and the other to close it.</p>
+<p>The Notes field can be used for any text the user wishes to store with the file. Suggested uses are: to record the changes made in a particular version of a design and why; and to comment on the simulation results. This will help when coming back to work that has been set aside, to recall what gave rise to the different version of a design.</p>
+</section>
+<section id="the-study-tabs" class="level1">
+<h1>The Study Tabs</h1>
+<section id="study-info" class="level2">
+<h2 class="anchored" data-anchor-id="study-info">Study Info</h2>
+<p>On the Study Info tab the user can</p>
+<ul>
+<li><p>Specify the maximum trial size (in subjects not cohorts, as subjects tested in the run-on phase count to the overall total).</p></li>
+<li><p>Specify the parameters of the target, the user specifies the boundaries between the different toxicity bands, and whether using overdose limits and if so which ones and what the overdosing thresholds are.</p></li>
+</ul>
+<div id="fig-fig13" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image13.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig13-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Study info tab: 2D-CRM
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="treatment-arms" class="level2">
+<h2 class="anchored" data-anchor-id="treatment-arms">Treatment Arms</h2>
+<p>On the Treatment Arms tab the user specifies the names of the drugs, and the number, relative strength and names of the doses of each drug. The user can either click the ‘Add’ button the required number of times or use Auto generate doses, specifying the number of doses to create and initial dose level. Auto generate deletes all the pre-existing doses before generating the new ones.</p>
+<p>After creating the desired number of entries the user can edit the strengths and names of the doses.</p>
+<p>It is up to the user to ensure that the dose strengths are in monotonically increasing order.</p>
+<p>It is now (FACTS 6.4.1 and later) possible to enter dose strengths of 0, to create dose combinations that are monotherapies. This is particularly useful for enabling prior information from monotherapy trials to be included in this design.</p>
+<div id="fig-fig14" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image14.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig14-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Treatment Arms tab
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="exclude" class="level2">
+<h2 class="anchored" data-anchor-id="exclude">Exclude</h2>
+<p>On the Study &gt; Exclude tab the user can specify dose combinations that cannot be used in the trial. By clicking on any square on the grid the corresponding dose combination is cycled through the following states: ‘Toxic’, ‘Not Available’, ‘Ineffective’ and ‘Available’. The initial state is ‘Available’ for all combinations.</p>
+<p>If a combination is specified as ‘Toxic’ then all the combinations where both drugs are at the same or higher strength are also excluded.</p>
+<p>If a combination is specified as ‘Ineffective’ then all combinations where both drugs are at the same or lower strength are also excluded.</p>
+<p>If a combination is specified as ‘Not Available’ then just that combination is excluded with no consequences for the combinations around it.</p>
+<p>If there are any combinations where, after transformation of the dose strengths, both drugs have a dose strength of less than 0.001 this must be excluded from the trial (mark them “ineffective” or “not available”). Any toxicities occurring on such a combination would be data that the model would have difficulty fitting.</p>
+<div id="fig-fig15" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image15.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig15-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: The Exclude tab
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="the-virtual-subject-response-tabs" class="level1">
+<h1>The Virtual Subject Response Tabs</h1>
+<p>The Virtual Subject Response tabs are used to define the toxicity rates to use in simulating subjects responses. In each scenario a specific toxicity rate is specified for each dose combination. Thus a range of different scenarios is usually created that span the range of toxicities that are believed credible. As well as the absolute toxicities the scenarios should span the different rates at which its thought that the toxicity rates could change from dose to dose, and also span the different degrees of drug-drug interaction – both +ve and –ve that are believed credible.</p>
+<p>There are two ways of specifying scenarios: Explicitly entering the rate to simulate for each combination, and Parametrically entering the parameters of a simple model from which the toxicity at every combination then derived.</p>
+<section id="explicitly-defined" class="level2">
+<h2 class="anchored" data-anchor-id="explicitly-defined">Explicitly Defined</h2>
+<p>On the VSR &gt; Explicitly Defined tab, the user enters the toxicity rate to use when simulating subject responses, for every dose combination. The cells are colored according to the toxicity band coloring convention used in FACTS (under-dosing: blue, target: green, excess: orange, unacceptable: red) according to the toxicity rate entered.</p>
+<div id="fig-fig16" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image16.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig16-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: VSR Explicitly Defined tab
+</figcaption>
+</figure>
+</div>
+<section id="parametric" class="level3">
+<h3 class="anchored" data-anchor-id="parametric">Parametric</h3>
+<p>On the VSR &gt; Parametric tab, the user enters the parameters for a model that generates a toxicity rate to use when simulating subject responses, for every dose combination. The cells are colored using toxic band coloring according to the toxicity rate of that dose combination.</p>
+<p>The model used is the 5 parameter BLRM model that is used as the Toxicity response model on the Design &gt; Response Model tab, but the user can specify different ‘effective dose strength’ models from those used in the analysis.</p>
+<div id="fig-fig17" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image17.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig17-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: VSR Parametric tab
+</figcaption>
+</figure>
+</div>
+<p>For each profile the user specifies:</p>
+<ul>
+<li><p>For each drug the ‘effective dose strength’ model.</p>
+<ul>
+<li><p>The reference dose (where the effective dose strength is 1 and the toxicity rate due to that drug is given by the Alpha parameter alone).</p></li>
+<li><p>Whether the effective dose strength is the ratio of dose strength to the reference dose or the exponential of the difference of the to dose strength from the reference dose.</p></li>
+</ul></li>
+<li><p>For each drug the values of the coefficients of the single drug models entered as ln(alpha) and ln(Beta)</p></li>
+<li><p>The value of Eta, the drug-drug interaction term – Eta is the log-odds ratio between the interaction and the non-interaction model at the reference dose combination.</p></li>
+</ul>
+<p>It is perfectly reasonable to use the parametric models by simply varying the parameters using trial and error until the desired set of toxicity rates is achieved.</p>
+</section>
+</section>
+</section>
+<section id="the-design-tabs" class="level1">
+<h1>The Design Tabs</h1>
+<p>The Design tab allows the user to specify:</p>
+<ul>
+<li><p>Start-up: where the parameters of the run-in phase (if any) are specified.</p></li>
+<li><p>Dose Escalation: where the ad hoc rules for limiting dose escalation and early stopping are specified.</p></li>
+<li><p>Response Model: where the priors for the dose-toxicity model are specified.</p></li>
+<li><p>Prior Toxicities: where any prior observations are specified.</p></li>
+</ul>
+<section id="start-up" class="level2">
+<h2 class="anchored" data-anchor-id="start-up">Start-up</h2>
+<p>The Start-up tab allows the user to specify what is commonly referred to as a single patient run-in, in the FACTS 2D-CRM it’s allowed to be a “small cohort“ run-in. (The paper <span class="citation" data-cites="ivanova2003improved">(<a href="#ref-ivanova2003improved" role="doc-biblioref">Ivanova et al. 2003</a>)</span> showed that smaller target toxicity rates benefited from larger cohort sizes in the run-in).</p>
+<p>On this tab the user can specify</p>
+<ul>
+<li><p>The scheme to use for the run-in: “None”, “Contour”, “Row by Row”, “Tri-axial” or “Custom”. These are described <a href="#sec-runins">above</a> and in [Spec].</p>
+<ul>
+<li>If “None” is specified then the table for specifying specific dose combinations is used to specify the dose combination(s) to be assigned to the starting cohort(s). These will be the full sized cohorts used in the escalation phase.</li>
+</ul></li>
+<li><p>The cohort size to use in the run-in. A size of ‘1’ yields a ‘single patient run-in’, but other values are possible and may give better results, (see <span class="citation" data-cites="ivanova2003improved">(<a href="#ref-ivanova2003improved" role="doc-biblioref">Ivanova et al. 2003</a>)</span>).</p></li>
+<li><p>For the ‘Row by row’ run-in scheme, the number of drug 1 dose increments to back-off each time drug 2 is incremented.</p></li>
+<li><p>The range of the run-in. If the user does not want the run-in to possibly run all the way up to the maximum dose strengths, even if no toxicities have been observed, it is possible to specify a rectangular area of dose combinations for the run-in to include by specifying the starting combination (the lower left corner of the rectangle) and the stopping dose (the upper right corner combination). Note that as you would expect, regardless of whether this feature is used or not, dose combinations that have been excluded from the study on the Stud &gt; Exclude tab are excluded from the run-in.</p></li>
+<li><p>The dose allocation scheme: (only applies to the Contour and Tri-axial run-in schemes):</p>
+<ul>
+<li><p>allocate a single cohort;</p></li>
+<li><p>allocate the cohort across the next possible dose combinations;</p></li>
+<li><p>or allocate a cohort to each of the next dose combinations and optionally specify a maximum number of cohorts / dose combinations that can be tested at a single step.</p></li>
+</ul></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The Row by row and Custom run-ins only identify one dose combination to test next, and so use “single cohort” allocation regardless of the setting of this control.</p>
+</div>
+</div>
+<ul>
+<li><p>Where to allocate after the end of the run-in it it ends due to observing toxicities, either:</p>
+<ul>
+<li><p>expand the allocation at the combinations where toxicity has been observed,</p></li>
+<li><p>or at one dose increment below where toxicity has been observed.</p></li>
+</ul></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If the run-in ends because it has reached the end of the combinations to be tested during run-in without seeing a toxicity, then dose escalation starts by expanding at the allocation of the maximum dose combination(s).</p>
+</div>
+</div>
+<ul>
+<li>If use of a Custom run-in has been specified, then the sequence of dose combinations is specified.</li>
+</ul>
+<div id="fig-fig18" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image18.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig18-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Design Start-up tab
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="dose-escalation" class="level2">
+<h2 class="anchored" data-anchor-id="dose-escalation">Dose Escalation</h2>
+<p>The Dose Escalation tab allows the user to specify the dose escalation and early stopping rules to use during the Dose Escalation phase.</p>
+<p>On this tab the user can specify:</p>
+<ul>
+<li><p>The cohort size.</p></li>
+<li><p>The minimum number of subjects: that must be have been tested at a combination before the trial can escalate to a higher dose combination (that is not excluded by the overdose control).</p></li>
+<li><p>The maximum dose increment: in either drug that can be applied from a combination that has been tested, and where the minimum of subjects have been tested, to a higher dose combination.</p></li>
+<li><p>The dose escalation scheme: “Contour”, “Walk”, “Tri-Axial” or “Allocate to MTT”. These are described in (2.3.2) and in [Spec].</p></li>
+<li><p>The dose allocation scheme: (only applies to the “Contour” and “Tri-axial” schemes):</p>
+<ul>
+<li><p>allocate a single cohort;</p></li>
+<li><p>allocate the cohort across the next possible doses;</p></li>
+<li><p>or allocate a cohort to each of the next doses.</p></li>
+</ul></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The “Walk” and “Allocate to MTT” escalation schemes only identify one next combination, and so use “single cohort” allocation regardless of the setting of this control.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If “Multiple simultaneous cohorts” is specified, then it is possible to set a limit on the maximum number of cohorts / dose combinations tested in the next step.</p>
+</div>
+</div>
+<ul>
+<li>Maximum subjects on MTT. This is the maximum number of subjects to allocate to a combination under Dose Escalation. In the “Contour”, “Walk”, “Tri-Axial” escalation schemes this is currently the only stopping rule. If all the targeted combinations have the maximum number of subjects on them, the trial stops.</li>
+</ul>
+<div id="fig-fig19" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image19.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig19-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;10: Design Dose Escalation
+</figcaption>
+</figure>
+</div>
+<p>All the escalation schemes stop if the maximum number of subjects has been allocated or all combinations are too toxic (the posterior probabilities of toxicity exceed the overdose threshold). The schemes other than “Allocate to MTT” can also stop when the maximum number of subjects on MTT is reached on all the target doses.</p>
+<p>If the “Allocate to MTT” escalation scheme, is being used then additional stopping rules similar to those available in N-CRM can be enabled. If they are enabled, then the following may be specified:</p>
+<ul>
+<li><p>Minimum subjects on MTT: the trial can only stop with a combination selection if the combination to be allocated to have at least these number of subjects on them.</p></li>
+<li><p>Stop when Posterior Probability of target Toxicity at MTT is at least: the trial can stop with a combination selection when the combination to be allocated to has a posterior probability that its toxicity rate is in the Target Toxicity band is at least the specified amount.</p></li>
+<li><p>Minimum cohort’s accrued: the trial can only stop with a combination selection if the specified minimum number of cohorts has been allocated and completed.</p></li>
+<li><p>Minimum toxicities: the trial can only stop for all combinations too toxic if the required minimum number of toxicities have been observed. Whilst all combinations are too toxic but this minimum number of toxicities havs not been observed, subjects are allocated to the lowest dose combination.</p></li>
+</ul>
+</section>
+<section id="response-model" class="level2">
+<h2 class="anchored" data-anchor-id="response-model">Response Model</h2>
+<p>The Response Model tab displays a description of the model and 4 other components:</p>
+<ul>
+<li>A panel where the prior distributions for the model parameters can be input. Unless prior toxicity information is also to be included, it is recommended that uninformative priors are not used as these tend to lead to a failure to re-escalate to a dose if just one toxicity has been observed there, due to overdose control.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Values that represent weakly informative priors are recommended instead. The prior mean and SD for each Alpha should represent the prior expectation (in log-odds) of toxicity at the reference dose for that drug in isolation. Having set Alpha the prior for Beta should be set to allow gradients that are as steep as plausible, but if set too high, or too broad it may cause problems of not being able to escalate to high doses because of overdose control (even with few toxicities at low doses the uncertainty of the model at higher doses where there is currently no data may mean the posterior estimates of toxicity at these doses exceed the overdose control thresholds). This can be checked looking at example simulations or manually by entering test data on the Analysis tab. The prior for the correlation should usually be zero or slightly negative. A positive prior for Rho means that if the value for Alpha is estimated as low (due to low toxicity being observed near the reference dose) then the value of Beta will be estimated as being low – and this may lead to too low an estimate of toxicity at higher doses. A very strongly negative prior for Rho can lead to the same problems as a too high or broad prior for Beta.</p>
+</div>
+</div>
+<ul>
+<li>A panel where the transformations of the virtual dose strengths to values that can be used by the model is specified. This transformation is usually the dose ratio of each dose to the median dose of that drug. Options to use a linear transform and a different reference dose are available.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The recommended values for the reference dose are either the center of the dose range (the default “Median dose”) or the dose thought most likely to be in the middle of the target toxicity range for that drug alone.</p>
+</div>
+</div>
+<ul>
+<li>Re-scaling the response model. The model estimates rates between 0 and 1 and works best when the observed rates are asymptotically 0 or 1. If the observed toxicity is known to have different minimum and maximum rates (0.1 and 0.5 say) then the model fits is much, much better if these are specified as the asymptotes in place of 0 and 1.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If a dose combination of 0,0 is included in the design (even when excluded from be used in the trial, as it must be) the response model must be re-scaled with a minimum asymptote above 0, even if only very slightly (such as 0.0001).</p>
+</div>
+</div>
+<ul>
+<li>The last panel displays the values of the model at the dose combinations using the specified parameters.</li>
+</ul>
+<div id="fig-fig20" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image20.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig20-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;11: Design Response Model
+</figcaption>
+</figure>
+</div>
+<p>Specifying the Priors: The priors for each pair of parameters (α,β) for the response model for each drug are specified via a bivariate normal distribution (as in the single drug N-CRM), with a separate mean and SD for α and β, and a correlation term ρ (Rho). The prior for the interaction term η (Eta) is the mean and Sd of a Normal distribution. Using a Normal prior for Eta allows Eta to be -ve, modeling a negative interaction between the drugs and resulting in a non-monotonic surface. Unless a negative interaction is thought possible, it is recommended that the lognormal prior for Eta is used</p>
+<p>Specifying the dose transform: For both drugs the transformation of the dose strengths to a range of values suited to the model is specified. For each drug the transformations are relative to ‘reference’ dose, by default the median value in the dose range. The transformation can be linear log(d – d<sup>*</sup>) or the dose ratio ((d/d<sup>*</sup>))</p>
+<p>Specifying the asymptotes: The model fits values in the range (0-1), asymptotically approaching either limit. If desired the range can be reduced by re-scaling so that it asymptotically approaches a specified lower limit &gt; 0 and upper limit &lt; 1.</p>
+<p>Checking the prior: The influence of the prior on the model can be checked by viewing the results of sampling of the model parameters from the specified prior. Options are to view a) 100 samples of the 1-dimensional model for drug 1 or drug 2, or b) 1,000 samples of the 2-dimensional model over both drugs showing the 10%-ile, median or 90%-ile toxicities at each dose combination.</p>
+<div id="fig-fig21" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image21.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig21-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;12: Design Response Model showing individual drug prior
+</figcaption>
+</figure>
+</div>
+<p>The individual drug graph plots the doses at the log of their transformed dose strength (“Log(X^)”), this enables the logits to be plotted linearly.</p>
+<p>If there is a transformed dose strength of 0, this is plotted at some notional value that represents -infinity, and to see the plot at the other doses the “Plot excl. first dose” option should be checked.</p>
+</section>
+<section id="prior-toxicities" class="level2">
+<h2 class="anchored" data-anchor-id="prior-toxicities">Prior Toxicities</h2>
+<p>This tab allows prior information to be included with the data collected during the trial.</p>
+<p>The user can specify, for any dose combinations a prior observed number of toxicities and number of observations. To allow the prior data to be down weighted, the user is allowed to enter fractional amounts.</p>
+<p>The specified prior data is simply added to the observed data when fitting the model, but this is logically equivalent to fitting the model with the specified prior to the specified prior data and then using the resulting posterior estimate of the model parameters as the prior for fitting the model to the observed data.</p>
+<p>Some idea of the effect of the prior data can be gained by using the “Analysis” tab, and performing an analysis on a dataset without any additional subject data.</p>
+<p>If there is a combination where the transformed dose strengths of both drugs are below 0.001, there can be no prior observed toxicities for that combination (it would be impossible for the model to fit them).</p>
+<div id="fig-fig22" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig22-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image22.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig22-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;13: Design Prior Toxicities
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="simulation-tab" class="level1">
+<h1>Simulation Tab</h1>
+<p>The Simulation tab allows the user to execute simulations for each of the scenarios specified for the study. The user may choose the number of simulations, whether to execute locally or on the Grid, and modify the random number seeds.</p>
+<p>If completed results are available, the <em>actual</em> number of simulations run for each scenario is reported in one of the first columns of the results table. The value displayed in the “Number of Simulations” control is the number of simulations that <em>will be</em> run if the user clicks on the ‘Simulate’ button.</p>
+<div id="fig-fig23" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig23-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image23.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig23-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;14: Simulation tab
+</figcaption>
+</figure>
+</div>
+<p>FACTS uses Markov Chain Monte Carlo methods in the generation of simulated patient response data and trial results. In order to exactly reproduce a statistical set of results, it is necessary to start the Markov Chain from an identical “Random Seed”. The initial random seed for FACTS simulations is set from the simulation tab, the first thing that FACTS does is to draw the random number seeds to use at the start of each simulation. It is possible to re-run a specific simulation, for example to have more detailed output files generated, by specifying ‘start at simulation’.</p>
+<p>Say the 999<sup>th</sup> simulation out of a set displayed some unusual behavior, in order to understand why, one might want to see the individual interim analyses for that simulation (the “weeks” file), the sampled subject results for that simulation (the “Subjects” files) and possibly even the MCMC samples from the analyses in that simulation. You can save the .facts file with a slightly different name (to preserve the existing simulation results), then run 1 simulation of the specific scenario, specifying that the simulations start at simulation 999 and that at least 1 weeks file, 1 subjects file and the MCMC samples file (see the “MCMC settings” dialog) are output.</p>
+<p>Even a small change in the random seed will produce different simulation results.</p>
+<p>The same random number seed is used at the start of the simulation of each scenario. If two identical scenarios are specified then identical simulation results will be obtained. The same may happen if scenarios or designs only differ in ways that have no impact on the trials being simulated, for instance designs that have no adaptation, or scenarios that don’t trigger any adaptation (e.g.&nbsp;none of the simulations stop early).</p>
+<p>The user can specify:</p>
+<ul>
+<li><p>the number of simulations for which ‘Cohorts’ files are written. ‘Cohorts’ files record the data, analysis and recommendation at each interim (after each cohort).</p></li>
+<li><p>The parallelization packet size, this allows simulation jobs to be split into runs of no-more than the specified number of trials to simulate. If more simulations of a scenario are requested than can be done in one packet, the simulations are started as the requisite number of packets and the results combined and summarized when they are all complete – so the final results files look just as though all the simulations were run as one job or packet. When running simulations on the local machine FACTS enterprise version will process as many packets in parallel as there are execution threads on the local machine. The overhead of packetization is quite low so a packet size of 10 to 100 can help speed up the overall simulation process – threads used to simulate scenarios that finish quicker can pick up packets for scenarios that take longer, if the number of scenarios is no directly divisible by the number of threads packetization uses all threads until the last few packets have to be run and finally the “Simulations complete” figure can be updated at the end of each packet, so the small the packet the better FACTS can report the overall progress.</p></li>
+</ul>
+<section id="to-run-simulations" class="level2">
+<h2 class="anchored" data-anchor-id="to-run-simulations">To run simulations</h2>
+<p>Even before simulations have been run, FACTS displays a row for each possible combination of the ‘profiles’ that have been specified: - baseline response, dose response, longitudinal response, accrual rate and dropout rate. Each such combination is a ‘simulation scenario’.</p>
+<p>The user clicks on the check box for each scenario to be simulated, or simply clicks on “Select All”, then clicks on the “Simulate” button.</p>
+<p>During simulation, the user is prevented from modifying any parameters on any other tab of the application. This safeguard ensures that the simulation results reflect the parameters specified in the user interface.</p>
+<p>When simulations are started, FACTS saves all the study parameters into the current “.facts” file, and when the simulations are complete all the simulation results are saved in a “_results” folder in the same directory as the “.facts” file. Within the “_results” folder there are sub-folders that holds the results for each scenario.</p>
+</section>
+<section id="mcmc-settings" class="level2">
+<h2 class="anchored" data-anchor-id="mcmc-settings">MCMC Settings</h2>
+<p>The first two values specify two standard MCMC parameters –</p>
+<ul>
+<li><p>The length of burn-in is the number of the initial iterations whose results are discarded, to allow the sampled values to settle down.</p></li>
+<li><p>The number of samples is the number of subsequent iterations whose results are recorded in order to give posterior estimates of the values of interest (in this case α and β).</p></li>
+</ul>
+<p><strong>Number of samples per imputation</strong> (not used in 2D-CRM, the model does not include imputation)</p>
+<p>If the <strong>Number of MCMC samples to output</strong> value is set to N, where N &gt; 0, then all the sampled values at each interim in the first N simulations are output in a file per simulation, allowing the user to check convergence.</p>
+<p><strong>The MCMC output thinning parameter</strong> can be used to reduce the amount of data output to the MCMC file. It does not reduce the amount of MCMC samples used within the model fitting.</p>
+<p>To obtain the MCMC sampled values for a particular simulation, keep the same Random number seed and use <strong>Start at simulation</strong> to specify the simulation in question and run just 1 simulation.</p>
+<div id="fig-fig24" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig24-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image24.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig24-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;15: MCMC Settings
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="how-many-simulations-to-run" class="level2">
+<h2 class="anchored" data-anchor-id="how-many-simulations-to-run">How many simulations to run?</h2>
+<ul>
+<li><p>After first entering a design it is worth running just a small number of simulations such as 10 to check that the scenarios and design have been entered correctly. If all 10 simulations of a ‘null’ scenario are successful, or all 10 simulations of what was intended to be an effective drug scenario are futile, it is likely there has been a mistake or misunderstanding in the specification of the scenarios or the final evaluation or early stopping criteria.</p></li>
+<li><p>Once the design and scenarios look broadly correct, it is usually worth quickly collecting rough estimates of the operating characteristics using around 100 simulations for each scenario. 100 simulations is enough to spot designs having very poor operating characteristics such as very high type-1 error, very poor power, a strong tendency to stop early for the wrong reason, or poor probability of selecting the correct target. 100 simulations is also usually sufficient to spot problems with the data analysis such as poor model fits and significant bias in the posterior estimates.</p></li>
+<li><p>Typically 1,000 simulations of each scenario of interest is required to get estimates of the operating characteristics precise enough to compare designs and tune the parameters. (Very roughly rates of 5% (such as type-1 error) can be estimated to about +/-1.5% and rates of around 80% (such as power) estimated +/- 2.5%)</p></li>
+<li><p>Finally around 10,000 simulations of the scenarios of interest is required to give confidence in operating characteristics of a design and possibly to select between the final shortlisted designs (Approximately rates of 5% can be estimated to about +/-0.5% and rates of around 80% estimated +/- 1%).</p></li>
+</ul>
+<p>There may be many operating characteristics need to be compared over a number of scenarios, such as expected sample size, type-1 error, power, probability of selecting a good dose as the target and quality of estimation of the dose-response.</p>
+<p>However frequently these will be compared over a range of scenarios, it may not be necessary to run very large number of simulations for each scenario if a design shows a consistent advantage on the key operating characteristics over the majority of the scenarios.</p>
+</section>
+<section id="simulation-results" class="level2">
+<h2 class="anchored" data-anchor-id="simulation-results">Simulation results</h2>
+<p>In the main screen the summary results that are usually of principal interest are displayed, the results summarised by scenario.</p>
+<ul>
+<li><p><strong>Show other columns</strong>: Allows the user to open additional windows on the simulation results, the windows available are:</p>
+<ul>
+<li><p><strong>All</strong>: A window containing all the summary results columns</p></li>
+<li><p><strong>Highlights</strong>: a separate window with the results shown on the main tab</p></li>
+<li><p><strong>Allocation, Observed</strong>: summary results of the number of subjects allocated, the number allocated to each dose, the number of toxicities observed and the number of toxicities observed per dose</p></li>
+<li><p><strong>Fitted toxicity</strong>: summary results of the estimates of the model parameters and the dose-toxicity.</p></li>
+<li><p><strong>Pr(MTD) etc</strong>: summary results of the posterior probabilities of the properties of interest</p></li>
+<li><p><strong>Simulation Results</strong>: a window displaying the individual simulation results for each simulation of the currently selected scenario</p></li>
+</ul></li>
+<li><p><strong>View Graph</strong>: opens the FACTS built in graph utility displaying the results for the currently selected scenario. See <strong>Error! Reference source not found.</strong> below for a description of the graphs.</p></li>
+<li><p><strong>Aggregate</strong>: opens a control that allows the user create aggregated results files from all the scenarios. The user can select which scenarios to include, and whether the results should be pivoted by dose. The resulting files are stored in the simulation results folder.</p></li>
+<li><p><strong>Open in R</strong>: If aggregated files have been created then clicking this button on the simulations tab will open control that allows the user to select which aggregations to load into data frames as R is opened. Otherwise it will offer to open R using the files in the currently selected scenario.</p></li>
+<li><p><em>Right Click Menu:</em> right clicking the mouse on a row of results in the simulation tab brings up a ‘local’ menu of options:</p>
+<ul>
+<li><p><strong>Open results folder</strong>: Opens a file browser in the results folder of the scenario, allowing swift access to any of the results files.</p></li>
+<li><p><strong>Simulation results</strong>: Opens a window displaying the individual simulation results for each simulation of the currently selected scenario</p></li>
+<li><p><strong>Open in R</strong>: opens a control that will launch R, first loading the selected files in the results folder as data frames.</p></li>
+<li><p><strong>Show Graphs</strong>: launches the graph viewer to view the results of the currently selected scenario.</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="facts-grid-simulation-settings" class="level2">
+<h2 class="anchored" data-anchor-id="facts-grid-simulation-settings">FACTS Grid Simulation Settings</h2>
+<p>If you have access to a computational grid, you may choose to have your simulations run on the grid instead of running them locally. This frees your computer from the computationally intensive task of simulating so you can continue other work or even shutdown your PC or laptop. In order to run simulations on the grid, it must first be configured, this is normally done via a configuration file supplied with the FACTS installation by the IT group responsible for the FACTS installation.</p>
+</section>
+<section id="detailed-simulation-results" class="level2">
+<h2 class="anchored" data-anchor-id="detailed-simulation-results">Detailed Simulation Results</h2>
+<p>After simulation has completed and simulation results have been loaded, the user may examine detailed results for any scenario with simulation data in the table by double-clicking on the row. A separate window (as in <a href="#fig-fig26" class="quarto-xref">Figure&nbsp;17</a>) shows the results simulation by simulation. Like the summary results – the initial window hold “highlights”, right clicking on the window displays a menu with options for viewing the “Fitted Toxicity”, “Observed Toxicity” or “All” Columns.</p>
+<div id="fig-fig25" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig25-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image25.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig25-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;16: Detailed Simulation Results
+</figcaption>
+</figure>
+</div>
+<div id="fig-fig26" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig26-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image26.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig26-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;17: Detailed Simulation Results
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="cohort-simulation-results" class="level2">
+<h2 class="anchored" data-anchor-id="cohort-simulation-results">Cohort Simulation Results</h2>
+<p>After viewing individual simulation results, the user may examine detailed results for any simulation with per-cohort data in the table by right-clicking on the row and selecting “Cohort Results”. A separate window opens, showing the result for the selected simulation cohort by cohort. Like the summary and simulation results the initial window displays “highlights” columns, right clicking on the window displays a menu with options for viewing the “Fitted Toxicity”, “Observed Toxicity” or “All” Columns.</p>
+</section>
+<section id="aggregation" class="level2">
+<h2 class="anchored" data-anchor-id="aggregation">Aggregation</h2>
+<p>Aggregation combines the csv output from multiple scenarios into fewer csv files. The Aggregate… button displays a dialog which allows the user to select what to aggregate.</p>
+<div id="fig-fig27" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig27-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image27.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fig27-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;18: Aggregation
+</figcaption>
+</figure>
+</div>
+<p>The default location for the aggregated files is the results directory for the study, but this can be changed.</p>
+<p>In other design engines there is the option to pivot the results by dose, this is more complicated in 2D-CRM and the option is not available.</p>
+<p>The default is to aggregate all scenarios, but any combination may be selected.</p>
+<p>Pressing “Aggregate” generates the aggregated files.</p>
+<p>Each type of csv file is aggregated into a separate csv file whose name begins agg_, so agg_summary.csv will contain the rows from each of the summary.csv files, cohortsNNN.csv files are aggregated into a single agg_cohorts.csv file. Doses.csv is identical for all scenarios and so is not aggregated.</p>
+<p>Each aggregated file begins with the following extra columns, followed by the columns from the original csv file:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 47%">
+<col style="width: 52%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Column Name</th>
+<th style="text-align: left;">Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Scenario ID</td>
+<td style="text-align: left;">Index of the scenario</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Toxicity Profile</td>
+<td style="text-align: left;">A series of columns containing the names of the various profiles used to construct the scenario. Columns that are never used are omitted (e.g External Subjects Profile if there are no external scenarios)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">External Subjects Profile</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agg Timestamp</td>
+<td style="text-align: left;">Date and time when aggregation was performed</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sim</td>
+<td style="text-align: left;">Simulation number. Only present in the cohorts file.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dose</td>
+<td style="text-align: left;">Only present if pivoted</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="the-summary-results-columns" class="level1">
+<h1>The Summary Results Columns</h1>
+<p>The simulation results are grouped into 4 tables; these tables can be opened by clicking the “Show Other Columns” button.</p>
+<ul>
+<li><p>Highlights: these are the columns displayed in table on the Simulation tab.</p></li>
+<li><p>Fitted Toxicity</p></li>
+<li><p>Observed Toxicity</p></li>
+<li><p>All – the combination of all the above.</p></li>
+</ul>
+<p>The columns displayed in the first three tables are described in the subsections below.</p>
+<p>Right clicking on any summary results table brings up a menu that allows the user to:</p>
+<ul>
+<li><p>Open the results folder for the scenario line that the cursor is on</p></li>
+<li><p>Open a window with the per simulation results</p></li>
+<li><p>Open R and load the results as data frames</p></li>
+<li><p>Open the FACTS graph display widow for the currently selected scenario.</p></li>
+</ul>
+<div id="fig-fig28" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig28-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image28.png" id="fig-fig28" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig28-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;19
+</figcaption>
+</figure>
+</div>
+<section id="highlights" class="level2">
+<h2 class="anchored" data-anchor-id="highlights">Highlights</h2>
+<p>These are the columns displayed on the simulations tab after simulations are completed, the can also be displayed in the separate “Highlights” results window.</p>
+<p>These results are in the ‘summar.csv’ files in each scenario results folder.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 22%">
+<col style="width: 53%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Select</td>
+<td>1</td>
+<td>Not an output column, this column contains check box to allow the user to select which scenario to simulate. The ‘Select All’ button causes them all to be checked.</td>
+</tr>
+<tr class="even">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="odd">
+<td>Scenario</td>
+<td>1</td>
+<td>This gives the name of the scenario. In the N-CRM this is simply the name of the Toxicity response profile to be simulated (in other Design Engines the scenario may be a combination of a number of profiles – e.g.&nbsp;one for the toxicity response and one for the efficacy response).</td>
+</tr>
+<tr class="even">
+<td>Num Sims</td>
+<td>1</td>
+<td>The number of simulations that are being summarised</td>
+</tr>
+<tr class="odd">
+<td>Mean subjects</td>
+<td>1</td>
+<td>The mean number (over the simulations) of subjects randomized</td>
+</tr>
+<tr class="even">
+<td>Ppn Toxic</td>
+<td>1</td>
+<td>The mean (over the simulations) proportion of the randomized subjects that had a toxic outcome</td>
+</tr>
+<tr class="odd">
+<td>True mean Tox</td>
+<td>1</td>
+<td>The mean (over the simulations) of the true probabilities of toxicity that subjects have been exposed to.</td>
+</tr>
+<tr class="even">
+<td>Duration</td>
+<td>1</td>
+<td>The mean duration of the simulations in weeks</td>
+</tr>
+<tr class="odd">
+<td>Ppn All Toxic</td>
+<td>1</td>
+<td>The proportion of the simulations that stopped because all combinations were judged too toxic (exceeded the overdose control limit).</td>
+</tr>
+<tr class="even">
+<td>Ppn MTT Under</td>
+<td>1</td>
+<td>The proportion of the dose combinations selected as MTT that actually had a toxicity rate in the “under-dosing” range.</td>
+</tr>
+<tr class="odd">
+<td>Ppn MTT Target</td>
+<td>1</td>
+<td>The proportion of the dose combinations selected as MTT that actually had a toxicity rate in the “target” range.</td>
+</tr>
+<tr class="even">
+<td>Ppn MTT Excess</td>
+<td>1</td>
+<td>The proportion of the dose combinations selected as MTT that actually had a toxicity rate in the “excess” range.</td>
+</tr>
+<tr class="odd">
+<td>Ppn MTT Unacceptable</td>
+<td>1</td>
+<td>The proportion of the dose combinations selected as MTT that actually had a toxicity rate in the “unacceptable” range.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="fitted-toxicity" class="level2">
+<h2 class="anchored" data-anchor-id="fitted-toxicity">Fitted Toxicity</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 22%">
+<col style="width: 53%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td>This gives the name of the scenario. In the N-CRM this is simply the name of the Toxicity response profile to be simulated (in other Design Engines the scenario may be a combination of a number of profiles – e.g.&nbsp;one for the toxicity response and one for the efficacy response).</td>
+</tr>
+<tr class="odd">
+<td>Mean Tox Coeffs</td>
+<td>5</td>
+<td>The mean (over the simulations) of the estimate of the 5 parameters of the BLRM Dose-Toxicity model</td>
+</tr>
+<tr class="even">
+<td>Sd Tox Coeffs</td>
+<td>5</td>
+<td>The standard deviation (over the simulations) of the estimate of the 5 parameters of the BLRM Dose-Toxicity model</td>
+</tr>
+<tr class="odd">
+<td>Pr(Under): &lt;Dose&gt;, &lt;Dose&gt;</td>
+<td>I*J</td>
+<td>The mean (over the simulations) of the posterior probability of being under the target toxicity at each dose combination.</td>
+</tr>
+<tr class="even">
+<td>Pr(Target): &lt;Dose&gt;, &lt;Dose&gt;</td>
+<td>I*J</td>
+<td>The mean (over the simulations) of the posterior probability of being in the target toxicity band at each dose combination</td>
+</tr>
+<tr class="odd">
+<td>Pr(Excess): &lt;Dose&gt;, &lt;Dose&gt;</td>
+<td>I*J</td>
+<td>The mean (over the simulations) of the posterior probability of being in the excess toxicity band at each dose combination</td>
+</tr>
+<tr class="even">
+<td>Pr(Unacc): &lt;Dose&gt;, &lt;Dose&gt;</td>
+<td>I*J</td>
+<td>The mean (over the simulation) of the posterior probability of being in the unacceptable toxicity band at each dose combination</td>
+</tr>
+<tr class="odd">
+<td>Pr(Sel-MTT): &lt;Dose&gt;, &lt;Dose&gt;</td>
+<td>I*J</td>
+<td>The proportion of times that each dose combination was selected as the combination with the MTT (Maximum Target Toxicity). Some methods may select more than one such combination so that these proportions sum to more than one for each scenario.</td>
+</tr>
+<tr class="even">
+<td>Mean Fitted Tox: &lt;Dose&gt;, &lt;Dose&gt;</td>
+<td>I*J</td>
+<td>The mean (over the simulations) of the estimate of the toxicity rate at each dose combination.</td>
+</tr>
+<tr class="odd">
+<td>Sd Fitted Tox: &lt;Dose&gt;, &lt;Dose&gt;</td>
+<td>I*J</td>
+<td>The standard deviation (over the simulations) of the toxicity rate at each dose combination.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="observed-toxicity" class="level2">
+<h2 class="anchored" data-anchor-id="observed-toxicity">Observed Toxicity</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 22%">
+<col style="width: 53%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Status</td>
+<td>1</td>
+<td>This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically.</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td>This gives the name of the scenario. In the N-CRM this is simply the name of the Toxicity response profile to be simulated (in other Design Engines the scenario may be a combination of a number of profiles – e.g.&nbsp;one for the toxicity response and one for the efficacy response).</td>
+</tr>
+<tr class="odd">
+<td>Mean Subjects: &lt;Dose&gt;, &lt;Dose&gt;</td>
+<td>I*J</td>
+<td>The mean (over the simulations) of the number of subjects allocated to each dose combination.</td>
+</tr>
+<tr class="even">
+<td>Sd Subjects: &lt;Dose&gt;, &lt;Dose&gt;</td>
+<td>I*J</td>
+<td>The standard deviation (over the simulations) of the number of subjects allocated to each dose combination.</td>
+</tr>
+<tr class="odd">
+<td>Mean Obs Tox: &lt;Dose&gt;, &lt;Dose&gt;</td>
+<td>I*J</td>
+<td>The mean (over the simulations) of the number of observed toxicities at each dose combination.</td>
+</tr>
+<tr class="even">
+<td>Sd Obs Tox: &lt;Dose&gt;, &lt;Dose&gt;</td>
+<td>I*J</td>
+<td>The standard deviation (over the simulations) of the number of observed toxicities at each dose combination.</td>
+</tr>
+<tr class="odd">
+<td>Ppn All Toxic Early Stop</td>
+<td>1</td>
+<td>The proportion of the simulations that stopped early (i.e.&nbsp;before the maximum sample size was reached) because all combinations were judged too toxic (exceeded the overdose control limit).</td>
+</tr>
+<tr class="even">
+<td>Ppn Early Succ</td>
+<td>1</td>
+<td>The proportion of the simulations that stopped because the stopping condition(s) had been satisfied.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Correct Under</td>
+<td>1</td>
+<td>The proportion of the dose combinations that have a true toxicity rate in the “under-dosing” band over all the simulations that are determined to be “under-dosing”. That is the posterior probability at the end of the simulation that the toxicity rate of that dose combination of being in the “under-dosing” band is greater than the probabilities of being in the “target” band or the combined “excess” and “unacceptable” toxicity bands, and the combination is not excluded by the overdose control conditions.</td>
+</tr>
+<tr class="even">
+<td>Ppn Correct Target</td>
+<td>1</td>
+<td>The proportion of the dose combinations that have a true toxicity rate in the “target” band over all the simulations that are determined to be “target”. That is the posterior probability at the end of the simulation that the toxicity rate of that dose combination of being in the “target” band is greater than the probabilities of being in the “under-dosing” band or the combined “excess” and “unacceptable” toxicity bands, and the combination is not excluded by the overdose control conditions.</td>
+</tr>
+<tr class="odd">
+<td>Ppn Excess+Unacc</td>
+<td>1</td>
+<td>The proportion of the dose combinations that have a true toxicity rate in the “excess” or “unacceptable” bands over all the simulations that are determined to be “excess” or “unacceptable”. That is the posterior probability at the end of the simulation that the toxicity rate of that dose combination of being in the “excess” or “unacceptable” bands is greater than the probabilities of being in the “under-dosing” band or the “target band”, or the combination is excluded by the overdose control conditions.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-per-simulation-results" class="level2">
+<h2 class="anchored" data-anchor-id="the-per-simulation-results">The Per-Simulation Results</h2>
+<p>Double clicking on any row in the simulation results table, opens a window displaying the individual simulation results. This table shows the individual results that are averaged in the summary table.</p>
+<p>These values are in the ‘simulations.csv’ for each scenario in the scenario results folder.</p>
+<p>Like the summary results, the per-simulation results are organized into ‘Highlights’, ‘Fitted Toxicity’ and ‘Observed Toxicity’ tables, with the corresponding columns.</p>
+<p>Right clicking on any summary results table brings up a menu that allows the user to:</p>
+<ul>
+<li><p>Open the per-simulations results window with all columns</p></li>
+<li><p>Open the per-simulations results window with the highlights columns</p></li>
+<li><p>Open the per-simulations results window with the fitted toxicity columns</p></li>
+<li><p>Open the per-simulations results window with the observed toxicity columns</p></li>
+<li><p>Open the results folder for the scenario line that the cursor is on</p></li>
+<li><p>Open the cohort results widow for the currently selected simulation.</p></li>
+</ul>
+<div id="fig-fig29" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig29-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image29.png" id="fig-fig29" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig29-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;20
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="graphs" class="level1">
+<h1>Graphs</h1>
+<p>There are 7 “overall” graphs that show means over the simulations and 5 graphs that show results per simulation or per cohort per simulation and one graph that shows the “true” toxicity – that is the toxicity rates being simulated for each dose combination in the scenario. The per cohort graphs can only be displayed for those simulations with “full results” (the number of these is specified on the “Advanced” dialog window on the Simulations tab), that is a “cohortsNNNN.csv” file has been written out for that simulation (where “NNNN” is replaced by the simulation number).</p>
+<p>The 7 Overall graphs are:</p>
+<ol type="1">
+<li><p>Fitted Ppn(Toxicity) – Displays the mean of the fitted mean toxicity rates at each dose combination, the cells are colored according to the fitted rate, also shows the mean observed number of toxicities and mean number of subjects exposed at each dose combination.</p></li>
+<li><p>Ppn Toxicity Bands – Displays the mean of the posterior probabilities that the toxicity rate lies in the selected toxicity band at each dose combination, also shows the mean observed number of toxicities and mean number of subjects exposed at each dose combination.</p></li>
+<li><p>Toxicity Summary Graph – Displays a small histogram for each dose combination, plotting the mean probability that the toxicity rate lies in each of the toxicity bands, also highlights those dose combinations that would be exclude based on applying the overdose control rules to the mean probabilities.</p></li>
+<li><p>Mean Pr(Selected MTT) – Displays the ppn of times each dose combination was selected as MTT (Maximum probability of being in the Target Toxicity band) (depending on the Dose Escalation method employed, there may be more than one combination selected as MTT at the end of each simulation).</p></li>
+<li><p>Mean Subject Allocation – Displays the mean number of subjects allocated to each dose combination.</p></li>
+<li><p>Mean Observed Toxicity – Displays the mean of the fitted mean toxicity rates at each dose combination, also shows the mean observed number of toxicities and mean number of subjects exposed at each dose combination. The cells are colored according to the observed toxicity ratio.</p></li>
+<li><p>Study Sizes and Outcomes – Displays a histogram of the Ppn of simulations that completed at different sample sizes, colored to indicate their reason for stopping.</p></li>
+</ol>
+<p>The 5 per-simulation and per-cohort graphs are</p>
+<ol type="1">
+<li><p>Fitted Pr(Toxicity) – Displays fitted mean toxicity rate at each dose combination, the cells are colored according to the fitted rate, also shows the observed number of toxicities and the number of subjects exposed at each dose combination.</p></li>
+<li><p>Pr(Toxicity Band) - Displays the posterior probability that the toxicity rate lies in the selected toxicity band at each dose combination, also shows the observed number of toxicities and number of subjects exposed at each dose combination.</p></li>
+<li><p>Summary graph - Displays a small histogram for each dose combination, plotting the probability that the toxicity rate lies in each of the toxicity bands, also highlights those dose combinations that are excluded based on applying the overdose control rules to the probabilities.</p></li>
+<li><p>Subject Allocation - Displays the number of subjects allocated to each dose combination.</p></li>
+<li><p>Observed Pr(Toxicity) - Displays the fitted mean toxicity rate at each dose combination, also shows the observed number of toxicities and the number of subjects exposed at each dose combination. The cells are colored according to the observed toxicity ratio. The dose combinations selected as MTT / next combinations to allocate to are indicated.</p></li>
+</ol>
+<section id="fitted-ppntoxicity" class="level2">
+<h2 class="anchored" data-anchor-id="fitted-ppntoxicity">Fitted Ppn(Toxicity)</h2>
+<p>The Fitted Ppn(Toxicity) graph shows the average mean posterior estimate of the toxicity at each combination, with the cells colored in increasing intensity the higher the fitted toxicity. In addition in each cell the average number of observed toxicities and average total observations is reported.</p>
+<p>The format is:</p>
+<p>Fit: &lt;Average Mean estimate of toxicity&gt;</p>
+<p>Obs: &lt;Mean toxicity observations&gt; / &lt;Mean total observations&gt;</p>
+<div id="fig-fig30" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig30-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image30.png" id="fig-fig30" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig30-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;21
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="ppntoxicity-bands" class="level2">
+<h2 class="anchored" data-anchor-id="ppntoxicity-bands">Ppn(Toxicity Bands)</h2>
+<p>The Ppn(Toxicity Bands) graph shows the average mean posterior estimate that the toxicity falls in one of the defined toxicity bands, with the cells colored from faint to intense the higher the probability. The color used depends on the band being displayed: blue for under-dosing, green for target, orange for excess and red for unacceptable.</p>
+<p>In addition in each cell the average number of observed toxicities and average total observations is reported.</p>
+<p>The format is:</p>
+<p>Prob: &lt;Average Posterior Probability&gt;</p>
+<p>Obs: &lt;Mean toxicity observations&gt; / &lt;Mean total observations&gt;</p>
+<div id="fig-fig31" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig31-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image31.png" id="fig-fig31" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig31-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;22
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="toxicity-summary-graph" class="level2">
+<h2 class="anchored" data-anchor-id="toxicity-summary-graph">Toxicity Summary Graph</h2>
+<p>The Toxicity Summary Graph displays a small histogram for each dose combination. In each histogram it shows for that dose combination the posterior probability its toxicity rate is in each of the four toxicity bands.</p>
+<p>If the posterior probabilities are such that the dose combination is excluded by the overdose control rules, then the background of the histogram is in pink to highlight it.</p>
+<div id="fig-fig32" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig32-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image32.png" id="fig-fig32" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig32-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;23
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="mean-prselected-mtt" class="level2">
+<h2 class="anchored" data-anchor-id="mean-prselected-mtt">Mean Pr(Selected MTT)</h2>
+<p>The Mean Pr(Selected MTT) graph shows the average number of times each combination was selected as the, or one of the, combinations with Maximum Target Toxicity. The cells are colored more intensely the greater the Ppn of simulations that the dose combination was selected as MTT.</p>
+<p>The ‘Selected as MTT’ dose combination is the one with the maximum posterior probability of having a toxicity rate in the target band and not excluded by overdose control. The ‘Walk’ and ‘Allocate to MTT’ dose escalation methods select a single MTT at the end of a trial, but the ‘Contour’ and ‘Tri-Axial’ can select multiple MTTs so when using these dose escalation methods these probabilities can sum to more than 1.</p>
+<p>The format is:</p>
+<p>&lt;PPn of simulations this combination selected as MTT&gt;</p>
+<div id="fig-fig33" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig33-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image33.png" id="fig-fig33" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig33-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;24
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="mean-subject-allocation" class="level2">
+<h2 class="anchored" data-anchor-id="mean-subject-allocation">Mean Subject Allocation</h2>
+<p>The Mean Subject Allocation graph shows the average number of subjects allocated to each combination over all the simulations, with the cells colored from white to dark blue the greater the number allocated.</p>
+<p>The format is:</p>
+<p>&lt;Number of subjects allocated to this combination&gt;</p>
+<div id="fig-fig34" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig34-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image34.png" id="fig-fig34" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig34-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;25
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="mean-observed-prtoxicity" class="level2">
+<h2 class="anchored" data-anchor-id="mean-observed-prtoxicity">Mean Observed Pr(Toxicity)</h2>
+<p>The Mean Observed Pr(Toxicity) graph shows the average number of observations and number of toxicities along with the mean fitted toxicity across all the simulations. The color intensity reflects the fraction of observations that resulted in toxicity, with the color more intense the closer that fraction gets to 1..</p>
+<p>The format is:</p>
+<p>Fit: &lt;Average Mean Estimate of Toxicity&gt;</p>
+<p>Obs: &lt;Mean toxicity observations&gt; / &lt;Mean total observations&gt;</p>
+<div id="fig-fig35" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig35-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image35.png" id="fig-fig35" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig35-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;26
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="study-sizes-and-outcomes" class="level2">
+<h2 class="anchored" data-anchor-id="study-sizes-and-outcomes">Study Sizes and Outcomes</h2>
+<p>The Study Sizes and Outcomes graph plots a histogram, of the sample sizes of the simulations. The bars are colored to show why the simulated trial stopped:</p>
+<ul>
+<li><p>Because all dose combinations were too toxic (barred by the overdose control rules)</p></li>
+<li><p>Because defined stopping rule had been met.</p></li>
+<li><p>Because the trial maximum sample size had been reached.</p></li>
+</ul>
+<div id="fig-fig36" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig36-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image36.png" id="fig-fig36" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig36-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;27
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="fitted-prtoxicity-per-simulationper-cohort" class="level2">
+<h2 class="anchored" data-anchor-id="fitted-prtoxicity-per-simulationper-cohort">Fitted Pr(Toxicity) per simulation/per cohort</h2>
+<p>The Fitted Ppn(Toxicity) graph shows the mean posterior estimate of the toxicity at each combination for each simulation, with the cells colored from beige to intense red the higher the toxicity. In addition in each cell the number of observed toxicities and total observations is reported.</p>
+<p>For simulations for which a “cohortNNNN.csv” file was output, the graph can be viewed for the result of the analysis after each cohort – allowing the trial to be “stepped through” a cohort at a time.</p>
+<p>The format is:</p>
+<p>Fit: &lt;Mean estimate of toxicity&gt;</p>
+<p>Obs: &lt; Toxicity observations&gt; / &lt;Total observations&gt;</p>
+<div id="fig-fig37" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig37-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image37.png" id="fig-fig37" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig37-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;28
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="prtoxicity-band-per-simulationper-cohort" class="level2">
+<h2 class="anchored" data-anchor-id="prtoxicity-band-per-simulationper-cohort">Pr(Toxicity Band) per simulation/per cohort</h2>
+<p>The Ppn(Toxicity Bands) graph shows the posterior estimate that the toxicity falls in one of the defined toxicity bands for each simulation, with the cells colored from faint to intense the higher the probability. The color used depends on the band being displayed: blue for under-dosing, green for target, orange for excess and red for unacceptable.</p>
+<p>In addition in each cell the number of observed toxicities and total observations is reported.</p>
+<p>For simulations for which a “cohortNNNN.csv” file was output, the graph can also be viewed for the result of the analysis after each cohort – allowing the trial to be “stepped through” a cohort at a time.</p>
+<p>The format is:</p>
+<p>Prob: &lt;The Posterior Probability&gt;</p>
+<p>Obs: &lt;The number toxicity observations&gt; / &lt;The number of total observations&gt;</p>
+<div id="fig-fig38" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig38-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image38.png" id="fig-fig38" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig38-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;29
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="summary-graph-per-simulationper-cohort" class="level2">
+<h2 class="anchored" data-anchor-id="summary-graph-per-simulationper-cohort">Summary Graph per simulation/per cohort</h2>
+<p>The Summary graph shows the posterior estimate that the toxicity falls into each of the defined toxicity bands as a small histogram for each dose combination</p>
+<p>In addition in the cells where the dose combination is excluded by the overdose rules are highlighted with a pink background.</p>
+<div id="fig-fig39" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig39-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image39.png" id="fig-fig39" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig39-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;30
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="subject-allocation-per-simulationper-cohort" class="level2">
+<h2 class="anchored" data-anchor-id="subject-allocation-per-simulationper-cohort">Subject Allocation per simulation/per cohort</h2>
+<p>The Subject Allocation graph shows the number of subjects allocated to each combination in a particular simulation with the cells colored from white to dark blue the greater the number allocated.</p>
+<p>For simulations for which a “cohortNNNN.csv” file was output, the graph can also be viewed for the subject allocation after each cohort – allowing the trial to be “stepped through” a cohort at a time.</p>
+<p>The format is:</p>
+<p>&lt;Number of subjects allocated to this combination&gt;</p>
+<div id="fig-fig40" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig40-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image40.png" id="fig-fig40" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig40-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;31
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="observed-prtoxicity-per-simulationper-cohort" class="level2">
+<h2 class="anchored" data-anchor-id="observed-prtoxicity-per-simulationper-cohort">Observed Pr(Toxicity) per simulation/per cohort</h2>
+<p>The Observed Pr(Toxicity) graph shows the number of observations and number of toxicities for each combination, for each the simulation. The color intensity reflects the fraction of observations that resulted in toxicity, with the color more intense the closer that fraction gets to 1.The size of the colored square is proportional to the number of observations.</p>
+<p>For simulations for which a “cohortNNNN.csv” file was output, the graph can also be viewed for the subject allocation after each cohort – allowing the trial to be “stepped through” a cohort at a time.</p>
+<p>The format is:</p>
+<ul>
+<li><p>Obs: &lt;Mean toxicity observations&gt; / &lt;Mean total observations&gt;</p></li>
+<li><p><label><input type="checkbox" checked="">signifies the combination that is (one of) the combination(s) selected for allocation to for the next cohort. At the end of the simulation, these are the combinations that are selected as the MTT.</label></p></li>
+<li><p>Cells excluded by the overdose control rules are marked with a “*”.</p></li>
+</ul>
+<div id="fig-fig41" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig41-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image41.png" id="fig-fig41" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig41-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;32
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="true-prtoxicity" class="level2">
+<h2 class="anchored" data-anchor-id="true-prtoxicity">True Pr(Toxicity)</h2>
+<p>The True Ppn(Toxicity) graph shows the toxicity rate simulated at each combination for all the simulations, with the cells colored from beige to intense red the higher the toxicity.</p>
+<p>The format is:</p>
+<p>&lt;Simulated toxicity rate&gt;</p>
+<div id="fig-fig42" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig42-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image42.png" id="fig-fig42" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig42-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;33
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="analysis-tab" class="level1">
+<h1>Analysis Tab</h1>
+<p>Initially the Analysis tab just displays a “Use Design to Analyze Data” button.</p>
+<div id="fig-fig43" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig43-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image43.png" id="fig-fig43" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig43-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;34
+</figcaption>
+</figure>
+</div>
+<p>After clicking the button the tab becomes active,</p>
+<div id="fig-fig44" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig44-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image44.png" id="fig-fig44" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig44-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;35
+</figcaption>
+</figure>
+</div>
+<p>and an “Analysis” folder is created alongside the folder that hold the simulation results.</p>
+<div id="fig-fig45" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig45-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image45.png" id="fig-fig45" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig45-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;36
+</figcaption>
+</figure>
+</div>
+<p>In the “…_Results” folder there an empty “subject.csv file will have been created</p>
+<p>This is the file that should be edited to contain the data to be analyzed, or the data can be added via the FACTS User Interface through the Analysis &gt; Subject Data tab.</p>
+<div id="fig-fig46" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig46-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image46.png" id="fig-fig46" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig46-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;37
+</figcaption>
+</figure>
+</div>
+<p>The file format is a comma separated text file. The file must contain the following fields/columns:</p>
+<ul>
+<li>Subject ID: the id of the subject. This should simply be a numeric value. It is unused by the 2D-CRM engine, it is provided as an aid to linking the record to actual patient data (if that is what is being used). It is useful to give each subject a different Id as errors in the file are reported by 2D-CRM using the Subject ID Num:</li>
+</ul>
+<div id="fig-fig47" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig47-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image47.png" id="fig-fig47" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig47-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;38
+</figcaption>
+</figure>
+</div>
+<ul>
+<li><p>Cohort ID: the number of the cohort the subject was treated in. This should be a simple increasing integer, but of course several subjects will belong to the same cohort.</p></li>
+<li><p>Dose 1, Dose 2: these should be the <strong>strength</strong> of the dose of Drug 1 and Drug 2 that the subject was treated with, doses are indexed 1, 2, 3, …. Max dose.</p></li>
+<li><p>Toxicity: this value indicates whether the subject had a dose limiting toxicity or not. It should be 0 (to indicate no toxicity) or 1 (to indicated toxicity).</p></li>
+<li><p>Efficacy: This value is included for future expansion to additionally taking an efficacy response into account. It should be 0 or 1. The value is currently ignored.</p></li>
+</ul>
+<p>After entering the above into the subjects.csv and then clicking on “Reload Data”, the Analysis tab looks like this:</p>
+<div id="fig-fig48" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig48-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image48.png" id="fig-fig48" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig48-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;39
+</figcaption>
+</figure>
+</div>
+<p>We can see that the data has been correctly loaded – 4 subjects with no toxicity on combination (3mg,400mg), 6 subjects with 2 toxicity on combination (3mg,800mg) and 6 subjects with 1 toxicity on combination (6mg,400mg). But as yet no analysis has been run. To run an analysis on this data, click on “Run Analysis”.</p>
+<p>Once the analysis has completed, the screen looks like this …</p>
+<div id="fig-fig49" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig49-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image49.png" id="fig-fig49" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig49-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;40
+</figcaption>
+</figure>
+</div>
+<p>We can see that the next recommended combinations are (4.5mg,600mg)</p>
+<p>In the simulation of the design that has been entered, all the combinations recommended would be tested by allocating a cohort to each combination in the next round. In practice the clinical team would review these recommendations, the results of the model fit and possibly other data such as minor toxicities observed to form a view as to which combinations should be tested.</p>
+<section id="analysis-tab-graphs" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-tab-graphs">Analysis tab graphs</h2>
+<p>After the analysis the graph shown by default is the “Observed Toxicities” graphs (shown above).</p>
+<p>The other three graphs available are similar to the “per cohort” graphs available for simulations, namely:</p>
+<ul>
+<li><p>Fitted Pr(Toxicity)</p></li>
+<li><p>Pr(Toxicity band)</p></li>
+<li><p>Band Summary Graph</p></li>
+</ul>
+<section id="fitted-prtoxicity" class="level3">
+<h3 class="anchored" data-anchor-id="fitted-prtoxicity">Fitted Pr(Toxicity)</h3>
+<p>This graph shows the mean fitted toxicity rate at each combination, colored with increasing intensity the higher the rate, and a summary of the observed data:</p>
+<div id="fig-fig50" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig50-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image50.png" id="fig-fig50" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig50-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;41
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="prtoxicity-band" class="level3">
+<h3 class="anchored" data-anchor-id="prtoxicity-band">Pr(Toxicity Band)</h3>
+<p>This graph shows the posterior probability of being in a particular toxicity band at each combination, colored with increasing intensity the higher the probability, and a summary of the observed data:</p>
+<div id="fig-fig51" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig51-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image51.png" id="fig-fig51" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig51-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;42
+</figcaption>
+</figure>
+</div>
+<p>There is a control to select for which toxicity band the probabilities are shown.</p>
+</section>
+<section id="band-summary-graph" class="level3">
+<h3 class="anchored" data-anchor-id="band-summary-graph">Band Summary Graph</h3>
+<p>This graph shows the posterior probability of being in each toxicity band at each combination as a simple histogram. Common y-axis range of 0-1 is used for all the histograms. The background of the histograms is white if the combination is within the overdose control rules and pink if the combination is excluded by the overdose control rules. At the top of each histogram is a summary of the observed data (toxicities / total observed):</p>
+<div id="fig-fig52" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fig52-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="2dcrmUGattachments/images/image52.png" id="fig-fig52" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fig52-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;43
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+</section>
+<section id="the-output-files" class="level1">
+<h1>The output files</h1>
+<p>For a description of the contents of the simulation results files, see the specification document [Spec]</p>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-ivanova2003improved" class="csl-entry" role="listitem">
+Ivanova, Anastasia, Aliakbar Montazer-Haghighi, Sri Gopal Mohanty, and Stephen D. Durham. 2003. <span>“Improved up-and-down Designs for Phase i Trials.”</span> <em>Statistics in Medicine</em> 22 (1): 69–82.
+</div>
+<div id="ref-neuenschwander2008critical" class="csl-entry" role="listitem">
+Neuenschwander, Beat, Michael Branson, and Thomas Gsponer. 2008. <span>“Critical Aspects of the Bayesian Approach to Phase i Cancer Trials.”</span> <em>Statistics in Medicine</em> 27 (13): 2420–39.
+</div>
+</div></section></div></main> <!-- /main -->
+<!-- footer.html -->
+
+<!-- FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pF6W3...<truncated>...Q==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+<style>
+
+  /* Make all footer icons the same color */
+  footer .fab,
+  footer .fas,
+  footer svg {
+    color: #125740;           /* ← pick whatever color your share-icons are using */
+    fill: currentColor;    /* ensures the SVG Bluesky icon matches */
+  }
+
+  /* Prevent links from overriding that color */
+  footer a {
+    color: inherit;
+  }
+
+  /* Share menu positioning */
+  #share-wrapper { position: relative; }
+  #share-menu {
+    display: none;
+    position: absolute;
+    bottom: 3rem;               /* float above the footer */
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px #125740;
+    gap: 1rem;
+    z-index: 100;
+  }
+  body.menu-open #share-menu { display: flex; }
+  #share-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* Left column: text + social permalinks */
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+  }
+  .footer-left p { margin: 0; }
+  .footer-left a.social {
+    color: inherit;
+    text-decoration: none;
+  }
+  .footer-left a.social i { font-size: 1.2em; }
+  
+  
+    /* Text color left */
+  .footer-left p > a {
+    color: #125740;
+  }
+
+  /* Text color last item */
+  footer > p:last-child a {
+    color: #125740;
+  }
+  
+    /* Link hover colors */
+  .footer-left p > a:hover,
+  footer > p:last-child a:hover {
+    color: #11A473;
+    text-decoration: underline;
+  }
+  
+</style>
+
+<footer style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
+  
+  <!-- Left: Berry Consultants + social permalinks -->
+  <div class="footer-left">
+    <p>
+      © <a href="https://www.berryconsultants.com">Berry Consultants</a>
+    </p>
+    <a href="https://twitter.com/BerryConsultant" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on X">
+      <i class="fab fa-x"></i>
+    </a>
+    <a href="https://www.linkedin.com/company/berry-consultants-llc" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on LinkedIn">
+      <i class="fab fa-linkedin"></i>
+    </a>
+    <a href="https://www.youtube.com/c/berryconsultants" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on YouTube">
+      <i class="fab fa-youtube"></i>
+    </a>
+  </div>
+
+  <!-- Center: share toggle + popup -->
+  <div id="share-wrapper">
+    <button id="share-toggle" aria-label="Share this page">
+      <i class="fas fa-share-alt" style="font-size:1.6em;"></i>
+    </button>
+    <div id="share-menu">
+      <!-- share icons injected here -->
+    </div>
+  </div>
+
+  <!-- Right: How to Cite -->
+  <p style="margin: 0;">
+    <a href="../../../introduction/citation.html">Cite</a>
+  </p>
+</footer>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const url   = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+    const networks = [
+      { name: "X",        href: `https://twitter.com/intent/tweet?url=${url}&text=${title}`,          icon: `<i class="fab fa-x" style="font-size:1.4em;"></i>` },
+      { name: "LinkedIn", href: `https://www.linkedin.com/feed/?shareActive=true&text=${title}%20${url}`, icon: `<i class="fab fa-linkedin" style="font-size:1.4em;"></i>` },
+      { name: "Bluesky",  href: `https://bsky.app/intent/compose?text=${title}%20${url}`,              icon: `
+        <svg width="1.4em" height="1.4em" fill="currentColor" viewBox="0 0 600 530">
+          <path d="m135.72 44.03c66.496 49.921 138.02 151.14 164.28 205.46 26.262-54.316 97.782-155.54 164.28-205.46 47.98-36.021 125.72-63.892 125.72 24.795 0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.3797-3.6904-10.832-3.7077-7.8964-0.0174-2.9357-1.1937 0.51669-3.7077 7.8964-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.4491-163.25-81.433-5.9562-21.282-16.111-152.36-16.111-170.07 0-88.687 77.742-60.816 125.72-24.795z"/>
+        </svg>` },
+      { name: "Reddit",   href: `https://www.reddit.com/submit?url=${url}&title=${title}`,         icon: `<i class="fab fa-reddit" style="font-size:1.4em;"></i>` },
+      { name: "WhatsApp", href: `https://wa.me/?text=${title}%20${url}`,                             icon: `<i class="fab fa-whatsapp" style="font-size:1.4em;"></i>` },
+      { name: "Email",    href: `mailto:?subject=${title}&body=${title}%20${url}`,                    icon: `<i class="fas fa-envelope" style="font-size:1.4em;"></i>` }
+    ];
+
+    // inject share icons
+    const menu = document.getElementById("share-menu");
+    networks.forEach(net => {
+      const a = document.createElement("a");
+      a.href      = net.href;
+      a.target    = "_blank";
+      a.rel       = "noopener";
+      a.setAttribute("aria-label", `Share on ${net.name}`);
+      a.innerHTML = net.icon;
+      menu.appendChild(a);
+    });
+
+    // toggle menu
+    const toggle = document.getElementById("share-toggle");
+    toggle.addEventListener("click", e => {
+      e.stopPropagation();
+      document.body.classList.toggle("menu-open");
+    });
+
+    // close on outside click
+    document.addEventListener("click", () => {
+      document.body.classList.remove("menu-open");
+    });
+    menu.addEventListener("click", e => e.stopPropagation());
+  });
+</script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/docs\.berryconsultants\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

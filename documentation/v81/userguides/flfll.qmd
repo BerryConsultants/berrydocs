@@ -1,0 +1,420 @@
+---
+title: "FLFLL"
+subtitle: "FACTS Linux File Loader Light"
+title-block-banner: '#125740'
+title-block-banner-color: white
+format: 
+  html:
+    toc: true
+    toc-depth: 4
+    toc-title: "Table of Contents"
+    number-depth: 4
+---
+
+#  Introduction
+
+## Purpose and Scope of this document
+
+This document provides installation and execution guidance for FACTS
+Linux File Loader Light (FLFLL), a console (non-GUI) application for
+running simulations of FACTS designs on both Linux and Windows systems.
+
+## Overview
+
+FLFLL is intended for anyone requiring FACTS to be run in a command-line
+environment. A common use-case of FLFLL involves running FACTS within
+the context of a larger automated pipeline, whereby multiple closely
+related FACTS designs (e.g., slightly different success/futility
+criteria thresholds) are simulated using FLFLL and compared using
+in-house libraries.
+
+FLFLL requires existing FACTS project files which should be created
+using the FACTS desktop application GUI. The FACTS project files contain
+a complex set of interrelated parameters and we **do not** recommend
+editing them directly as this will likely make the application unstable.
+However, Eli Lilly has released an open-source R library, “rFacts”
+(https://github.com/EliLillyCo/rfacts) which can batch create multiple
+FACTS files and run these files via FLFLL.
+
+FLFLL can run under both Linux and Windows, in 2 modes:
+
+1)  generate parameter file(s) only
+
+    a.  Generate the param files used as input for the FACTS engine
+        executables (e.g., “nuk1e.param” for Core Continuous/Dichotmous
+        designs, “init.bcrm” for Dose Escalation N-CRM designs etc.).
+
+2)  generate full simulations, which we refer to as an “end-to-end” run:
+
+    a.  Run full simulations and generate output exactly as generated
+        from FACTS.
+
+To run FLFLL on Linux, the FACTS engines must be present and Mono, a
+third-party Linux .NET interpreter, must be installed.
+
+FLFLL can take input from a single FACTS project file, or a directory of
+one or more FACTS project files, or a directory hierarchy containing
+other directories, with FACTS project files contained at any level of
+the directory structure. A directory structure of results will be
+generated matching the input directory structure.
+
+# Installation and Setup
+
+## Linux
+
+- Install Mono version 6.12 or later from
+  <https://www.mono-project.com/docs/about-mono/releases> onto the
+  target machine/server running FLFLL and ensure that all users of FLFLL
+  can run Mono. A simple test would be to ask FLFLL users to run “mono
+  --version”.
+
+- Download the enterprise release (e.g.,
+  facts-6.4-enterprise-release_20210413.1.zip) from App Center
+  (https://appcenter.ms) and unzip it onto the target machine running
+  FLFLL.
+
+- Retrieve the folder containing the FLFLL application (e.g.,
+  facts-6.4-flfll_20210413.1), rename it to a more user-friendly name
+  such as “FLFLL” and place it in an area where all users of FLFLL will
+  have the necessary permissions to execute “FLFLL.exe” (via Mono)
+  present in the application folder.
+
+- Retrieve the FACTS license file corresponding to the version of FLFLL
+  being used, ensure it is named “license.txt” and place it in the FLFLL
+  application folder. The license file should contain the following
+  attributes: OrgName, Key and StartDate (date format: yyyy/mm/dd). The
+  license file is only required for the first successful run of FLFLL on
+  the target machine: for security reasons, we would strongly recommend
+  removing the license file from the server entirely once the first
+  successful run of FLFLL has been performed on the target
+  machine/server.
+
+- Within the FLFLL application folder, go to the “bin” folder (which
+  contains the Linux engines used by FLFLL) and elevate the Linux engine
+  permissions to being executable by running “chmod +x \[name of linux
+  engine executable here\]” for each of the Linux engines. If you do not
+  have permission to do so, please ask your IT administrator to run this
+  command.
+
+## Windows
+
+- Download the enterprise release (e.g.,
+  facts-6.4-enterprise-release_20210413.1.zip) from App Center
+  (https://appcenter.ms) and unzip it onto the target machine running
+  FLFLL. We recommend using 7Zip (<https://www.7-zip.org/>) to perform
+  the unzipping rather than the Windows in-built unzipping tool: the
+  latter can result in the corruption of the FLFLL application as a
+  security precaution.
+
+- Retrieve the folder containing the FLFLL application (e.g.,
+  facts-6.4-flfll_20210413.1), rename it to a more user-friendly name
+  such as “FLFLL” and place it in an area where all users of FLFLL will
+  have the necessary permissions to execute “FLFLL.exe” present in the
+  application folder.
+
+- If the machine/server running FLFLL already has a licensed version of
+  FACTS installed on it, the following step can be skipped. Otherwise,
+  retrieve the FACTS license file corresponding to the version of FLFLL
+  being used, ensure it is named “license.txt” and place it in the FLFLL
+  application folder. The license file should contain the following
+  attributes: OrgName, Key and StartDate (date format: yyyy/mm/dd). The
+  license file is only required for the first successful run of FLFLL on
+  the target machine: for security reasons, we would strongly recommend
+  removing the license file from the server entirely once the first
+  successful run of FLFLL has been performed on the target
+  machine/server.
+
+# Examples
+
+## Linux
+
+- Run FLFLL to generate parameter files only for a single FACTS project
+  file:
+
+    ```{default}
+    mono "FLFLL.exe" -file "home/mono/FLFLL/Input/myfile.facts" -nSim 1
+    -seed 3500 -nFreqWeeksFiles 1 -nSubjectFiles 1 -outputPath
+    "home/mono/FLFLL/Output" -logPath “/home/mono/Log”
+    ```
+
+- Run FLFLL to generate parameter files only for multiple FACTS project
+  files in a single directory:
+
+    ```{default}
+    mono "FLFLL.exe" -file "home/mono/FLFLL/Input " -nSim 1 -seed 3500
+    -nFreqWeeksFiles 1 -nSubjectFiles 1 -outputPath
+    "home/mono/FLFLL/Output" -logPath “/home/mono/Log”
+    ```
+    
+    The directory “Input” can contain any number of FACTS project files or a directory structure of multiple directories, each containing any number of FACTS project files.
+
+- Run FLFLL to run simulations.
+
+  - Add the command line argument “-endToEndRun” to the above examples
+    and add “-skipMissingParamsCheck” if simulating using FACTS files
+    older than FACTS 6.2.
+
+## Windows
+
+- Run FLFLL to generate parameter files only for a single FACTS project
+  file:
+
+    ```{default}
+    FLFLL.exe -file “C:\MyDocuments\FLFLL\Input\myfile.facts” -nSim 1
+    -seed 3500 -nFreqWeeksFiles 1 -nSubjectFiles 1 -outputPath
+    “C:\MyDocuments\FLFLL\Output" -logPath “C:\MyDocuments\Log”
+    ```
+
+- Run FLFLL to generate parameter files only for multiple FACTS project
+  files:
+
+    ```{default}
+    FLFLL.exe -file “C:\MyDocuments\FLFLL\Input” -nSim 1 -seed 3500
+    -nFreqWeeksFiles 1 -nSubjectFiles 1 -outputPath
+    “C:\MyDocuments\FLFLL\Output" -logPath “C:\MyDocuments\Log”
+    ```
+
+    The directory “Input” can contain any number of FACTS project files or
+    a directory structure of multiple directories, each containing any
+    number of FACTS project files.
+
+- Run FLFLL to run simulations.
+
+  - Add the command line argument “-endToEndRun” to the above examples
+    and add “-skipMissingParamsCheck” if simulating using FACTS file
+    older than FACTS 6.2.
+
+# API
+
+## Overview
+
+Usage: `FLFLL.exe [options]` where `[options]` are:
+
+| Option  | Description |
+|-----------------|----------------------------------------|
+| `-[h|help]` | Display the help menu. Default (False). |
+| `-[f|file]` | Specifies the file or top-level directory to open. |
+| `-[n|nSim]` | Number of simulations to run. Default (5).|
+| `-[p|packet]` | Packet size for parallelization. Default (1000). |
+| `-[g|grid]` | Flag indicating sims to run on grid. Default (False).|
+| `-[a|agg]`   | Aggregation mode. Default (None).  |
+| `-[aggPrefix]` | Prefix for aggregated files. Default (agg).  |
+| `-[nBurn]`     | Number of MCMC burn-in iterations. Default (1000).  |
+| `-[nMCMC]`    | Number of MCMC sample iterations. Default (2500).  |
+| `-[nWeeksFiles]`  | Number of weeks files to generate. Default (100).   |
+| `-[nSubjectFiles]` | Number of subjects files to generate. Default (1).   |
+| `-[nMCMCFiles]`   | Number of MCMC output files to generate. Default (0). |
+| `-[nMCMCThin]`  | MCMC thinning parameter. Default (0).   |
+| `-[nMCMCImpute]`   | MCMC length per imputation parameter. Default (1). |
+| `-[seed]`  | Set the random number seed. Default (3500).   |
+| `-[logPath]`   | If provided, specifies a directory where a log file is generated.  |
+| `-[outputPath]`   | Specifies the directory where output will be generated. Default (“out"). |
+| `-[endToEndRun]`  | Flag indicating if simulations should be run.  |
+| `-[skipMissingParamsCheck]` | Flag indicating to skip checking for missing parameters.  |
+| `-[scenarios]`  | Flag indicating which scenarios should be processed. |
+| `-[useDifferentSeedPerScenario]` | Flag indicating whether to use a different seed for each simulated scenario. Default (False). |
+| `-[useDifferentSeedPerDesign]`  | Flag indicating whether to use a different seed for each simulated design. Default (False).   |
+
+
+## Arguments
+
+### –\[h \| help\] (Help)
+
+The –h command line option displays the command line help options in the
+terminal. No simulations will be performed when the –h option is
+specified.
+
+### –\[v \| version\] (Version)
+
+The –v command line option displays the FLFLL version in the terminal.
+No simulations will be performed when the –v option is specified.
+
+### –\[f \| file\] FILE (Run a specific .facts file)
+
+The –f command line option is used to specify the “.facts” file to
+process. The –f option must be followed by a valid path to an existing
+“.facts” file or directory containing one or more “.facts” files. Hint:
+Remember to use quotes around the path if it includes spaces.
+
+If the supplied file name is a directory, then FACTS will process each
+“.facts” file in the directory in turn. As this only starts FACTS once,
+this can be quite a bit quicker than using a batch file or script that
+loops and starts FACTS separately for each “.facts” file.
+
+Furthermore, if the supplied file name is a directory then FACTS also
+automatically recurses through every sub-directory processing every
+“.facts” file it finds.
+
+### –\[n \| nSim\] N (Run N simulations for each scenario)
+
+The –n command line option is used to specify the number of simulations
+to run. The –n option must be followed by an integer value greater than
+0. For each scenario in the FACTS project file, the application will run
+N simulations. Defaults to 5 if unspecified.
+
+### –\[p \| packet\] N (Set the packet size for simulations)
+
+The –p command line option is used to specify the packet size for
+parallelization of simulations. The –p option must be followed by an
+integer value greater than 0. When using the –g option to run on a grid,
+or when running on a multicore machine it is often beneficial to
+parallelize simulations using the packetization process (see grid
+documentation for more information on packetization). The packet size
+must be greater than zero, but as in the GUI, there is no restriction
+that it be less than the number of simulations. If it is greater than
+the number of simulations, the simulations will not be packetized.
+Defaults to 1000 if unspecified.
+
+### –\[g \| grid\] (Run on grid)
+
+The –g command line option instructs the application to send simulations
+to the grid (assumes that the grid is correctly configured). When
+running on the grid, the action is still performed synchronously (i.e.
+FACTS will wait while the simulations run and collect the results before
+exiting). This option is useful to parallelize long running simulations
+more than they can be parallelized locally. Defaults to run locally if
+unspecified.
+
+### –\[a \| agg\] Mode (Aggregation Mode)
+
+The –a command line option specifies the aggregation action to take for
+completed simulation results. The available modes for this option are:
+
+- None – no aggregation will be performed
+
+- NoPivot – Only standard aggregation will be performed
+
+- Pivot – Both standard and pivoted aggregation will be performed.
+
+- Default, if unspecified, is None.
+
+### –aggPrefix prefix (Prefix for aggregation files)
+
+The –aggPrefix command line option specifies the prefix to use when
+naming aggregated files and must be followed by a valid file prefix.
+This option is only used when –a is set to NoPivot or Pivot. The
+aggregation files produced by aggregating across all scenarios will be
+named using the prefix\<\_pivot\>\_(filename).csv pattern, where
+\<\_pivot\> is included for pivoted files only, and (filename) is
+replaced by the name of the file being aggregated. Defaults to “agg” if
+unspecified.
+
+### –nBurn N (Number of MCMC burn-in iteractions)
+
+The –nBurn command line option specifies the number of burn-in MCMC
+iterations to use in the simulation and must be followed by a valid
+integer value greater than 0. Defaults to 1000 if unspecified.
+
+### –nMCMC N (Number of MCMC sample iterations)
+
+The –nMCMC command line option specifies the number of MCMC sampling
+iterations to use in the simulation and must be followed by a valid
+integer value greater than 0. Defaults to 2500 if unspecified.
+
+### –nWeeksFiles N (Number of weeks files to output)
+
+The –nWeeksFiles command line option specifies the number of weeks files
+to output from the simulation and must be followed by a valid integer
+value at least 0. Defaults to 100 if unspecified.
+
+### –nSubjectFiles N (Number of subjects files to output)
+
+The –nSubjectFiles command line option specifies the number of subject
+files to output from the simulation and must be followed by a valid
+integer value at least 0. Defaults to 1 if unspecified.
+
+### –nMCMCFiles N (Number of MCMC files to output)
+
+The –nMCMCFiles command line option specifies the number of MCMC sample
+files to output from the simulation and must be followed by a valid
+integer value at least 0. Defaults to 0 if unspecified.
+
+**Note:** This option potentially produces a very large amount of output
+data and may fail if sufficient disk space is not available.
+
+### –nMCMCThin N (MCMC output thinning value)
+
+The –nMCMCThin command line option specifies the MCMC thinning value to
+apply to the MCMC output and must be followed by a valid integer value
+at least \<x\>. The thinning parameter applies only to the MCMC output,
+all MCMC samples are used for analysis. Defaults to \<x\> if
+unspecified.
+
+### –nMCMCImpute N (MCMC length per imputation value)
+
+The –nMCMCImpute command line option specifies the number of MCMC
+sampling iterations to use in the simulation for each imputation.
+Defaults to 1 if unspecified.
+
+### –seed (Random number seed)
+
+The –seed command line option sets the random number generator seed
+value. The default value (3500) is the same as that used in the GUI. It
+can be set to any positive integer.
+
+### -logPath Path (Path where the optional log file is placed)
+
+The –logPath command line option (if given) is used to specify the
+directory where a log file is generated. If not specified, a log file
+will not be generated. The –logPath option must be followed by a valid
+path. If the path does not exist, it will be created.
+
+**Note**: Remember to use quotes around the path if it includes spaces.
+
+### -outputPath Path (Path where output is generated)
+
+The –outputPath command line option (if given) is used to specify the
+directory where parameter files and optional simulation files are
+placed. If not specified, the output path will be the directory in which
+the .facts file is present. The –outputPath option must be followed by a
+valid path. If the path does not exist, it will be created.
+
+### -endToEndRun (Flag to indicate if simulations should be run also)
+
+The –endToEndRun command line instructs FLFLL to run full simulations.
+If unspecified, only parameter files will be generated.
+
+### -skipMissingParamsCheck (Flag to indicate to skip checking of missing parameters)
+
+The –skipMissingParamsCheck command line instructs FLFLL to skip the
+process of checking for missing parameters in legacy FACTS project files
+(.facts). If not specified, when running FACTS projects files prior to
+version 6.2, errors will prevent FLFLL from completing.
+
+### -scenarios (Flag indicating which scenarios should be processed)
+
+The –scenarios command line instructs FLFLL to run the specified
+scenarios by name. The names of the scenarios to run should be provided
+as a comma separated list. If not specified, all scenarios will be
+processed.
+
+### -useDifferentSeedPerScenario (Flag indicating whether to use a different seed for each simulated scenario)
+
+The –useDifferentSeedPerScenario command line option provides FLFLL with
+an option to set a different random number seed for each of the
+scenarios that are being simulated. FLFLL simply takes the base random
+number seed as set in the -seed flag, uses this for the first simulated
+scenario and then adds 1111 to the random number seed of any additional
+scenarios being simulated. For example, if three scenarios are being
+simulated and the -seed flag is set to 3500, the first scenario will
+have a random number seed of 3500, the second scenario a random number
+of 4611 and the third scenario a random number seed of 5722. This
+deterministic way of setting different random number seeds allows for
+reproducible simulation results.
+
+### -useDifferentSeedPerDesign (Flag indicating whether to use a different seed for each simulated design)
+
+The –useDifferentSeedPerDesign command line option provides FLFLL with
+an option to set a different base random number seed for each of the
+designs that are being simulated. This option is only used when a
+directory containing multiple FACTS designs is passed as an argument to
+the FLFLL command line, rather than a single design. FLFLL simply takes
+the base random number seed as set in the -seed flag, uses this for the
+first simulated design and then adds 1234 to the random number seed of
+any additional designs being simulated. For example, if three designs
+are being simulated and the -seed flag is set to 3500, the first design
+will have a base random number seed of 3500, the second scenario a
+random number of 4734 and the third design a base random number seed of
+5968. This deterministic way of setting different random number seeds
+allows for reproducible simulation results.
+
