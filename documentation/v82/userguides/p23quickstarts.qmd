@@ -1,0 +1,68 @@
+---
+title: "Quick Starts"
+subtitle: "Rapidly Create Common Trial Designs with Minimal Inputs"
+title-block-banner: '#125740'
+title-block-banner-color: white
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-title: "Table of Contents"
+---
+
+## Overview
+
+Quick Starts provide a streamlined entry point for creating common Phase 2 and Phase 3 clinical trial designs directly from the FACTS home screen. Rather than navigating the full design workflow, Quick Starts allow you to specify a small number of essential inputs and immediately obtain a working design ready to be simulated. Quick Starts are ideal when you need to rapidly explore a design, compare broad design strategies, or generate a starting point that can later be refined using the full FACTS functionality.
+
+## Common Inputs
+
+While each Quick Start type has parameters specific to its methodology, they all share a core set of inputs:
+
+- **Endpoint Type**: Continuous, Dichotomous, or Time-to-Event.
+- **Expected Control Response**: The anticipated outcome in the control arm (e.g., a mean for continuous endpoints, a rate for dichotomous endpoints, or a hazard for time-to-event endpoints).
+- **Target Treatment Effect**: The clinically meaningful treatment difference the trial is designed to detect.
+- **Allocation Ratio**: The randomization ratio between treatment and control arms.
+- **One-Sided Type I Error**: The acceptable false-positive rate, typically 0.025.
+- **Power or Maximum Sample Size**: You may specify either a target power (and allow the sample size to be calculated) or fix the maximum sample size directly.
+- **Expected Accrual Rate**: The anticipated number of subjects enrolled per unit of time, used in duration and timing calculations.
+- **Time to Endpoint**: The expected duration from enrollment to primary endpoint observation for each subject.
+
+## Quick Start Types
+
+### Fixed
+
+The Fixed Quick Start creates a standard fixed sample size design with no interim analyses. Given the expected control response, target treatment effect, and desired power (or a fixed maximum sample size), it calculates the required sample size and expected trial duration. This serves as a natural baseline for comparison against the adaptive Quick Start types.
+
+### Group Sequential
+
+The Group Sequential Quick Start creates designs that include pre-planned interim analyses with formal stopping boundaries for efficacy and, optionally, futility. In addition to the common inputs, you specify:
+
+- **Number of Interim Analyses**: How many times the data will be evaluated before the final analysis.
+- **Information Fraction**: The proportion of total information available at each interim look.
+- **Alpha Spending Function**: The method used to distribute the overall Type I error across interim analyses (e.g., Hwang-Shih-DeCani, O'Brien-Fleming approximation, Pocock approximation).
+- **Beta Spending Function**: The method used to distribute the Type II error for futility boundaries, if futility stopping is enabled.
+
+The Quick Start calculates z-score boundaries, expected sample sizes under the null and alternative hypotheses, and cumulative alpha and beta spending at each interim.
+
+### Goldilocks
+
+The Goldilocks Quick Start creates Bayesian adaptive designs that use predictive probabilities to guide interim decisions. The central idea is to find a sample size that is "just right", neither too large nor too small, by assessing at each interim whether the trial is likely to succeed or is futile if it were to continue to full enrollment.
+
+Beyond the common inputs, the Goldilocks Quick Start includes:
+
+- **Predictive Probability Thresholds**: Thresholds for declaring early success (e.g., predictive probability of success > 0.95) or futility (e.g., predictive probability of success < 0.05) at each interim.
+- **Final Analysis P-Value**: The significance threshold applied at the final analysis after all subjects have completed follow-up.
+- **Information Type**: Whether interim timing is based on the number of subjects enrolled, the number of completers, or another measure.
+
+These designs are especially well-suited when the primary endpoint involves delayed observation, as they account for the uncertainty in incomplete data when making stopping decisions.
+
+### Promising Zone
+
+The Promising Zone Quick Start creates a two-stage design that allows for sample size re-estimation based on the interim results. At the interim analysis, the observed treatment effect determines whether the trial falls within a "promising zone" where increasing the sample size is warranted.
+
+In addition to the common inputs, the Promising Zone Quick Start requires:
+
+- **Interim Timing**: The number of subjects at the single interim analysis.
+- **Expanded Sample Size**: The increased sample size to use if the trial falls within the promising zone.
+- **Boundary Specification**: The method for defining the promising zone, expressed as conditional power boundaries.
+- **Lower and Upper Boundaries**: The conditional power thresholds that define the promising zone (e.g., 0.4 to 0.8). Results below the lower boundary suggest futility; results above the upper boundary indicate the original sample size is sufficient; results between the boundaries trigger sample size expansion.
