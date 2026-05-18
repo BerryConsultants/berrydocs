@@ -287,7 +287,17 @@ window.Quarto = {
   <li><a href="#cohort-responses" id="toc-cohort-responses" class="nav-link" data-scroll-target="#cohort-responses">Cohort Responses</a></li>
   <li><a href="#mtd-change-on-expansion" id="toc-mtd-change-on-expansion" class="nav-link" data-scroll-target="#mtd-change-on-expansion">MTD Change on Expansion</a></li>
   </ul></li>
-  <li><a href="#output-files" id="toc-output-files" class="nav-link" data-scroll-target="#output-files">Output Files</a></li>
+  <li><a href="#output-files" id="toc-output-files" class="nav-link" data-scroll-target="#output-files">Output Files</a>
+  <ul>
+  <li><a href="#contents-of-summary.csv" id="toc-contents-of-summary.csv" class="nav-link" data-scroll-target="#contents-of-summary.csv">Contents of summary.csv</a></li>
+  <li><a href="#contents-of-simulations.csv-and-cohortsnnn.csv" id="toc-contents-of-simulations.csv-and-cohortsnnn.csv" class="nav-link" data-scroll-target="#contents-of-simulations.csv-and-cohortsnnn.csv">Contents of simulations.csv and cohortsNNN.csv</a>
+  <ul class="collapse">
+  <li><a href="#simulations.csv-initial-columns" id="toc-simulations.csv-initial-columns" class="nav-link" data-scroll-target="#simulations.csv-initial-columns">simulations.csv initial columns</a></li>
+  <li><a href="#cohortsnnn.csv-initial-columns" id="toc-cohortsnnn.csv-initial-columns" class="nav-link" data-scroll-target="#cohortsnnn.csv-initial-columns">cohortsNNN.csv initial columns</a></li>
+  <li><a href="#common-simulations.csv-and-cohortsnnn.csv-columns" id="toc-common-simulations.csv-and-cohortsnnn.csv-columns" class="nav-link" data-scroll-target="#common-simulations.csv-and-cohortsnnn.csv-columns">Common simulations.csv and cohortsNNN.csv columns</a></li>
+  <li><a href="#aggregation-1" id="toc-aggregation-1" class="nav-link" data-scroll-target="#aggregation-1">Aggregation</a></li>
+  </ul></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -1065,9 +1075,527 @@ Figure&nbsp;19: MTD change on expansion graph
 <p><strong>Summary.csv</strong> – contains a single row of data that holds data summarized across the simulations. This is the source of most of the values in the simulations table.</p>
 <p><strong>Simulations.csv</strong> – contains one row per simulation describing the final state of each simulation.</p>
 <p><strong>CohortsNNN.csv</strong> – contains one row for each cohort during a simulation where NNN is the number of the simulation. By default this file is written only for the first 100 simulations, but this can be changed via the advanced button on the simulation tab.</p>
+<section id="contents-of-summary.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-summary.csv">Contents of summary.csv</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 15%">
+<col style="width: 66%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Number of Sims</td>
+<td>1</td>
+<td>The number of simulations that were run to produce the displayed results.</td>
+</tr>
+<tr class="even">
+<td>Random Number Seed</td>
+<td>1</td>
+<td>The random number seed used to simulate the scenario.</td>
+</tr>
+<tr class="odd">
+<td>Mean num subjects</td>
+<td>1</td>
+<td>This is the mean (over the simulations) of the number of subjects recruited in this scenario (including any single patient run-in, but excluding any expansion cohort..</td>
+</tr>
+<tr class="even">
+<td>Ppn Tox</td>
+<td>1</td>
+<td>This is the average proportion of the subjects recruited that experienced a toxicity in this scenario.</td>
+</tr>
+<tr class="odd">
+<td>SD Ppn Tox</td>
+<td>1</td>
+<td>This is the standard deviation of the proportion of toxicity across the simulations.</td>
+</tr>
+<tr class="even">
+<td>True Mean Tox</td>
+<td>1</td>
+<td>This is the average true probability of toxicity over the simulations. The ‘true probability of toxicity’ in a simulated trial is the average of the probabilities of toxicity all the subjects are exposed to, given the toxicity response profile that we are simulating from.</td>
+</tr>
+<tr class="odd">
+<td>True Mean Eff</td>
+<td>1 – Efficacy only</td>
+<td>This is the average true probability of efficacy over the simulations. The ‘true probability of efficacy’ in a simulated trial is the average of the probabilities of efficacy all the subjects are exposed to, given the efficacy response profile that we are simulating from.</td>
+</tr>
+<tr class="even">
+<td>MTD Selection &lt;dose index&gt;</td>
+<td>One per dose</td>
+<td><p>For each dose, this is proportion of the simulations where it was selected as the MTD at the end of the study, as defined by the Selected MTD simulation results column.</p>
+<p>Index starts at 0 if a control arm is included.</p></td>
+</tr>
+<tr class="odd">
+<td>OSD Selection &lt;dose index&gt;</td>
+<td>One per dose</td>
+<td>Unused [it contains values that are copies of the MTD selection. OSD = Optimum Safe Dose, it differs from the MTD only if there is an efficacy endpoint to take into account too]</td>
+</tr>
+<tr class="even">
+<td>Mean Fitted Toxicity &lt;dose index&gt;</td>
+<td>One per dose</td>
+<td>This is the mean (over the simulations) of the mean estimate of toxicity from the fitted toxicity response model for each dose.</td>
+</tr>
+<tr class="odd">
+<td>SD Fitted Toxicity &lt;dose index&gt;</td>
+<td>One per dose</td>
+<td>This is the standard deviation of the mean estimates across the simulations for each dose. Note it is not based on the standard deviation estimated <strong>in</strong> the simulations, it is the SD observed <strong>across</strong> the simulation results.</td>
+</tr>
+<tr class="even">
+<td>Mean Subj per dose&lt;dose index&gt;</td>
+<td>One per dose</td>
+<td>This is the mean (over the simulations) of the number of subjects assigned to each dose.</td>
+</tr>
+<tr class="odd">
+<td>SD Subj per dose &lt;dose index&gt;</td>
+<td>One per dose</td>
+<td>This is the standard deviation of the number of subjects assigned to each dose across the simulations.</td>
+</tr>
+<tr class="even">
+<td>Mean Tox per dose &lt;dose index&gt;</td>
+<td>One per dose</td>
+<td>This is the mean (over the simulations) of the number of toxicities observed at each dose.</td>
+</tr>
+<tr class="odd">
+<td>SD Tox per dose &lt;dose index&gt;</td>
+<td>One per dose</td>
+<td>This is the standard deviation of the number of toxicities observed at each dose across the simulations.</td>
+</tr>
+<tr class="even">
+<td>Mean Known per dose &lt;dose index&gt;</td>
+<td>One per dose</td>
+<td>The number of known patient outcomes for a dose. In N-CRM there is no simulation of drop-outs so this will always be the same as “Mean subj per dose”</td>
+</tr>
+<tr class="odd">
+<td>SD Known per dose &lt;dose index&gt;</td>
+<td>One per dose</td>
+<td>This is the standard deviation of the number of known patient outcomes for each dose across the simulations. In N-CRM there is no simulation of drop-outs so this will always be the same as “SD subj per dose”</td>
+</tr>
+<tr class="even">
+<td>Num subj 80%ile</td>
+<td>1</td>
+<td>This is the eightieth percentile across the simulations of the number of subjects recruited into the trial.</td>
+</tr>
+<tr class="odd">
+<td>MTD+ &lt;1</td>
+<td>1</td>
+<td>The number of times the MTD was deemed to be less than the lowest dose</td>
+</tr>
+<tr class="even">
+<td>MTD+ &lt;dose index&gt;</td>
+<td>One per dose</td>
+<td>The number of times each dose was selected as the MTD</td>
+</tr>
+<tr class="odd">
+<td>MTD+ &gt;&lt;D&gt;</td>
+<td>1</td>
+<td>The number of times the MTD was deemed to be above the highest dose</td>
+</tr>
+<tr class="even">
+<td>OSD+ &lt;1</td>
+<td>1</td>
+<td>The same as MTD+ &lt;1, can be ignored</td>
+</tr>
+<tr class="odd">
+<td>OSD+ &lt;dose index&gt;</td>
+<td>One per dose</td>
+<td>The same as MTD+ &lt;dose index&gt;, can be ignored</td>
+</tr>
+<tr class="even">
+<td>OSD+ &gt;&lt;D&gt;</td>
+<td>1</td>
+<td>The same as MTD+ &gt; &lt;D&gt;, can be ignored</td>
+</tr>
+<tr class="odd">
+<td>DE Version</td>
+<td>1</td>
+<td>This is the version of the Dose Esc design engine that simulated these trial results.</td>
+</tr>
+<tr class="even">
+<td>GUI Version</td>
+<td>1</td>
+<td>This is the version of the FACTS GUI that was used to specify the parameters for the trials to be simulated.</td>
+</tr>
+<tr class="odd">
+<td>Project</td>
+<td>1</td>
+<td>The name of the project or design</td>
+</tr>
+<tr class="even">
+<td>Scenario</td>
+<td>1</td>
+<td>The name of the scenario within the project or design</td>
+</tr>
+<tr class="odd">
+<td>Date/Time</td>
+<td>1</td>
+<td>The date and time the simulations were started</td>
+</tr>
+<tr class="even">
+<td>True Toxicity &lt;Dose&gt;</td>
+<td>One per dose</td>
+<td>The actual toxicity rate being simulated for each dose</td>
+</tr>
+<tr class="odd">
+<td>Mean Lost</td>
+<td>1 – Open Enrolment only</td>
+<td>The mean (over the simulations) of the number of subjects who were available for treatment but could not be included in the trial because the number of treated subjects for whom the final result is not available equals the maximum queue length. This only applies to Open Enrolment designs otherwise the column is omitted.</td>
+</tr>
+<tr class="even">
+<td>s.d.Lost</td>
+<td>1 – Open Enrolment only</td>
+<td>The SD (over the simulations) of the number of subjects ‘lost’ (see above). This only applies to Open Enrolment designs otherwise the column is omitted.</td>
+</tr>
+<tr class="odd">
+<td>Ppn(Esc) &lt;Dose&gt;</td>
+<td>One per dose</td>
+<td>The proportion of times the final data on the dose resulted in the decision “Escalate”.</td>
+</tr>
+<tr class="even">
+<td>Ppn(Stay) &lt;Dose&gt;</td>
+<td>One per dose</td>
+<td>The proportion of times the final data on the dose resulted in the decision “Stay”.</td>
+</tr>
+<tr class="odd">
+<td>Ppn(DeEsc) &lt;Dose&gt;</td>
+<td>One per dose</td>
+<td>The proportion of times the final data on the dose resulted in the decision “De-escalate”.</td>
+</tr>
+<tr class="even">
+<td>Ppn(Never) &lt;Dose&gt;</td>
+<td>One per dose</td>
+<td>The proportion of times the final data on the dose resulted in the decision “De-escalate and never return”.</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>Note that there is a fifth outcome or state for a dose at the end of the trial – that is that it has no data. Hence for a given dose, the above 4 proportions don’t necessarily sum to 1.</td>
+</tr>
+<tr class="even">
+<td>PostCE MTD+ &lt;1</td>
+<td>1 – Cohort expansion only</td>
+<td>The number of times after the Cohort Expansion the dose ‘below the first dose’ was selected as MTD+. (Omitted if no Expansion Cohort is defined)</td>
+</tr>
+<tr class="odd">
+<td>PostCE MTD+ &lt;Dose&gt;</td>
+<td>One per dose – Cohort expansion only</td>
+<td>The number of times after the Cohort Expansion the dose was selected as MTD+. (Omitted if no Expansion Cohort is defined)</td>
+</tr>
+<tr class="even">
+<td>PostCE MTD+ &gt; &lt;D&gt;</td>
+<td>1 – Cohort expansion only</td>
+<td>The number of times after the Cohort Expansion the dose ‘above the top dose’ was selected as MTD+. (Omitted if no Expansion Cohort is defined)</td>
+</tr>
+<tr class="odd">
+<td>PostCE OSD+ &lt;1</td>
+<td>1 – Cohort expansion only</td>
+<td>The number of times after the Cohort Expansion the dose ‘below the first dose’ was selected as OSD+. (Omitted if no Expansion Cohort is defined)</td>
+</tr>
+<tr class="even">
+<td>PostCE OSD+ &lt;Dose&gt;</td>
+<td>One per dose – Cohort expansion only</td>
+<td>The number of times after the Cohort Expansion the dose was selected as OSD+. (Omitted if no Expansion Cohort is defined)</td>
+</tr>
+<tr class="odd">
+<td>PostCE OSD+ &gt; &lt;D&gt;</td>
+<td>1 – Cohort expansion only</td>
+<td>The number of times after the Cohort Expansion the dose ‘above the top dose’ was selected as OSD+. (Omitted if no Expansion Cohort is defined)</td>
+</tr>
+<tr class="even">
+<td>All Tox Stop</td>
+<td>1</td>
+<td>The proportion of the simulations that stopped because all doses were too toxic.</td>
+</tr>
+<tr class="odd">
+<td>Early Success</td>
+<td>1</td>
+<td>The proportion of the simulations that stopped because sufficient stopping rules were met before the maximum number of cohorts had been treated.</td>
+</tr>
+<tr class="even">
+<td>Cap Stop</td>
+<td>1</td>
+<td>The proportion of the simulations that stopped because the maximum number of cohorts had been treated.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="contents-of-simulations.csv-and-cohortsnnn.csv" class="level2">
+<h2 class="anchored" data-anchor-id="contents-of-simulations.csv-and-cohortsnnn.csv">Contents of simulations.csv and cohortsNNN.csv</h2>
+<section id="simulations.csv-initial-columns" class="level3">
+<h3 class="anchored" data-anchor-id="simulations.csv-initial-columns">simulations.csv initial columns</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 15%">
+<col style="width: 64%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Column Title</th>
+<th style="text-align: left;">Number of columns</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Number</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The number of the simulation.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Random Number Seed</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The random number seed used to simulate the scenario.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">No.Subjects</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The number of subjects recruited in this trial in the small cohort run-in and in the cohorts used to locate the MTD, but not those in the expansion cohort.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ppn Tox</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">This is the proportion of the subjects recruited that experienced a toxicity in this trial</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">True Mean Tox</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">This is the average probability of toxicity for the subjects in the trial, given the doses they were treated with and the toxicity rate being simulated for each of those doses.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Seeds</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">The two 32 bit numbers that make up the random number seed at the end of the simulation. To exactly re-simulate a specific simulation (e.g.&nbsp;in order to generate an mcmc file or cohorts file for that simulation) enter these values from the line above the simulation to be re-simulated.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="cohortsnnn.csv-initial-columns" class="level3">
+<h3 class="anchored" data-anchor-id="cohortsnnn.csv-initial-columns">cohortsNNN.csv initial columns</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 12%">
+<col style="width: 71%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Column Title</th>
+<th style="text-align: left;">Number of columns</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Cohort</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The number of the cohort in the simulation.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Alloc Dose</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The index of the dose assigned to that cohort. If using open enrolment, -2 means the subject was ‘lost’, that is they couldn’t be allocated a dose because there were already the maximum number of subjects treated but not complete.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NumToxic</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">The number of subjects in that cohort that experienced a toxicity</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="common-simulations.csv-and-cohortsnnn.csv-columns" class="level3">
+<h3 class="anchored" data-anchor-id="common-simulations.csv-and-cohortsnnn.csv-columns">Common simulations.csv and cohortsNNN.csv columns</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 19%">
+<col style="width: 65%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Title</th>
+<th>Number of columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Model MTD</td>
+<td>1</td>
+<td>The dose index of the model MTD</td>
+</tr>
+<tr class="even">
+<td>Model OSD</td>
+<td>1 [simulations only]</td>
+<td>The index of the dose selected as the Optimal Safe Dose (OSD), in N-CRM this will always be the same as the MTD as there is no efficacy to take into consideration.</td>
+</tr>
+<tr class="odd">
+<td>Toxicity &lt;dose index&gt;</td>
+<td>One per dose</td>
+<td>The mean of the final posterior estimate of the toxicity rate at each dose.</td>
+</tr>
+<tr class="even">
+<td>No.&nbsp;Subj &lt;dose index&gt;</td>
+<td>One per dose</td>
+<td>The number of subjects that have been allocated to each dose.</td>
+</tr>
+<tr class="odd">
+<td>Tox per dose &lt;dose index&gt;</td>
+<td>One per dose</td>
+<td>The number of toxicities that have observed at each dose</td>
+</tr>
+<tr class="even">
+<td>Known per dose &lt;dose index&gt;</td>
+<td>One per dose</td>
+<td>The number of subjects for whom final results are available at each dose.</td>
+</tr>
+<tr class="odd">
+<td>Tox CI</td>
+<td>1 – MTD target only</td>
+<td>Only used if targeting a single dose. It’s the CI used in the stopping rule “range of dose strength within the credible interval”, where the credible interval has a default alpha of 0.05.</td>
+</tr>
+<tr class="even">
+<td>Flags</td>
+<td>1</td>
+<td>A flag value comprising a number of (possible) flag values ’OR’d together to show the current allocation or stopping decisions. See the Flag Values table below for details</td>
+</tr>
+<tr class="odd">
+<td>1<sup>st</sup> full size</td>
+<td>1 [simulations only]</td>
+<td>The number of the first full sized cohort, this will be ‘1’ unless the small cohort run-in is enabled. If the small cohort run-in is enabled, then this is the index of the first full size cohort.</td>
+</tr>
+<tr class="even">
+<td>Cohort size</td>
+<td>1 [cohorts only]</td>
+<td>The number of patients in the cohort.</td>
+</tr>
+<tr class="odd">
+<td>MTD+</td>
+<td>1</td>
+<td>The dose index of the model MTD+, this is the model MTD using the dose range extended by one dose either end. Dose 0 will be selected if all doses are too toxic and dose D+1 will be selected if no doses are toxic enough.</td>
+</tr>
+<tr class="even">
+<td>OSD+</td>
+<td>1 [simulations only]</td>
+<td>The dose index of the model OSD+, will be the same as the model MED+ unless this is above the model MTD+, in which case it is same as the model MTD+. If there is no efficacy to take into consideration this is the same as the model MTD+..</td>
+</tr>
+<tr class="odd">
+<td>True Toxicity &lt;Dose&gt;</td>
+<td>One per dose</td>
+<td>The toxicity rate being simulated for that dose in the scenario.</td>
+</tr>
+<tr class="even">
+<td>Rec Time</td>
+<td>1 - Cohorts only</td>
+<td>If the trial is using open enrolment this column record the time the subject was available to be dosed.</td>
+</tr>
+<tr class="odd">
+<td>Num Lost</td>
+<td>1 – Open enrolment only (simulations only)</td>
+<td>If the trial is using open enrolment this is the total number of subjects ‘lost’ during the simulation, that is they couldn’t be allocated a dose because there were already the maximum number of subjects treated but not complete.</td>
+</tr>
+<tr class="even">
+<td>Decision &lt;Dose&gt;</td>
+<td>One per dose</td>
+<td><p>Based on the data on that dose (in simulaitons.csv the data at the end of the trial) a code indicating the decision that the rules say should be taken if that were the dose last tested.</p>
+<p>-3: No data</p>
+<p>-2: De-escalate and never return</p>
+<p>-1: De-escalate</p>
+<p>0: Stay</p>
+<p>1: Escalate</p></td>
+</tr>
+<tr class="odd">
+<td>PostCE MTD</td>
+<td>1 – Expansion cohort only (simulations only)</td>
+<td>In the case of a trial using an expansion cohort, this is the dose that is the model MTD at the end of the dose escalation phase, after the expansion cohort.</td>
+</tr>
+<tr class="even">
+<td>PostCE OSD</td>
+<td>1 – Expansion cohort only (simulations only)</td>
+<td>In the case of a trial using an expansion cohort, this is the dose that is the model OSD at the end of the dose escalation phase, after the expansion cohort.</td>
+</tr>
+<tr class="odd">
+<td>PostCE MTD+</td>
+<td>1 – Expansion cohort only (simulations only)</td>
+<td>In the case of a trial using an expansion cohort, this is the dose that is the model MTD+ at the end of the dose escalation phase, after the expansion cohort.</td>
+</tr>
+<tr class="even">
+<td>PostCE OSD+</td>
+<td>1 – Expansion cohort only (simulations only)</td>
+<td>In the case of a trial using an expansion cohort, this is the dose that is the model OSD+ at the end of the dose escalation phase, after the expansion cohort.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="aggregation-1" class="level3">
+<h3 class="anchored" data-anchor-id="aggregation-1">Aggregation</h3>
+<p>The results files can be aggregated using the “Aggregate…” button on the Simulations tab.</p>
+<p>The Aggregate… button displays a dialog which allows the user to select what to aggregate:</p>
+<p><img src="deUGattachments/media/image62.png" style="width:5.32292in;height:4.40625in"></p>
+<p>The default location for the aggregated files is the results directory for the study, but this can be changed.</p>
+<p>Aggregation may be performed with or without pivoting on group, or both.</p>
+<ul>
+<li><p>Unpivoted files will have one row for each row in the original files.</p></li>
+<li><p>In pivoted files each original row will be split into one row per dose, plus two extra rows for ‘below lowest’ and ‘above highest’.</p>
+<ul>
+<li><p>Where there is a group of columns for each dose, they will be turned into a single column with each value on a new row.</p></li>
+<li><p>If there is no value for the below lowest or above highest rows, they will be left blank.</p></li>
+<li><p>Values in columns that are independent of group will be repeated on each row.</p></li>
+</ul></li>
+</ul>
+<p>The default is to aggregate all scenarios, but any combination may be selected.</p>
+<p>Pressing “Aggregate” generates the aggregated files.</p>
+<p>Each type of csv file is aggregated into a separate csv file whose name begins agg_ or agg_pivot_, so agg_summary.csv will contain the rows from each of the summary.csv files, unpivoted. Files for the two samples are aggregated into separate files. cohortsNNN.csv files are aggregated into a single agg_[pivot_]cohorts.csv file. Doses.csv is identical for all scenarios and so is not aggregated.</p>
+<p>Each aggregated file begins with the following extra columns, followed by the columns from the original csv file:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Column Name</th>
+<th>Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scenario ID</td>
+<td>Index of the scenario</td>
+</tr>
+<tr class="even">
+<td>Toxicity Profile</td>
+<td rowspan="2">A series of columns containing the names of the various profiles used to construct the scenario. Columns that are never used are omitted (e.g External Subjects Profile if there are no external scenarios)</td>
+</tr>
+<tr class="odd">
+<td>External Subjects Profile</td>
+</tr>
+<tr class="even">
+<td>Agg Timestamp</td>
+<td>Date and time when aggregation was performed</td>
+</tr>
+<tr class="odd">
+<td>Sim</td>
+<td>Simulation number. Only present in the cohorts file.</td>
+</tr>
+<tr class="even">
+<td>Dose</td>
+<td>Only present if pivoted</td>
+</tr>
+</tbody>
+</table>
 
 
 
+</section>
+</section>
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
