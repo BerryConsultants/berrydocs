@@ -65,12 +65,14 @@ results window.
 | Scenario | 1 | This column gives the name of the scenario. It is constructed from the names of all the profiles that have been combined to create the scenario. |
 | Mean Ctrl Response: \<Group\> | One per group (if control treatment arm included) | These columns are -9999 if there are no control arms included in the design. This is the mean (over the simulations) of the mean estimate of response (change from baseline) for the control arm in each group. |
 | Mean Ctrl Response: Across groups | 1 (if control treatment arm included) | This column is -9999 if there are no control arms included in the design. This is the mean (over the simulations) of the average of the response on all the control arms across all the groups. (Note: this is not part of the response model, but estimated separately) |
+| Mean Trt Effect: \<Group\> | One per group | This is the mean (over the simulations) of the mean estimate of the treatment effect in each group (the difference between the response on the study treatment and the historic control rate or the mean response on the control arm in that group). |
+| Mean Trt Effect: Across groups | 1 | This is the mean (over the simulations) of the across groups effect size (the estimate across the groups of the difference between response on the study treatment and the historic control rate or the mean response on the control arm). |
 | Mean Trt Response: \<Group\> | One per group | This is the mean (over the simulations) of the mean estimate of response (change from baseline) for the study treatment in each group. |
-| Mean Trt Response: Across groups | 1 | This is the mean (over the simulations) of the across groups effect size (the estimate across the groups of the difference between response on the study treatment and the historic control rate or the mean response on the control arm). |
 | SD Control Resp: \<Group\> | One per group (if control treatment arm included) | These columns are -9999 if there are no control arms included in the design. This is the standard deviation (over the simulations) of the mean estimate of the response for the control arm in each group. |
 | SD Control Resp: Across groups | 1 (if control treatment arm included) | This column is -9999 if there are no control arms included in the design. This is the standard deviation (over the simulations) of the average of the mean estimates of response for all the control arms across the groups. |
+| SD Trt Effect: \<Group\> | One per group | This is the standard deviation (over the simulations) of the mean estimate of the treatment effect in each group. Note it is **not** based on the standard deviation estimated **in** the simulations, it is the SD observed **across** the simulation results. |
+| SD Trt Effect: Across groups | 1 | This is the standard deviation (over the simulations) of the estimate of the across groups effect size. |
 | SD Trt Resp: \<Group\> | One per group | This is the standard deviation (over the simulations) of the mean estimate of the response for the study treatment in each group across the simulations. Note it is **not** based on the standard deviation estimated **in** the simulations, it is the SD observed **across** the simulation results. |
-| SD Trt Resp: Across groups | 1 | This is the standard deviation (over the simulations) of the estimate of the across groups effect size. |
 | Mean Sigma | 1 | This is the mean (over the simulations) of the mean estimate for ‘sigma’ that is the common standard deviation of the distributions of the final endpoints for each treatment arm. |
 | SD Sigma | 1 | This is the standard deviation (across the simulations) of the mean estimates for sigma. |
 | Mean Overall Sigma | 1 | This is the mean (over the simulations) of the mean estimate for ‘the across groups sigma’ that is the common standard deviation of the distributions of the final endpoints for the pooled control subjects and pooled study treatment subjects. |
@@ -323,14 +325,16 @@ this engine.
 | SE Subj.                                    | 1                 | The standard error of the total number of subjects recruited into the trials. |
 | 80-ile                                      | 1                 | The 80th percentile, over the simulations, of the total number of subjects recruited in the trial. |
 | Mean Alloc \<Group\> <arm>                     | 2*G               | The mean number of subjects recruited into each arm in each group. If a control arm is not included the column is still present, with value ‘0’. |
-| Mean Trt Resp \<Group\>                       | G                 | The mean of the mean estimates of response on the study treatment arm in each group. |
+| Mean Trt Effect \<Group\>                     | G                 | The mean of the mean estimates of the treatment difference in each group. |
 | Mean Trt Effect (Overall)                   | 1                 | The mean of the mean estimate of the across groups treatment difference. |
-| SE Trt Resp \<Group\>                         | G                 | The standard error, over the simulations, of the mean estimate of response on the study treatment arm in each group. |
+| SE Trt Effect \<Group\>                       | G                 | The standard error, over the simulations, of the mean estimate of the treatment difference in each group. |
 | SE Trt Effect (Overall)                     | 1                 | The standard error, over the simulations, of the mean estimate of the across groups treatment difference. |
+| Mean Trt Resp \<Group\>                       | G                 | The mean of the mean estimates of response on the study treatment arm in each group. |
+| SE Trt Resp \<Group\>                         | G                 | The standard error, over the simulations, of the mean estimate of response on the study treatment arm in each group. |
 | Mean Control Resp \<Group\>                   | G                 | The mean of the mean estimates of response on the control arm in each group. |
 | Avg. Control Resp (Overall)                 | 1                 | The mean of the average of the control response across the groups |
 | SE Control Resp \<Group\>                     | G                 | The standard error, over the simulations, of the mean estimate of response rate on the control arm in each group. |
-| SE Avg. Control Effect (Overall)            | 1                 | The standard error, over the simulations, of the mean estimate of the across groups control response rate. |
+| SE Avg. Control Resp (Overall)              | 1                | The standard error, over the simulations, of the mean estimate of the across groups control response rate. |
 | Mean Sigma                                  | 1                 | The mean of the estimate of the standard deviation in the endpoint from the estimates of the response of the individual arms in each group. |
 | SE Sigma                                    | 1                 | The standard error of the estimate of the standard deviation in the endpoint from the estimates of the response of the individual arms in each group. |
 | Mean Overall Sigma                          | 1                 | The mean of the estimate of the standard deviation in the endpoint from the estimates of the treatment difference across the groups. |
@@ -437,16 +441,18 @@ criteria.
 | \#Week	 | 1 |  | ✔ | Week |
 | No. Subj |  | ✔ | ✔ | The number of subjects recruited in the simulation. |
 | Alloc \<group\> \<arm\> | 2 \* G | ✔ | ✔ | The number of subjects allocated to each arm in each group. |
-| Mean Trt Resp \<group\> | G | ✔ | ✔ | The estimated mean response of the study treatment in the group. |
+| Trt Effect \<group\> | G | ✔ | ✔ | The estimated mean treatment difference in the group. |
 | Trt Effect (Overall) | 1 | ✔ | ✔ | The estimated mean treatment difference across the groups. |
-| SD Mean Trt Resp \<group\> | G | ✔ | ✔ | The standard deviation of the estimate of the mean response of the study treatment in the group. |
+| SD Trt Effect \<group\> | G | ✔ | ✔ | The standard deviation of the estimate of the mean treatment difference in the group. |
 | SD Trt Effect (Overall) | 1 | ✔ | ✔ | The standard deviation of the estimate of the mean treatment difference across the groups. |
-| Mu Theta | 1 | ✔ | ✔ | The mean of the hierarchical distribution of the treatment differences over all the groups. |
-| Tau Theta | 1 | ✔ | ✔ | The standard deviation of the hierarchical distribution of the treatment differences over all the groups. |
+| Mean Trt Resp \<group\> | G | ✔ | ✔ | The estimated mean response of the study treatment in the group. |
+| SD Mean Trt Resp \<group\> | G | ✔ | ✔ | The standard deviation of the estimate of the mean response of the study treatment in the group. |
 | Mean Control Resp \<group\> | G | ✔ | ✔ | The estimated mean response of the control arm in each group. |
 | Avg. Control Resp (Overall) | 1 | ✔ | ✔ | The average overall mean response of the control arm over all the groups. (Note: this is not part of the response model, but estimated separately). |
 | SD Mean Control Resp \<group\> | G | ✔ | ✔ | The standard deviation of the estimate of the mean response of the control arm in each group. |
 | SD Avg. Control Resp (Overall) | 1 | ✔ | ✔ | The standard deviation of the estimate of the average response over all the control arms. |
+| Mu Theta | 1 | ✔ | ✔ | The mean of the hierarchical distribution of the treatment differences over all the groups. |
+| Tau Theta | 1 | ✔ | ✔ | The standard deviation of the hierarchical distribution of the treatment differences over all the groups. |
 | Mu Gamma | 1 | ✔ | ✔ | The mean of the hierarchical distribution of the responses on the control arms across all the groups. |
 | Tau Gamma | 1 | ✔ | ✔ | The standard deviation of the hierarchical distribution of the responses on the control arms across all the groups. |
 | Sigma | 1 | ✔ | ✔ | The estimate of the standard deviation of the final responses given the per-group response model. |

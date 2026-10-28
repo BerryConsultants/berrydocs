@@ -81,21 +81,88 @@ other properties that have to be simulated.
 
 Within each profile the user specifies:
 
-1.  The hazard ratio compared to control for each treatment arm (except
-    control itself, where of course the ratio is 1).
+1.  The time segments over which the hazard ratios are specified (see
+    [Hazard Ratio Time Segments](#hazard-ratio-time-segments) below).
+    By default there is a single segment covering the whole follow-up
+    period, so that the hazard ratio of each arm is constant over time
+    (proportional hazards).
 
-2.  A check box that allows the user to specify whether a specific arm
+2.  The hazard ratio compared to control for each treatment arm in each
+    time segment (except control itself, where of course the ratio is
+    always 1).
+
+3.  A check box that allows the user to specify whether a specific arm
     "should succeed" in that scenario: so that FACTS can report on the
     proportion of simulations that were successful **and** a 'good'
     treatment arm selected.
 
-On the graph the different hazard ratios for the profile are plotted,
-along with the 'target' -- this is the default CSHRD or NIHRD offset
-from the QOI tab, the direction of the offset is dependent on whether
-events are 'good' or 'bad' and whether the aim of the trial is to show
-superiority on non-inferiority.
-
 ![Specify the hazard ratio per dose](../coreUGattachments/tte/media/image19.png){#fig-ttehr}
+
+#### Hazard Ratio Time Segments
+
+To simulate non-proportional hazards, where the treatment effect
+changes over the course of a subject's follow-up (for example a
+treatment whose effect is delayed, or wanes over time), the follow-up
+time can be divided into different time segments and a different hazard
+ratio specified for each treatment arm in each segment.
+
+As for the control hazard rates, segment boundaries are entered in
+weeks. To add a segment, enter the time at which the new segment
+starts in the "Segment breakpoint" box (it must be greater than 0) and
+click "Add". The first segment always starts at week 0 and the last
+segment extends indefinitely. To delete a segment, select it in the list
+of segments and click the "Delete Row" button (the first segment, which
+starts at week 0, cannot be deleted).
+
+The table of hazard ratios has one row per treatment arm and one column
+per segment, the column headers showing the start and end of each
+segment in weeks (e.g. "Segment 0 - 12 Haz Ratio" and "Segment 12 - ∞
+Haz Ratio"). The hazard ratio of the control arm is 1 in every segment.
+
+The time segments used for the hazard ratios are independent of the
+time segments used to specify the control hazard rates: they may differ
+in number and in their breakpoints. When simulating a subject's time to
+event, FACTS combines the two sets of segments, so that at any time
+since the subject's randomization the simulated hazard rate on a
+treatment arm is the control hazard rate for the segment containing that
+time multiplied by the arm's hazard ratio for the segment containing
+that time.
+
+When reporting the 'true' hazard ratio of each arm (for example in the
+"True Mean resp" columns of the simulation output files), FACTS uses
+the mean of the arm's segment hazard ratios, each segment weighted by
+the proportion of the maximum follow-up period that it covers (any part
+of a segment beyond the end of follow-up carries no weight). With a
+single segment this is simply the hazard ratio of that segment.
+
+Designs created in versions of FACTS prior to 8.2 are loaded with a
+single segment containing the hazard ratios previously specified, and
+are simulated as before.
+
+Per-segment hazard ratios are available when there is no predictor, and
+when the predictor is simulated using the "Explicitly Defined (Predictor
+\| Event Rate)" method. When the "Explicitly Defined (Event Rate \|
+Predictor)" method is used, a single hazard ratio is specified for each
+arm, as described in [Specifying VSR with a
+predictor](#specifying-vsr-with-a-predictor).
+
+#### Graphs
+
+The graph at the bottom of the tab can show:
+
+-   "Hazard Ratio": the hazard ratio of each arm over time, with a step
+    at each segment breakpoint (the graph is titled "Hazard Ratios per
+    Time Segment").
+
+-   "Cumulative Pr(Event)": the cumulative probability of having an event
+    over time on each arm.
+
+-   "Cumulative Pr(1-Event)": the cumulative probability of not having an
+    event over time on each arm.
+
+The two cumulative probability graphs combine the hazard ratios with a
+control hazard rate profile, which is selected using the "Rate Profile"
+drop-down to the right of the graph.
 
 ### Loading Scenario Control Hazard Rates and Scenario Hazard Ratios from file
 
@@ -133,7 +200,8 @@ hazard rates over time.
 ![Load a scenario's treatment hazard ratios from an external file.](../coreUGattachments/tte/media/image21.png){#fig-exttrthr}
 
 After selecting the ".mvsr" file the graph shows the different
-individual hazard ratios for each dose.
+individual hazard ratios for each dose, in each hazard ratio time
+segment.
 
 The VSR parameters are provided in two separate files, (the number of
 lines in the files should be the same for the two files). The formats
@@ -144,10 +212,31 @@ are:
     each of the S segments. (Note: FACTS will treat the hazard rate as
     per week).:
 
--   Hazard Ratio File: Each line should contain columns \[HR~1~, HR~2~,
-    ... , HR~D~\] giving the true Mean Hazard Ratios for each of the D
-    dose arms. (Note: HR~1~ = 1 by definition, but the column of 1's to
-    be included here for completeness.)
+-   Hazard Ratio File: Each line should contain D x N columns giving the
+    true hazard ratio of each of the D dose arms in each of the N
+    [hazard ratio time segments](#hazard-ratio-time-segments) defined
+    on the Dose Response tab, listed arm by arm: \[HR~1,1~, ... , HR~1,N~,
+    HR~2,1~, ... , HR~2,N~, ... , HR~D,1~, ... , HR~D,N~\], where
+    HR~d,s~ is the hazard ratio of arm d in segment s. (Note: HR~1,s~ =
+    1 by definition, but the columns of 1's for the control arm are to
+    be included here for completeness.) When a single hazard ratio
+    segment is defined (N = 1), each line simply contains the D hazard
+    ratios \[HR~1~, HR~2~, ... , HR~D~\], as in versions of FACTS prior
+    to 8.2.
+
+For example, the following hazard ratio file has 2 lines for a design
+with a control arm and 2 treatment arms, with two hazard ratio time
+segments:
+
+```
+# Control Seg 1, Control Seg 2, Dose 1 Seg 1, Dose 1 Seg 2, Dose 2 Seg 1, Dose 2 Seg 2
+1.0,1.0,0.85,0.84,0.70,0.69
+1.0,1.0,0.75,0.74,0.60,0.59
+```
+
+Lines starting with a '#' are ignored. FACTS checks that each line
+contains the expected number of hazard ratios (number of arms times
+number of segments), and that all the hazard ratios are greater than 0.
 
 The use of MVSR files has not been extended to the case where a
 predictor is being used.

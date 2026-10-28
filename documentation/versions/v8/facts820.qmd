@@ -7,3 +7,59 @@ format:
     toc-depth: 3
     toc-title: "Table of Contents"
 ---
+
+# Introduction
+
+FACTS 8.2.0 is now available for download via [FACTS Cloud](https://factscloud-live.azurewebsites.net/). Its main new features are:
+
+- Design reports are now generated natively by FACTS as Word documents, removing the need for an R installation.
+- Non-proportional hazards in time-to-event designs: treatment hazard ratios can now be specified per time segment in the virtual subject response.
+- A new "Copy" button to duplicate any existing profile.
+- Significant improvements to the stability, memory usage and responsiveness of FACTS when opening, editing and closing designs.
+
+# Design Report
+
+- The design report is now generated natively by FACTS and no longer requires R, RStudio, R packages or pandoc to be installed and configured. The report is written directly as a Microsoft Word document, with all equations rendered as native (editable) Word equations, and is generated within seconds without opening a command prompt. The R-based report generator, its "ReportGenerator" installation folder and the FACTS command line "-rpath" option have been removed. (The R configuration in Settings > Options is still used by the "Open in R" functionality.)
+- Design reports remain available for the same design types as before: Phase 2 and Phase 3 designs (continuous, dichotomous, ordinal, time-to-event and multiple endpoints), Enrichment designs (continuous, dichotomous and time-to-event), Platform Trial designs (continuous and dichotomous) and N-CRM designs.
+- Design reports can now also be generated when running FACTS from the command line on Linux (FLFLL), using the new "-report" flag in combination with "-endToEndRun".
+- The design report now describes time-to-event virtual subject response profiles using hazard ratios per time segment, and summarises profiles loaded from external scenario files per arm and per segment.
+- In Enrichment designs, the per-group success criteria operating characteristics section is now included for all endpoints (previously only for continuous endpoints).
+- Profile names in the scenario summary tables (Operating Characteristics, Trial Outcomes, Computational Details) are now given wider columns to improve readability.
+- In the Platform Trial design report, dropout rates are now displayed correctly for designs with multiple visits.
+
+# Phase 2 and Phase 3 Quick Start Improvements
+
+- In Group Sequential Quick Starts, the spending function parameter inputs and labels are now shown or hidden correctly when changing the alpha and beta spending functions.
+
+# Phase 2 and Phase 3 Trial Type Improvements
+
+- In time-to-event designs, users can now simulate non-proportional hazards: on the Virtual Subject Response > Dose Response tab, the follow-up period can be split into hazard ratio segments (by adding segment breakpoints) and a separate hazard ratio specified for each treatment arm in each segment. A new "Hazard Ratios per Time Segment" graph displays the specified hazard ratios over time. The mean hazard ratio of each arm (each segment weighted by the proportion of the follow-up period it covers) is used for the "true" hazard ratio reported in the output files. Existing designs are migrated to a single segment and simulate as before. Per-segment hazard ratios are available when there is no predictor, or when the predictor is simulated using the "Predictor | Event Rate" method.
+- In time-to-event designs, the external ".mvsr" hazard ratio file now contains a hazard ratio per arm per segment on each line (all segments of the first arm, followed by all segments of the second arm, and so on). Files with a single segment use the same format as before.
+- In time-to-event designs using Bayesian Augmented Control (hierarchical borrowing from historical studies) for the control or active comparator arm, the prior on the hierarchical mean is now evaluated with the correct standard deviation (previously the variance was used in its place). [IMPACTS OLDER DESIGNS]
+- In time-to-event designs with a predictor, the prior "beta" parameters of the predictor model are now used correctly by the engine: the Gamma prior on the conditional hazard rates for time-to-event and dichotomous predictors, and the Inverse Gamma prior on the variance for continuous predictors. [IMPACTS OLDER DESIGNS]
+- In continuous, dichotomous and ordinal designs using p-value QOIs, p-values are now calculated correctly when the residual variance is (close to) zero or the frequentist model has no residual degrees of freedom (e.g. very few subjects remaining on an arm). Previously the p-value was erroneously reported as 1 in these cases. When the model has no residual degrees of freedom, the other frequentist statistics (effect estimates, test statistics and confidence intervals) are now reported as missing. [IMPACTS OLDER DESIGNS]
+- In Multiple Endpoint designs, the validation of the endpoint index column of external subject data files has been improved.
+- In Multiple Endpoint designs, the "Across Scenario" graphs (including the Receiver Operating Characteristics graph) can now be opened when the first scenario in the list has not been simulated.
+- In Staged time-to-event designs, simulating a single trial will no longer result in the engine crashing when the stage 2 event budget is exhausted ("Pr(Succ. Stage 2 Future)" QOI) or when stage 2 is not run.
+- In Staged time-to-event designs with a predictor, the direction of the predictor (whether high values are good) is now passed to the engine correctly.
+- In Staged designs, the "Interim vs Final Scatter Plot" and the Multiple Endpoint "Response/Utility" across scenario graphs will now display correctly when one or more scenarios have not been simulated. In Staged Multiple Endpoint designs, the outcome shown in the "Interim vs Final Scatter Plot" is now read from the final interim of each simulation.
+- When converting a Core time-to-event design with a predictor to a Staged design, the predictor model priors (Beta-Binomial priors, the single prior for the "no model" option and the hierarchical model priors) are now carried over correctly instead of being reset to their defaults.
+
+# Enrichment and Basket Trial Type Improvements
+
+- In Enrichment designs with continuous endpoints, the simulations and weeks output files now report the estimated treatment effect in each group ("Trt Effect \<group\>", "SD Trt Effect \<group\>") alongside the overall treatment effect across groups. These columns now come first, followed by the per-group mean treatment responses; the "Mu Theta" and "Tau Theta" columns have moved after the control arm columns. The summary file gains the corresponding "Mean Trt Effect \<group\>" and "SE Trt Effect \<group\>" columns ahead of the per-group "Mean Trt Resp" and "SE Trt Resp" columns, and the simulation results tables in FACTS display the per-group treatment effects. Results simulated with earlier versions of FACTS can still be loaded. Note that scripts reading these output files by column position will need to be updated.
+- In Enrichment designs with time-to-event endpoints, the per-group columns of the simulations and weeks output files have been renamed "Mean Trt Effect (HR) \<group\>" and "SD Trt Effect (HR) \<group\>" (previously "Mean Trt Resp (HR) \<group\>" and "SD Mean Trt Resp \<group\>"), and the corresponding summary file columns have been renamed "Mean Trt Effect (HR) \<group\>" and "SE Trt Effect (HR) \<group\>" (previously "Mean Trt Resp \<group\>" and "SE Trt Resp \<group\>"). Only the column names have changed.
+
+# General Improvements
+
+- Profiles (e.g. virtual subject response, accrual and dropout profiles) can now be duplicated using the new "Copy" button next to the "Add" and "Delete" buttons.
+- FACTS no longer leaks memory and Windows handles when opening and closing designs. Previously, opening and closing many designs in the same FACTS session could eventually cause FACTS to crash with "Error creating window handle" or to close without warning.
+- Editing profiles and parameters in large designs, as well as opening designs, is now noticeably faster thanks to performance improvements in how FACTS tracks dependencies between parameters.
+- Fixed a rare crash that could occur when closing time-to-event designs.
+- All dialogs used to select design files (e.g. external files, subject data files, accrual regions) now open in the folder containing the .facts file.
+- Cancelling simulations now reliably stops all running engine processes.
+- Simulation results aggregated across simulations (e.g. weeks and patients files) now always list the simulations in simulation order, on all platforms.
+- When re-opening a design whose simulations were submitted to a grid, the simulation progress, the status of each scenario and the display of results graphs are now handled correctly.
+- If crash/analytics data sharing is enabled (Settings > Options > Analytics), the shared data is now sent to Microsoft Azure Application Insights. Machine and user names are only sent as one-way hashes.
+
+Please [contact us](../../../contact/index.qmd) regarding any questions.
