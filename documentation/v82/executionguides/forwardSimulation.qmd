@@ -1,0 +1,210 @@
+---
+title: "FACTS Forward Simulation"
+subtitle: "Execution Guide"
+title-block-banner: '#125740'
+title-block-banner-color: white
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-title: "Table of Contents"
+    number-sections: true
+    number-depth: 4
+---
+
+#  Introduction
+
+This document describes the detailed functionality for running forward simulations using FACTS^TM^ (Fixed and Adaptive Clinical Trial Simulator) via the command line execution of the FACTS engines (we refer to this as Forward Simulation Mode). It describes the functionality for all four of the FACTS Core engines that have forward simulation mode.
+
+The design engines are simple command line programs that require no complex installation. They are supplied in a 'Zip' archive from which they should be extracted to an easy to locate directory.
+
+For example:
+
+``` text
+C:\Program Files\BerryConsultants\FACTS 7.1.0\bin
+```
+
+This places them in a subdirectory ('Bin') in the standard FACTS install directory.
+
+The following files are available:
+
+- aipf_contin.exe - the Enrichment Design engine for a continuous endpoint (not used here)
+
+- aipf_dichot.exe the Enrichment Design engine for a dichotomous endpoint (not used here)
+
+- aipf_tte.exe the Enrichment Design engine for a time-to-event endpoint (not used here)
+
+- contin.exe the FACTS Core engine for a continuous endpoint
+
+- bCRM.exe the Dose Escalation engine (not used here)
+
+- dichot.exe the FACTS Core engine for a dichotomous endpoint
+
+- multep.exe the FACTS Core engine for a multiple endpoints
+
+- tte.exe the FACTS Core engine for a time-to-event endpoint
+
+To run the engines, open a command prompt window. Navigate to the directory where the various input files for the run are located and enter the command, for example:
+
+``` text
+C:\Program Files (x86)\BerryConsultants\FACTS 7.1.0\Bin\contin.exe p n 100 –-current-week 25 –-interim 2
+```
+
+For this example, three files are required:
+
+1.  a copy of the nuk1_e.param file from a simulation results directory of the FACTS design to be used; and
+
+2.  a patients data file (the formats of the patients data files are given below).
+
+3.  a 'forward simulation parameter file' so the simulation knows the 'current time' in the trial and which arms (if any) have been dropped and when
+
+The engine will output the requested number of Sim Forward patients files (100 in the example above)..
+
+The Enrichment Design and Dose Escalation engines do not include a forward simulation capability.
+
+# Forward Simulation Mode Usage for FACTS Core Engines
+
+## Input
+
+The execution mode can be invoked from the command line by running the engine executable program with the appropriate option flags. The user will also have to provide a dataset with data on subjects enrolled in the trial at the time the analysis is required, and a parameter file describing the trial design, a short data file fsim.param describing the state of the trial and some additional inputs via command line options. The required input files and command-line options are as follows.
+
+## The trial specification ('param') file
+
+The trial specification parameters should be provided in a file named nuk1_e.param (C/ME), bin1_e.param (D) or tte1_e.param (TTE) in the directory in which the executable is run (or some other file name may be specified with the 'f' option). This is the file produced by the GUI in the design/simulation phase of the trial.
+
+## The Forward Simulation ('fsim') parameter file
+
+The forward simulation specification parameters should be provided in a file named contin_fsim.param, dichot_fsim.param, me_fsim.param or tte_fsim.param in the directory in which the executable is run (or some other file name may be specified with the \--fsimparam option). The parameters to be provided are:
+
+- **fsim_start_week** : The time (in weeks) when the data were recorded and from when the forward simulation should begin
+
+- **arm_dropped** (Optional) : A comma separated list of 0/1 of length = number of dose arms, that provide an indicator of whether a particular arm has already been dropped at the present time.
+
+- **arm_drop_week** (Optional if **arm_dropped** is not specified) : The arm drop times in weeks corresponding to the 1's in arm_dropped (the drop times for arms that have not been dropped should be set to -9999).
+
+Lines beginning with a '#' and are skipped. The parameters **arm_dropped/arm_drop_week** may be omitted if there is no arm dropping in the study or if no arms have been dropped to date (the engine will issue a warning which may be ignored). A sample file might look like this:
+
+``` text
+#======================================
+fsim_start_week=17.43
+# 4arm study where arm #2 has been dropped
+arm_dropped=0,1,0,0
+arm_drop_week=-9999,12.14,-9999,-9999
+#======================================
+```
+
+Note that "fsim_start_week" and "--current-week" will usually have the same or similar values -- the former is the time from which further recruitment occurs and the latter the time of the current data. It must be supplied in addition to fsim_start_week.
+
+## Patient Data File
+
+This format is identical to that of the patientsNNNNN.csv output files from simulation mode. Note that all columns should be present even if not used (e.g. baseline) in the particular design. It is recommended you supply the value -9999 in unused columns, this makes it clear to someone subsequently using the file that this is intended as an unused data column -- the exception to this is the region id, here just supply the value "1".
+
+- The subject data in a file named patients.dat should be provided in the directory in which the executable is run (or some other file name may be specified with the \--fsimdata option).
+
+- It is a text file with comma separated fields. Empty lines and lines beginning with '#' will be ignored.
+
+- Each subject's data appears on a single line with comma separated values. For continuous and dichotomous these are:
+
+  - Subject ID: An integer value that is not used other than to identify a subject's data records.
+
+  - Region ID: The subject's region ID (1...R).
+
+  - Enrollment Date: A non-negative number of days.
+
+  - Dose Index: Subject's dose arm (1\...D)
+
+  - Last Visit #: Last observed visit. Zero to number of visits.
+
+  - Dropout indicator: 1=dropped out, 0 otherwise
+
+  - Baseline: Not used if no baseline (supply -9999)
+
+> For each scheduled visit:
+
+- Response at visit. Ignored if after Last Visit \# (supply -9999). For dichotomous endpoints these are 0 or 1 (or -1 if restricted Markov). Note that in C/ME if the analysis is to be conducted on change from baseline and baseline is present, the Response column is expected to contain the original response and not difference from baseline.
+
+<!-- -->
+
+- The multiple endpoint format is identical except that columns are needed for each endpoint:
+
+  - Subject ID
+
+  - Region ID
+
+  - Enrollment Date
+
+  - Dose Index
+
+  - Last Visit #: Zero to number of overall visits.
+
+  - Dropout indicator
+
+> Then for each endpoint:
+
+- Last visit observed for the endpoint: 0 to the number of visits used for the endpoint.
+
+- Baseline: Not used if no baseline (supply -9999)
+
+> For each visit used by the endpoint:
+
+- Response
+
+<!-- -->
+
+- The time to event format is simpler in that there are no visits, but there are predictor columns:
+
+  - Subject ID
+
+  - Region ID
+
+  - Enrollment Date:
+
+  - Dose:
+
+  - Dropout indicator: 1=dropped out, 0 otherwise
+
+  - Duration: Duration until censoring (outcome=0) or time of event (outcome=1)
+
+  - Outcome: 0=censored, 1=event observed, -1=event not yet observed/not yet censored (this will cause forward simulation to simulate the remainder of the subject's observation time).
+
+  - Predictor value: A continuous value for a continuous predictor. 0 or 1 for a dichotomous predictor. For either a continuous or dichotomous predictor, supply -9999 if not yet observed or censored by the primary endpoint. As per Duration for a time to event predictor. Unused if there is no predictor (supply -9999).
+
+  - Pred Outcome: 1 if the predictor value/event has been observed. 0 if censored (the subject dropped out before the predictor value was observed, or censored by the primary endpoint if either a continuous or dichotomous predictor). -1 if the predictor value/event not yet observed/not yet censored. Unused if there is no predictor (supply -9999).
+
+The subject data provided must be compatible with the trial setup specified in the 'param' file.
+
+Where fields are unused, a numeric value still needs to be supplied but the exact value supplied is immaterial (though It is recommended that the value supplied is an integer).
+
+## Forward Simulation Mode
+
+The engine executables can be run with the following command line parameters:
+
+- **p** : Required. Invokes forward simulation mode
+
+- **n \<NNN\>** : Specifies how many trials to simulate forward. NNN patients files will be produced at the end of the run giving dose and region allocation for the existing and simulated subjects. (Default is NNN=5)
+
+- **f \<paramfilename\>** : Specify the 'param' file. Default is nuk1_e.param (C/ME), bin1_e.param (D), or tte1_e.param (TTE).
+
+- **\--interim \<I\>** : Where I is the interim number, an integer number should be supplied, there is no check that the value supplied is an integer, and the design engine behaviour is undefined if that is not the case.
+
+- **\--current-week \<W\>** : Where \<W\> is the current time in weeks (this parameter is required and should be correct with respect to the data submitted; if the specified date and the data supplied are not in alignment, the design engine's behaviour is undefined).
+
+- **\--fsimparam \<forwardsimspecsfilename\>** : Default is contin_fsim.param (C), dichot_fsim.param (D), me_fsim.param (ME), or tte_fsim.param (TTE).
+
+- **\--fsimdata \<subjectdatafilename\>** : Default is patients.dat
+
+- **\--noadapt :** If this is specified, then adaptive features of the trial are turned off in the forward simulation.
+
+## Output Files
+
+- **patientsNNNNN**.csv, the complete subjects data for each of the forward simulations (i.e including the input subjects plus the simulated forward data. The format of the file is the same as the standard patientsNNNNN.csv FACTS outputs when simulating from scratch.
+
+## Forward Simulation Implementation note
+
+In order to create a complete internal history of the current trial, the forward sim engine always performs an interim analysis using the data supplied invoke it and the time of the analysis is taken from the "--current-week" parameter. FACTS then proceeds to do the forward simulation according to the interim schedule from fsim_start_week onwards. The engine does not have detailed history of the trial conduct until the current time so it needs to do an interim right away to internally generate things like blocks and randomization probs., etc. It would be almost impossible to recreate the exact history of the trial internally. Hence, the ideal usage pattern is to invoke the forward simulation engine right at the time of an interim analysis. There are several implications of this:
+
+- Any of the decisions (trial stopping, arm dropping, etc.) that could be taken at an interim can be triggered at this initial interim. In particular there may be no simulation forward because the decision is to stop the trial straight away.
+
+- Since detailed history of the blocking used in the randomization lists up to the current time is not known to the engine, a fresh set of blocks is always generated following the first interim.
+
+Forward simulation has been implemented to provide estimates of likely recruitment, not a prediction of the outcome of the trial. The forward simulation is based on the simulation profiles of the user specified dose response, longitudinal response, accrual rate and dropout rates in the parameter file, not on estimates based on what has been observed so far.

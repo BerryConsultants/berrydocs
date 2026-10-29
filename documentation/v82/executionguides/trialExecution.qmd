@@ -1,0 +1,618 @@
+---
+title: "FACTS Trial Execution"
+subtitle: "Execution Guide"
+title-block-banner: '#125740'
+title-block-banner-color: white
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-title: "Table of Contents"
+    number-sections: true
+    number-depth: 4
+---
+
+#  Introduction
+
+This document describes the detailed functionality for running interim analyses designs simulated using FACTS^TM^ (Fixed and Adaptive Clinical Trial Simulator) via the command line execution of the FACTS engines (we refer to this as the Trial Execution Mode). It describes the functionality for all four of the FACTS CorePlatform Trial engines and all for three Enrichment Design (ED) engines
+
+The "Analysis" tab on the FACTS Graphical User Interface (GUI) provides a convenient graphical interface for invoking the trial execution directly from the GUI rather than from the command line. So this document also serves as a guide for using the "Analysis" tab in the GUI.
+
+The design engines are simple command line programs that require no complex installation. They are supplied in a 'Zip' archive from which they should be extracted to an easy to locate directory.
+
+For example:
+
+``` text
+C:\Program Files\BerryConsultants\FACTS 7.1.0\bin
+```
+
+This places them in a subdirectory (bBin') in the standard FACTS install directory.
+
+The following files are available (Note: the Enrichment Design (ED) engines were previously known as Adaptive Indication and Population Finder -- hence the prefix "aipf\_" on the executable files").:
+
+- aipf_contin.exe - the ED engine for a continuous endpoint
+
+- aipf_dichot.exe the ED engine for a dichotomous endpoint
+
+- aipf_tte.exe the ED engine for a time-to-event endpoint
+
+- contin.exe the Core engine for a continuous endpoint
+
+- bCRM.exe the Dose Escalation engine (not used here)
+
+- combiF.exe the 2D Dose Escalation engine (not used here)
+
+- dichot.exe the Core engine for a dichotomous endpoint
+
+- multep.exe the Core engine for a multiple endpoints
+
+- pt_contin.exe the Plaftorm Trial engine for a continuous endpoint (not used here)
+
+- pt_dichot.exe the Platform Trial engine for a dichotomous endpoint (not used here)
+
+- tte.exe the Core engine for a time-to-event endpoint
+
+To run the engines, open a command prompt window. Navigate to the directory where the various input files for the run are located and enter the command, for example:
+
+``` text
+C:\Program Files\BerryConsultants\FACTS 7.1.0\bin\contin.exe r n 10 > recommend_out.txt
+```
+
+For this example, two files are required:
+
+1.  a copy of the nuk1_e.param file from a simulation results directory of the FACTS design to be used; and
+
+2.  a patients data file (the formats of the patients data files are given below.
+
+The engine will output a "weeks" file with the same columns as provided in simulations, giving the results of the analysis along with a results file and the requested number of randomisations (10 in the above example).
+
+## Changes to Trial Execution mode in FACTS 6.2
+
+Execution updates for FACTS 6.2 only affect the Core and Staged Design engines. The details are in the FACTS Core and FACTS Staged Design sections below. Briefly the changes are:
+
+1.  The executable write on standard output a summary of the data that has been read in, to help check that FACTS has read the supplied data as intended and that there hasn't been a data formatting problem.
+
+2.  Previously the engines were poor at coping with missing data entries -- as none occur in simulation mode (where of course trial execution is perfect). FACTS Core and Staged Design are now better at coping with missing data.
+
+# Execution Mode Usage for Core Engines
+
+## Input
+
+The execution mode can be invoked from the command line by running the engine executable program with the appropriate option flags. The user will also have to provide a dataset with data on subjects enrolled in the trial at the time the analysis is required, and a parameter file describing the trial design and some additional inputs via command line options. The required input files and command-line options are as follows.
+
+## The trial specification ('param') file
+
+The trial specification parameters should be provided in a file named nuk1_e.param (C/ME), bin1_e.param (D) or tte1_e.param (TTE) in the directory in which the executable is run (or some other file name may be specified with the 'f' option). This is the file produced by the GUI in the design/simulation phase of the trial.
+
+## Patient Data File
+
+This format has changed from that in earlier versions of FACTS and is now identical to that of the patientsNNNNN.csv output files. Note that all columns should be present even if not used (e.g. baseline) in the particular design. It is recommended you supply the value -9999 in unused columns, this makes it clear to someone subsequently using the file that this is intended as an unused data column -- the exception to this is the region id, here just supply the value "1".
+
+- The subject data in a file named patients.dat should be provided in the directory in which the executable is run (or some other file name may be specified with the \--execdata option).
+
+- It is a text file with comma separated fields. Empty lines and lines beginning with '#' will be ignored.
+
+- Each subject's data now appears on a single line with comma separated values. For continuous and dichotomous these are:
+
+  - Subject ID: An integer value that is not used other than to identify a subject's data records.
+
+  - Region ID: The subject's region ID (1...R). Unused in trial execution mode -- just supply the value "1".
+
+  - Enrollment Date: A non-negative number of days.
+
+  - Dose Index: Subject's dose arm (1\...D)
+
+  - Last Visit #: Last observed visit. Zero to number of visits.
+
+  - Dropout indicator: 1=dropped out, 0 otherwise
+
+  - Baseline: Not used if no baseline (supply -9999)
+
+> For each scheduled visit:
+
+- Response at visit. Ignored if after Last Visit \# (supply -9999). For dichotomous endpoints these are 0 or 1 (or -1 if restricted Markov). Note that in C/ME if the analysis is to be conducted on change from baseline and baseline is present, the Response column is expected to contain the original response and not difference from baseline.
+
+<!-- -->
+
+- The multiple endpoint format is identical except that columns are needed for each endpoint:
+
+  - Subject ID
+
+  - Region ID
+
+  - Enrollment Date
+
+  - Dose Index
+
+  - Last Visit #: Zero to number of overall visits.
+
+  - Dropout indicator
+
+> Then for each endpoint:
+
+- Last visit observed for the endpoint: 0 to the number of visits used for the endpoint.
+
+- Baseline: Not used if no baseline (supply -9999)
+
+> For each visit used by the endpoint:
+
+- Response
+
+<!-- -->
+
+- The time to event format is simpler in that there are no visits, but there are predictor columns:
+
+  - Subject ID
+
+  - Region ID
+
+  - Enrollment Date:
+
+  - Dose:
+
+  - Dropout indicator: 1=dropped out, 0 otherwise
+
+  - Duration: Duration until last observation (outcome=0) or time of event (outcome=1)
+
+  - Outcome: 0=no event observed, 1=event observed
+
+  - Predictor value: For a dichotomous predictor 0 or 1. For a time to event predictor, as for duration. Unused if there is no predictor (supply -9999).
+
+  - Pred Outcome: 1 if the predictor value/event has been observed. If the subject dropped out before the predictor value was recorded or if they are still being followed up but predictor is not yet available, then set PredictorOutcome= 0. Unused if there is no predictor (supply -9999).
+
+The subject data provided must be compatible with the trial setup specified in the 'param' file.
+
+Where fields are unused, a numeric value still needs to be supplied but the exact value supplied is immaterial (though It is recommended that the value supplied is an integer).
+
+Previous versions of FACTS execution engines could not handle missing values prior to the final observed visit, and user imputation was required. As of version 6.2, this issue has been remedied. A patient's last visit (as specified by the last visit column) must be a valid value. However, visits prior to the last visit may be missing with the following exceptions: the dichotomous stable-state model must have all non-missing values up to the last visit, and the baseline value for a continuous endpoint must be non-missing if the endpoint is specified as change from baseline or if the baseline-adjusted model is used.
+
+The default code of "-9999" is still expected for missing values, though any character string that cannot be interpreted as a number (except #) will be interpreted as missing.
+
+## Program Invocation
+
+The engine executables can be run with the following command line parameters:
+
+- **r** : Required. Invokes the execution mode
+
+- **n** \<NNN\> : Specifies how many new subjects we need treatment arm allocations for. (This is only relevant when adaptive randomization is applicable; ignored otherwise).
+
+- **f** \<param-filename\> : Specify the 'param' file. Default is nuk1_e.param (C/ME), bin1_e.param (D) or tte1_e.param (TTE).
+
+- **\--execdata** \<subject-data-filename\> : Default is patients.dat
+
+- **\--interim \<I\>** : where I is the interim number, an integer number should be supplied, there is no check that the value supplied is an integer, and the design engine behaviour is undefined if that is not the case.
+
+- **\--current-week \<W\>** : where \<W\> is the current time in weeks (this parameter is required and should be correct with respect to the data submitted; if the specified date and the data supplied are not in alignment, the design engine's behaviour is undefined).
+
+- **\--seed \<**N\> : If this is specified, then N will be used as the random number generator (RNG) seed for this interim/final analysis. Otherwise, the seeds specified in the param file will be used.
+
+<!-- -->
+
+- **\--final** : If this flag is specified, then a 'final' analysis and evaluation is performed (as opposed to interim evaluations of stopping criteria, etc. Takes precedence over \--interim). Note that if neither an --interim or --final flag is suppled, then a final analysis is performed.
+
+- **\--armsdropped** \<B,B,B,B,B\> : This needs to specified for interim analyses in arm-dropping settings or forced arm selection settings where some arms have been dropped at earlier interims (the engine needs to be told about this since it has no way of remembering previous states). For example if you have a trial with 6 arms, and arms 2 and 3 were dropped on a previous interim (or similarly in a forced arm selection setting if you retain arms 1,4,5,6), then you would specify this as "\--armsdropped 0,1,1,0,0,0" (no spaces in the comma-separated argument string). If this is omitted in an arm-dropping trial, then it is assumed that no arms have already been dropped at the time of invocation. Note that this specification has to be compatible with the param file specified.
+
+- **\--o** \<output-directory\> : Specify the output directory to place all output files generated from the engine run.
+
+## Output Files
+
+- **weeks00000.csv** : The analysis is reported in a 'weeks' file format. \[With the understanding that the weeks file structure is retained for familiarity, although some of the columns such as time-related ones (e.g. arm drop time, interim analysis time) will be meaningless since the engine does not track time or past events.\]
+
+- **results.txt** : A simple text file that reports a high level summary of the analysis. It states whether: (1) the accrual has stopped because the max subjects/events was reached, or implied since the engine was invoked for the final analysis; and (2) whether the current analysis satisfied the success/failure criterion.
+
+- **alloc.txt** : A text file with a single columns listing the treatment allocations for the next N subjects. This is only output when requested in cases when the trial has not stopped accrual, and only for trials with probabilistic adaptive allocation.
+
+- **Standard out**: not actually a file of course, unless you pipe the output into one. The output is a duplicate of execdatasummary.csv (see below).
+
+- **execdatasummary.csv**: This is a comma separated text file. For every data column expected for input, the feedback consists of a summary of the column along with a summary of the column broken out by treatment arm. For continuous-valued inputs, the number of records, minimum, median, mean, maximum, standard deviation, and number of missing values is given. For dichotomous or categorical variables, the table of counts is given, including the number of missing values. For the special case of dichotomized continuous variables, a summary is given for both the continuous and dichotomous version of the variables.
+
+> Note that not all columns in the execdatasummary.csv file are computed for each row -- only the quantities that are deemed relevant. For example, minimum, median, etc. are not computed for number of records nor for dichotomous values, whereas ntrue and nfalse is computed only for dichotomous values. Up to 100 unique values and their frequency are printed for categorical or numerical variables, which is likely comprehensive for categorical variables but not truly continuous variables. If more than 100 unique values are present, only the first 100 observed in the file are printed, as the intent is just a check on inputs, not a comprehensive summary.
+
+# Execution Mode Usage for Staged Design Engines
+
+## Input
+
+The execution mode can be invoked from the command line by running the engine executable program with the appropriate option flags. The user will also have to provide a dataset with data on subjects enrolled in the trial at the time the analysis is required, and a parameter file describing the trial design and some additional inputs via command line options. The required input files and command-line options are as follows. The Staged Design execution mode usage is largely similar to the Core Designs, except for a few stage-specific inputs and options.
+
+## The trial specification ('param') file
+
+### Stage 1
+
+The trial specification parameters should be provided in a file named nuk1_e.param (C/ME), bin1_e.param (D) or tte1_e.param (TTE) in the directory in which the executable is run (or some other file name may be specified with the 'f' option). This is the file produced by the GUI in the design/simulation phase of the trial.
+
+### Stage 2
+
+The trial specification parameters should be provided in a file named nuk2_e.param (C/ME), bin2_e.param (D) or tte2_e.param (TTE) in the directory in which the executable is run (or some other file name may be specified with the 'f' option). This is the file produced by the GUI in the design/simulation phase of the trial.
+
+In addition to the trial specification parameters, the analysis engine needs some additional parameters that provide information on some Stage 1 outcomes and data summaries. This information should be provided in a file with a similar structure to the '\*.param' files mentioned above. The file name is s2_aux.param by default (but can be specified using the "**---s2-aux-paramfile"** option on the command line option). One such sample parameter file for TTE Staged Designs is given below to illustrate the format.
+
+In the second stage of Staged Design, because of the relative complexity, in some circumstances, of determining whether minimum information requirements have been met, FACTS in TE mode used for the second stage of a Staged Design does not check if minimum information requirements have been met and hence it does not write out a "results.txt" file. The user must check themselves in the weeks00000.csv file if the decision conditions have been met and if the minimum information conditions have been satisfied.
+
+``` text
+--------- <s2_aux.param> -------------------
+block_alloc = 2,0,0,0,0,0
+block_size = 4
+init_alloc = 1,1,0,0,0,1
+max_events = 738
+max_subjects = 661
+stage1_lpfv = 29.976959561567821
+start_time = 50
+n_stage1_subjects_in_stage2 = 175
+```
+
+The parameters that have to be specified are:
+
+- Required parameters
+
+  - max_subjects : This the maximum number of subjects that can be enrolled in Stage 2 (after accounting for the subjects enrolled in Stage 1).
+
+  - max_events : (TTE only) This the maximum number of events that are allowed in Stage 2 (after accounting for the events in Stage 1).
+
+  - start_time : The time in weeks when Stage 2 of the trial started.
+
+  - stage1_lpfv : The time in weeks when the last Stage 1 patient enrolled.
+
+  - init_alloc : A comma-separated list of 0/1s to indicate which of the complete set of arms were carried forward into Stage 2. E.g., If we had six arms in the trial and only arms 1, 2 and 6 were carried forward to Stage2 then it would be represented by init_alloc = 1,1,0,0,0,1.
+
+- Optional parameters (only needed if the treatment allocations for the next N subjects is required)
+
+  - block_alloc : specifying which of the arms should be allocated via blocking and its allocation size within the block.
+
+  - block_size : The block size. (Continuing the above example, with arms 1, 2 and 6 carried forward to Stage2, the above sample file illustrates the case where we wish to specify future allocation to be done with a block size of 4 with arm 1 allocated 2 slots per block and the remaining two slots being adaptively allocated to the two other allocatable arms in Stage 2.)
+
+Note for TE mode, the aux file parameter "n_stage1_subjects_in_stage2" is not required.
+
+## Patient Data File
+
+This format is identical to that of the s1-patientsNNNNN.csv or s2-patientsNNNNN.csv output files in simulation mode for Stage 1 and Stage 2 respectively. When execution mode is run for in Stage 2, and Stage 1 patients have been carried forward into Stage 2, the input data file should contain all patients (and not simply those enrolled in Stage 2) -- this is consistent with how s2-patientsNNNNN.csv are reported in simulation mode. Note that all columns should be present even if not used (e.g. baseline) in the particular design. It is recommended you supply the value -9999 in unused columns, this makes it clear to someone subsequently using the file that this is intended as an unused data column -- the exception to this is the region id, here just supply the value "1".
+
+- The subject data in a file named patients.dat should be provided in the directory in which the executable is run (or some other file name may be specified with the \--execdata option).
+
+- It is a text file with comma separated fields. Empty lines and lines beginning with '#' will be ignored.
+
+- Each subject's data now appears on a single line with comma separated values. For continuous and dichotomous these are:
+
+  - Subject ID: An integer value that is not used other than to identify a subject's data records.
+
+  - Region ID: The subject's region ID (1...R). Unused in trial execution mode -- just supply the value "1".
+
+  - Enrollment Date: A non-negative number of days.
+
+  - Dose Index: Subject's dose arm (1\...D)
+
+  - Last Visit #: Last observed visit. Zero to number of visits.
+
+  - Dropout indicator: 1=dropped out, 0 otherwise
+
+  - Baseline: Not used if no baseline (supply -9999)
+
+> For each scheduled visit:
+
+- Response at visit. Ignored if after Last Visit \# (supply -9999). For dichotomous endpoints these are 0 or 1 (or -1 if restricted Markov). Note that in C/ME if the analysis is to be conducted on change from baseline and baseline is present, the Response column is expected to contain the original response and not difference from baseline.
+
+<!-- -->
+
+- The multiple endpoint format is identical except that columns are needed for each endpoint:
+
+  - Subject ID
+
+  - Region ID
+
+  - Enrollment Date
+
+  - Dose Index
+
+  - Last Visit #: Zero to number of overall visits.
+
+  - Dropout indicator
+
+> Then for each endpoint:
+
+- Last visit observed for the endpoint: 0 to the number of visits used for the endpoint.
+
+- Baseline: Not used if no baseline (supply -9999)
+
+> For each visit used by the endpoint:
+
+- Response
+
+<!-- -->
+
+- The time to event format is simpler in that there are no visits, but there are predictor columns:
+
+  - Subject ID
+
+  - Region ID
+
+  - Enrollment Date:
+
+  - Dose:
+
+  - Dropout indicator: 1=dropped out, 0 otherwise
+
+  - Duration: Duration until last observation (outcome=0) or time of event (outcome=1)
+
+  - Outcome: 0=no event observed, 1=event observed
+
+  - Predictor value: For a dichotomous predictor 0 or 1. For a time to event predictor, as for duration. Unused if there is no predictor (supply -9999).
+
+  - Pred Outcome: 1 if the predictor value/event has been observed. If the subject dropped out before the predictor value was recorded or if they are still being followed up but predictor is not yet available, then set PredictorOutcome= 0. Unused if there is no predictor (supply -9999).
+
+The subject data provided must be compatible with the trial setup specified in the 'param' file.
+
+Where fields are unused, a numeric value still needs to be supplied but the exact value supplied is immaterial (though It is recommended that the value supplied is an integer).
+
+Previous versions of FACTS execution engines could not handle missing values prior to the final observed visit, and user imputation was required. As of version 6.2, this issue has been remedied. A patient's last visit (as specified by the last visit column) must be a valid value. However, visits prior to the last visit may be missing with the following exceptions: the dichotomous stable-state model must have all non-missing values up to the last visit, and the baseline value for a continuous endpoint must be non-missing if the endpoint is specified as change from baseline or if the baseline-adjusted model is used.
+
+The default code of "-9999" is still expected for missing values, though any character string that cannot be interpreted as a number (except #) will be interpreted as missing.
+
+## Program Invocation
+
+The engine executables can be run with the following command line parameters:
+
+- **r** : Required. Invokes the execution mode
+
+- **n** \<NNN\> : Specifies how many new subjects we need treatment arm allocations for. (This is only relevant when adaptive randomization is applicable; ignored otherwise).
+
+- **f** \<param-filename\> : Specify the 'param' file. Default is nuk1_e.param (C/ME), bin1_e.param (D) or tte1_e.param (TTE).
+
+- **\--execdata** \<subject-data-filename\> : Default is patients.dat
+
+- **\--stage \<S\>** : where S is the stage number (1 or 2). Default is 1.
+
+- **\--interim \<I\>** : where I is the interim number, an integer number should be supplied, there is no check that the value supplied is an integer, and the design engine behaviour is undefined if that is not the case.
+
+- **\--current-week \<W\>** : where \<W\> is the current time in weeks (this parameter is required and should be correct with respect to the data submitted; if the specified date and the data supplied are not in alignment, the design engine's behaviour is undefined).
+
+- **\--seed \<**N\> : If this is specified, then N will be used as the random number generator (RNG) seed for this interim/final analysis. Otherwise, the seeds specified in the param file will be used.
+
+- **\--final** : If this flag is specified, then a 'final' analysis and evaluation is performed (as opposed to interim evaluations of stopping criteria, etc.) If both and --interim and --final flag are specified, \--final takes precedence. If one of \--interim , \--complete-data-analysis or ---final flag is not supplied, then performing a final analysis is the default.
+
+- **\--armsdropped** \<B,B,B,B,B\> : This needs to specified for interim analyses in arm-dropping settings or forced arm selection settings where some arms have been dropped at earlier interims (the engine needs to be told about this since it has no way of remembering previous states). For example if you have a trial with 6 arms, and arms 2 and 3 were dropped on a previous interim (or similarly in a forced arm selection setting if you retain arms 1,4,5,6), then you would specify this as "\--armsdropped 0,1,1,0,0,0" (no spaces in the comma-separated argument string). If this is omitted in an arm-dropping trial, then it is assumed that no arms have already been dropped at the time of invocation. Note that this specification has to be compatible with the param file specified.
+
+- **\--complete-data-analysis** (Stage 1 only) : If this flag is specified, then a 'Complete Data Analysis' is performed i.e., final analysis criteria are evaluated and no success/futility/arm-selection is assessed (Takes precedence over --interim and \--final).
+
+- **\--arm-selection** (Stage 1 only) : If this flag is specified, then an end-of-satge1 arm selection assessment is performed. It can only be performed with a \--final analysis, so this flag can't be combined with \--interim or\
+  \--complete-data-analysis.
+
+- **\--s2-aux-paramfile \<stage2-aux-param-filename\>** (Stage 2 only) : The filename of the Stage 2 auxiliary parameter file. Default is s2_aux.param
+
+- **\--o** \<output-directory\> : Specify the output directory to place all output files generated from the engine run.
+
+## Output Files
+
+- **s1-weeks00000.csv** or **s2-weeks00000.csv** : The analysis is reported in a 'weeks' file format. \[With the understanding that the weeks file structure is retained for familiarity, although some of the columns such as time-related ones (e.g. arm drop time, interim analysis time) will be meaningless since the engine does not track time or past events. In s2-weeks00000.csv the fields "Comb", "Information" and "Success/Futility Combined" are populated with -9999 as these are dependent on information from of Stage 1 that is not being passed to the engine when doing the Stage 2 analysis.\]
+
+- **results.txt** : *Output for Stage 1 only*. A simple text file that reports a high level summary of the analysis. It states whether: (1) the accrual has stopped because the max subjects/events was reached, or implied since the engine was invoked for the final analysis; and (2) whether the current analysis satisfied the success/failure/graduation criterion. *For Stage 2* TE can only provide analysis and QOI calculation, it cannot judge stopping rules as these may depend on information that is not available to it -- hence it is left to the user to compare the calculated QOI values against the relevant thresholds and to check any information requirements and hence judge if any stopping criteria have been met.
+
+- **alloc.txt** : A text file with a single columns listing the treatment allocations for the next N subjects. This is only output when requested in cases when the trial has not stopped accrual, and only for trials with probabilistic adaptive allocation.
+
+- **Standard out**: not actually a file of course, unless you pipe the output into one. This is a summary of the data supplied. Containing:
+
+  - The number of records per arm
+
+  - The number of records per arm per region
+
+  - The earliest and latest enrolment dates
+
+  - The number of records per arm by the last observed visit
+
+  - The number of dropouts per arm
+
+  - a table per subject visit, describing at each visit the values per arm
+
+    - the number of records,
+
+    - the minimum value
+
+    - the median value
+
+    - the maximum value
+
+    - the SD of the values
+
+    - the number of missing values (at an interim this will include data missing simply because that subject who has not completed follow up).
+
+> Example from a trial with 2 recruitment regions, 3 arms and 3 visits:
+
+``` text
+92 records read.
+Number of records by arm:
+Arm 1 | 31 ; Arm 2 | 30 ; Arm 3 | 31 ;
+Regions :
+1 2
+Combined | 47 45
+Arm 1 | 13 18
+Arm 2 | 16 14
+Arm 3 | 18 13
+Enrollment Dates (weeks [days])
+Min: 0.08 [1] ; Max:11.66 [82]
+Last Visits :
+0 1 2 3
+Combined | 17 19 20 36
+Arm 1 | 7 6 6 12
+Arm 2 | 5 6 7 12
+Arm 3 | 5 7 7 12
+Dropouts :
+Dropouts Non-dropouts
+Combined | 2 90
+Arm 1 | 1 30
+Arm 2 | 0 30
+Arm 3 | 1 30
+Visit 1 Values :
+# Records Min Median Mean Max SD # Missing
+Combined | 75 -8.710 0.665 0.655 7.956 3.794 17
+Arm 1 | 24 -8.710 -0.204 -0.291 7.767 4.703 7
+Arm 2 | 25 -5.921 0.597 0.632 7.252 2.981 5
+Arm 3 | 26 -4.412 2.527 1.552 7.956 3.470 5
+Visit 2 Values :
+# Records Min Median Mean Max SD # Missing
+Combined | 56 -12.709 1.877 1.971 12.850 4.705 36
+Arm 1 | 18 -7.040 2.171 2.006 11.724 4.567 13
+Arm 2 | 19 -3.093 1.355 1.747 7.253 3.141 11
+Arm 3 | 19 -12.709 1.697 2.163 12.850 6.162 12
+Visit 3 Values :
+# Records Min Median Mean Max SD # Missing
+Combined | 36 -4.976 2.975 2.587 9.935 3.987 56
+Arm 1 | 12 -4.253 2.638 3.088 9.935 3.823 19
+Arm 2 | 12 -4.976 2.196 1.940 9.543 4.541 18
+Arm 3 | 12 -4.474 3.053 2.734 7.902 3.819 19
+```
+
+- **execdatasummary.csv**: This is a comma separated text file. For every data column expected for input, the feedback consists of a summary of the column along with a summary of the column broken out by treatment arm. For continuous-valued inputs, the number of records, minimum, median, mean, maximum, standard deviation, and number of missing values is given. For dichotomous or categorical variables, the table of counts is given, including the number of missing values. For the special case of dichotomized continuous variables, a summary is given for both the continuous and dichotomous version of the variables.
+
+> Note that not all columns in the execdatasummary.csv file are computed for each row -- only the quantities that are deemed relevant. For example, minimum, median, etc. are not computed for number of records nor for dichotomous values, whereas ntrue and nfalse is computed only for dichotomous values. Up to 100 unique values and their frequency are printed for categorical or numerical variables, which is likely comprehensive for categorical variables but not truly continuous variables. If more than 100 unique values are present, only the first 100 observed in the file are printed, as the intent is just a check on inputs, not a comprehensive summary.
+
+- NumberOfRecords: total and per arm, the active column is 'nvalid' which reports how many valid records there are in total and per arm.
+
+- Region: total and per arm, the active columns are 'nvalid' which reports how many valid entries there are and nunique, which reports how many unique values there are (region ids), then the pairs 'uvalueN' and 'nvalueN' list the different values and how often they occur. (i.e. how many region 1s, how many region 2s, etc.) This field is intended to record the region in which the participant was recruited, but for analysis purposes it is ignored by FACTS.
+
+- LastVisit: total and per arm, the active columns are 'nvalid' which reports how many valid entries there are and nunique, which reports how many unique values there are (last visit ids), then the pairs 'uvalueN' and 'nvalueN' list the different values and how often they occur. (i.e. how many participants last visit was visit 1, how many visit 2, etc.).
+
+- Dropouts: total and per arm, the active columns are are 'nvalid' which reports how many valid entries there are and ntrue, which report how many of the values where "true" -- i.e. how many dropouts have been reported.
+
+- Visit_X_Values: total and per arm per visit, potentially all columns are active:
+
+  - nvalid: the number of valid records
+
+  - min: the minimum response seen for this arm and visit
+
+  - median: the median response seen for this arm and visit
+
+  - mean: the mean response seen for this arm and visit
+
+  - max: the maximum response seen for this arm and visit
+
+  - sd: the standard deviation of the responses seen for this arm and visit
+
+  - ntrue: (dichotomous response) the number of responders for this arm and visit
+
+  - nfalse: (dichotomous response) the number of non-responders for this arm and visit
+
+  - nmissing: the number of missing records (at an interim this may be due to subjects not yet having reached that visit yet, but it will also include dropouts)
+
+  - nunique: the number of unique values seen
+
+  - uvalueN, nvalueN: for up to the first 100 unique values, the value seen and the number of times it occurs. Where there is missing data, the value "-9999" will be reported.
+
+The purpose of these two data summaries are to allow a quick check that there is nothing obviously amiss with the data file that has been supplied.
+
+# Execution Mode Usage for ED Engines
+
+## Inputs
+
+The execution mode can be invoked from the command line by running the engine executable program with the appropriate option flags. The user will also have to provide a dataset with data on subjects enrolled in the trial at the time the analysis is required, and a parameter file describing the trial design and some additional inputs via command line options. The required input files and command-line options are as follows.
+
+## The trial specification ('param') file
+
+The trial specification parameters should be provided in a file named nuk1_e.param in the directory in which the executable is run (or some other file name may be specified with the 'f' option). This is the file produced by the GUI in the design/simulation phase of the trial.
+
+## Patient Data File
+
+This format has changed from that in earlier versions of FACTS and is now identical to that of the patientsNNNNN.csv output files. Note that all columns should be present even if not used (apart from.baseline which is continuous only) in the particular design. It is recommended you supply the value -9999 in unused columns, this makes it clear to someone subsequently using the file that this is intended as an unused data column -- the exception to this is the region id, here just supply the value "1".
+
+- The subject data in a file named patients.dat should be provided in the directory in which the executable is run (or some other file name may be specified with the \--execdata option).
+
+- It is a text file with comma separated fields. Empty lines and lines beginning with '#' will be ignored.
+
+- Each subject's data now appears on a single line with comma separated values. For continuous and dichotomous these are:
+
+  - Subject ID: An integer value (unique to a subject) that is not used other than to identify a subject's data records.
+
+  - Region ID: The subject's region ID (1...R). Unused in trial execution mode -- just supply "1".
+
+  - Enrollment Date: A non-negative number of days.
+
+  - Group : Subject's Group (1..G)
+
+  - Arm: Subject's treatment arm (1=Trt, 0=Control)
+
+  - Last Visit #: Last observed visit. Zero to number of visits.
+
+  - Dropout indicator: 1=dropped out, 0 otherwise
+
+  - Baseline (AIPF-C only): Only present if baseline is included
+
+> For each scheduled visit:
+
+- Response at visit. Ignored if after Last Visit \# (supply -9999). For dichotomous endpoints these are 0 or 1 (or -1 if restricted Markov). Note that in C, if the analysis is to be conducted on change from baseline and baseline is present, the Response column is expected to contain the original response and not difference from baseline.
+
+<!-- -->
+
+- For time to event the columns are similar:
+
+  - Subject ID
+
+  - Region ID
+
+  - Enrollment Date:
+
+  - Group
+
+  - Arm
+
+  - Placeholder: this corresponds to the "dropout" column in continuous or dichotomous and not used in TTE, a dummy value is required, and the value of 0 should be supplied. .
+
+  - Duration: Duration until last observation/censoring time (outcome=0) or time of event (outcome=1)
+
+  - Outcome : 0=no event observed (yet) or 1=event observed.
+
+- The subject data provided must be compatible with the trial setup specified in the 'param' file.
+
+## The State File
+
+The user needs to provide an additional file with information on the current trial state. The following information needs to be provided in a file named "current_state.csv". The file should have two comma separated columns providing the group stopping type (if stopped) and the group data completeness status. The following example for a case with four groups illustrates the structure required:
+
+``` text
+--------- <current_state.csv> -------------------
+Grp1_stop_type, Grp1_all_in
+Grp2_stop_type, Grp2_all_in
+Grp3_stop_type, Grp3_all_in
+Grp4_stop_type, Grp4_all_in
+Study_stop_type, <dummy integer>
+-----------------------------------------------------
+```
+
+[GrpN_all_in is a 1/0 indicator indicating that everyone in a group has finished (dropout, had final visit, or no longer being followed up).]{.mark}
+
+[(Since we aren\'t asking for any \'times\' as input, we need this to distinguish between the case when a group stops enrolling due to cap and later qualifies for early success when (1) Not all in vs (2) All in \-- the outcomes are classified differently.)]{.mark}
+
+[GrpN_stop_type is:]{.mark}
+
+- [Success=1, Futility=3, Cap=2,]{.mark}
+
+- [OtherStop=4 (For a group it means group stops because study stopped early for success/futility. When applied to a study, it means all groups stopped (could be a combination of individual group stopping causes).]{.mark}
+
+- [StudyCap=5 (When a group stops because the study cap is reached)]{.mark}
+
+- [None=-9999]{.mark}
+
+[The final row in the file contains the corresponding information for the overall study.]{.mark}
+
+[At the completion of the execution of the program a file named "]{.mark}new_state.csv" is output which contains the updated state information.
+
+## Program Invocation
+
+The AIPF engine executables can be run with the following command line parameters
+
+- **r** : Required. Invokes the execution mode
+
+- **f** \<param-filename\> : Specify the 'param' file. Default is nuk1_e.param
+
+- **\--execdata** \<subject-data-filename\> : Default is patients.data
+
+- **\--interim \<I\>** :where I is the interim number, an integer number should be supplied, there is no check that the value supplied is an integer, and the design engine behaviour is undefined if that is not the case
+
+- **\--current-week \<W\>** : where \<W\> is the current time in weeks. (required if information is defined in terms of opportunity to complete and should be correct with respect to the data submitted; if the specified date and the data supplied are not in alignment, the design engine's behaviour is undefined).
+
+- **\--seed** N : If this is specified, then N will be used as the RNG seed for this interim/final analysis. Otherwise, the seeds specified in the param file will be used.
+
+- **\--final** : If this flag is specified, then a 'final' analysis and evaluations (as opposed to interim evaluations of stopping criteria, etc. . Takes precedence over \--interim).
+
+- **-o** \<output-directory\> : Specify the output directory to place all output files generated from the engine run.
+
+## Output Files
+
+- **weeks00000.csv** : The analysis is reported in a 'weeks' file format. \[With the understanding that the weeks file structure is retained for familiarity, although some of the columns such as time-related ones (e.g. group stop time, interim analysis time) will be meaningless since the engine does not track time or past events.\]
+
+- **new_state.csv** : An updated 'state information' file.

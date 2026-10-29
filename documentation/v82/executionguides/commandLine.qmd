@@ -1,0 +1,221 @@
+---
+title: "FACTS Command Line"
+subtitle: "Execution Guide"
+title-block-banner: '#125740'
+title-block-banner-color: white
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-title: "Table of Contents"
+    number-sections: true
+    number-depth: 4
+---
+
+#  Introduction
+
+## Purpose of this document
+
+This document describes the use of FACTS in command line mode. The command line mode of FACTS provides simple access to open FACTS project files (\*.facts files) and run all available simulations for the project.
+
+Once a FACTS project file has been created, there are certain cases where it is useful to be able to run simulations for the project, or simulations for a set of projects as a batch action, rather than using the GUI to open and run simulations for each project.
+
+**The FACTS project files contain a complex set of interrelated parameters and must be edited with care. FACTS expects files created by FACTS and to be consistent, errors will not be handled or reported gracefully.**
+
+## Scope of this document
+
+This document describes the command line options for using FACTS in a command line mode. It does not include guidance on the use of the graphical user interface (GUI) or how to create FACTS project files.
+
+# Installation/uninstall
+
+The command line option is simply part of the FACTS executable, no additional installation is required to have access to the command line functionality.
+
+# Quick Guide
+
+A typical use of the command line interface would be along the lines of:
+
+"\[InstallPath\]\\FACTS File Loader.exe" -batch --file myfile.facts -nSim 1000 -packet 100
+
+which will simulate "myfile.facts", assumed to be in the current directory, running 1,000 simulations of each scenario, using a packet size of 100.
+
+# Command Line Options
+
+The FACTS command line mode can be accessed from the Windows Command Prompt (Start \> Run \> cmd.exe). The command line mode of FACTS is accessed by adding the command line argument "-batch" or "-b" from the command prompt. A variety of additional options are available, and can be viewed using the "-h" or "-help" option.
+
+"\[InstallPath\]\\FACTS File Loader.exe" --batch --h
+
+- \[InstallPath\] is the path where FACTS is installed, usually C:\\Program Files\\BerryConsultants\\FACTS N.N.N. Where "N.N.N" is the version number. If using FACTS command line frequently, an alternative is to use a shortcut or add the installation path to your PATH environment variable so you do not have to type out the full path.
+
+Usage: FACTS File Loader.exe -batch \[options\]
+
+where \[options\] are:
+
+-\[h\|help\] - Display the help menu. Default (False).
+
+-\[v\|version\] - Display the version. Default (False).
+
+-\[b\|batch\] - Run facts in command line mode. Default (False).
+
+-\[f\|file\] - Specifies the file or top level directory to open. Default ().
+
+-\[n\|nSim\] - Number of simulations to run. Default (5).
+
+-\[p\|packet\] - Packet size for parallelization. Default (1000).
+
+-\[g\|grid\] - Flag indicating sims to run on grid. Default (False).
+
+-\[a\|agg\] - Aggregation mode. Default (None).
+
+-\[aggPrefix\] - Prefix for aggregated files. Default (agg).
+
+-\[nBurn\] - Number of MCMC burn-in iterations. Default (1000).
+
+-\[nMCMC\] - Number of MCMC sample iterations. Default (2500).
+
+-\[nWeeksFiles\] - Number of weeks files to generate. Default (100).
+
+-\[nFreqWeeksFiles\] -- Number of frequentist weeks files to generate. Default (100)
+
+-\[nSubjectFiles\] - Number of subjects files to generate. Default (1).
+
+-\[nMCMCFiles\] - Number of MCMC output files to generate. Default (0).
+
+-\[nMCMCThin\] - MCMC thinning parameter. Default (0).
+
+-\[nMCMCImpute\] - MCMC length per imputation parameter. Default (1).
+
+-\[seed\] -- Set the random number seed. Default (3500).
+
+-\[offset\] -- Start the simulation at offset. Default (1)
+
+-\[scenarios\] -- Flag indicating which scenarios should be processed.
+
+-\[report\] -- Flag indicating whether a design report should be generated. Default (False).
+
+-\[rpath\] -- Flag indicating the path to the R executable. Required for generating the design report. Default ().
+
+-\[useDifferentSeedPerScenario\] -- Flag indicating whether to use a different seed for each simulated scenario. Default (False).
+
+-\[useDifferentSeedPerDesign\] -- Flag indicating whether to use a different seed for each simulated design. Default (False).
+
+Command line options documented as --\[c\|command\] can be entered as either --c or --command. All commands are case insensitive.
+
+Any errors encountered parsing command line options will be reported and correct usage displayed.
+
+## --\[b \| batch \] (Batch Mode)
+
+The batch mode command line flag instructs FACTS to run simulations without displaying the user interface. Without specifying the --b command line argument, the user interface will open and any other command line options will be ignored (or misinterpreted).
+
+## --\[h \| help\] (Help)
+
+The --h command line option displays the command line help options in the terminal. No simulations will be performed when the --h option is specified.
+
+## --\[v \| version\] (Version)
+
+The --v command line option displays the FACTS version in the terminal. No simulations will be performed when the --v option is specified.
+
+## --\[f \| file\] FILE (Run a specific .facts file)
+
+The --f command line option is used to specify the ".facts" file for which to run simulations. The --f option must be followed by a valid path to an existing ".facts" file or directory containing one or more ".facts" files. Hint: Remember to use quotes around the path if it includes spaces.
+
+If the supplied file name is a directory, then FACTS will simulate each ".facts" file in the directory in turn. As this only starts FACTS once, this can be quite a bit quicker than using a batch file or script that loops and starts FACTS separately for each ".facts" file.
+
+Furthermore, if the supplied file name is a directory then FACTS also automatically recurses through every sub-directory simulating every ".facts" file it finds.
+
+## --\[n \| nSim\] N (Run N simulations for each scenario)
+
+The --n command line option is used to specify the number of simulations to run. The --n option must be followed by an integer value greater than 0. For each scenario in the ".facts" file, the application will run N simulations. Default if unspecified is 5.
+
+## --\[p \| packet\] N (Set the packet size for simulations)
+
+The --p command line option is used to specify the packet size for parallelization of simulations. The --p option must be followed by an integer value greater than 0. When using the --g option to run on a grid, or when running on a multicore machine it is often beneficial to parallelize simulations using the packetization process (see grid documentation for more information on packetization). The packet size must be greater than zero, but as in the GUI, there is no restriction that it be less than the number of simulations. If it is greater than the number of simulations, the simulations will not be packetized. Default if unspecified is 1000.
+
+## --\[g \| grid\] (Run on grid)
+
+The --g command line option instructs the application to send simulations to the grid (assumes that the grid is correctly configured). When running on the grid, the action is still performed synchronously (ie. FACTS will wait while the simulations run and collect the results before exiting). This option is useful to parallelize long running simulations more than they can be parallelized locally. Default if unspecified is to run locally.
+
+## --\[a \| agg\] Mode (Aggregation Mode)
+
+The --a command line option specifies the aggregation action to take for completed simulation results. The available modes for this option are:
+
+- None -- no aggregation will be performed
+
+- NoPivot -- Only standard aggregation will be performed
+
+- Pivot -- Both standard and pivoted aggregation will be performed.
+
+Default if unspecified is None.
+
+## --aggPrefix prefix (Prefix for aggregation files)
+
+The --aggPrefix command line option specifies the prefix to use when naming aggregated files, and must be followed by a valid file prefix. This option is only used when --a is set to NoPivot or Pivot. The aggregation files produced by aggregating across all scenarios will be named using the prefix\<\_pivot\>\_(filename).csv pattern, where \<\_pivot\> is included for pivoted files only, and (filename) is replaced by the name of the file being aggregated. Defaults to "agg" if unspecified.
+
+## --nBurn N (Number of MCMC burn-in iteractions)
+
+The --nBurn command line option specifies the number of burn-in MCMC iterations to use in the simulation, and must be followed by a valid integer value greater than 0. Defaults to 1000 if unspecified.
+
+## --nMCMC N (Number of MCMC sample iterations)
+
+The --nMCMC command line option specifies the number of MCMC sampling iterations to use in the simulation, and must be followed by a valid integer value greater than 0. Defaults to 2500 if unspecified.
+
+## --nWeeksFiles N (Number of weeks files to output)
+
+The --nWeeksFiles command line option specifies the number of weeks files to output from the simulation, and must be followed by a valid integer value at least 0. Defaults to 100 if unspecified.
+
+## --nFreqWeeksFiles N (Number of weeks files to output)
+
+The --nFreqWeeksFiles command line option specifies the number of frequentist weeks files to output from the simulation, and must be followed by a valid integer value at least 0. Defaults to 100 if unspecified.
+
+## --nSubjectFiles N (Number of subjects files to output)
+
+The --nSubjectFiles command line option specifies the number of subject files to output from the simulation, and must be followed by a valid integer value at least 0. Defaults to 1 if unspecified.
+
+## --nMCMCFiles N (Number of MCMC files to output)
+
+The --nMCMCFiles command line option specifies the number of MCMC sample files to output from the simulation, and must be followed by a valid integer value at least 0. Defaults to 0 if unspecified.
+
+**NB: This option potentially produces a very large amount of output data and may fail if sufficient disk space is not available.**
+
+## --nMCMCThin N (MCMC output thinning value)
+
+The --nMCMCThin command line option specifies the MCMC thinning value to apply to the MCMC output, and must be followed by a valid integer value at least 1. The thinning parameter applies only to the MCMC output, all MCMC samples are used for analysis. Defaults to 1 if unspecified.
+
+## --nMCMCImpute N (MCMC length per imputation value)
+
+The --nMCMCImpute command line option specifies the number of MCMC sampling iterations to use in the simulation for each imputation. Defaults to 1 if unspecified.
+
+## --seed (Random number seed)
+
+The --seed command line option sets the random number generator seed value. The default value (3500) is the same as that used in the GUI. It can be set to any positive integer.
+
+## -offset (Offset from random number seed)
+
+The -offset command line option specifies the rand number to start at, offset from the supplied rand number seed, and must be followed by q valid integer at least 1. Defaults to 1 if unspecified.
+
+In order to ensure reproducibility, the FACTS uses random number seeds is to use the supplied random number seed to first generate a list of random number seed, one per simulation, to be used as the starting random number seed of that simulation. Thus it is possible to re-simulate a specific simulation by re-running FACTS with the same seed, but by specifying the offset of the required simulation. Note the offsets are '1' based, simulation 1 has offset 1.
+
+This allows a simulation with interesting characteristics to be re-run with greater output (such as weeks file, patients file, MCMC file) without having to re-run all the other simulations leading up to it.
+
+## -scenarios (Flag indicating which scenarios should be processed)
+
+The --scenarios command line option instructs FACTS command line to run the specified scenarios by name. The names of the scenarios to run should be provided as a comma separated list. If not specified, all scenarios will be processed.
+
+## -report (Flag indicating whether a design report should be generated)
+
+The --report command line option instructs FACTS command line to generate a design report once it completes the design's simulations. The requires a valid installation of R and pandoc.
+
+## -rpath (Flag indicating the path to the R executable)
+
+The --rpath command line option provides FACTS command line with the location of R.exe. Typically this would be under C:\\Program Files\\R\\R-{version number}\\bin\\R.exe. This option is required if the -report flag is used.
+
+## -useDifferentSeedPerScenario (Flag indicating whether to use a different seed for each simulated scenario)
+
+The --useDifferentSeedPerScenario command line option provides FACTS command line with an option to set a different random number seed for each of the scenarios that are being simulated. FACTS command line simply takes the base random number seed as set in the -seed flag, uses this for the first simulated scenario and then adds 1111 to the random number seed of any additional scenarios being simulated. For example, if three scenarios are being simulated and the -seed flag is set to 3500, the first scenario will have a random number seed of 3500, the second scenario a random number of 4611 and the third scenario a random number seed of 5722. This deterministic way of setting different random number seeds allows for reproducible simulation results.
+
+## -useDifferentSeedPerDesign (Flag indicating whether to use a different seed for each simulated design)
+
+The --useDifferentSeedPerDesign command line option provides FACTS command line with an option to set a different base random number seed for each of the designs that are being simulated. This option is only used when a directory containing multiple FACTS designs is passed as an argument to the FACTS command line, rather than a single design. FACTS command line simply takes the base random number seed as set in the -seed flag, uses this for the first simulated design and then adds 1234 to the random number seed of any additional designs being simulated. For example, if three designs are being simulated and the -seed flag is set to 3500, the first design will have a base random number seed of 3500, the second scenario a random number of 4734 and the third design a base random number seed of 5968. This deterministic way of setting different random number seeds allows for reproducible simulation results.
+
+# Errors
+
+Most errors trapped and reported through the GUI dialogs will be redirected to the console when running in command line mode. There are, however, certain cases where errors are captured first by the Windows error reporting mechanism and the user will be presented with a dialog requiring interaction.
