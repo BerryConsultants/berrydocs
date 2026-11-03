@@ -1659,5 +1659,127 @@ observed):
 
 # The output files
 
-For a description of the contents of the simulation results files, see
-the specification document \[Spec\]
+FACTS writes the following files to the results folder of each scenario. They can be opened in Excel or any text editor. While a results file is open in Excel it is locked, and FACTS cannot overwrite it.
+
+- **summary.csv**: a single row summarizing all the simulations of the scenario. This is the source of the values shown on the Simulation tab.
+- **simulations.csv**: one row per simulation, describing the final state of each simulated trial.
+- **cohortsNNN.csv**: one row per cohort for simulation NNN, describing the data and the fitted model after each cohort. These files are written for the number of simulations requested on the Simulation tab.
+
+In the column descriptions below, *I* is the number of doses of Drug 1 and *J* the number of doses of Drug 2. A column described as having *I×J* columns has one column per dose combination, headed `<name> i j`, where *i* is the Drug 1 dose index and *j* the Drug 2 dose index. The Drug 1 index varies slowest: `1 1`, `1 2`, …, `1 J`, `2 1`, …, `I J`.
+
+The toxicity model coefficients are reported in the order: Drug 1 intercept (ln(α~1~)), Drug 2 intercept (ln(α~2~)), Drug 1 slope (β~1~), Drug 2 slope (β~2~) and the interaction term (η).
+
+## Contents of summary.csv
+
+The first line starts with '#' and holds the engine and GUI versions, the name of the FACTS file, the scenario and the time stamp. The second line starts with '#' and holds the column headings below. The third line holds the data.
+
+| Column Title | Number of columns | Description |
+|------------|-----------|--------------------------|
+| Number of sims | 1 | The number of simulations summarized. |
+| Random Number Seed | 1 | The random number seed used for the simulations. |
+| Mean num subjects | 1 | The mean, over the simulations, of the number of subjects allocated. |
+| Ppn Tox | 1 | The mean, over the simulations, of the proportion of subjects who had a toxicity. |
+| SD Ppn Tox | 1 | The standard deviation, over the simulations, of the proportion of subjects who had a toxicity. |
+| True Mean Tox | 1 | The mean, over the simulations, of the average true probability of toxicity of the combinations subjects were allocated to. |
+| Mean Tox Params | 5 | The mean, over the simulations, of the final posterior mean of each toxicity model coefficient. |
+| Sd Tox Params | 5 | The standard deviation, over the simulations, of the final posterior mean of each toxicity model coefficient. |
+| Pr(Under) | I×J | The mean, over the simulations, of the final posterior probability that the toxicity rate of the combination is below the target toxicity band. |
+| Pr(Target) | I×J | The mean, over the simulations, of the final posterior probability that the toxicity rate of the combination is in the target toxicity band. |
+| Pr(Excess) | I×J | The mean, over the simulations, of the final posterior probability that the toxicity rate of the combination is above the target band but below the unacceptable band. |
+| Pr(Unacc) | I×J | The mean, over the simulations, of the final posterior probability that the toxicity rate of the combination is in the unacceptable toxicity band. |
+| Pr(Sel MTT) | I×J | The proportion of simulations in which the combination was selected as an MTT at the end of the trial. More than one combination can be selected in a simulation. |
+| Fitted Tox | I×J | The mean, over the simulations, of the final posterior mean probability of toxicity of the combination. |
+| Sd Fitted Tox | I×J | The standard deviation, over the simulations, of the final posterior mean probability of toxicity of the combination. |
+| Subjects | I×J | The mean, over the simulations, of the number of subjects allocated to the combination. |
+| Sd Subjects | I×J | The standard deviation, over the simulations, of the number of subjects allocated to the combination. |
+| Obs Tox | I×J | The mean, over the simulations, of the number of toxicities observed on the combination. |
+| Sd Obs Tox | I×J | The standard deviation, over the simulations, of the number of toxicities observed on the combination. |
+| Mean Duration | 1 | The mean duration of the simulated trials, in weeks. |
+| Sd Duration | 1 | The standard deviation of the duration of the simulated trials, in weeks. |
+| All Tox Stop Early | 1 | The proportion of simulations that stopped because all combinations were too toxic. |
+| Early Success | 1 | The proportion of simulations that stopped because the stopping rules were met. |
+| Cap Stop | 1 | The proportion of simulations that stopped because the maximum number of subjects was reached. |
+
+## Contents of simulations.csv
+
+The first line starts with '#' and holds the GUI version, the name of the FACTS file, the scenario, the time stamp and the engine version. The second line starts with '#' and holds the column headings below. Each subsequent line describes one simulation.
+
+| Column Title | Number of columns | Description |
+|------------|-----------|--------------------------|
+| Number | 1 | The simulation number. |
+| Random Number Seed | 1 | The random number seed used for the simulations. |
+| No.Subjects | 1 | The number of subjects allocated. |
+| Ppn.Tox | 1 | The proportion of subjects who had a toxicity. |
+| True Mean Tox | 1 | The average true probability of toxicity of the combinations subjects were allocated to. |
+| Seed1, Seed2 | 2 | The state of the random number generator at the start of the simulation, which allows an individual simulation to be replayed. |
+| Mean Tox Coeffs | 5 | The final posterior mean of each toxicity model coefficient. |
+| Sd Tox Coeffs | 5 | The final posterior standard deviation of each toxicity model coefficient. |
+| Pr(Under) | I×J | The final posterior probability that the toxicity rate of the combination is below the target toxicity band. |
+| Pr(Target) | I×J | The final posterior probability that the toxicity rate of the combination is in the target toxicity band. |
+| Pr(Excess) | I×J | The final posterior probability that the toxicity rate of the combination is above the target band but below the unacceptable band. |
+| Pr(Unacc) | I×J | The final posterior probability that the toxicity rate of the combination is in the unacceptable toxicity band. |
+| Sel MTT | I×J | 1 if the combination was selected as an MTT at the end of the trial, otherwise 0. |
+| Fitted Tox | I×J | The final posterior mean probability of toxicity of the combination. |
+| Subjects | I×J | The number of subjects allocated to the combination. |
+| Obs Tox | I×J | The number of toxicities observed on the combination. |
+| Flags | 1 | The state of the trial at its last cohort, including why it stopped (see [Flag values](#flag-values)). |
+| Duration | 1 | The duration of the trial, in weeks. |
+
+## Contents of cohortsNNN.csv
+
+The first two lines are as for simulations.csv. Each subsequent line describes the state of the trial after one cohort.
+
+| Column Title | Number of columns | Description |
+|------------|-----------|--------------------------|
+| Cohort | 1 | The sequence number of the cohort that has just been allocated. |
+| Phase | 1 | The allocation phase: 0 = run-in, 1 = dose escalation. |
+| Total subj | 1 | The total number of subjects allocated so far. |
+| NumToxic | 1 | The number of toxicities observed so far. |
+| Mean Tox Coeffs | 5 | The posterior mean of each toxicity model coefficient. |
+| Sd Tox Coeffs | 5 | The posterior standard deviation of each toxicity model coefficient. |
+| Pr(Under) | I×J | The posterior probability that the toxicity rate of the combination is below the target toxicity band. |
+| Pr(Target) | I×J | The posterior probability that the toxicity rate of the combination is in the target toxicity band. |
+| Pr(Excess) | I×J | The posterior probability that the toxicity rate of the combination is above the target band but below the unacceptable band. |
+| Pr(Unacc) | I×J | The posterior probability that the toxicity rate of the combination is in the unacceptable toxicity band. |
+| Fitted Tox | I×J | The posterior mean probability of toxicity of the combination. |
+| Subjects | I×J | The number of subjects allocated to the combination so far. |
+| Obs Tox | I×J | The number of toxicities observed so far on the combination. |
+| Known | I×J | The number of subjects allocated to the combination whose outcome is known. |
+| Flags | 1 | How the cohort was allocated (see [Flag values](#flag-values)). |
+| Duration | 1 | The time since the start of the trial, in weeks. |
+
+## Flag values {#flag-values}
+
+The Flags column is written as a hexadecimal number without a `0x` prefix (for example `30` or `430`). It shows how the cohort was allocated. On the last cohort, 200 or 400 is added to show why the trial stopped.
+
+| Flag | Description |
+|------------|--------------------------------------|
+| 1 | No run-in: cohort allocated to a fixed starting combination. |
+| 2 | Cohort allocated during a Contour run-in. |
+| 3 | Full cohort added at the end of a Contour run-in at the combination where a toxicity was seen. |
+| 4 | Full cohort added at the end of a Contour run-in at the combination(s) below the one where a toxicity was seen. |
+| 8 | Cohort allocated during a Row by row run-in. |
+| 11 | Cohort allocated on the Drug 1 axis during a Tri-axial run-in. |
+| 12 | Cohort allocated on the Drug 2 axis during a Tri-axial run-in. |
+| 14 | Cohort allocated on the diagonal (x, x−1) during a Tri-axial run-in. |
+| 15 | Cohort allocated on the diagonal (x, x) during a Tri-axial run-in. |
+| 16 | Cohort allocated on the diagonal during a Tri-axial run-in, with one drug already at its maximum dose. |
+| 21 | Full cohort added at the end of a Row by row run-in at the combination where a toxicity was seen (when expanding at the current combination is selected). |
+| 22 | Full cohort added at the end of a Row by row run-in at the next lower Drug 1 dose (same Drug 2 dose) from the combination where a toxicity was seen. |
+| 24 | Full cohort added at the end of a Row by row run-in at the lowest Drug 1 dose (same Drug 2 dose), when no lower Drug 1 dose is available. |
+| 28 | Full cohort added at the end of a Row by row run-in at the highest available Drug 1 dose on the next lower Drug 2 dose. |
+| 30 | Full cohort added during dose escalation using the Contour method. |
+| 41 | Full cohort added at the start of dose escalation using the Walk method. |
+| 42 | Full cohort added during dose escalation using the Walk method. |
+| 51 | Full cohort added on the Drug 1 axis during dose escalation using the Tri-axial method. |
+| 52 | Full cohort added on the Drug 2 axis during dose escalation using the Tri-axial method. |
+| 54 | Full cohort added on the diagonal during dose escalation using the Tri-axial method. |
+| 60 | Full cohort added during dose escalation using the Allocate to MTT method. |
+| 70 | Full cohort added at the lowest dose combinations because all combinations are too toxic but the minimum number of toxicities has not been observed. |
+| 80 | Cohort allocated during a Custom run-in. |
+| 81 | Full cohort added at the end of a Custom run-in at the combination where a toxicity was seen. |
+| 82 | Full cohort added at the end of a Custom run-in at the combination(s) below the one where a toxicity was seen. |
+| 100 | Full cohort added at the end of a Row by row or Tri-axial run-in. |
+| 101 | Cohort added at the end of a run-in that reached its limit without observing any toxicity. |
+| +200 | Added to the flag of the last cohort when the trial stopped because all combinations were too toxic. |
+| +400 | Added to the flag of the last cohort when the trial stopped because the stopping rules were met. |
