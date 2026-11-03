@@ -221,7 +221,7 @@ This method is defined by 3 values for each visit:
 - *f<sub>t</sub>* the fraction of the final mean response seen at visit
   *t*.
 
-- *φ<sub>t</sub>* the fraction of the final sigma seen at visit *t*.
+- *φ<sub>t</sub>* the fraction of the final SD seen at visit *t*.
 
 - *ρ<sub>t</sub>* the visit-to-visit correlation in the noise from visit
   *t-1* to *t*.
@@ -247,18 +247,18 @@ $y_{g,a,1} \sim\mu_{g,a,1} + N\left( 0,\sigma_{g,a,1}^{2} \right)$
 Where the final mean $\mu_{g,a}$, and variance $\sigma_{g,a}$, are
 as defined on the group response tab.
 
-For the second visit, the mean response is given by:
-$\mu_{g,a,2} = f_{2}\mu_{g,a}$,
+For each later visit *t*, the mean response is given by
+$\mu_{g,a,t} = f_{t}\mu_{g,a}$, the standard deviation by
+$\sigma_{g,a,t} = \varphi_{t}\sigma_{g,a}$, and the response of the
+i<sup>th</sup> subject by
 
-and the observed variance by
-${\rho_{g,1}\left( y_{i,1} - \mu_{g,a,1} \right)\frac{\sigma_{g,a,2}^{2}}{\sigma_{g,a,1}^{2}} + \sqrt{1 - \rho_{g,2}^{2}}N\left( 0,\sigma_{g,a,2}^{2} \right)}_{}^{}$
+$$y_{i,t} = \mu_{g,a,t} + \rho_{g,t}\left( y_{i,t-1} - \mu_{g,a,t-1} \right)\frac{\sigma_{g,a,t}}{\sigma_{g,a,t-1}} + \sqrt{1 - \rho_{g,t}^{2}}\,N\left( 0,\sigma_{g,a,t}^{2} \right)$$
 
-(where $y_{i,1}$ is the observed response at the i<sup>th</sup>
-subject's first visit response) thus the variance is
-$\sigma_{g,a,2}^{2} = \varphi_{2}^{2}\sigma_{g,a}^{2}$ but made up of
-a component that has already been observed at the previous visit, scaled
-by the correlation factor and relative variance at the second visit
-compared to the first, plus a new suitably scaled random component.
+where $y_{i,t-1}$ is the subject's response at the previous visit. The
+variance at visit *t* is therefore $\sigma_{g,a,t}^{2} = \varphi_{t}^{2}\sigma_{g,a}^{2}$,
+made up of a component carried over from the previous visit, scaled by
+the correlation and the ratio of the standard deviations at the two
+visits, plus a new, suitably scaled random component.
 
 #### Hierarchical Method
 
@@ -267,7 +267,9 @@ This method is defined by 2 values for each visit:
 - *f<sub>t</sub>* the fraction of the final mean response seen at visit
   *t*.
 
-- *φ<sub>t</sub>* the fraction of the final sigma seen at visit *t*.
+- *φ<sub>t</sub><sup>2</sup>* the fraction of the final variance seen at
+  visit *t*. This is the value entered in the "Fraction of Final
+  Variance (ϕ^2)" column.
 
 And an overall (or per group) fraction $\nu_{g}$ for how much of the
 final variance is due to inter-subject variance.
@@ -292,7 +294,13 @@ $\kappa_{g,a}^{2}$, will be set so that this
 $= \varphi_{t}^{2}\sigma_{g,a}^{2}$
 
 Thus there is an inter-subject component to the variance $\delta_{i}$,
-and an intra-subject component $\kappa_{g,a}^{2}$.
+and an intra-subject component $\kappa_{g,a}^{2}$. The correlation
+between a subject's responses at visits *t* and *t′* is
+$f_{g,t}f_{g,t'}\nu_{g} / (\varphi_{t}\varphi_{t'})$.
+
+The values entered must satisfy $f_{g,t}^{2}\nu_{g} \le \varphi_{t}^{2}$
+at every visit, otherwise $\kappa^{2}$ would be negative and the
+simulation stops with an "Infeasible Kappa value specified" error.
 
 #### ITP
 
