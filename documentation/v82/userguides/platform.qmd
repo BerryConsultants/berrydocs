@@ -2694,8 +2694,10 @@ the simulations.
 
 ### Contents of summary.csv
 
-The first line is a header line, starting with a '#', containing the
-column headings.
+The first two lines are header lines, each starting with a '#',
+containing the column headings. The two lines are identical except for
+the QOI columns: the first line uses the QOI names and the second uses
+the alternative QOI names given in the QOIMappingFile.csv.
 
 +-------------+--------+----------------------------------------------+
 | Column      | Number | Description                                  |
@@ -2713,6 +2715,9 @@ column headings.
 +-------------+--------+----------------------------------------------+
 | Nsim        | 1      | The number of simulations contributing to    |
 |             |        | the summary file.                            |
++-------------+--------+----------------------------------------------+
+| Random      | 1      | The random number seed used to simulate the  |
+| Number Seed |        | scenario.                                    |
 +-------------+--------+----------------------------------------------+
 | Mean        | 1      | The average number (over the simulations) of |
 | Treatments  |        | non-control treatments that entered the      |
@@ -3082,6 +3087,16 @@ column headings.
 | resp        | arm    | participant data for the arm.                |
 | \<Arm\>     |        |                                              |
 +-------------+--------+----------------------------------------------+
+| Mean        | 1 per  | The average (over the simulations) of the    |
+| Complete    | arm    | number of participants on the arm who had    |
+| \<Arm\>     |        | completed follow-up at the end of the trial. |
++-------------+--------+----------------------------------------------+
+| Mean        | 1 per  | The average (over the simulations) of the    |
+| Complete    | arm    | number of participants on the arm who        |
+| Info        |        | counted as complete for the purposes of      |
+| \<Arm\>     |        | update timing at the end of the trial, as    |
+|             |        | defined on the Design \> Trial Updates tab.  |
++-------------+--------+----------------------------------------------+
 | N           | 1 per  | Average (across the simulations) of the      |
 | o.Dropouts: | arm    | number of dropouts for the arm by visit.     |
 | \<Arm\>,    | per    |                                              |
@@ -3137,20 +3152,23 @@ The first line is a header line, starting with a '#', and containing
 
 -   The time stamp of the start of the simulation
 
-The second and third lines are header lines. Most header names are
-identical in the second and third lines, but differ for some quantities,
-particularly QOIs. The alternate names for QOIs are summarized in the
-QOIMappingFile.csv that is produced in the main results directory.
+The second and third lines are header lines, each starting with a '#'.
+They are identical except for the QOI columns: the second line uses the
+QOI names and the third uses the alternative QOI names. The alternative
+names for QOIs are summarized in the QOIMappingFile.csv that is produced
+in the main results directory.
 
 Most of the columns are common to the simulations and weeks file types,
 except as noted below.
 
 | Column Title | Number of columns | In simulations file | In weeks file | Description |
 |----------|----------|--------|--------|--------------------------------|
-| \# Weeks (Duration) | 1 | | ✔ | The week of the analysis |
+| \#Weeks | 1 | | ✔ | The time of the analysis in weeks, rounded up to a whole week. |
 | \#Sim | 1 | ✔ | | The number of the simulation. |
+| Random Number Seed | 1 | ✔ | | The random number seed used to simulate the scenario. |
 | Update Number | 1 | | ✔ | The index of the interim analysis being performed. |
 | Stage | 1 | ✔ | ✔ | 0 = Accruing (standard trial update)<br>1 = Final (final analysis for a particular arm)<br>2 = Accrued (standard trial update after full enrollment)<br>4 = Paused (accrual is paused -- currently not allowed) |
+| Duration | 1 | ✔ | ✔ | The time (in weeks) of the analysis, not rounded. In the simulations file this is the duration of the trial. |
 | \# Participants | 1 | ✔ | ✔ | Number of participants enrolled in the trial |
 | Alloc \<Arm\> | 1 per arm | | | Number of participants enrolled on the arm |
 | Status \<Arm\> | 1 per arm | ✔ | ✔ | Status of the treatment arm:<br>-99 = Turned Away (could not enter trial)<br>-98 = Waiting In Treatment Queue<br>-97 = Never Arrived, (trial ended before arm arrived)<br>-1 = Not Started (weeks file only)<br>0 = Enrolling<br>1 = In Followup (done enrolling)<br>2 = Paused (not currently available)<br>99 = Complete |
@@ -3200,7 +3218,7 @@ except as noted below.
 | Complete \<Arm\> | 1 per arm | ✔ | ✔ | The number of completed subjects on each treatment arm at the time of the analysis. |
 | Complete Information \<Arm\> | 1 per arm | ✔ | ✔ | The number of subject who count as complete for the purposes of update timing, as defined on the Design > Trial Updates tab: enrolled, complete, or opportunity to complete. |
 | \#Dropouts \<Arm\> \<Visit\> | 1 per arm per visit | ✔ | ✔ | The number of dropouts on the arm, broken out into the visit at which they dropped. (The current implementation has only a single visit.) |
-| QOI Columns | 1 per arm per QOI* | ✔ | ✔ | All QOI values are reported for each arm. The row 1 and row 2 names for the columns are given in the QOIMappingFile.csv that is output in the top-level "\_results" folder. There is an additional column for each Target QOI that specifies the arm index of the arm with the highest posterior probability of being the target arm. |
+| QOI Columns | 1 per arm per QOI* | ✔ | ✔ | All QOI values are reported for each arm. The row 1 and row 2 names for the columns are given in the QOIMappingFile.csv that is output in the top-level "\_results" folder. Each posterior probability, predictive probability, p-value and Target QOI is followed by an additional "\<QOI\> Dose" column. For a Target QOI it holds the arm index of the arm with the highest posterior probability of being the target arm; for the other QOI types it is always -9999. |
 
 : Contents of the simulations/weeks files.
 

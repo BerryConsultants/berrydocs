@@ -1455,12 +1455,14 @@ file.
 
 ## Contents of summary.csv
 
-The first line is a header line, starting with a '#', containing the
-FACTS GUI version number, the name of the FACTS file, the name of the
-scenario, and the time stamp of the start of the simulation.
-
-The second line is a header line, starting with a '#', containing the following
-column headings.
+The first two lines are header lines, starting with a '#', and both list
+the following column headings. The first line uses the full QOI
+descriptions (for example `Pr(OR_d <= 1)`) and `Mean LP Enrolled time`;
+the second line uses the QOI short labels (for example `Pr(PBO)`) and
+`Mean LPFV time`. The third line holds the data. There is no separate
+version line: the FACTS version, the name of the FACTS file, the name of
+the scenario and the time stamp are given in the Version, Project,
+Scenario and Timestamp columns.
 
 :::{.panel-tabset}
 
@@ -1647,6 +1649,11 @@ design. The columns in the following order:
 | Target Probabilities | The summary file contains the proportion of times (over the simulations) each dose had the greatest probability of being the target. |
 | Decision QOIs | The summary file contains the mean (over the simulations) of the final value of the decision QOI at the target. |
 
+Each posterior probability, predictive probability and p-value QOI takes
+D columns, one per dose. Each target QOI also takes D columns, headed
+`Ppn <QOI name> <Dose>`. Each decision QOI takes 1 column. Unlike the
+simulations and weeks files, summary.csv has no `<QOI name> Dose` column.
+
 
 ## Contents of simulations.csv and weeksNNNNN.csv
 
@@ -1671,12 +1678,16 @@ The first line is a header line, starting with a '#', containing the
 FACTS GUI version number, the name of the FACTS file, the name of the
 scenario, and the time stamp of the start of the simulation.
 
-The second line is a header line, starting with a '#', containing the following
-column headings.
+The second and third lines are header lines, starting with a '#', and
+both list the following column headings. The second line uses the full
+QOI descriptions (for example `Pr(OR_d <= 1)`) and `LP Enrolled`; the
+third line uses the QOI short labels (for example `Pr(PBO)`) and `LPFV`.
 
-Most of the columns are common to the two file types, but the weeks file
-does not contain columns for the 'final' values of the evaluation
-criteria.
+The two file types have the same columns, including the success and
+futility flags of the evaluation criteria, except for the first few:
+simulations.csv starts with #Sim, Random Number Seed and
+LastInterimNumber, and the weeks file starts with #Weeks and
+InterimNumber.
 
 :::{.panel-tabset}
 
@@ -1686,8 +1697,9 @@ criteria.
 |----------|----------|--------|--------|--------------------------------|
 | # Weeks (Duration) | 1 | | ✔ | The week of the analysis |
 | #Sim | 1 | ✔ | | The number of the simulation. |
-| Random Number Seed | 1 | ✔ | ✔ | Base random number seed. |
-| LastInterim | 1 | ✔ | | The index of the last interim performed the index of the interim immediately before the final interim (index '999'). Note this is not necessarily the interim when the trial stopped if the design includes follow-up after stopping. |
+| Random Number Seed | 1 | ✔ | | Base random number seed. |
+| InterimNumber | 1 | | ✔ | The index of the analysis the row reports: 1, 2, ... for the interims and 999 for the final analysis. |
+| LastInterimNumber | 1 | ✔ | | The index of the last interim performed the index of the interim immediately before the final interim (index '999'). Note this is not necessarily the interim when the trial stopped if the design includes follow-up after stopping. |
 | #Subjects | 1 | ✔ | ✔ | The number of subjects recruited in the simulation. |
 | Outcome | 1 | ✔ | ✔ | A flag categorizing final study outcome:<br>1 = Early success<br>2 = Late success<br>3 = Late futility<br>4 = Early futility<br>5 = Success to futility flip-flop<br>6 = Futility to success flip-flop<br>7 = Inconclusive |
 | Early Success Time | 1 | ✔ | ✔ | This is the time to the early success decision (-9999 if there was no early success decision). The from the start of the trial to the interim where the early success conditions were first met. It does not include the subsequent follow up time. |
@@ -1707,8 +1719,8 @@ criteria.
 | Mean P \<Dose\> \<Outcome\> | D * K |  ✔ | ✔ | Posterior mean of the probability of each ordinal outcome for each arm |
 | SD P \<Dose\> \<Outcome\> | D * K |  ✔ | ✔ | Posterior SD of the probability of each ordinal outcome for each arm |
 | N \<Dose\> \<Outcome\> | D * K | ✔ | ✔ | Number of subjects for each treatment arm and outcome. |
-| DR Param \<Param\> | 10 | ✔ | ✔ | The estimate of the mean value of each of the response model parameters. The response models require up to 10 parameters, most less. The model parameters are labeled $\alpha_1$, $\alpha_2$, .. the subscripts corresponding to the index "\<Param\>". |
-| Sd DR Param \<Param\> | 4 | ✔ | ✔ | The standard deviation of the estimate of the mean value of the corresponding response model parameter. |
+| DR Param \<Param\> | 10 | ✔ | ✔ | The estimate of the mean value of each of the response model parameters. The response models require up to 10 parameters, most less. The model parameters are labeled $\alpha_1$, $\alpha_2$, .. the subscripts corresponding to the index "\<Param\>". Only when cumulative logistic modeling is used. |
+| Sd DR Param \<Param\> | 10 | ✔ | ✔ | The standard deviation of the estimate of the mean value of the corresponding response model parameter. Only when cumulative logistic modeling is used. |
 | Duration | 1 | ✔ | ✔ | The time in weeks to the analysis shown. |
 | Arm Drop Time \<Dose\> | D | ✔ | ✔ | For each treatment arm, the time in weeks when it was decided to drop the arm. |
 | LPFV | 1 | ✔ | ✔ | The time in weeks to the last patient first visit. |
@@ -1730,6 +1742,12 @@ design. The columns are grouped in the following order:
 | Decision QOIs | The value of the decision QOI at the target. |
 | Success Futile | A flag for each QOI decision criteria indicating if the decision QOI was evaluated and compared to a threshold at the interim (weeks file) or final analysis (simulation file). The flag value is -1 if the decision QOI was not evaluated, 0 if it did not meet the threshold and 1 if it did. |
 | Success / Futile Combined | Flags indicating if the interim or final analysis determined success or futility taking all the factors defined for Success/Futility into account: 0 if the conditions were not met, 1 it the conditions were met. If success and futility conditions have been defined that are not mutually exclusive and both sets of combined conditions are met, FACTS will pick one of the outcomes as met but not the other. In order to discourage defining Success and Futility rules that can both be true FACTS does not guarantee which outcome will be selected. |
+
+Each posterior probability, predictive probability, p-value and target
+probability QOI has one column per dose, followed by one extra column,
+`<QOI name> Dose`, so it takes D+1 columns. The Dose column holds the
+index (1, ...) of the arm with the highest value (the lowest p-value for
+p-value QOIs, or the target dose for target QOIs).
 
 ## Contents of PatientsNNNNN.csv
 

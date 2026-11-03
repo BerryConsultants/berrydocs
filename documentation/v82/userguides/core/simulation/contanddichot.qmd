@@ -1677,12 +1677,15 @@ different methods for dealing with missing data that are applicable.
 
 ## Contents of summary.csv
 
-The first line is a header line, starting with a '#', containing the
-FACTS GUI version number, the name of the FACTS file, the name of the
-scenario, and the time stamp of the start of the simulation.
-
-The second line is a header line, starting with a '#', containing the following
-column headings.
+The first two lines are header lines, starting with a '#', that both
+contain the following column headings. The first line uses the long
+names (for example the full QOI descriptions such as
+`Pr(theta_d > theta_(Control))`, and `Mean LP Enrolled time`), the
+second uses the short names (for example the QOI short labels such as
+`Pr(PBO)`, and `Mean LPFV time`). The third line holds the data. There
+is no separate line for the FACTS version, file name, scenario and time
+stamp: these are given in the Version, Project, Scenario and Timestamp
+columns.
 
 :::{.panel-tabset}
 
@@ -1911,6 +1914,8 @@ column headings.
 | Mean LPFV | 1       | The mean, over the simulations, of the accrual |
 | time      |         | period of the trials, from first person first  |
 |           |         | visit, to last person first visit (LPFV).      |
+|           |         | Headed "Mean LP Enrolled time" in the first    |
+|           |         | header line.                                   |
 +-----------+---------+------------------------------------------------+
 | Ppn       | 1       | The proportion of the simulations where the    |
 | Correct   |         | correct arm has been selected, where an arm is |
@@ -1919,7 +1924,7 @@ column headings.
 |           |         | scenario on the VSR tab.                       |
 +-----------+---------+------------------------------------------------+
 | Ppn       | 1       | The proportion of the simulations where the    |
-| Incorrect |         | incorrect correct arm has been selected, where |
+| Incorrect |         | incorrect arm has been selected, where         |
 | Arm       |         | an arm is deemed "incorrect" based on whether  |
 |           |         | it wasn't marked as "Should Succeed" for the   |
 |           |         | relevant scenario on the VSR tab.              |
@@ -2119,16 +2124,18 @@ column headings.
 | Mean LPFV | 1       | The mean, over the simulations, of the accrual |
 | time      |         | period of the trials, from first person first  |
 |           |         | visit, to last person first visit (LPFV).      |
+|           |         | Headed "Mean LP Enrolled time" in the first    |
+|           |         | header line.                                   |
 +-----------+---------+------------------------------------------------+
 | Ppn       | 1       | The proportion of the simulations where the    |
 | Correct   |         | correct arm has been selected, where an arm is |
-| Arm       |         | deemed "correct" based on whether it was       |
+|           |         | deemed "correct" based on whether it was       |
 |           |         | marked as "Should Succeed" for the relevant    |
 |           |         | scenario on the VSR tab.                       |
 +-----------+---------+------------------------------------------------+
 | Ppn       | 1       | The proportion of the simulations where the    |
-| Incorrect |         | incorrect correct arm has been selected, where |
-| Arm       |         | an arm is deemed "incorrect" based on whether  |
+| Incorrect |         | incorrect arm has been selected, where         |
+|           |         | an arm is deemed "incorrect" based on whether  |
 |           |         | it wasn't marked as "Should Succeed" for the   |
 |           |         | relevant scenario on the VSR tab.              |
 +-----------+---------+------------------------------------------------+
@@ -2152,6 +2159,9 @@ design. The columns in the following order:
 | P-Values | The summary file contains the mean (over the simulations) of the p-value for each dose. |
 | Target Probabilities | The summary file contains the proportion of times (over the simulations) each dose had the greatest probability of being the target. |
 | Decision QOIs | The summary file contains the mean (over the simulations) of the final value of the decision QOI at the target. |
+
+In the summary file, each QOI that has a value per arm takes D columns.
+Unlike the simulations and weeks files, there is no extra "Dose" column.
 
 ## Contents of Summary_freq_{missingnessType}.csv
 
@@ -2200,16 +2210,22 @@ column headings.
 | \<Dose\> |         | less than the user specified one-sided alpha.  |
 |          |         |                                                |
 |          |         | The marginal probability of significance per   |
-|          |         | dose (using unadjusted p-values.               |
+|          |         | dose (using unadjusted p-values).              |
 +----------+---------+------------------------------------------------+
-| Bias     | D       | The difference between the estimated mean      |
-| \<Dose\> |         | response and the true (simulated) mean         |
-|          |         | response per dose                              |
+| Bias     | D       | For each treatment arm, the mean (over the     |
+| \<Dose\> |         | simulations) of the difference between the     |
+|          |         | estimated treatment effect and the true        |
+|          |         | treatment effect. The true treatment effect is |
+|          |         | the true mean response on the arm minus the    |
+|          |         | true mean response on control (or minus the    |
+|          |         | fixed comparison value of the frequentist test |
+|          |         | if there is no control arm), signed so that a  |
+|          |         | positive effect is a benefit.                  |
 +----------+---------+------------------------------------------------+
 | Coverage | D       | The proportion of simulations where the        |
 | \<Dose\> |         | unadjusted confidence interval for the         |
-|          |         | response contains the true mean response used  |
-|          |         | to simulate subject responses.                 |
+|          |         | treatment effect contains the true treatment   |
+|          |         | effect (see Bias).                             |
 +----------+---------+------------------------------------------------+
 | Ppn      | 1       | The proportion of simulations where at least   |
 | Signif   |         | one of the Dunnett adjusted p-values is less   |
@@ -2221,9 +2237,9 @@ column headings.
 | \<Dose\> |         | alpha.                                         |
 +----------+---------+------------------------------------------------+
 | Coverage | D       | The proportion of simulations where the        |
-| Dunnett  |         | Dunnett adjusted confidence interval contains  |
-| \<Dose\> |         | the true mean response used to simulate        |
-|          |         | subjects responses.                            |
+| Dunnett  |         | Dunnett adjusted confidence interval for the   |
+| \<Dose\> |         | treatment effect contains the true treatment   |
+|          |         | effect (see Bias).                             |
 +----------+---------+------------------------------------------------+
 | Ppn      | 1       | The proportion of simulations where at least   |
 | Signif   |         | one of the Bonferroni adjusted p-values is     |
@@ -2235,9 +2251,9 @@ column headings.
 | \<Dose\> |         | one-sided alpha.                               |
 +----------+---------+------------------------------------------------+
 | Coverage | D       | The proportion of simulations where the        |
-| Bonf     |         | Bonferroni adjusted confidence interval        |
-| \<Dose\> |         | contains the true mean response used to        |
-|          |         | simulate subjects responses.                   |
+| Bonf     |         | Bonferroni adjusted confidence interval for    |
+| \<Dose\> |         | the treatment effect contains the true         |
+|          |         | treatment effect (see Bias).                   |
 +----------+---------+------------------------------------------------+
 | Ppn      | 1       | The proportion of simulations where the trend  |
 | Signif   |         | test p-value is less than the user specified   |
@@ -2269,16 +2285,22 @@ column headings.
 | \<Dose\> |         | less than the user specified one-sided alpha.  |
 |          |         |                                                |
 |          |         | The marginal probability of significance per   |
-|          |         | dose (using unadjusted p-values).               |
+|          |         | dose (using unadjusted p-values).              |
 +----------+---------+------------------------------------------------+
-| Bias     | D       | The difference between the estimated mean      |
-| \<Dose\> |         | response and the true (simulated) mean         |
-|          |         | response per dose                              |
+| Bias     | D       | For each treatment arm, the mean (over the     |
+| \<Dose\> |         | simulations) of the difference between the     |
+|          |         | estimated treatment effect and the true        |
+|          |         | treatment effect. The true treatment effect is |
+|          |         | the true mean response on the arm minus the    |
+|          |         | true mean response on control (or minus the    |
+|          |         | fixed comparison value of the frequentist test |
+|          |         | if there is no control arm), signed so that a  |
+|          |         | positive effect is a benefit.                  |
 +----------+---------+------------------------------------------------+
 | Coverage | D       | The proportion of simulations where the        |
 | \<Dose\> |         | unadjusted confidence interval for the         |
-|          |         | response contains the true mean response used  |
-|          |         | to simulate subject responses.                 |
+|          |         | treatment effect contains the true treatment   |
+|          |         | effect (see Bias).                             |
 +----------+---------+------------------------------------------------+
 | Ppn      | 1       | The proportion of simulations where at least   |
 | Signif   |         | one of the Dunnett adjusted p-values is less   |
@@ -2290,9 +2312,9 @@ column headings.
 | \<Dose\> |         | alpha.                                         |
 +----------+---------+------------------------------------------------+
 | Coverage | D       | The proportion of simulations where the        |
-| Dunnett  |         | Dunnett adjusted confidence interval contains  |
-| \<Dose\> |         | the true mean response used to simulate        |
-|          |         | subjects responses.                            |
+| Dunnett  |         | Dunnett adjusted confidence interval for the   |
+| \<Dose\> |         | treatment effect contains the true treatment   |
+|          |         | effect (see Bias).                             |
 +----------+---------+------------------------------------------------+
 | Ppn      | 1       | The proportion of simulations where at least   |
 | Signif   |         | one of the Bonferroni adjusted p-values is     |
@@ -2304,9 +2326,9 @@ column headings.
 | \<Dose\> |         | one-sided alpha.                               |
 +----------+---------+------------------------------------------------+
 | Coverage | D       | The proportion of simulations where the        |
-| Bonf     |         | Bonferroni adjusted confidence interval        |
-| \<Dose\> |         | contains the true mean response used to        |
-|          |         | simulate subjects responses.                   |
+| Bonf     |         | Bonferroni adjusted confidence interval for    |
+| \<Dose\> |         | the treatment effect contains the true         |
+|          |         | treatment effect (see Bias).                   |
 +----------+---------+------------------------------------------------+
 | Ppn      | 1       | The proportion of simulations where the trend  |
 | Signif   |         | test p-value is less than the user specified   |
@@ -2340,12 +2362,16 @@ The first line is a header line, starting with a '#', containing the
 FACTS GUI version number, the name of the FACTS file, the name of the
 scenario, and the time stamp of the start of the simulation.
 
-The second line is a header line, starting with a '#', containing the following
-column headings.
+The second and third lines are header lines, starting with a '#', that
+both contain the following column headings. The second line uses the
+long names (for example `LP Enrolled` and the full QOI descriptions such
+as `Pr(theta_d > theta_(Control))`), the third uses the short names (for
+example `LPFV` and the QOI short labels such as `Pr(PBO)`).
 
-Most of the columns are common to the two file types, but the weeks file
-does not contain columns for the 'final' values of the evaluation
-criteria.
+The two file types have the same columns, including the success and
+futility flags, apart from the first few: the simulations file starts
+with the simulation number, the random number seed and the last interim
+number, and the weeks file starts with the week and the interim number.
 
 :::{.panel-tabset}
 
@@ -2354,9 +2380,10 @@ criteria.
 | Column Title | Number of columns | In simulations file | In weeks file | Description |
 |----------|----------|--------|--------|--------------------------------|
 | # Weeks (Duration) | 1 | | ✔ | The week of the analysis |
+| InterimNumber | 1 | | ✔ | The index of the interim (1, 2, ...); 999 for the final analysis. |
 | #Sim | 1 | ✔ | | The number of the simulation. |
-| Random Number Seed | 1 | ✔ | ✔ | Base random number seed. |
-| LastInterim | 1 | ✔ | | The index of the last interim performed the index of the interim immediately before the final interim (index '999'). Note this is not necessarily the interim when the trial stopped if the design includes follow-up after stopping. |
+| Random Number Seed | 1 | ✔ | | Base random number seed. |
+| LastInterimNumber | 1 | ✔ | | The index of the last interim performed the index of the interim immediately before the final interim (index '999'). Note this is not necessarily the interim when the trial stopped if the design includes follow-up after stopping. |
 | #Subjects | 1 | ✔ | ✔ | The number of subjects recruited in the simulation. |
 | Outcome | 1 | ✔ | ✔ | A flag categorizing final study outcome:<br>1 = Early success<br>2 = Late success<br>3 = Late futility<br>4 = Early futility<br>5 = Success to futility flip-flop<br>6 = Futility to success flip-flop<br>7 = Inconclusive |
 | Early Success Time | 1 | ✔ | ✔ | This is the time to the early success decision (-9999 if there was no early success decision). The from the start of the trial to the interim where the early success conditions were first met. It does not include the subsequent follow up time. |
@@ -2380,8 +2407,8 @@ criteria.
 | Complete \<Dose\> | D | ✔ | ✔ | The number of completed subjects on each treatment arm at the time of the analysis. |
 | Complete Information \<Dose\> | D | ✔ | ✔ | The number of subject who count as complete for the purposes of timing interims -- whether complete or opportunity to complete and at which visit is as defined on the Interims tab. If interims are by enrolment then CompleteInformation is the number of subjects that have completed -- final endpoint data is available. |
 | #Dropouts \<Dose\> \<Visit\> | D * V | ✔ | ✔ | The number of subjects dropped out on each treatment arm and each visit. |
-| DR Param \<Param\> | 10 | ✔ | ✔ | The estimate of the mean value of each of the response model parameters. The response models require up to 10 parameters, most less. The model parameters are labeled $\alpha_1$, $\alpha_2$, .. the subscripts corresponding to the index "\<Param\>". |
-| Sd DR Param \<Param\> | 4 | ✔ | ✔ | The standard deviation of the estimate of the mean value of the corresponding response model parameter. |
+| DR Param \<Param\> | 10 | ✔ | ✔ | The estimate of the mean value of each of the response model parameters. The response models require up to 10 parameters, most less. The model parameters are labeled $\alpha_1$, $\alpha_2$, .. the subscripts corresponding to the index "\<Param\>". If a 2D treatment arm model is used, there is one column per parameter of that model instead of 10. |
+| Sd DR Param \<Param\> | 10 | ✔ | ✔ | The standard deviation of the estimate of the mean value of the corresponding response model parameter. As for DR Param, there is one column per parameter of a 2D treatment arm model instead of 10. |
 | Longmod_ \<Model\> \<Parameter\> \<Visit\> | LM * LMP * V | ✔ | ✔ | The estimate of the mean value of each of the longitudinal model parameters. The number of models depends on the number of "model instances" the user has specified. For linear regression the parameters reported are: - Alpha -- per visit -- the mean estimate of the constant offset in the change in response from this visit to the final visit - Beta -- per visit -- the mean estimate of the coefficient of change in response from this visit to the final visit - Lambda -- per visit -- the mean estimate of the SD of the residual error term in the predicted final visit response based on the response at this visit. For time course hierarchical the parameters reported are: - Alpha -- per visit -- the mean estimate of the exponential coefficient of the proportion of the dose response and per-subject response seen at this visit.. - Lambda -- per visit -- the mean estimate of the SD of the residual error term in the predicted final visit response based on the response at this visit. - Tau -- the mean estimate of the SD of the per subject random effect For ITP the parameters are: - K -- per model -- the mean estimate of the ITP shape parameter - Tau -- per model - the mean estimate of the SD of the per subject random effect - Lambda -- per model -- the mean estimate of the Sd of the residual error. - Omega -- per treatment arm -- the mean estimate of the mean treatment arm effect. For LOCF & Kernel Density there are no estimated parameters. |
 | Longmod Resp: \<Dose\> \<Visit\> | D * V | ✔ | ✔ | These are only calculated and written out if the Time Course Hierarchical or ITP longitudinal models are being used. This is the mean response for a particular dose at a particular visit. |
 | BAC Mean | 1 | ✔ | ✔ | This is the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses. |
@@ -2394,7 +2421,7 @@ criteria.
 | BAAC Tau SD | 1 | ✔ | ✔ | This is the SD of the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses. |
 | Duration | 1 | ✔ | ✔ | The time in weeks to the analysis shown. |
 | Arm Drop Time \<Dose\> | D | ✔ | ✔ | For each treatment arm, the time in weeks when it was decided to drop the arm. |
-| LPFV | 1 | ✔ | ✔ | The time in weeks to the last patient first visit. |
+| LPFV | 1 | ✔ | ✔ | The time in weeks to the last patient first visit. Headed `LP Enrolled` in the first column-heading line. |
 | QOI Columns | | ✔ | ✔ | See next section. |
 
 ### Dichotomous
@@ -2402,8 +2429,10 @@ criteria.
 | Column Title | Number of columns | In simulations file | In weeks file | Description |
 |----------|----------|--------|--------|--------------------------------|
 | # Weeks (Duration) | 1 | | ✔ | The week of the analysis |
+| InterimNumber | 1 | | ✔ | The index of the interim (1, 2, ...); 999 for the final analysis |
 | #Sim | 1 | ✔ | | The number of the simulation |
-| LastInterim | 1 | ✔ | | The index of the last interim performed the index of the interim immediately before the final interim (index '999'). Note this is not necessarily the interim when the trial stopped if the design includes follow-up after stopping |
+| Random Number Seed | 1 | ✔ | | Base random number seed |
+| LastInterimNumber | 1 | ✔ | | The index of the last interim performed the index of the interim immediately before the final interim (index '999'). Note this is not necessarily the interim when the trial stopped if the design includes follow-up after stopping |
 | #Subjects | 1 | ✔ | ✔ | The number of subjects recruited in the simulation |
 | Outcome | 1 | ✔ | ✔ | A flag categorizing final study outcome:<br>1 = Early success<br>2 = Late success<br>3 = Late futility<br>4 = Early futility<br>5 = Success to futility flip-flop<br>6 = Futility to success flip-flop<br>7 = Inconclusive |
 | Early Success Time | 1 | ✔ | ✔ | This is the time to the early success decision (-9999 if there was no early success decision). The from the start of the trial to the interim where the early success conditions were first met. It does not include the subsequent follow up time |
@@ -2418,8 +2447,8 @@ criteria.
 | Complete \<Dose\> | D | ✔ | ✔ | The number of completed subjects on each treatment arm at the time of the analysis |
 | Complete Information \<Dose\> | D | ✔ | ✔ | The number of subjects that have achieved the information criteria as specified on the Interims tab. May be the number enrolled, complete, or with the opportunity to complete. If complete or opportunity to complete, then the visit that should be complete is also specified.|
 | #Dropouts \<Dose\> \<Visit\> | D * V | ✔ | ✔ | The number of subjects dropped out on each treatment arm and each visit |
-| DR Param \<Param\> | 4 | ✔ | ✔ | The estimate of the mean value of each of the response model parameters. The response models require up to 4 parameters, some less. The model parameters are labeled $\alpha_1$, $\alpha_2$, .. the subscripts corresponding to the column their value appears in here |
-| Sd DR Param \<Param\> | 4 | ✔ | ✔ | The standard deviation of the estimate of the mean value of the corresponding response model parameter |
+| DR Param \<Param\> | 10 | ✔ | ✔ | The estimate of the mean value of each of the response model parameters. The response models require up to 10 parameters, most less. The model parameters are labeled $\alpha_1$, $\alpha_2$, .. the subscripts corresponding to the column their value appears in here. If a 2D treatment arm model is used, there is one column per parameter of that model instead of 10 |
+| Sd DR Param \<Param\> | 10 | ✔ | ✔ | The standard deviation of the estimate of the mean value of the corresponding response model parameter. As for DR Param, there is one column per parameter of a 2D treatment arm model instead of 10 |
 | Longmod_ \<Model\> \<Parameter\> \<Visit\> | LM * LMP * V | ✔ | ✔ | The estimate of the mean value of each of the longitudinal model parameters. The number of models depends on the number of "model instances" the user has specified. Each value is reported per visit unless otherwise stated.<br>For Beta-Binomial the parameters reported are:<br>•	Alpha0 &  Beta 0 – The beta binomial alpha & beta parameters for the probability that the final result will be 1 if the result at the visit is 0<br>•	Prob01 – the mean probability of the Beta(Alpha0, Beta0) – the probability of 1 being the final result if the result at the visit is 0<br>•	Alpha1 &  Beta 1 – The beta binomial alpha & beta parameters for the probability that the final result will be 1 if the result at the visit is 1<br>•	Prob11 – the mean probability of the Beta(Alpha1, Beta1) – the probability of 1 being the final result if the result at the visit is 1<br>For logistic regression the parameters reported are: <br>•	Prob11 – the probability of 1 being the final result if the result at the visit is 1and <br>•	Prob01 – the probability of 1 being the final result if the result at the visit is 0<br>For restricted Markov the parameters reported are:<br>•	Alpha0 – Alpha for state 0<br>•	AlphaS – Alpha for stable state<br>•	Alpha1 – Alpha for state 1<br>•	Prob0 – Transition probability to state 0<br>•	ProbS – Probability of remaining stable<br>•	Prob1 – Transition probability to state 1<br>(values are for the transition to the next visit, so thre are no values for the final visit)<br>If using a dichotomized continuous response, these columns will be for the selected continuous longitudinal model:<br>For linear regression the parameters reported are:<br>•	Alpha – the mean estimate of the constant offset in the change in response from this visit to the final visit<br>•	Beta – the mean estimate of the coefficient of change in response from this visit to the final visit<br>•	Lambda – the mean estimate of the SD of the residual error term in the predicted final visit response based on the response at this visit.<br>For ITP the parameters are:<br>•	K – single value per model – the mean estimate of the ITP shape parameter<br>•	Tau – single value per model - the mean estimate of the SD of the per subject random effect<br>•	Lambda – single value per model – the mean estimate of the Sd of the residual error.<br>•	Omega – per treatment arm not visit – the mean estimate of the mean treatment arm effect.<br>For LOCF & Kernel Density there are no estimated parameters. |
 | Longmod Resp: \<Dose\> \<Visit\> | D * V | ✔ | ✔ | These are only calculated and written out if the ITP longitudinal model is being used for a dichotomized continuous endpoint.<br>This is the mean response for a particular dose at a particular visit. |
 | BAC Mean | 1 | ✔ | ✔ | This is the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses |
@@ -2432,7 +2461,7 @@ criteria.
 | BAAC Tau SD | 1 | ✔ | ✔ | This is the SD of the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses |
 | Duration | 1 | ✔ | ✔ | The time in weeks to the analysis shown |
 | Arm Drop Time \<Dose\> | D | ✔ | ✔ | For each treatment arm, the time in weeks when it was decided to drop the arm |
-| LPFV | 1 | ✔ | ✔ | The time in weeks to the last patient first visit |
+| LPFV | 1 | ✔ | ✔ | The time in weeks to the last patient first visit. Headed `LP Enrolled` in the first column-heading line. |
 | QOI Columns | | ✔ | ✔ | See next section.|
 
 :::
@@ -2444,13 +2473,21 @@ design. The columns are grouped in the following order:
 
 | QOI Type | Description |
 |------|----------------|
-| Posterior Probabilities | The posterior probability for each QOI for each dose. |
-| Predictive Probabilities | The predictive probability for each QOI for each dose. |
-| P-Values | The p-value for each QOI for each dose. |
-| Target Probabilities | The probability of being the target for each QOI for each dose. |
+| Posterior Probabilities | The posterior probability for each QOI for each dose, followed by a "Dose" column. |
+| Predictive Probabilities | The predictive probability for each QOI for each dose, followed by a "Dose" column. |
+| P-Values | The p-value for each QOI for each dose, followed by a "Dose" column. |
+| Target Probabilities | The probability of being the target for each QOI for each dose, followed by a "Dose" column. |
 | Decision QOIs | The value of the decision QOI at the target. |
 | Success Futile | A flag for each QOI decision criteria indicating if the decision QOI was evaluated and compared to a threshold at the interim (weeks file) or final analysis (simulation file). The flag value is -1 if the decision QOI was not evaluated, 0 if it did not meet the threshold and 1 if it did. |
 | Success / Futile Combined | Flags indicating if the interim or final analysis determined success or futility taking all the factors defined for Success/Futility into account: 0 if the conditions were not met, 1 it the conditions were met. If success and futility conditions have been defined that are not mutually exclusive and both sets of combined conditions are met, FACTS will pick one of the outcomes as met but not the other. In order to discourage defining Success and Futility rules that can both be true FACTS does not guarantee which outcome will be selected. |
+
+Each QOI that has a value per arm (posterior probability, predictive
+probability, conditional power, p-value and target QOIs) takes D+1
+columns: one per arm, then a column headed `<QOI name> Dose`. This holds
+the index (1, 2, ...) of the arm with the highest value of the QOI, or,
+for p-value QOIs, the arm with the lowest p-value. For a target QOI this
+is the arm most likely to be the target. A trend-test p-value QOI has a
+single column and no "Dose" column.
 
 ## Contents of Simulations_freq_{missingnessType}.csv, Weeks_freq_{missingnessType}.csv
 

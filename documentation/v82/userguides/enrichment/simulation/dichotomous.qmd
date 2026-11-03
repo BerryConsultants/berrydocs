@@ -213,34 +213,19 @@ In the scenario directory there are the following types of results file:
 simulation results. This is the source of the shown on the simulations
 tab.
 
-**Summary_freq_bocf.csv**
-
-**Summary_freq_fail.csv**
-
-**Summary_freq_ignore.csv**
-
-**Summary_freq_locf.csv** Contains a single row of data that that
-summarizes the frequentist analysis of the simulations. A file is output
-for each of the different methods for dealing with missing data that are
-applicable: BOCF if the baseline score is being simulated (Continuous
-Only), LOCF and “ignore” (referred to as PP (Per-Protocol) in the GUI)
-and Fail (Dichotomous only).
+**Summary_freq.csv** Contains a single row of data that summarizes the
+frequentist analysis of the simulations.
 
 **Simulations.csv** Contains one row per simulation describing the final
 state of each simulation for every trial simulated.
 
-**Simulations_freq_bocf.csv**
-
-**Simulations_freq_fail.csv**
-
-**Simulations_freq_ignore.csv**
-
-**Simulations_freq_locf.csv** Contains one row per simulation describing
+**Simulations_freq.csv** Contains one row per simulation describing
 the frequentist analysis of the final state of each simulation for every
-trial simulated. A file is output for each of the different methods for
-dealing with missing data that are applicable: BOCF if the baseline
-score is being simulated (Continuous only), LOCF and “ignore” (referred
-to as PP (Per-Protocol) in the GUI) and Fail (Dichotomous only).
+trial simulated.
+
+The frequentist files (Summary_freq, Simulations_freq and weeks_freq)
+are only written if frequentist analysis is enabled on the Design \>
+Frequentist Analysis tab.
 
 **PatientsNNNNN.csv** Contains one row per patient in simulation, where
 NNNNN is the number of the simulation. By default this file is written
@@ -254,23 +239,15 @@ the simulation tab. The values in the last row of the “weeks” file will
 be the same as the final values for that simulation in the simulations
 file.
 
-**weeks_freq_bocf_NNNNN.csv,**
-
-**weeks_freq_fail_NNNN.csv,**
-
-**weeks_freq_ignore_NNNN.csv,**
-
-**weeks_freq_locf_NNNNN.csv,**
-
-Contains one row for each interim during a simulation where NNNNN is the
-number of the simulation. A file is output for each simulation for which
-a frequentist “weeks file” is to be output, and for each of the
-different methods for dealing with missing data that are applicable:
-BOCF if the baseline score is being simulated (Continuous Only), LOCF
-and “ignore” (referred to as PP (Per-Protocol) in the GUI) and Fail
-(Dichotomous only)
+**weeks_freqNNNNN.csv** Contains one row for each interim during a
+simulation, giving the frequentist analysis at that interim, where
+NNNNN is the number of the simulation. A file is output for each
+simulation for which a frequentist “weeks file” is to be output.
 
 ## Contents of summary.csv
+
+The file has a single header line, starting with ‘#’, that holds the
+column titles. It is followed by one row of data.
 
 | Column Title                                | Number of columns | Description |
 |------|----|-------------------|
@@ -279,10 +256,12 @@ and “ignore” (referred to as PP (Per-Protocol) in the GUI) and Fail
 | Timestamp                                   | 1                 | The date and time when the simulations started. |
 | Version                                     | 1                 | The version number of the FACTS GUI that ran the simulations. |
 | Nsim                                        | 1                 | The number of simulation runs. |
+| Random Number Seed                          | 1                 | The base random number seed used to perform the simulations. |
 | No. Subj                                    | 1                 | The mean, over the simulations, of the total number of subjects recruited in the trial. |
 | SE Subj.                                    | 1                 | The standard error of the total number of subjects recruited into the trials. |
 | 80-ile                                      | 1                 | The 80th percentile, over the simulations, of the total number of subjects recruited in the trial. |
 | Mean Alloc \<Group\> <arm>                     | 2*G               | The mean number of subjects recruited into each arm in each group. If a control arm is not included the column is still present, with value ‘0’. |
+| SE Alloc \<Group\> <arm>                       | 2*G               | The standard error, over the simulations, of the number of subjects recruited into each arm in each group. |
 | Mean Odds Ratio \<Group\>                     | G                 | The mean of the response odds ratio estimates between treatment and control. |
 | Mean Odds Ratio (Overall)                   | 1                 | The mean of the means of the response odds ratio estimates across all groups. |
 | SE Odds Ratio \<Group\>                       | G                 | The standard error, over the simulations, of the mean estimate of the response odds ratio in each group. |
@@ -305,7 +284,8 @@ and “ignore” (referred to as PP (Per-Protocol) in the GUI) and Fail
 | SE Mu Gamma                                 | 1                 | The standard error, over the simulations, of the mean estimate of the mean of the hierarchical distribution of the mean log-odds response rate on the control arm in each group. |
 | Mean Tau Gamma                              | 1                 | The mean, over the simulations, of the mean estimate of the standard deviation of hierarchical distribution of the mean log-odds response rate on the control arm in each group. |
 | SE Tau Gamma                                | 1                 | The standard error, across the simulations, of the mean estimate of the standard deviation of hierarchical distribution of the mean log-odds response rate on the control arm in each group. |
-| Mean Pr Ph3 Success \<Group\>                 | G                 | The mean, over the simulations, of the mean probability of success in phase 3 of the study treatment in each group. |
+| No.Dropouts \<Group\> <Arm>                    | 2*G               | The mean, over the simulations, of the number of subjects who dropped out on each arm in each group. These columns are only present if a longitudinal model is being used. |
+| Mean Pr Ph3 Success \<Group\>                 | G               | The mean, over the simulations, of the mean probability of success in phase 3 of the study treatment in each group. |
 | Mean Pr Ph3 Success 99                      | 1                 | The mean, across the simulations, of the mean probability of success in phase 3 of the across groups treatment difference. |
 | Mean Pr CSD (Success) \<Group\>               | G                 | The mean, over the simulations, of the mean probability of the study treatment arm being better than the control by the CSD for success in each group. |
 | Mean Pr CSD (Success) 99                    | 1                 | The mean, over the simulations, of the mean probability of the across groups treatment difference being better than the CSD for success. |
@@ -343,21 +323,32 @@ and “ignore” (referred to as PP (Per-Protocol) in the GUI) and Fail
 | Ppn Study Success (Final)                   | 1                 | The proportion of simulations where after all data has been collected the study was a success (whether stopping early or reaching full accrual). |
 | Ppn Futility Criteria Met (Final) \<Group\>    | G                 | The proportion of simulations where after all data has been collected each groups futility criteria have been met either for early stopping or final evaluation – for early stopping this means that the Phase 3 and/or CSD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied. |
 | Ppn Study Futile (Final)                    | 1                 | The proportion of simulations after all data has been collected where the study was futile (whether stopping early or reaching full accrual). |
-| Ppn Outcome 1                               | 1                 | The proportion of simulations that stopped early for success. |
+| Ppn Overall Success                         | 1                 | The proportion of simulations that were successful, either early success or late success (Outcome 1 or 2). |
+| Ppn Overall Futility                        | 1                 | The proportion of simulations that were futile, either early futility or late futility (Outcome 4 or 3). |
+| Ppn Outcome 1                              | 1                 | The proportion of simulations that stopped early for success. |
 | Ppn Outcome 2                               | 1                 | The proportion of simulations that reached full accrual and declared success on final evaluation. |
 | Ppn Outcome 3                               | 1                 | The proportion of simulations that reached full accrual and declared futility on final evaluation. |
 | Ppn Outcome 4                               | 1                 | The proportion of simulations that stopped early for futility. |
 | Ppn Outcome 5                               | 1                 | The proportion of simulations that stopped early for success but were deemed futile on final evaluation. |
 | Ppn Outcome 6                               | 1                 | The proportion of simulations that stopped early for futility but were deemed successful on final evaluation. |
 | Ppn Outcome 7                               | 1                 | The proportion of simulations that reached full accrual and were inconclusive. |
-| Mean Study Accrual Stop Week                | 1                 | The mean study duration of accrual – from start of accrual to last patient first visit. |
+| Mean Complete \<Group\> <Arm>                  | 2*G               | The mean, over the simulations, of the number of subjects with their final endpoint available on each arm in each group at the end of the trial. |
+| Mean Complete Info \<Group\> <Arm>             | 2*G               | The mean, over the simulations, of the amount of complete information on each arm in each group at the end of the trial, as defined for interim timing. |
+| Mean Study Accrual Stop Week               | 1                 | The mean study duration of accrual – from start of accrual to last patient first visit. |
 | Mean BAC Mu \<Group\>                          | G                 | The mean, over the simulations, of the posterior mean of the Bayesian Augmented Control hierarchical distribution for each group. |
 | SE BAC Mu \<Group\>                           | G                 | The standard error, over the simulations, of the posterior mean of the Bayesian Augmented Control hierarchical distribution for each group. |
 | Mean BAC Tau \<Group\>                         | G                 | The mean, over the simulations, of the posterior standard deviation of the Bayesian Augmented Control hierarchical distribution for each group. |
 | SE BAC Tau \<Group\>                          | G                 | The standard error, over the simulations, of the posterior standard deviation of the Bayesian Augmented Control hierarchical distribution for each group. |
+| Ppn Correct Groups                          | 1                 | The proportion of the groups marked as “should succeed” on the Virtual Subject Response \> Explicitly Defined \> Group Response tab that were successful in a simulation where the study was successful, averaged over all the simulations. |
+| Ppn Incorrect Groups                        | 1                 | The proportion of the groups **not** marked as “should succeed” on the Virtual Subject Response \> Explicitly Defined \> Group Response tab that were successful in a simulation where the study was successful, averaged over all the simulations. |
 
 
 ## Contents of Summary_freq.csv
+
+The file has two header lines starting with ‘#’: the first gives the
+FACTS version, the project name, the scenario name and the date and time
+of the simulations; the second holds the column titles. They are
+followed by one row of data.
 
 | Column Title | Number of columns | Description |
 |------|----|-------------------|
@@ -367,6 +358,8 @@ and “ignore” (referred to as PP (Per-Protocol) in the GUI) and Fail
 | ppn Significant (Chisq) (By Group) \<group\> | G | The proportion of simulations in which the treatment effect was significant according to a Chi-Square Test in each group. |
 | ppn Significant (Chisq) (By Group) \<group\> | G | The proportion of simulations in which the treatment effect was significant according to a Fisher exact test in each group. |
 | Ppn Significant (Binomial) (By Group) \<group\> | G | The proportion of simulations in which the treatment effect was significant according to a Binomial test in each group. |
+| Bias \<group\> | G | The mean, over the simulations, of the difference between the frequentist estimate of the treatment effect (the difference in response rates between treatment and control) in each group and the true treatment effect in that group (the true treatment response rate minus the true control response rate, reversed if a lower response is better). |
+| Coverage \<group\> | G | The proportion of simulations in which the confidence interval for the treatment effect in each group contains the true treatment effect in that group. |
 | Mean Trt Effect (By Group) \<group\> | G | The mean (over the simulations) of the frequentist estimate of the mean treatment effect in each group. |
 | SE Mean Trt Effect (by Group) \<group\> | G | The SE (over the simulations) of the frequentist estimate of the mean treatment effect in each group. |
 | Ppn Significant (Trt) | 1 | The proportion of simulations with an overall significant treatment effect. |
@@ -376,6 +369,11 @@ and “ignore” (referred to as PP (Per-Protocol) in the GUI) and Fail
 
 ## Contents of simulations.csv and weeksNNNNN.csv
 
+Both files have two header lines starting with ‘#’: the first gives the
+FACTS version, the project name, the scenario name and the date and time
+of the simulations; the second holds the column titles. simulations.csv
+then has one row per simulation, and the weeks file one row per interim.
+
 Most of the columns are common to the two file types, but the weeks file
 does not contain columns for the ‘final’ values of the evaluation
 criteria.
@@ -383,6 +381,7 @@ criteria.
 | Column Title                                | Number of columns | In simulations file | In weeks file | Description |
 |------------------|-----------|-----------|----------|-------------------------|
 | #Sim                                        | 1                 | ✔                   |               | Simulation number |
+| Random Number Seed                          | 1                 | ✔                   |               | The base random number seed used to perform the simulations (the same on every row). |
 | Weeks (Duration)                            | 1                 | ✔                   |               | The week of final analysis – the total duration of the simulation. |
 | #Week                                       | 1                 |                     | ✔             | Week |
 | No.Subj                                     | 1                 | ✔                   | ✔             | The number of subjects recruited in the simulation. |
@@ -447,8 +446,8 @@ criteria.
 | Combined Futility (Final) 99                 | 1                 | ✔                   |               | A flag: 1 = the required CSD and success in phase 3 criteria are all met for the final evaluation for futility in the across groups analysis, 0 = they are not all met. |
 | Combined Success (Final) \<Group\>             | G                 | ✔                   |               | A flag: 1 = the required CSD and success in phase 3 criteria are all met for the final evaluation for success for each group, 0 = they are not all met. Whether the across group final success condition is also met if required is not included in this flag. |
 | Combined Success (Final) 99                  | 1                 | ✔                   |               | A flag: 1 = the required CSD and success in phase 3 criteria are all met for the final evaluation for success in the across groups analysis, 0 = they are not all met. |
-| Success Criteria Met (Final) \<Group\>         | G                 | ✔                   | ✔             | A flag: 1 = the group’s success criteria were met, 0 = otherwise. |
-| Futility Criteria Met (Final) \<Group\>        | G                 | ✔                   | ✔             | A flag: 1 = the group’s futility criteria were met, 0 = otherwise. |
+| Success Criteria Met (Final) \<Group\>         | G                 | ✔                   |               | A flag: 1 = the group’s success criteria were met, 0 = otherwise. |
+| Futility Criteria Met (Final) \<Group\>        | G                 | ✔                   |               | A flag: 1 = the group’s futility criteria were met, 0 = otherwise. |
 | Futile Study                                | 1                 | ✔                   | ✔             | A flag: 1 = the study was futile overall, 0 = otherwise. |
 | Successful Study                            | 1                 | ✔                   | ✔             | A flag: 1 = the study was successful overall, 0 = otherwise. |
 | Outcome                                     | 1                 | ✔                   | ✔             | A flag categorizing final study outcome: 1. Early success; 2. Late success; 3. Late futility; 4. Early futility; 5. Success to futility flip-flop; 6. Futility to success flip-flop; 7. Inconclusive. In weeks files written before the final analysis it is -9999. |
@@ -475,6 +474,10 @@ criteria.
 
 
 ## Contents of Simulations_freq.csv
+
+Like simulations.csv, the file has two header lines starting with ‘#’: a
+line giving the FACTS version, project, scenario and date and time, then
+the column titles.
 
 | Column Title | Number of columns | Description |
 |------|----|-------------------|

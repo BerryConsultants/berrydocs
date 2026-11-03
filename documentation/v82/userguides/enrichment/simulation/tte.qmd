@@ -210,6 +210,10 @@ state of each simulation for every trial simulated.
 frequentist analysis of the final state of each simulation for every
 trial simulated.
 
+The frequentist files (Summary_freq, Simulations_freq and Weeks_freq)
+are only written if frequentist analysis is enabled on the Design \>
+Frequentist Analysis tab.
+
 **MCMCNNNNN.csv** Contains one row per MCMC sample, where NNNNN is the
 number of the simulation. By default this file is written out only for
 the first simulation, but this can be changed vai the “MCMC Setting”
@@ -234,6 +238,9 @@ via the advanced button on the simulation tab.
 
 ## Contents of summary.csv
 
+The file has a single header line, starting with ‘#’, that holds the
+column titles. It is followed by one row of data.
+
 | Column Title | Number of columns | Description |
 |------|----|-------------------|
 | \# Project | 1 | The name of the “.facts” file in the FACTS GUI that was used to generate the simulations. |
@@ -241,10 +248,12 @@ via the advanced button on the simulation tab.
 | Timestamp | 1 | The date and time when the simulations started. |
 | Version | 1 | The version number of the FACTS GUI that ran the simulations. |
 | Nsim | 1 | The number of simulation runs. |
+| Random Number Seed | 1 | The base random number seed used to perform the simulations. |
 | No. Subj | 1 | The mean, over the simulations, of the total number of subjects recruited in the trial. |
 | SE Subj. | 1 | The standard error of the total number of subjects recruited into the trials. |
 | 80-ile | 1 | The 80<sup>th</sup> percentile, over the simulations, of the total number of subjects recruited in the trial. |
 | Mean Alloc \<group\> \<arm\> | 2\*G | The mean number of subjects recruited into each arm in each group. If a control arm is not included the column is still present, with value ‘0’. |
+| SE Alloc \<group\> \<arm\> | 2\*G | The standard error, over the simulations, of the number of subjects recruited into each arm in each group. |
 | Mean Trt Effect (HR) \<group\> | G | The mean of the estimates of hazard ratio on the study treatment arm in each group. |
 | Mean Trt Effect (Overall) | 1 | The mean of the estimate of the across groups treatment hazard ratio. |
 | SE Trt Effect (HR) \<group\> | G | The standard error, over the simulations, of the estimate of hazard ratio on the study treatment arm in each group. |
@@ -288,6 +297,8 @@ via the advanced button on the simulation tab.
 | Ppn Study Success (Final) | 1 | The proportion of simulations where after all the data has been collected the study was a success (whether stopping early or reaching full accrual). |
 | Ppn Futility Criteria Met (Final) \<group\> | G | The proportion of simulations where after all the data has been collected each groups futility criteria have been met either for early stopping or final evaluation – for early stopping this means that the Phase 3 and/or CSHRD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied |
 | Ppn Study Futile (Final) | 1 | The proportion of simulations where after all the data has been collected the study was futile (whether stopping early or reaching full accrual). |
+| Ppn Overall Success | 1 | The proportion of simulations that were successful, either early success or late success (Outcome 1 or 2). |
+| Ppn Overall Futility | 1 | The proportion of simulations that were futile, either early futility or late futility (Outcome 4 or 3). |
 | Ppn Outcome 1 | 1 | The proportion of simulations that stopped early for success. |
 | Ppn Outcome 2 | 1 | The proportion of simulations that reached full accrual and declared success on final evaluation. |
 | Ppn Outcome 3 | 1 | The proportion of simulations that reached full accrual and declared futility on final evaluation. |
@@ -314,8 +325,15 @@ via the advanced button on the simulation tab.
 | Mean Events 99 \<segment\> \<arm\> | S \* A | The mean, over the simulations, of the number of events on each arm across all the groups in each time segment of the hazard model. |
 | Mean Exposure \<group\> \<segment\> \<arm\> | G \* S \*A | The mean, over the simulations, of the subject weeks exposure time on each arm in each group in each time segment of the hazard model. |
 | Mean Exposure 99 \<segment\> \<arm\> | S \* A | The mean, over the simulations, of the subject weeks exposure time on each arm across all groups in each time segment of the hazard model |
+| Ppn Correct Groups | 1 | The proportion of the groups marked as “should succeed” on the Virtual Subject Response \> Explicitly Defined \> Group Response tab that were successful in a simulation where the study was successful, averaged over all the simulations. |
+| Ppn Incorrect Groups | 1 | The proportion of the groups **not** marked as “should succeed” on the Virtual Subject Response \> Explicitly Defined \> Group Response tab that were successful in a simulation where the study was successful, averaged over all the simulations. |
 
 ## Contents of Summary_freq.csv
+
+The file has two header lines starting with ‘#’: the first gives the
+FACTS version, the project name, the scenario name and the date and time
+of the simulations; the second holds the column titles. They are
+followed by one row of data.
 
 | Column Title | Number of columns | Description |
 |------|----|-------------------|
@@ -327,12 +345,19 @@ via the advanced button on the simulation tab.
 | Ppn Significant (Trt) | 1 | The proportion of simulations in which the treatment effect was significant using a 2-sided p-value test at the specified alpha level. |
 | Ppn Significnat Str. LogRank | 1 | The proportion of simulations significant by the stratified log rank test using a 2-sided p-value test at the specified alpha level. |
 | pSignificant (GrpxTrt) | 1 | The proportion of simulations with a significant group and treatment effect using a 2-sided p-value test at the specified alpha level. |
+| Bias \<group\> | G | The mean, over the simulations, of the difference between the frequentist estimate of the hazard ratio in each group and the true hazard ratio for that group in the scenario. |
+| Coverage \<group\> | G | The proportion of simulations in which the confidence interval for the hazard ratio in each group contains the true hazard ratio for that group. |
 | Mean Trt Effect \<group\> | G | The mean treatment effect per group. |
 | SE Trt Effect \<group\> | G | The standard error of the treatment effect per group |
 | Cox ppn significant | G | The proportion of simulations with significant effect by Cox proportional hazards using a 2-sided p-value test at the specified alpha level. |
 | LogRank Significant \<group\> | G | The proportion of simulations with significant effect by the Log Rank test using a 2-sided p-value test at the specified alpha level. |
 
 ## Contents of simulations.csv and weeksNNNNN.csv
+
+Both files have two header lines starting with ‘#’: the first gives the
+FACTS version, the project name, the scenario name and the date and time
+of the simulations; the second holds the column titles. simulations.csv
+then has one row per simulation, and the weeks file one row per interim.
 
 Most of the columns are common to the two file types, but the weeks file
 does not contain columns for the ‘final’ values of the evaluation
@@ -341,6 +366,7 @@ criteria.
 | Column Title                              | Number of columns | In simulations file | In weeks file | Description |
 |------------------|-----------|-----------|----------|-------------------------|
 | #Sim                                      | 1                 | ✔                   |               | Simulation number |
+| Random Number Seed                        | 1                 | ✔                   |               | The base random number seed used to perform the simulations (the same on every row). |
 | # Weeks (Duration)                        | 1                 | ✔                   |               | The week of final analysis – the total duration of the simulation. |
 | #Week                                     | 1                 |                     | ✔             | Week |
 | No.Subj                                   | 1                 | ✔                   | ✔             | The number of subjects recruited in the simulation. |
@@ -373,10 +399,10 @@ criteria.
 | Combined Futility 99                       | 1                 | ✔                   | ✔             | A flag: 1 = the required CSHRD, success in phase 3 and minimum sample size criteria are all met for early stopping for futility in the across groups analysis, 0 = they are not all met. |
 | Combined Success \<group\>                   | G                 | ✔                   | ✔             | A flag: 1 = the required CSHRD, success in phase 3 and minimum sample size criteria are all met for early stopping for success for each group, 0 = they are not all met. Whether the across group stopping condition is also met if required is not included in this flag. |
 | Combined Success 99                        | 1                 | ✔                   | ✔             | A flag: 1 = the required CSHRD, success in phase 3 and minimum sample size criteria are all met for early stopping for success in the across groups analysis, 0 = they are not all met. |
-| Success Criteria Met \<group\>               | G                 | ✔                   | ✔             | A flag: 1 = the group’s success criteria were met for the final evaluation, 0 = otherwise. |
-| Success Criteria Met (Final) 99            | 1                 | ✔                   | ✔             | A flag: 1 = the Across Group success criteria were met for the final evaluation, 0 = otherwise |
-| Futility Criteria Met \<group\>              | G                 | ✔                   | ✔             | A flag: 1 = the group’s futility criteria were met for the final evaluation, 0 = otherwise. |
-| Futility Criteria Met (Final) 99           | 1                 | ✔                   | ✔             | A flag: 1 = the Across Group futility criteria were met for the final evaluation, 0 = otherwise |
+| Success Criteria Met \<group\>               | G                 | ✔                   | ✔             | A flag: 1 = the group’s success criteria were met, 0 = otherwise. |
+| Success Criteria Met 99                    | 1                 | ✔                   | ✔             | A flag: 1 = the Across Group success criteria were met, 0 = otherwise. |
+| Futility Criteria Met \<group\>              | G                 | ✔                   | ✔             | A flag: 1 = the group’s futility criteria were met, 0 = otherwise. |
+| Futility Criteria Met 99                   | 1                 | ✔                   | ✔             | A flag: 1 = the Across Group futility criteria were met, 0 = otherwise. |
 | Futile Study                               | 1                 | ✔                   | ✔             | A flag: 1 = the study was futile overall, 0 = otherwise. |
 | Successful Study                           | 1                 | ✔                   | ✔             | A flag: 1 = the study was successful overall, 0 = otherwise. |
 | Outcome                                    | 1                 | ✔                   | ✔             | A flag categorizing final study outcome: 1. Early success; 2. Late success; 3. Late futility; 4. Early futility; 5. Success to futility flip-flop; 6. Futility to success flip-flop; 7. Inconclusive. In weeks files written before the final analysis it is -9999. |
@@ -395,6 +421,10 @@ criteria.
 
 
 ## Contents of Simulations_freq.csv
+
+Like simulations.csv, the file has two header lines starting with ‘#’: a
+line giving the FACTS version, project, scenario and date and time, then
+the column titles.
 
 | Column Title | Number of columns | Description |
 |------|----|-------------------|
