@@ -1722,7 +1722,7 @@ The first line starts with '#' and holds the GUI version, the name of the FACTS 
 | Fitted Tox | I×J | The final posterior mean probability of toxicity of the combination. |
 | Subjects | I×J | The number of subjects allocated to the combination. |
 | Obs Tox | I×J | The number of toxicities observed on the combination. |
-| Flags | 1 | The state of the trial at its last cohort, including why it stopped (see [Flag values](#flag-values)). |
+| Flags | 1 | Why the trial stopped: 200 if all combinations were too toxic, 400 if the stopping rules were met; otherwise the flag of the last cohort allocated (see [Flag values](#flag-values)). |
 | Duration | 1 | The duration of the trial, in weeks. |
 
 ## Contents of cohortsNNN.csv
@@ -1750,7 +1750,7 @@ The first two lines are as for simulations.csv. Each subsequent line describes t
 
 ## Flag values {#flag-values}
 
-The Flags column is written as a hexadecimal number without a `0x` prefix (for example `30` or `430`). It shows how the cohort was allocated. On the last cohort, 200 or 400 is added to show why the trial stopped.
+The Flags column is written as a hexadecimal number without a `0x` prefix (for example `30` or `101`). In the cohorts files it shows how each cohort was allocated. In simulations.csv it shows why the trial stopped (200 or 400), or, if neither applies, the flag of the last cohort allocated.
 
 | Flag | Description |
 |------------|--------------------------------------|
@@ -1781,5 +1781,5 @@ The Flags column is written as a hexadecimal number without a `0x` prefix (for e
 | 82 | Full cohort added at the end of a Custom run-in at the combination(s) below the one where a toxicity was seen. |
 | 100 | Full cohort added at the end of a Row by row or Tri-axial run-in. |
 | 101 | Cohort added at the end of a run-in that reached its limit without observing any toxicity. |
-| +200 | Added to the flag of the last cohort when the trial stopped because all combinations were too toxic. |
-| +400 | Added to the flag of the last cohort when the trial stopped because the stopping rules were met. |
+| 200 | The trial stopped because all combinations were too toxic. |
+| 400 | The trial stopped because the stopping rules were met. |

@@ -422,13 +422,12 @@ example to have more detailed output files generated, by specifying
 
 Say the 999<sup>th</sup> simulation out of a set displayed some unusual
 behavior, in order to understand why, one might want to see the
-individual interim analyses for that simulation (the “weeks” file), the
-sampled subject results for that simulation (the “Subjects” files) and
-possibly even the MCMC samples from the analyses in that simulation. You
+state of the trial after each cohort in that simulation (the “cohorts”
+file) and possibly even the MCMC samples from the analyses in that simulation. You
 can save the .facts file with a slightly different name (to preserve the
 existing simulation results), then run 1 simulation of the specific
 scenario, specifying that the simulations start at simulation 999 and
-that at least 1 weeks file, 1 subjects file and the MCMC samples file
+that at least 1 cohorts file and the MCMC samples file
 (see the “MCMC settings” dialog) are output.
 
 Even a small change in the random seed will produce different simulation
@@ -872,6 +871,21 @@ simulation where NNN is the number of the simulation. By default this
 file is written only for the first 100 simulations, but this can be
 changed via the advanced button on the simulation tab.
 
+**Doses.csv** -- contains one row per dose, with a single column
+`Dose` holding the dose strength.
+
+Apart from doses.csv, each file starts with a line giving the design
+engine version, GUI version, project, scenario and date/time (for
+example `#DE=8.0.0.0,GUI=8.1.0,MyDesign,MyScenario,01/13/2026 09:05:10`).
+The next line holds the column titles, and also starts with `#`.
+
+3+3 designs write fewer columns than the other methods; the columns
+they omit are listed after each table below.
+
+Designs that use the deprecated CRM (Toxicity), CRM (Efficacy), CRM
+(Ordinal), bCRM and standalone 3+3 engines can still be opened and
+simulated, but their output files are not described in this guide.
+
 ## Contents of summary.csv
 
 +------------+-----------+--------------------------------------------------+
@@ -904,13 +918,6 @@ changed via the advanced button on the simulation tab.
 |            |           | are exposed to, given the toxicity response      |
 |            |           | profile that we are simulating from.             |
 +------------+-----------+--------------------------------------------------+
-| True Mean  | 1 --      | This is the average true probability of efficacy |
-| Eff        | Efficacy  | over the simulations. The 'true probability of   |
-|            | only      | efficacy' in a simulated trial is the average of |
-|            |           | the probabilities of efficacy all the subjects   |
-|            |           | are exposed to, given the efficacy response      |
-|            |           | profile that we are simulating from.             |
-+------------+-----------+--------------------------------------------------+
 | MTD        | One per   | For each dose, this is proportion of the         |
 | Selection  | dose      | simulations where it was selected as the MTD at  |
 | \<dose     |           | the end of the study, as defined by the Selected |
@@ -924,9 +931,9 @@ changed via the advanced button on the simulation tab.
 | index\>    |           | efficacy endpoint to take into account too\]     |
 +------------+-----------+--------------------------------------------------+
 | Mean       | One per   | This is the mean (over the simulations) of the   |
-| Fitted     | dose      | mean estimate of toxicity from the fitted        |
-| Toxicity   |           | toxicity response model for each dose.           |
-| \<dose     |           |                                                  |
+| Fitted     | dose      | final estimate of toxicity for each dose, from   |
+| Toxicity   |           | the isotonic regression of the observed toxicity |
+| \<dose     |           | rates (the Toxicity columns of simulations.csv). |
 | index\>    |           |                                                  |
 +------------+-----------+--------------------------------------------------+
 | SD Fitted  | One per   | This is the standard deviation of the mean       |
@@ -1007,18 +1014,10 @@ changed via the advanced button on the simulation tab.
 | Toxicity   | dose      | each dose                                        |
 | \<Dose\>   |           |                                                  |
 +------------+-----------+--------------------------------------------------+
-| Mean Lost  | 1 -- Open | The mean (over the simulations) of the number of |
-|            | Enrolment | subjects who were available for treatment but    |
-|            | only      | could not be included in the trial because the   |
-|            |           | number of treated subjects for whom the final    |
-|            |           | result is not available equals the maximum queue |
-|            |           | length. This only applies to Open Enrolment      |
-|            |           | designs otherwise the column is omitted.         |
+| Mean Lost  | 1         | Always 0. Subjects can only be 'lost' with open  |
+|            |           | enrolment, which these designs do not use.       |
 +------------+-----------+--------------------------------------------------+
-| s.d.Lost   | 1 -- Open | The SD (over the simulations) of the number of   |
-|            | Enrolment | subjects 'lost' (see above). This only applies   |
-|            | only      | to Open Enrolment designs otherwise the column   |
-|            |           | is omitted.                                      |
+| s.d.Lost   | 1         | Always 0 (see Mean Lost).                        |
 +------------+-----------+--------------------------------------------------+
 | Ppn(Esc)   | One per   | The proportion of times the final data on the    |
 | \<Dose\>   | dose      | dose resulted in the decision "Escalate".        |
@@ -1038,40 +1037,33 @@ changed via the advanced button on the simulation tab.
 |            |           | it has no data. Hence for a given dose, the      |
 |            |           | above 4 proportions don't necessarily sum to 1.  |
 +------------+-----------+--------------------------------------------------+
-| PostCE     | 1 --      | The number of times after the Cohort Expansion   |
-| MTD+ \<1   | Cohort    | the dose 'below the first dose' was selected as  |
-|            | expansion | MTD+. (Omitted if no Expansion Cohort is         |
-|            | only      | defined)                                         |
+| PostCE     | 1         | The number of times after the Cohort Expansion   |
+| MTD+ \<1   |           | the dose 'below the first dose' was selected as  |
+|            |           | MTD+. If no Expansion Cohort is defined, all the |
+|            |           | PostCE columns contain -9999.                    |
 +------------+-----------+--------------------------------------------------+
 | PostCE     | One per   | The number of times after the Cohort Expansion   |
-| MTD+       | dose --   | the dose was selected as MTD+. (Omitted if no    |
-| \<Dose\>   | Cohort    | Expansion Cohort is defined)                     |
-|            | expansion |                                                  |
-|            | only      |                                                  |
+| MTD+       | dose      | the dose was selected as MTD+.                   |
+| \<Dose\>   |           |                                                  |
 +------------+-----------+--------------------------------------------------+
-| PostCE     | 1 --      | The number of times after the Cohort Expansion   |
-| MTD+ \>    | Cohort    | the dose 'above the top dose' was selected as    |
-| \<D\>      | expansion | MTD+. (Omitted if no Expansion Cohort is         |
-|            | only      | defined)                                         |
+| PostCE     | 1         | The number of times after the Cohort Expansion   |
+| MTD+ \>    |           | the dose 'above the top dose' was selected as    |
+| \<D\>      |           | MTD+.                                            |
 +------------+-----------+--------------------------------------------------+
-| PostCE     | 1 --      | The number of times after the Cohort Expansion   |
-| OSD+ \<1   | Cohort    | the dose 'below the first dose' was selected as  |
-|            | expansion | OSD+. (Omitted if no Expansion Cohort is         |
-|            | only      | defined)                                         |
+| PostCE     | 1         | The number of times after the Cohort Expansion   |
+| OSD+ \<1   |           | the dose 'below the first dose' was selected as  |
+|            |           | OSD+.                                            |
 +------------+-----------+--------------------------------------------------+
 | PostCE     | One per   | The number of times after the Cohort Expansion   |
-| OSD+       | dose --   | the dose was selected as OSD+. (Omitted if no    |
-| \<Dose\>   | Cohort    | Expansion Cohort is defined)                     |
-|            | expansion |                                                  |
-|            | only      |                                                  |
+| OSD+       | dose      | the dose was selected as OSD+.                   |
+| \<Dose\>   |           |                                                  |
 +------------+-----------+--------------------------------------------------+
-| PostCE     | 1 --      | The number of times after the Cohort Expansion   |
-| OSD+ \>    | Cohort    | the dose 'above the top dose' was selected as    |
-| \<D\>      | expansion | OSD+. (Omitted if no Expansion Cohort is         |
-|            | only      | defined)                                         |
+| PostCE     | 1         | The number of times after the Cohort Expansion   |
+| OSD+ \>    |           | the dose 'above the top dose' was selected as    |
+| \<D\>      |           | OSD+.                                            |
 +------------+-----------+--------------------------------------------------+
 | All Tox    | 1         | The proportion of the simulations that stopped   |
-| Stop       |           | because all doses were too toxic.                |
+| Stop Early |           | because all doses were too toxic.                |
 +------------+-----------+--------------------------------------------------+
 | Early      | 1         | The proportion of the simulations that stopped   |
 | Success    |           | because sufficient stopping rules were met       |
@@ -1082,6 +1074,10 @@ changed via the advanced button on the simulation tab.
 |            |           | because the maximum number of cohorts had been   |
 |            |           | treated.                                         |
 +------------+-----------+--------------------------------------------------+
+
+3+3 designs do not write the Mean Fitted Toxicity, SD Fitted Toxicity,
+Mean Lost, s.d.Lost, Ppn(Esc), Ppn(Stay), Ppn(DeEsc), Ppn(Never) and
+All Tox Stop Early columns.
 
 ## Contents of simulations.csv and cohortsNNN.csv
 
@@ -1135,6 +1131,16 @@ changed via the advanced button on the simulation tab.
                        toxicity
   -----------------------------------------------------------------------------
 
+As well as one row per cohort, the cohorts file can contain these rows:
+
+- Cohort 8999: written if there are delayed responses and an expansion
+  cohort. It shows the state once the outstanding responses are
+  available, when the dose for the expansion cohort is chosen.
+- Cohort 9000: the expansion cohort, if one is used. In 3+3 designs the
+  expansion cohort row is the one with a Flags value of 14.
+- Cohort 9999: the state at the end of the trial, excluding any
+  expansion cohort. Alloc Dose is -1 and NumToxic is blank.
+
 ### Common simulations.csv and cohortsNNN.csv columns
 
 +----------+---------------+-----------------------------------------------------+
@@ -1145,17 +1151,16 @@ changed via the advanced button on the simulation tab.
 | MTD      |               |                                                     |
 +----------+---------------+-----------------------------------------------------+
 | Model    | 1             | The index of the dose selected as the Optimal Safe  |
-| OSD      | \[simulations | Dose (OSD), in N-CRM this will always be the same   |
-|          | only\]        | as the MTD as there is no efficacy to take into     |
-|          |               | consideration.                                      |
+| OSD      | \[simulations | Dose (OSD). This is always the same as the MTD, as  |
+|          | only\]        | there is no efficacy to take into consideration.    |
 +----------+---------------+-----------------------------------------------------+
-| Toxicity | One per dose  | The mean of the final posterior estimate of the     |
-| \<dose   |               | toxicity rate at each dose.                         |
-| index\>  |               |                                                     |
+| Toxicity | One per dose  | The estimate of the toxicity rate at each dose from |
+| \<dose   |               | the isotonic regression of the observed toxicity    |
+| index\>  |               | rates.                                              |
 +----------+---------------+-----------------------------------------------------+
 | No. Subj | One per dose  | The number of subjects that have been allocated to  |
-| \<dose   |               | each dose.                                          |
-| index\>  |               |                                                     |
+| \<dose   |               | each dose. In simulations.csv these columns are     |
+| index\>  |               | titled Subj per dose.                               |
 +----------+---------------+-----------------------------------------------------+
 | Tox per  | One per dose  | The number of toxicities that have observed at each |
 | dose     |               | dose                                                |
@@ -1167,15 +1172,9 @@ changed via the advanced button on the simulation tab.
 | \<dose   |               |                                                     |
 | index\>  |               |                                                     |
 +----------+---------------+-----------------------------------------------------+
-| Tox CI   | 1 -- MTD      | Only used if targeting a single dose. It's the CI   |
-|          | target only   | used in the stopping rule "range of dose strength   |
-|          |               | within the credible interval", where the credible   |
-|          |               | interval has a default alpha of 0.05.               |
-+----------+---------------+-----------------------------------------------------+
-| Flags    | 1             | A flag value comprising a number of (possible) flag |
-|          |               | values 'OR'd together to show the current           |
-|          |               | allocation or stopping decisions. See the Flag      |
-|          |               | Values table below for details                      |
+| Flags    | 1             | A value showing the current allocation or stopping  |
+|          |               | decision, written in hexadecimal. See the Flag      |
+|          |               | Values table below for details.                     |
 +----------+---------------+-----------------------------------------------------+
 | 1^st^    | 1             | The number of the first full sized cohort, this     |
 | full     | \[simulations | will be '1' unless the small cohort run-in is       |
@@ -1202,15 +1201,13 @@ changed via the advanced button on the simulation tab.
 | Toxicity |               | the scenario.                                       |
 | \<Dose\> |               |                                                     |
 +----------+---------------+-----------------------------------------------------+
-| Rec Time | 1 - Cohorts   | If the trial is using open enrolment this column    |
-|          | only          | record the time the subject was available to be     |
-|          |               | dosed.                                              |
+| Rec Time | 1 \[cohorts   | Always blank. This column holds the time a subject  |
+|          | only\]        | was available to be dosed when using open           |
+|          |               | enrolment, which these designs do not use.          |
 +----------+---------------+-----------------------------------------------------+
-| Num Lost | 1 -- Open     | If the trial is using open enrolment this is the    |
-|          | enrolment     | total number of subjects 'lost' during the          |
-|          | only          | simulation, that is they couldn't be allocated a    |
-|          | (simulations  | dose because there were already the maximum number  |
-|          | only)         | of subjects treated but not complete.               |
+| Num Lost | 1             | Always 0. Subjects can only be 'lost' with open     |
+|          | (simulations  | enrolment, which these designs do not use.          |
+|          | only)         |                                                     |
 +----------+---------------+-----------------------------------------------------+
 | Decision | One per dose  | Based on the data on that dose (in simulaitons.csv  |
 | \<Dose\> |               | the data at the end of the trial) a code indicating |
@@ -1227,30 +1224,58 @@ changed via the advanced button on the simulation tab.
 |          |               |                                                     |
 |          |               | 1: Escalate                                         |
 +----------+---------------+-----------------------------------------------------+
-| PostCE   | 1 --          | In the case of a trial using an expansion cohort,   |
-| MTD      | Expansion     | this is the dose that is the model MTD at the end   |
-|          | cohort only   | of the dose escalation phase, after the expansion   |
-|          | (simulations  | cohort.                                             |
-|          | only)         |                                                     |
+| PostCE   | 1             | In the case of a trial using an expansion cohort,   |
+| MTD      | (simulations  | this is the dose that is the model MTD at the end   |
+|          | only)         | of the dose escalation phase, after the expansion   |
+|          |               | cohort. Blank if no expansion cohort is defined.    |
 +----------+---------------+-----------------------------------------------------+
-| PostCE   | 1 --          | In the case of a trial using an expansion cohort,   |
-| OSD      | Expansion     | this is the dose that is the model OSD at the end   |
-|          | cohort only   | of the dose escalation phase, after the expansion   |
-|          | (simulations  | cohort.                                             |
-|          | only)         |                                                     |
+| PostCE   | 1             | In the case of a trial using an expansion cohort,   |
+| OSD      | (simulations  | this is the dose that is the model OSD at the end   |
+|          | only)         | of the dose escalation phase, after the expansion   |
+|          |               | cohort. Blank if no expansion cohort is defined.    |
 +----------+---------------+-----------------------------------------------------+
-| PostCE   | 1 --          | In the case of a trial using an expansion cohort,   |
-| MTD+     | Expansion     | this is the dose that is the model MTD+ at the end  |
-|          | cohort only   | of the dose escalation phase, after the expansion   |
-|          | (simulations  | cohort.                                             |
-|          | only)         |                                                     |
+| PostCE   | 1             | In the case of a trial using an expansion cohort,   |
+| MTD+     | (simulations  | this is the dose that is the model MTD+ at the end  |
+|          | only)         | of the dose escalation phase, after the expansion   |
+|          |               | cohort. Blank if no expansion cohort is defined.    |
 +----------+---------------+-----------------------------------------------------+
-| PostCE   | 1 --          | In the case of a trial using an expansion cohort,   |
-| OSD+     | Expansion     | this is the dose that is the model OSD+ at the end  |
-|          | cohort only   | of the dose escalation phase, after the expansion   |
-|          | (simulations  | cohort.                                             |
-|          | only)         |                                                     |
+| PostCE   | 1             | In the case of a trial using an expansion cohort,   |
+| OSD+     | (simulations  | this is the dose that is the model OSD+ at the end  |
+|          | only)         | of the dose escalation phase, after the expansion   |
+|          |               | cohort. Blank if no expansion cohort is defined.    |
 +----------+---------------+-----------------------------------------------------+
+
+3+3 designs do not write the Toxicity, Num Lost and Decision columns in
+simulations.csv, or the MTD, Toxicity, MTD+, Rec Time and Decision
+columns in the cohorts files.
+
+The Flags column is written in hexadecimal without a `0x` prefix. For
+mTPI, mTPI-2, i3+3 and BOIN it holds one allocation value, to which
+any of the other flags may be added:
+
+| Flag Value | Meaning |
+|------------|------------------------------------------------------|
+| 1 | Allocating the first cohort |
+| 2 | Escalating |
+| 3 | Staying at the current dose |
+| 4 | De-escalating |
+| 7 | Allocating the expansion cohort |
+| 10 | Stopping because the lowest dose is too toxic (so 14 means the trial stopped because all doses are too toxic) |
+| 20 | The rules say escalate, but the next dose has been eliminated ("De-escalate and never return"), so staying at the current dose |
+| 40 | The rules say escalate, but the current dose is the highest dose |
+| 80 | The rules say de-escalate, but the current dose is the lowest dose |
+| 100 | Stopping because the maximum number of subjects on a dose has been reached |
+
+For 3+3 the Flags column holds a single state value:
+
+| Flag Value | Meaning |
+|------------|------------------------------------------------------|
+| 1 | Normal cohort: allocating to the starting dose, or escalating |
+| 2 | Confirmation cohort: a second cohort at the same dose after 1 toxicity |
+| 3 | Validation cohort at the dose below (Include final validation cohort) |
+| a | Stopped, the MTD is the dose below the last dose tested |
+| b | Stopped, the MTD is the last dose tested |
+| 14 | Expansion cohort |
 
 ### Aggregation
 

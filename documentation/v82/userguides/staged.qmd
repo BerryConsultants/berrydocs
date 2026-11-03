@@ -2162,6 +2162,16 @@ simulation results using the results of the "arm selection analysis"
 (the 999 row) of each simulation that graduated to Stage 2 (and hence
 performed a arm selection).
 
+**s1-ds-summary_freq_xxxx.csv** Contains a single row of data that
+summarizes the frequentist analysis of the same simulations as
+s1-ds-summary.csv. "xxxx" indicates how missing data is treated and
+can be: "bocf", "fail", "locf" and "ignore". This file is only output
+if frequentist analysis is enabled.
+
+**s1-mcmcNNNNN.csv** Contains the MCMC samples from each analysis in
+Stage 1 of simulation NNNNN. Only output if MCMC sample files have been
+requested (by default they are not).
+
 **s1-patientsNNNNN.csv** Contains one row per patient in a Stage 1,
 where NNNNN is the number of the simulation. By default this file is
 written out only for the first simulation, but this can be changed on
@@ -2205,6 +2215,10 @@ default this file is written only for the first 100 simulations, but
 this can be changed via the simulation tab. The values in the 999 row of
 the weeks file will be the same as the values for that simulation in the
 simulations file.
+
+**s2-mcmcNNNNN.csv** Contains the MCMC samples from each analysis in
+Stage 2 of simulation NNNNN. Only output if MCMC sample files have been
+requested.
 
 **s2-patientsNNNNN.csv** Contains one row per patient included in a
 Stage 2, where NNNNN is the number of the simulation. By default this
@@ -2251,6 +2265,14 @@ the weeks file will be the same as the values for that simulation in the
 simulations file. If Stage 2 does not run for a simulation then the
 s2-weeks file for that simulation is still written out, but has no data
 rows.
+
+The frequentist file names above differ slightly by endpoint:
+
+-   Time-to-event: there is no "_xxxx" part, for example
+    s1-simulations_freq.csv and s1-weeks_freqNNNNN.csv.
+-   Multiple endpoint: a set of frequentist files is written for each
+    endpoint, with the endpoint number added after "xxxx", for example
+    s1-simulations_freq_locf_2.csv and s1-weeks_freq_locf_2_NNNNN.csv.
 
 ## Notes on the differences in the SD output files from FACTS Core
 
@@ -2368,6 +2390,10 @@ In s1-summary and s1-ds-summary.csv:
 
 ### New s1-weeks & s1-simulation file fields
 
+These fields are also in s1-cd-simulations.csv. Num Selected and the
+Select columns come straight after EarlySuccess Time, and the Graduation
+columns come after the Success and Futile flag columns.
+
 +---------------------+-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Column Title        | Number of columns | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 +=====================+===================+=========================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================+
@@ -2379,7 +2405,7 @@ In s1-summary and s1-ds-summary.csv:
 |                     |                   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 |                     |                   | -   10: Early Non-Graduation (ENG) -- the graduation criteria were met but no treatment arms met the dose selection criteria, hence Stage 2 was 'Null'.                                                                                                                                                                                                                                                                                                                                                                                                 |
 |                     |                   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-|                     |                   | -   11: Late Non-Graduation (LNG) -- the graduation criteria were met but no treatment arms met the dose selection criteria, or the overall max sample size was reached in Stage 1, hence Stage 2 was 'Null'.                                                                                                                                                                                                                                                                                                                                           |
+|                     |                   | -   11: Late Non-Graduation (LNG) -- the graduation criteria were met but no treatment arms met the dose selection criteria, hence Stage 2 was 'Null'. (Reaching the overall max sample size in Stage 1 does not give this outcome; see Comb Outcome 40 in the s2 files.)                                                                                                                                                                                                                                                                               |
 |                     |                   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 |                     |                   | -   15: Early graduation, and meets Stage 1 final futility criteria in the complete data analysis                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 |                     |                   |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
@@ -2391,7 +2417,8 @@ In s1-summary and s1-ds-summary.csv:
 +---------------------+-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Select \<dose\>     | D                 | A flag per arm (including Control) indicating whether it was selected for use in Stage 2                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 +---------------------+-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Graduation \<QOI\>  | \-                | A flag for each QOI in the Early Graduation criteria. In the weeks file on interim analysis rows these will be 1 if met and 0 if not met. However the row in simulations.csv corresponds to the 999 row (dose selection) where the EG criteria are not re-evaluated. Thus in s1-simulations these columns either have the value -1 not evaluated because stage 1 reached final analysis when early graduation criteria are not evaluated or -9999 because the values correspond to the dose selection analysis when no decision criteria are evaluated. |
+| Graduation \<QOI\>  | One per decision  | A flag for each decision QOI (the same QOIs as the Success and Futile flag columns) indicating whether it met the Early Graduation criteria. In the weeks file on interim analysis rows these will be 1 if met and 0 if not met. However the row in simulations.csv corresponds to the 999 row (dose selection) where the EG criteria are not re-evaluated. Thus in s1-simulations these columns either have the value -1 not evaluated because stage 1 reached final analysis when                                                                     |
+|                     | QOI               | early graduation criteria are not evaluated or -9999 because the values correspond to the dose selection analysis when no decision criteria are evaluated.                                                                                                                                                                                                                                                                                                                                                                                              |
 +---------------------+-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Graduation Combined | 1                 | A flag for whether the complete graduation criteria were met, including at the final analysis when graduation occurs if neither the final analysis Success or Futility criteria are met. If the trial stopped at an interim the value here will be -9999 as the row corresponds to the 999 row (dose selection) where the early decision criteria are not re-evaluated.                                                                                                                                                                                 |
 +---------------------+-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -2403,6 +2430,7 @@ In s1-summary and s1-ds-summary.csv:
 | Column Title | Number of columns | Description |
 |----------|-----------|-------------------------------------------|
 | Ntrials | 1 | This is the number of trials simulated. (Whereas the column Nsims reports the number of Stage 2's simulated). |
+| Comb. Random Number Seed | 1 | The random number seed used for the simulations. |
 | Comb No. subj | 1 | The average (over all the trial simulations) of the combined number of subjects in the trial from Stage 1 and Stage 2 |
 | SE No. Subj | 1 | The standard error of the combined number of subjects |
 | Comb No.Subj 80%-ile | 1 | The 80^th^ percentile of the combined number of subjects |
@@ -2418,14 +2446,14 @@ In s1-summary and s1-ds-summary.csv:
 | P(ES2E) | 1 | The proportion of trials that ended early for success in Stage 2 having graduated early from Stage 1 |
 | P(LS2E) | 1 | The proportion of trials that ended late for success in Stage 2 having graduated early from Stage 1 |
 | P(LF2E) | 1 | The proportion of trials that ended late for futility in Stage 2 having graduated early from Stage 1 |
-| P(EF2E) | 1 | The proportion of trials that ended early for futility in Stage 2 having graduated early from Stage 2 having graduated early from Stage 1 |
+| P(EF2E) | 1 | The proportion of trials that ended early for futility in Stage 2 having graduated early from Stage 1 |
 | SFFF2E | 1 | The proportion of trials that ended early for success in Stage 2 but "flip-flopped" to futility after completing follow-up, having graduated early from Stage 1 |
 | FSFF2E | 1 | The proportion of trials that ended early for futility in Stage 2 but "flip-flopped" to success after completing follow-up, having graduated early from Stage 1 |
 | Undec.2E | 1 | The proportion of trials that ended undecided at the end of Stage 2 having graduated early from Stage 1. |
 | P(ES2L) | 1 | The proportion of trials that ended early for success in Stage 2 having graduated late from Stage 1 |
 | P(LS2L) | 1 | The proportion of trials that ended late for success in Stage 2 having graduated late from Stage 1 |
 | P(LF2L) | 1 | The proportion of trials that ended late for futility in Stage 2 having graduated late from Stage 1 |
-| P(EF2L) | 1 | The proportion of trials that ended early for futility in Stage 2 having graduated late from Stage 2 having graduated early from Stage 1 |
+| P(EF2L) | 1 | The proportion of trials that ended early for futility in Stage 2 having graduated late from Stage 1 |
 | SFFF2L | 1 | The proportion of trials that ended early for success in Stage 2 but "flip-flopped" to futility after completing follow-up, having graduated late from Stage 1, |
 | FSFF2L | 1 | The proportion of trials that ended early for futility in Stage 2 but "flip-flopped" to success after completing follow-up, having graduated late from Stage 1 |
 | Undec.2L | 1 | The proportion of trials that ended undecided at the end of Stage 2 having graduated late from Stage 1. |
@@ -2435,7 +2463,7 @@ In s1-summary and s1-ds-summary.csv:
 | Comb Duration | 1 | The mean (over the simulations total duration of the trial from the start of Stage 1 to the end of Stage 2, if a Stage 2 was run, otherwise the end of Stage 1. |
 | Comb LPFV | 1 | The mean (over the simulations) of the total accrual period from the start of Stage 1 to the Last Patient First Visit (whether that was in Stage 1 or Stage 2) |
 
-The remaining columns are as per the summary file for this endpoint in FACTS Core, but note that averages, proportions etc. are taken over only those Stage 2's that ran.
+These columns come after the Project, Scenario, Timestamp and Version columns. The columns after Comb LPFV, starting at Nsim, broadly follow the summary file for this endpoint in FACTS Core, except that three placeholder columns headed "Unused" come straight after Undec. and can be ignored. Note that averages, proportions etc. in these columns are taken over only those Stage 2's that ran.
 
 In addition:
 
@@ -2444,12 +2472,12 @@ In addition:
 
 ### New s2-weeks and s2-simulation file fields
 
-The preceding columns are as per the Weeks and Simulations files for this endpoint in FACTS Core (see the corresponding User Guide for detailed listings), but note that if the Stage 2 did not run these columns will contain -9999 in the Simulations file and the Weeks file are empty of data rows.
+The combined columns below come first. In s2-simulations they follow the #Sim and Random Number Seed columns and end with Null Stage; in s2-weeks they start with Comb Weeks. The rest of each file follows the Weeks and Simulations files for this endpoint in FACTS Core (see the corresponding User Guide for detailed listings), starting from #Weeks in s2-weeks and from LastInterimNumber in s2-simulations. If Stage 2 did not run, these Core columns contain -9999 in the Simulations file, and the Weeks file has no data rows.
 
 +---------------------+-------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Column Title        | Number of columns | Description                                                                                                                                                                                                        |
 +=====================+===================+====================================================================================================================================================================================================================+
-| Comb Weeks          | 1                 | Number of weeks into the trial from the start of Stage 1.                                                                                                                                                          |
+| Comb Weeks          | 1                 | s2-weeks only. Number of weeks into the trial from the start of Stage 1.                                                                                                                                           |
 +---------------------+-------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Comb Outcome        | 1                 | This is the final outcome of both stages. If the outcome is in the range 1-6then the trial did not graduate to Stage 2 and the outcome of the trial is the outcome of Stage 1.                                     |
 |                     |                   |                                                                                                                                                                                                                    |
@@ -2475,7 +2503,7 @@ The preceding columns are as per the Weeks and Simulations files for this endpoi
 +---------------------+-------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Comb LPFV           | 1                 | The total accrual period of the trial from the FPFV of Stage 1 to the LPFV of Stage 2                                                                                                                              |
 +---------------------+-------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Null Stage          | 1                 | A flag value 0 or 1. A value of 1 indicates that Stage 2 was not run.                                                                                                                                              |
+| Null Stage          | 1                 | s2-simulations only. A flag value 0 or 1. A value of 1 indicates that Stage 2 was not run.                                                                                                                         |
 +---------------------+-------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 ## Data in the patients files
@@ -2547,28 +2575,31 @@ The contents of the patients files reflect the following principles:
 : The data lock timing for the s2-patients and master-patients file based on how stage 1 data is used in stage 2.
 
 
-There are two columns in the master-patients file that
-require explanation:
+The master-patients file has three extra columns, after the Region (or
+Cohort) column, that require explanation:
+
+**AccrualStage**: The stage in which the patient was recruited: 1 =
+Stage 1, 2 = Stage 2.
 
 **Stage2Use**: This field is a flag indicating how and whether the data from
-a patient in stage 1 is used in stage 2, the values of the flag are:
+a patient is used in stage 2, the values of the flag are:
 
-1.  Not used in stage 2
+-   0: A stage 1 patient whose data is not used in stage 2.
 
-2.  \<This value is not used.\>
+-   1: A patient recruited in stage 2.
 
-3.  Retained in stage 2, treated as on the same arm as in stage 1.
+-   2: A stage 1 patient retained in stage 2, treated as on the same arm
+    as in stage 1 (this includes stage 1 data used in full).
 
-4.  Retailed in stage 2, but pooled onto a different arm, the arm that
-    was retained in stage 2.
+-   3: A stage 1 patient retained in stage 2, but pooled onto a
+    different arm, the arm that was retained in stage 2.
 
-5.  \<This value is not used.\>
-
-6.  Retained in stage 2, the patient did not complete in stage 1, so was
+-   5: A stage 1 patient who did not complete in stage 1, so was
     retained to complete in stage 2.
 
 **Stage2Arm**: This field records which arm (if any) the patient's data is
-treated as belonging to in stage 2. This will be same as the arm in
-stage 1 ***unless*** the stage 1 data has been pooled onto the 1 arm
-retained in stage 2. If the patient's data is not used in stage 2 this
-field is set to -9999.
+treated as belonging to in stage 2. For a stage 1 patient this will be
+same as the arm in stage 1 ***unless*** the stage 1 data has been pooled
+onto the 1 arm retained in stage 2. If the patient's data is not used in
+stage 2 this field is set to -9999. For a patient recruited in stage 2
+it is their stage 2 arm.
