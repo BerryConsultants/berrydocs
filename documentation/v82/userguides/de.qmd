@@ -83,11 +83,11 @@ All (except 3+3) share in the following:
 
 - If at the highest dose the decision is to Escalate, this is converted to Stay instead,  if at the lowest dose the decision is to De-escalate, this is converted to Stay instead.
 
-- Using a Beta-binomial distribution based on the observed data (with a Beta(0.001, 0.001) prior) if the posterior probability that the toxicity rate exceeds the target rate with some probability (0.95 by default) then mark the dose as unacceptable and de-escalate (shown as "DU" in the decision tables). Stopping the trial if this is at the lowest dose.
+- Using a Beta-binomial distribution based on the observed data (with a Beta(1, 1) prior) if the posterior probability that the toxicity rate exceeds the target rate with some probability (0.95 by default) then mark the dose as unacceptable and de-escalate (shown as "DU" in the decision tables). Stopping the trial if this is at the lowest dose.
 
 - At the end of the trial, MTD selection is after isotonic regression performed as follows:
 
-  + Calculate the toxicity rate estimate at each dose (BOIN uses the observed rates, all others use the posterior mean toxicity, assuming a Beta(0.005, 0.005) prior and an independent Beta-Binomial model).
+  + Calculate the toxicity rate estimate at each dose (BOIN uses the observed rates, all others use the posterior mean toxicity, assuming a Beta(0.001, 0.001) prior and an independent Beta-Binomial model). Doses with no subjects are skipped. For mTPI, mTPI-2 and i3+3, the first dose where the posterior probability (under this prior) that the toxicity rate exceeds the target is greater than the threshold (0.95 by default), and all doses above it, are excluded.
   
   + Impose monotonicity using isotonic regression (pool adjacent violators): where monotonicity is violated, the estimates of toxicity at the respective doses are replaced with their average.
   
@@ -97,7 +97,7 @@ All (except 3+3) share in the following:
 
 ## mTPI
 
-The E, S, D decision rule uses the Beta-Binomial distribution of the toxicity rate on a dose with a prior of Beta(0.001, 0.001). The Unit Probability Mass (UPM) is then calculated for three intervals: the interval below the target toxicity band, the interval corresponding to the target toxicity band and the interval above the target toxicity band. The UPM is the probability mass of the area divided by the length of the interval. The decision is then based on the interval with the highest UPM, E if its below the target toxicity band, S if it is the target toxicity band and D if its above the target toxicity band.
+The E, S, D decision rule uses the Beta-Binomial distribution of the toxicity rate on a dose with a prior of Beta(1, 1). The Unit Probability Mass (UPM) is then calculated for three intervals: the interval below the target toxicity band, the interval corresponding to the target toxicity band and the interval above the target toxicity band. The UPM is the probability mass of the area divided by the length of the interval. The decision is then based on the interval with the highest UPM, E if its below the target toxicity band, S if it is the target toxicity band and D if its above the target toxicity band.
 
 Below @fig-fig1 is taken from @guo2017bayesian. It shows the UPM in the target interval and above the target interval. It also illustrates what was perceived as a problem with the mTPI method, that gave rise to the development separately of mTPI-2, i3+3 and BOIN. With a target toxicity rate of 0.3 and target band of [0.25, 0.35], with 6 observations on a dose of which 3 had experienced a Dose Limiting Toxicity (DLT), the decision by the mTPI method is to Stay. It was generally considered that this was not safe decision.
 
