@@ -264,11 +264,19 @@ The coefficients that can be specified are:
 
 -   Psi: the coefficient of x in the log term
 
+In each segment the utility of a value $x$ is
+
+$$u(x) = \alpha x^2 + \beta x + \gamma + \delta e^{\epsilon x} + \phi \ln(\psi x)$$
+
+The log term is only added when $\psi x > 0$; otherwise it contributes
+nothing. A value of $x$ belongs to the first segment whose upper knot it
+does not exceed, and values above the last knot use the last segment.
+
 Finally, the user specified whether the $x$ in the utility function is relative
 to control or not. If the "Parameterize response relative to control" is checked,
 then $x=\theta_d - \theta_0$ for a continuous endpoint, and $x = P_d - P_0$ for
-a dichotomous endpoint. If the "Parameterize response relative to control" is checked,
-then $x=\theta_d$ for a continuous endpoint and $x=P_d$ for a dichtomous endpoint.
+a dichotomous endpoint. If the "Parameterize response relative to control" is unchecked,
+then $x=\theta_d$ for a continuous endpoint and $x=P_d$ for a dichotomous endpoint.
 
 For a continuous endpoint, the utility function is defined on the range of $x \in (-\infty, \infty)$. For dichotomous endpoints, if $x$ is relative to control, then the utility is on the range $x \in (-1, 1)$, and
 if $x$ is not relative to control, then the utility is on the range $x \in (0, 1)$.
@@ -359,7 +367,7 @@ based on the proportion of MCMC samples when that arm had the greatest
 utility. It is not estimated from the utility of the mean estimates of
 the dose response for the different endpoints.
 
-In any given sample if several arms have the same maximum toxicity, the
+In any given sample if several arms have the same maximum utility, the
 arm with the lowest dose strength is selected. This is particularly
 useful when using dose response models with plateau features (the
 Plateau and U-shaped models). It means that where the utility is driven
@@ -369,6 +377,28 @@ maximum response section. However it has a less desirable effect when
 the overall utility is formed by multiplying the utilities of individual
 endpoints and one of the endpoint utility functions has a segment where
 the utility is 0.
+
+:::{.callout-caution}
+
+### Caution when using 0 in your utilities
+
+Having segments of utility 0 for an endpoint, and
+calculating the overall utility by multiplying the component
+utilities will lead to segments of 0 in the overall utility. If in
+only a proportion of the MCMC samples all arms have a utility of 0,
+this will result in that proportion of the probability of being the
+arm with the maximum utility being placed on the arm with the lowest
+dose strength, which might be odd given the utility in the other
+samples. It can lead to counter intuitive and sometimes undesired
+adaptations, such as in the adaptive allocation of subjects between
+the arms.
+
+**The solution is to not use 0** for the segments of low utility, but
+a small value such as 0.01, the multiplication with the utility of
+the other endpoints will then not flatten them all to exactly 0, but
+retain the utility profile at attenuated values.
+
+:::
 
 ## Component Utility Combination Method
 
@@ -482,86 +512,6 @@ possible. Generally, the process followed is roughly as follows:
     estimates of the operating characteristics considered and other
     aspects of the trials design considered.
 
-
-### Estimation of Utility in FACTS
-
-An important aspect of the way FACTS estimates utility is that it
-estimates a probability density for the utility within the MCMC
-sampling. That is, the utility is calculated for every parameter
-sample within the MCMC, and the final distribution of the utility
-is based on those samples just like the estimates for the model
-parameters.
-
-Each dose has a distribution of utility scores - not a single value.
-The utility is not estimated from the mean estimates of the dose
-response from the different endpoints.
-
-This has some notable effects on the estimates of utility. If, for
-example, the utility function is a step function -- for example if its
-value is 1 for response rates below a threshold and 0 above -- as the
-estimate of the response rate will have some uncertainty then when the
-mean response estimates are around the threshold value, the estimate of
-utility will be between 0 and 1, based on the proportion of MCMC samples
-the fitted response rate was below the threshold. Indeed, the utility
-can be interpreted as the 'probability the response rate is below the
-threshold', and thus be useful or even exactly what is required.
-
-Similarly, any utility function that has a floor or ceiling will result
-in a bias in the estimate of the utility to be above the floor or below
-the ceiling. -- because in the distribution of the values for the
-utility the lowest the value can be is the floor and the final estimate
-of the utility would only be at the floor if all the values for the
-utility sampled in the MCMC were at the floor. Another effect of
-utilities with a floor or ceiling is that the estimate of the mean
-utility has a smaller standard error the further the value of the
-estimate of the mean of the underlying response is from an inflexion
-point (or "knot").
-
-These are not errors, nor does it mean utility functions with steps,
-ceilings or floors should be avoided, but these artefacts need to be
-understood -- particularly when graphs of the estimated utility and the
-true utility are compared.
-
-### Calculation of Arms' probability of having the greatest utility
-
-Like other probabilities in FACTS this is calculated during the MCMC
-sampling -- the probability that an arm has the greatest probability is
-based on the proportion of MCMC samples when that arm had the greatest
-utility. It is not estimated from the utility of the mean estimates of
-the dose response for the different endpoints.
-
-In any given sample if several arms have the same maximum toxicity, the
-arm with the lowest dose strength is selected. This is particularly
-useful when using dose response models with plateau features (the
-Plateau and U-shaped models). It means that where the utility is driven
-by this model, the arm that will be ranked most likely to have the
-greatest utility will be the one that lies at the start of the flat
-maximum response section. However it has a less desirable effect when
-the overall utility is formed by multiplying the utilities of individual
-endpoints and one of the endpoint utility functions has a segment where
-the utility is 0.
-
-:::{.callout-caution}
-
-### Caution when using 0 in your utilities
-
-Having segments of utility 0 for an endpoint, and
-calculating the overall utility by multiplying the component
-utilities will lead to segments of 0 in the overall utility. If in
-only a proportion of the MCMC samples all arms have a utility of 0,
-this will result in that proportion of the probability of being the
-arm with the maximum utility being placed on the arm with the lowest
-dose strength, which might be odd given the utility in the other
-samples. It can lead to counter intuitive and sometimes undesired
-adaptations, such as in the adaptive allocation of subjects between
-the arms.
-
-**The solution is to not use 0** for the segments of low utility, but
-a small value such as 0.01, the multiplication with the utility of
-the other endpoints will then not flatten them all to exactly 0, but
-retain the utility profile at attenuated values.
-
-:::
 
 # Variants
 
