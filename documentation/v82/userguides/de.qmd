@@ -702,9 +702,6 @@ results window.
 | SD Ppn. Tox | 1 | All | This is the standard deviation of the proportion of toxicity across the simulations of this scenario. |
 | True Ppn Tox | 1 | All | This is the average true probability of toxicity over the simulations. The ‘true probability of toxicity’ in a simulated trial is the average of the probabilities of toxicity all the subjects are exposed to, given the toxicity response profile of the scenario. |
 | MTD Selection: \<dose\> | One per dose | All | For each dose, this is proportion of the simulations where it was selected as the MTD (Maximum Tolerated Dose) at the end of the study. The dose chosen will be the dose with the highest posterior probability being the MTD (closest dose to having the target toxicity rate – or “nearest below” or “nearest above” as selected by the user on the Study Info tab. |
-| Ppn(All Tox) | 1 | All | The proportion of the simulations that stopped because all doses were too toxic. |
-| Ppn(Early Success) | 1 | All | The proportion of the simulations that stopped because sufficient stopping rules were met before the maximum number of cohorts had been treated. |
-| Ppn(Cap) | 1 | All | The proportion of the simulations that stopped because the maximum number of cohorts had been treated. |
 
 ## Allocations, Observed
 
@@ -720,6 +717,9 @@ results window.
 | Tox. Per Dose: \<dose\> | One per dose | All | This is the mean (over the simulations) of the number of toxicities observed at each dose. |
 | SD Tox. Per Dose: \<dose\> | One per dose | All | This is the standard deviation of the number of toxicities observed at each dose across the simulations. |
 | 80% Num Subj | 1 | All | This is the 80<sup>th</sup> centile of the overall number of subjects recruited in each simulation. |
+| Ppn All Toxic Early Stop | 1 | All except 3+3 | The proportion of the simulations that stopped because all doses were too toxic. |
+| Ppn Early Success | 1 | All | The proportion of the simulations that stopped because sufficient stopping rules were met before the maximum number of cohorts had been treated. Simulations that stopped because all doses were too toxic are counted only in Ppn All Toxic Early Stop. For 3+3, which has no Ppn All Toxic Early Stop column, it also includes simulations that stopped because the lowest dose was too toxic. |
+| Ppn Reached Max Sample Size | 1 | All | The proportion of the simulations that stopped because the maximum number of cohorts had been treated. |
 
 # Graphs of Simulation Results
 
@@ -1074,7 +1074,11 @@ simulated, but their output files are not described in this guide.
 
 3+3 designs do not write the Mean Fitted Toxicity, SD Fitted Toxicity,
 Mean Lost, s.d.Lost, Ppn(Esc), Ppn(Stay), Ppn(DeEsc), Ppn(Never) and
-All Tox Stop Early columns.
+All Tox Stop Early columns. For the other designs, a simulation that
+stopped because all doses were too toxic is counted only in All Tox Stop
+Early, so All Tox Stop Early, Early Success and Cap Stop add up to 1. For
+3+3, Early Success also includes simulations that stopped because the
+lowest dose was too toxic.
 
 ## Contents of simulations.csv and cohortsNNN.csv
 
