@@ -803,6 +803,29 @@ probabilities are not currently implemented.
 
 P-values do not offer Bonferroni or Dunnett's adjustments in the platform trials engine.
 
+### P-value Missing Data Handling
+
+Each p-value QOI specifies how participants without a final response are
+handled. Only participants who have dropped out *and* have had the
+opportunity to complete (their enrollment time plus the time to the
+final response is no later than the analysis time) are imputed.
+Participants who are still in follow-up are left out of the p-value
+calculation. The options for dropouts are:
+
+-   **LOCF:** Platform Trials have no post-baseline visits, so the last
+    observation is the baseline value. If baseline is simulated, it is
+    carried forward (a change from baseline of 0). Otherwise the
+    participant is left out, as for Ignore.
+
+-   **BOCF:** the baseline value is carried forward (a change from
+    baseline of 0). Only available if baseline is simulated.
+
+-   **Ignore:** the participant is left out.
+
+-   **Fail:** the participant is counted as a failure (non-response if
+    a response is good, response if a response is bad). Only available
+    for a dichotomous endpoint.
+
 # Design
 
 The Design tab sets up prior distributions for the parameters,
@@ -842,11 +865,92 @@ of the responses. The variance is modeled as an inverse-gamma
 distribution.
 
 This tab also contains the method for handling missing data due to
-dropouts. Since longitudinal modeling is not yet implemented, the only
-method that currently applies is BOCF, if the endpoint is continuous and baseline data is simulated.
+dropouts. Since longitudinal modeling is not yet implemented, LOCF is
+not available. The methods that apply are BOCF, if the endpoint is
+continuous and baseline data is simulated, and, for a dichotomous
+endpoint, "Missing data is considered failure", which counts each
+dropout as the unfavourable outcome (a non-response if a high response
+is good, a response otherwise).
 Without longitudinal modeling to incorporate post-baseline visit data,
 the Bayesian multiple imputation from post-baseline method will ignore
 dropouts.
+
+### Independent Treatments Model
+
+The only treatment response model available is "Independent Treatments".
+Let $\theta_t$ be the parameter for arm $t$, with $t=0$ for the control arm.
+
+::: {.panel-tabset}
+
+#### Continuous
+
+The final response (or change from baseline, if baseline is simulated and
+the response is change from baseline) $Y_i$ of participant $i$ allocated
+to arm $t_i$ is modeled as
+$$Y_i \sim \text{N}(\theta_{t_i}, \sigma^2)$$
+so $\theta_t$ is the mean response on arm $t$. All arms share the
+variance $\sigma^2$, which has the inverse-gamma prior
+$$\sigma^2 \sim \text{IG}\left(\frac{n}{2}, \frac{n\,\sigma_c^2}{2}\right)$$
+where $\sigma_c$ is the "Center" and $n$ is the "Weight" entered in the
+"Model for Endpoint Variance σ²" box. For a description of how the center
+and weight determine the inverse-gamma distribution, [see here](../../../concepts/facts/InverseGammaDistribution.qmd).
+
+#### Dichotomous
+
+The final response $Y_i$ of participant $i$ allocated to arm $t_i$ is
+modeled as
+$$Y_i \sim \text{Bernoulli}(P_{t_i})$$
+where $P_t$ is the probability of a response on arm $t$. The arm
+parameter is the log-odds of response:
+$$\theta_t = \ln\left(\frac{P_t}{1-P_t}\right), \qquad P_t = \frac{e^{\theta_t}}{1+e^{\theta_t}}$$
+All of the normal priors below, for the treatment arms and for the
+control arm, are therefore specified on the log-odds scale. There is no
+variance parameter.
+
+:::
+
+The priors are the same for both endpoints. Each treatment arm has an
+independent normal prior
+$$\theta_t \sim \text{N}(\mu_t, \tau_t^2)$$
+where $\mu_t$ and $\tau_t$ are either the same for every arm ("Same prior
+for all arms") or entered separately for each arm ("Prior per arm"). The
+control arm has the normal prior $\theta_0 \sim \text{N}(\mu_0, \tau_0^2)$
+entered on the Control Response tab. There is no dose-response
+relationship, ordering or borrowing between arms. The only parameter the
+arms share is $\sigma^2$ for a continuous endpoint.
+
+The $\theta_t$ are sampled with Metropolis-Hastings steps. $\sigma^2$, and
+$\beta$ if the baseline adjusted model below is used, are sampled with
+Gibbs steps from their conjugate full conditional distributions.
+
+When a QOI uses the "Concurrent Controls" analysis population, this model
+is fitted separately to each treatment arm's concurrent data set (see
+[Analysis Population](#analysis-population)).
+
+### Baseline Adjusted Model (Continuous Only)
+
+If "Include simulation of baseline" is checked on the Trial > Trial Info
+tab, the "Include Model for Baseline Adjustment" option is available on
+this tab. If it is checked, the model above gains a linear baseline
+covariate term:
+$$Y_i \sim \text{N}(\theta_{t_i} + \beta Z_i, \sigma^2)$$
+where $Z_i = (X_i - \bar X)/s_X$ is participant $i$'s baseline $X_i$,
+standardized by the mean $\bar X$ and standard deviation $s_X$ of the
+baseline values in the data set being analyzed. A single $\beta$ is
+shared by all arms. Its prior is
+$$\beta \sim \text{N}(m_B, s_B^2)$$
+where $m_B$ and $s_B$ are entered by the user (default 0 and 1). $Y_i$ is
+the change from baseline or the final value, as selected on the Trial
+Info tab. The baseline adjustment is not available for a dichotomous
+endpoint.
+
+The $\beta$ entered on the Virtual Subject Response > Baseline tab to
+simulate responses is not, in general, the value that this model's $\beta$
+estimates. They agree only when the centering $c$ and scaling $s$ used in
+the simulation equal the mean and standard deviation of the simulated
+baseline, and baseline is not truncated. See the [FACTS Core technical
+note](./core/design/doseresponse.qmd#baseline-adjusted-dose-response-models-continuous-only)
+for an example.
 
 ## Allocation
 
@@ -955,6 +1059,55 @@ this aspect when determining how interim timing is to be set up. While
 in the burn-in phase, a treatment arm is allocated a fixed 1/T ratio of
 the adaptive allocation slots, where T is the number of active treatment
 arms.
+
+##### How the allocation probabilities are calculated
+
+At each update, let $T$ be the number of active treatment arms, $B$ the
+number of them still in their fixed allocation period, and $C$ and $S$
+the numbers of control and treatment slots in the block (the X and Y
+for the current number of treatments, or the per sub-block allocations
+for a constant proportion to control). A block holds $C + S$
+participants, and the control arm always gets its $C$ slots.
+
+1.  For each adaptive allocation target $m$, the target value
+    $V_t^{(m)}$ of each adaptive arm is calculated as in FACTS Core
+    (probability or information weighting, raised to the power
+    $\gamma$). The $V_t^{(m)}$ are then normalized to sum to 1 over the
+    adaptive arms (if they are all 0, every adaptive arm gets an equal
+    share).
+
+2.  The targets are combined using the relative weights $\omega_m$,
+    normalized to sum to 1: $r_t = \sum_m \omega_m V_t^{(m)}$. The $r_t$
+    sum to 1 over the adaptive arms.
+
+3.  If an adaptive arm has
+    $$r_t \frac{S - B}{C + S} < p_{\min}$$
+    where $p_{\min}$ is "Allocation probability set to zero for values
+    less than:", the arm with the smallest $r_t$ is set to 0 and the
+    remaining $r_t$ are renormalized to sum to 1. This repeats until no
+    arm is below the threshold or only one adaptive arm has a non-zero
+    probability. That last arm keeps all of the adaptive probability, so
+    the adaptive arms are never all set to 0. When no arm is in its
+    fixed allocation period ($B = 0$), the left-hand side is the arm's
+    probability of allocation in the whole block, $r_t S/(C+S)$.
+
+4.  Each arm in its fixed allocation period gets a share $1/T$ of the
+    treatment slots. The adaptive arms share the remaining
+    $1 - B/T$, so adaptive arm $t$ gets $\pi_t = r_t(1 - B/T)$.
+
+5.  Arm $t$ gets the whole number part of $\pi_t S$ slots in the block,
+    and the remaining treatment slots are drawn at random in proportion
+    to the fractional parts. On average, arm $t$ gets $\pi_t S$ of the
+    $C + S$ slots, an allocation probability of $\pi_t S/(C+S)$.
+
+For example, with $C = 2$, $S = 6$ and $T = 3$, suppose arm A is in its
+fixed allocation period and arms B and C have $r_B = 0.8$ and
+$r_C = 0.2$. With $p_{\min} = 0.05$, neither is set to 0
+($0.2 \times 5/8 = 0.125$). Arm A gets $\pi_A = 1/3$, and B and C get
+$\pi_B = 0.8 \times 2/3 \approx 0.533$ and $\pi_C \approx 0.133$. On
+average a block of 8 holds 2 control, 2 A, 3.2 B and 0.8 C participants.
+With $p_{\min} = 0.15$ instead, arm C is set to 0, B gets
+$\pi_B = 2/3$, and a block holds 2 control, 2 A and 4 B participants.
 
 ![The Design > Allocation tab with an Adaptive Allocation target specified.](./platformattachments/media/image29.png){#fig-ptallocrar}
 
