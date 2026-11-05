@@ -20,7 +20,7 @@ This document describes how use the FACTS Dose Escalation (DE) CRM design engine
 
 This document covers the FACTS Dose Escalation N-CRM design engine user interface.
 
-This document does not address the internal workings of the design engines or algorithms, which are addressed in the associated Design Engine Specification. It also does not address the use of FACTS Core Designs or Enrichment Designs, which are covered in other User Guides.
+This document does not address the use of FACTS Core Designs or Enrichment Designs, which are covered in other User Guides.
 
 The screenshots provided are specific to a particular installation and may not reflect the exact layout of the information seen by any particular user. They were taken from FACTS 6.3 and later installed on Windows 10. Different versions of Windows or the use of different Windows themes will introduce some differences in appearance. The contents of each tab, however, will be consistent with the software.
 
@@ -210,7 +210,7 @@ $$
 The second group is modeled:
 
 $$
-logit(p_{2j}) = (\alpha + a) + (\beta + b) \hat{x}_j
+logit(p_{2j}) = (\alpha + a) + \beta b \hat{x}_j
 $$ With separate priors and some optional constraints on $a$ and $b$. Dose escalation and stopping are judged independently for the two groups.
 
 ## Efficacy {#sec-concepts-efficacy}
@@ -809,7 +809,7 @@ Alternatively, the user may click the ‘derive prior’ button and select from:
 
     ![](crmUGattachments/images/clipboard-1575534157.png){#fig-sec-des-tox-prior1}
 
-2.  **Scenarios**: the model is fitted to each of the toxicity response scenarios (MLE), the parameters of the bivariate normal are then calculated from resulting set of pairs of values for $\alpha$ and $ln(\beta)$.
+2.  **Scenarios**: the model is fitted to each of the toxicity response scenarios (by least squares on the logit scale), the parameters of the bivariate normal are then calculated from resulting set of pairs of values for $\alpha$ and $ln(\beta)$.
 
     ![](crmUGattachments/images/clipboard-811643692.png){#fig-sec-des-tox-prior2}
 
@@ -1109,7 +1109,7 @@ If completed results are available, the *actual* number of simulations run for e
 
 N.B. FACTS uses Markov Chain Monte Carlo methods in the generation of simulated patient response data and trial results. In order to exactly reproduce a statistical set of results, it is necessary to start the Markov Chain from an identical “Random Seed”. The initial random seed for FACTS simulations is set from the simulation tab, the first thing that FACTS does is to draw the random number seeds to use at the start of each simulation. It is possible to re-run a specific simulation, for example to have more detailed output files generated, by specifying ‘start at simulation’.
 
-Say the 999th simulation out of a set displayed some unusual behavior, in order to understand why, one might want to see the individual interim analyses for that simulation (the “weeks” file), the sampled subject results for that simulation (the “Subjects” files) and possibly even the MCMC samples from the analyses in that simulation. You can save the .facts file with a slightly different name (to preserve the existing simulation results), then run 1 simulation of the specific scenario, specifying that the simulations start at simulation 999 and that at least 1 weeks file, 1 subjects file and the MCMC samples file (see the “MCMC settings” dialog) are output.
+Say the 999th simulation out of a set displayed some unusual behavior, in order to understand why, one might want to see the state of the trial after each cohort in that simulation (the “cohorts” file) and possibly even the MCMC samples from the analyses in that simulation. You can save the .facts file with a slightly different name (to preserve the existing simulation results), then run 1 simulation of the specific scenario, specifying that the simulations start at simulation 999 and that at least 1 cohorts file and the MCMC samples file (see the “MCMC settings” dialog) are output.
 
 Even a small change in the random seed will produce different simulation results.
 
@@ -1294,6 +1294,8 @@ These are the columns displayed on the simulations tab after simulations are com
 | True Ppn. Toxicity | 1 | This is the average true probability of toxicity over the simulations. The ‘true probability of toxicity’ in a simulated trial is the average of the probabilities of toxicity all the subjects are exposed to, given the toxicity response profile that we are simulating from. |
 | True Ppn. Eff | 1 | Included if efficacy is being simulated. This is the average true probability of efficacy over the simulations. |
 | Ppn All Toxic Early Stop | 1 | The proportion of the simulations that stopped early (i.e. before reaching the maximum sample size) because all doses were too toxic. |
+| Ppn Early Success | 1 | The proportion of the simulations that stopped because sufficient stopping rules were met before the maximum sample size had been reached. Simulations that stopped because all doses were too toxic, or for futility, are not included. |
+| Ppn Early Futility | 1 | Included if efficacy is being simulated. The proportion of the simulations that stopped for futility: either stopping for early futility, or stopping because the MTD was found but there was no MED. |
 | Ppn Reached Max Sample Size | 1 | The proportion of the simulations that stopped because the maximum sample size had been reached. |
 | Num Phase 1 | 1 | Included if efficacy is being simulated. This is the mean (over the simulations) of the number of subjects recruited in the first phase (up to the MTD stopping criteria being met) in this scenario. |
 | Subj. Per Dose: \<dose\> | One per dose | This is the mean (over the simulations) of the number of subjects assigned to each dose. |
@@ -1739,6 +1741,14 @@ There are several types of file:
 
 **CohortsNNN.csv**	contains one row for each cohort during a simulation where NNN is the number of the simulation. By default this file is written only for the first 100 simulations, but this can be changed via the advanced button on the simulation tab. The values in the last row of the cohorts file will be the same as the final values for that simulation in the simulations file.
 
+**Doses.csv**	contains one row per dose, with the columns `Dose` (the dose strength), `ToxX` (the x-hat value used for the dose in the toxicity model) and `Prior2.5`, `Prior50` and `Prior97.5` (the 2.5%, 50% and 97.5% quantiles of the prior distribution of the toxicity rate at the dose).
+
+**MCMCNNNNN.csv**	is written only if requested, see [below](#contents-of-mcmcnnnnn).
+
+Apart from doses.csv, each file starts with a line giving the design engine version, GUI version, project, scenario and date/time (for example `#DE=8.0.0.0,GUI=8.1.0,MyDesign,MyScenario,01/13/2026 09:05:10`). The next line holds the column titles, and also starts with `#`.
+
+Designs that use the deprecated CRM (Toxicity), CRM (Efficacy), CRM (Ordinal), bCRM and standalone 3+3 engines can still be opened and simulated, but their output files are not described in this guide.
+
 ## Contents of summary.csv {#contents-of-summary}
 
 The columns in summary.csv are common across all the FACST Dose Finding design engines.
@@ -1753,7 +1763,11 @@ Cohort Expansion Only	These columns are output only of an expansion cohort is be
 
 MTD only	These columns are output only if the target dose for the toxicity endpoint is a single MTD, rather than the dose most likely to have a toxicity rate in the target toxicity band.
 
-If 2 groups are being simulated, then there are two separate summary files. The first summary file “summary.csv” contains the results for the first group, the second summary file “summary2.csv” contains the result for the second group.
+Ordinal Toxicity Only	These columns are output only if ordinal toxicity is being simulated (Cat 2 and Cat 4 columns), or modelled (Alpha 2 and Alpha 4 columns).
+
+If 2 groups are being simulated, then there are two separate summary files. The first summary file “summary.csv” contains the results for the first group, the second summary file “summary2.csv” contains the result for the second group. In summary2.csv the model coefficient columns are titled with the group 2 parameter names: `mean B Tox`, `s.d.B Tox`, `mean A 3 Tox` and so on.
+
+If fine grain dosing is used, the per-dose columns are written for the reported doses only. Some are titled with the index of the dose level, others (such as counts and selections) sum over a band of dose levels and are titled with the range, for example `Mean Subj per dose 4-6`.
 
 | Column Title | Number of columns | Description |
 |------------|-----------|--------------------------|
@@ -1768,24 +1782,32 @@ If 2 groups are being simulated, then there are two separate summary files. The 
 | True Mean Eff | 1 – Efficacy only | This is the average true probability of efficacy over the simulations. The ‘true probability of efficacy’ in a simulated trial is the average of the probabilities of efficacy all the subjects are exposed to, given the efficacy response profile that we are simulating from. |
 | Mean Beta Tox | 1 | This is the mean (over the simulations) of the mean of the posterior distribution of the estimate of the Beta parameter of the toxicity logistic model. |
 | s.d.Beta Tox | 1 | This is the mean (over the simulations) of the standard deviation of the posterior distribution of the estimate of the Beta parameter of the toxicity logistic model. |
+| Mean Alpha 2 Tox | 1 – Ordinal toxicity only | This is the mean (over the simulations) of the mean of the posterior distribution of the estimate of the Alpha 2 parameter (category 2 or higher toxicity) of the toxicity logistic model. |
+| s.d.Alpha 2 Tox | 1 – Ordinal toxicity only | This is the mean (over the simulations) of the standard deviation of the posterior distribution of the estimate of the Alpha 2 parameter of the toxicity logistic model. |
 | Mean Alpha 3 Tox | 1 | This is the mean (over the simulations) of the mean of the posterior distribution of the estimate of the Alpha 3 parameter of the toxicity logistic model. |
-| s.d.Alpha 3 Tox3 | 1 | This is the mean (over the simulations) of the standard deviation of the posterior distribution of the estimate of the Alpha 3 parameter of the toxicity logistic model. |
+| s.d.Alpha 3 Tox | 1 | This is the mean (over the simulations) of the standard deviation of the posterior distribution of the estimate of the Alpha 3 parameter of the toxicity logistic model. |
+| Mean Alpha 4 Tox | 1 – 4 category ordinal toxicity only | This is the mean (over the simulations) of the mean of the posterior distribution of the estimate of the Alpha 4 parameter (category 4 toxicity) of the toxicity logistic model. |
+| s.d.Alpha 4 Tox | 1 – 4 category ordinal toxicity only | This is the mean (over the simulations) of the standard deviation of the posterior distribution of the estimate of the Alpha 4 parameter of the toxicity logistic model. |
 | Mean Beta Eff | 1 – Efficacy only | This is the mean (over the simulations) of the mean of the posterior distribution of the estimate of the Beta parameter of the efficacy logistic model. |
 | s.d.Beta Eff | 1 – Efficacy only | This is the mean (over the simulations) of the standard deviation of the posterior distribution of the estimate of the Beta parameter of the efficacy logistic model. |
 | Mean Alpha 3 Eff | 1 – Efficacy only | This is the mean (over the simulations) of the mean of the posterior distribution of the estimate of the Alpha parameter of the efficacy logistic model. |
 | s.d.Alpha 3 Eff | 1 – Efficacy only | This is the mean (over the simulations) of the standard deviation of the posterior distribution of the estimate of the Alpha parameter of the efficacy logistic model. |
 | MTD Selection  \<dose index\> | One per dose | For each dose, this is proportion of the simulations where it was selected as the MTD at the end of the study, as defined by the Selected MTD simulation results column.  Index starts at 0 if a control arm is included. |
 | MED Selection \<dose index\> | One per dose – Efficacy only | For each dose, this is proportion of the simulations where it was selected as the MED at the end of the study, as defined by the Selected MED simulation results column. Index starts at 0 if a control arm is included. |
-| OSD Selection  \<dose index\> | One per dose | Unused \[it contains values that are copies of the MTD selection. OSD \= Optimum Safe Dose, it differs from the MTD only if there is an efficacy endpoint to take into account too\] |
+| OSD Selection  \<dose index\> | One per dose | For each dose, this is proportion of the simulations where it was selected as the OSD (Optimal Safe Dose) at the end of the study, as defined by the Selected OSD simulation results column. Without an efficacy endpoint this is the same as the MTD selection. |
 | Mean num Ph1 | 1 – Efficacy only | This is the mean (over the simulations) of the number of subjects dosed during the first phase of the trial that targets the MTD. |
 | Mean Fitted Toxicity \<dose index\> | One per dose | This is the mean (over the simulations) of the mean estimate of toxicity from the fitted toxicity response model for each dose. |
 | SD Fitted Toxicity \<dose index\> | One per dose | This is the standard deviation of the mean estimates across the simulations for each dose. Note it is not based on the standard deviation estimated **in** the simulations, it is the SD observed **across** the simulation results. |
-| Mean Fitted Efficacy \<dose index\> | One per dose – Efficacy only | This is the mean (over the simulations) of the mean estimate of toxicity from the fitted toxicity response model for each dose. |
-| SD Fitted Efficacy \<dose index\> | One per dose \-  | This is the standard deviation of the mean estimates across the simulations for each dose. Note it is not based on the standard deviation estimated **in** the simulations, it is the SD observed **across** the simulation results. |
+| Mean Fitted Efficacy \<dose index\> | One per dose – Efficacy only | This is the mean (over the simulations) of the mean estimate of efficacy from the fitted efficacy response model for each dose. |
+| SD Fitted Efficacy \<dose index\> | One per dose – Efficacy only |This is the standard deviation of the mean estimates across the simulations for each dose. Note it is not based on the standard deviation estimated **in** the simulations, it is the SD observed **across** the simulation results. |
 | Mean Subj per dose\<dose index\> | One per dose | This is the mean (over the simulations) of the number of subjects assigned to each dose. |
 | SD Subj per dose \<dose index\> | One per dose | This is the standard deviation of the number of subjects assigned to each dose across the simulations. |
+| Mean Cat 2 Tox per dose \<dose index\> | One per dose – Ordinal toxicity only | This is the mean (over the simulations) of the number of category 2 or higher toxicities observed at each dose. |
+| SD Cat 2 Tox per dose \<dose index\> | One per dose – Ordinal toxicity only | This is the standard deviation of the number of category 2 or higher toxicities observed at each dose across the simulations. |
 | Mean Tox per dose \<dose index\> | One per dose | This is the mean (over the simulations) of the number of toxicities observed at each dose. |
 | SD Tox per dose \<dose index\> | One per dose | This is the standard deviation of the number of toxicities observed at each dose across the simulations. |
+| Mean Cat 4 Tox per dose \<dose index\> | One per dose – 4 category ordinal toxicity only | This is the mean (over the simulations) of the number of category 4 toxicities observed at each dose. |
+| SD Cat 4 Tox per dose \<dose index\> | One per dose – 4 category ordinal toxicity only | This is the standard deviation of the number of category 4 toxicities observed at each dose across the simulations. |
 | Mean Eff per dose \<dose index\> | One per dose \-Efficacy only  | This is the mean (over the simulations) of the number of efficacies observed at each dose. |
 | SD Eff per dose \<dose index\> | One per dose – Efficacy only | This is the standard deviation of the number of efficacies observed at each dose across the simulations. |
 | Mean Known per dose \<dose index\> | One per dose | The number of known patient outcomes for a dose. In N-CRM there is no simulation of drop-outs so this will always be the same as “Mean subj per dose” |
@@ -1796,7 +1818,7 @@ If 2 groups are being simulated, then there are two separate summary files. The 
 | Tox Stopping 3 | 1 | The number of times that toxicity stopping rule 3 was true at the end of the simulation. This is the rule that the trial should stop when a dose achieves the minimum posterior probability of having a toxicity rate within the target band/of being MTD. |
 | Tox Stopping 4 | 1 | The number of times that toxicity stopping rule 4 was true at the end of the simulation. This is the rule that the trial should stop if testing another cohort and observing no toxicities does not change the dose selected as the MTD. |
 | Tox stopping 5 | 1 | Number of times that the maximum cohorts /subjects on MTD was met at the end of a simulation. |
-| Eff Stopping 1 | 1 – Efficacy only | Number of times the minimum cohorts / subjects on MED was rule was met at the end of a simulation. |
+| Eff Stopping 1 | 1 – Efficacy only | Number of times the minimum cohorts / subjects on MED was rule was met at the end of a simulation. If a control arm is included, the three Eff Stopping columns are numbered 0 to 2 rather than 1 to 3. |
 | Eff Stopping 2 | 1 – Efficacy only | Number of times the range of dose strengths within the credible interval of the estimate of the dose strength of the MED is less than the specified number.  |
 | Eff Stopping 3 | 1 – Efficacy only | Number of times that the probability that the dose was MED the stopping rule threshold was met at the end of a simulation. |
 | Mean Tox CI | 1 – MTD target only | The mean number of doses in the MTD CI |
@@ -1811,9 +1833,9 @@ If 2 groups are being simulated, then there are two separate summary files. The 
 | MED+ \<1 | 1 – Efficacy only | The number of times the MED was deemed to be less than the lowest dose |
 | MED+ \<dose index\> | One per dose – Efficacy only | The number of times each dose was selected as the MED |
 | MED+ \>\<D\> | 1 – Efficacy only | The number of times the MED was deemed to be above the highest dose |
-| OSD+ \<1 | 1 | The same as MTD+ \<1, can be ignored |
-| OSD+ \<dose index\> | One per dose | The same as MTD+ \<dose index\>, can be ignored |
-| OSD+ \>\<D\> | 1 | The same as MTD+ \> \<D\>, can be ignored |
+| OSD+ \<1 | 1 | The number of times the OSD was deemed to be less than the lowest dose. Without an efficacy endpoint this is the same as MTD+ \<1. |
+| OSD+ \<dose index\> | One per dose | The number of times each dose was selected as the OSD. Without an efficacy endpoint this is the same as MTD+ \<dose index\>. |
+| OSD+ \>\<D\> | 1 | The number of times the OSD was deemed to be above the highest dose. Without an efficacy endpoint this is the same as MTD+ \> \<D\>. |
 | DE Version | 1 | This is the version of the N-CRM design engine that simulated these trial results. |
 | GUI Version | 1 | This is the version of the FACTS GUI that was used to specify the parameters for the trials to be simulated. |
 | Project | 1 | The name of the project or design |
@@ -1829,31 +1851,38 @@ If 2 groups are being simulated, then there are two separate summary files. The 
 | Pr(Excess) \<dose index\> | One per dose | This is the mean (over the simulations) of the posterior probabilities of having a toxicity in the ‘Excess’ toxicity band for each dose. |
 | Pr(Unacc) \<dose index\> | One per dose | This is the mean (over the simulations) of the posterior probabilities of having a toxicity in the ‘Unacceptable’ toxicity band for each dose. |
 | Prior Mean ln(Beta) Tox | 1 | The value used for the mean value for the prior distribution of log Beta in the toxicity model for all simulations |
-| Prior s.d.(Beta) Tox | 1 | The value used for the standard deviation of the prior distribution of log Beta in the toxicity model for all simulations |
+| Prior s.d. ln(Beta) Tox | 1 | The value used for the standard deviation of the prior distribution of log Beta in the toxicity model for all simulations |
 | Prior Mean Alpha Tox | 1 | The value used for mean value for the prior distribution of Alpha in the toxicity model for all the simulations |
-| Prior s.d.Alpha Tox | 1 | The value used for the standard deviation of the prior distribution of Alpha in the toxicity model for all simulations |
+| Prior s.d. Alpha Tox | 1 | The value used for the standard deviation of the prior distribution of Alpha in the toxicity model for all simulations |
 | Prior Mean Rho Tox | 1 | The value used for the correlation between Alpha and log Beta in the bivariate Normal prior distribution for Alpha and log Beta in the toxicity model for all simulations |
 | Prior Mean ln(Beta) Eff | 1 – Efficacy only | The value used for the mean value for the prior distribution of log Beta in the efficacy model for all simulations |
-| Prior s.d.(Beta) Eff | 1 – Efficacy only | The value used for the standard deviation of the prior distribution of log Beta in the efficacy model for all simulations |
+| Prior s.d. ln(Beta) Eff | 1 – Efficacy only | The value used for the standard deviation of the prior distribution of log Beta in the efficacy model for all simulations |
 | Prior Mean Alpha Eff | 1 – Efficacy only | The value used for mean value for the prior distribution of Alpha in the efficacy model for all the simulations |
-| Prior s.d.Alpha Eff | 1 – Efficacy only | The value used for the standard deviation of the prior distribution of Alpha in the efficacy model for all simulations |
+| Prior s.d. Alpha Eff | 1 – Efficacy only | The value used for the standard deviation of the prior distribution of Alpha in the efficacy model for all simulations |
 | Prior Mean Rho Eff | 1 – Efficacy only | The value used for the correlation between Alpha and log Beta in the bivariate Normal prior distribution for Alpha and log Beta in the efficacy model for all simulations |
 | Mean Duration | 1 | The mean (over the simulations) of the duration of the trial. |
 | s.d.Duration | 1 | The SD (over the simulations) of the duration of the trial. |
 | True Toxicity \<Dose\> | One per dose | The actual toxicity rate being simulated for each dose |
+| True Efficacy \<Dose\> | One per dose – Efficacy only | The actual efficacy rate being simulated for each dose |
 | Mean Lost | 1 – Open Enrolment only | The mean (over the simulations) of the number of subjects who were available for treatment but could not be included in the trial because the number of treated subjects for whom the final result is not available equals the maximum queue length. This only applies to Open Enrolment designs otherwise the column is omitted. |
 | s.d.Lost | 1 – Open Enrolment only | The SD (over the simulations) of the number of subjects ‘lost’ (see above). This only applies to Open Enrolment designs otherwise the column is omitted. |
 | PostCE MTD+ \<1 | 1 – Cohort expansion only | The number of times after the Cohort Expansion the dose ‘below the first dose’ was selected as MTD+. (Omitted if no Expansion Cohort is defined) |
 | PostCE MTD+ \<Dose\> | One per dose – Cohort expansion only | The number of times after the Cohort Expansion the dose was selected as MTD+. (Omitted if no Expansion Cohort is defined) |
 | PostCE MTD+ \> \<D\> | 1 – Cohort expansion only | The number of times after the Cohort Expansion the dose ‘above the top dose’ was selected as MTD+. (Omitted if no Expansion Cohort is defined) |
+| PostCE MED+ \<1 | 1 – Cohort expansion & Efficacy only | The number of times after the Cohort Expansion the dose ‘below the first dose’ was selected as MED+. |
+| PostCE MED+ \<Dose\> | One per dose – Cohort expansion & Efficacy only | The number of times after the Cohort Expansion the dose was selected as MED+. |
+| PostCE MED+ \> \<D\> | 1 – Cohort expansion & Efficacy only | The number of times after the Cohort Expansion the dose ‘above the top dose’ was selected as MED+. |
 | PostCE OSD+ \<1 | 1 – Cohort expansion only | The number of times after the Cohort Expansion the dose ‘below the first dose’ was selected as OSD+. (Omitted if no Expansion Cohort is defined) |
 | PostCE OSD+ \<Dose\> | One per dose – Cohort expansion only | The number of times after the Cohort Expansion the dose was selected as OSD+. (Omitted if no Expansion Cohort is defined) |
 | PostCE OSD+ \> \<D\> | 1 – Cohort expansion only | The number of times after the Cohort Expansion the dose ‘above the top dose’ was selected as OSD+. (Omitted if no Expansion Cohort is defined) |
-| All Tox Stop | 1 | The proportion of the simulations that stopped because all doses were too toxic. |
+| All Tox Stop Early | 1 | The proportion of the simulations that stopped because all doses were too toxic. |
 | Early Success | 1 | The proportion of the simulations that stopped because sufficient stopping rules were met before the maximum number of cohorts had been treated. |
+| Early Futility | 1 – Efficacy only | The proportion of the simulations that stopped for futility: either stopping for early futility, or stopping because the MTD was found but there was no MED. |
 | Cap Stop | 1 | The proportion of the simulations that stopped because the maximum number of cohorts had been treated. |
-| Mean Fitted Tox Lower \<D\> | One per dose | This is the lower bound of the 95-percentile of the estimates of the toxicity rate across the simulations, at each dose. |
-| Mean Fitted Tox Upper \<D\> | One per dose | This is the upper bound of the 95-percentile of the estimates of the toxicity rate across the simulations at each dose. |
+| Mean Fitted Tox Lower \<D\> | One per dose | The mean (over the simulations) of the lower bound of the 95% credible interval of the fitted toxicity rate at each dose (the Pr(Tox) Lower simulations column). |
+| Mean Fitted Tox Upper \<D\> | One per dose | The mean (over the simulations) of the upper bound of the 95% credible interval of the fitted toxicity rate at each dose (the Pr(Tox) Upper simulations column). |
+| Mean Fitted Eff Lower \<D\> | One per dose – Efficacy only | The mean (over the simulations) of the lower bound of the 95% credible interval of the fitted efficacy rate at each dose (the Pr(Eff) Lower simulations column). |
+| Mean Fitted Eff Upper \<D\> | One per dose – Efficacy only | The mean (over the simulations) of the upper bound of the 95% credible interval of the fitted efficacy rate at each dose (the Pr(Eff) Upper simulations column). |
 
 ## Contents of simulations.csv and cohortsNNN.csv {#contents-of-simulations.csv-and-cohortsnnn}
 
@@ -1871,7 +1900,11 @@ MTD only	These columns are output only if the target dose for the toxicity endpo
 
 If 2 groups are being simulated, then there are two separate simulation.csv and cohorts.csv files. The first simulations file “simulations.csv” contains the results for the first group, the second file “simulations2.csv” contains the result for the second group.
 
-For the cohorts files if two groups are being simulated, the files names ‘cohortsNNN.csv’ contain the results for the first group, and the files ‘named cohorts2\_NNN.csv’ contain the results for the second group
+For the cohorts files if two groups are being simulated, the files names ‘cohortsNNN.csv’ contain the results for the first group, and the files ‘named cohorts2\_NNN.csv’ contain the results for the second group. As in summary2.csv, the model coefficient columns in the group 2 files are titled `mean B Tox`, `s.d.B Tox`, `mean A 3 Tox` and so on.
+
+Ordinal Toxicity Only	These columns are output only if ordinal toxicity is being simulated (ToxCat columns), or modelled (Alpha 2 and Alpha 4 columns).
+
+Fine grain dosing affects the per-dose columns in the same way as in summary.csv.
 
 ### simulations.csv initial columns
 
@@ -1893,6 +1926,12 @@ For the cohorts files if two groups are being simulated, the files names ‘coho
 | Cohort | 1 | The number of the cohort in the simulation. |
 | Alloc Dose | 1 | The index of the dose assigned to that cohort. If using open enrolment, \-2 means the subject was ‘lost’, that is they couldn’t be allocated a dose because there were already the maximum number of subjects treated but not complete. |
 | NumToxic | 1 | The number of subjects in that cohort that experienced a toxicity |
+| NumEff | 1 – Efficacy only | The number of subjects in that cohort that had an efficacious outcome |
+
+As well as one row per cohort, the cohorts file can contain these rows:
+
+- Cohort 9000: the expansion cohort, if one is used.
+- Cohort 9999: the state at the end of the trial, excluding any expansion cohort. Alloc Dose is -1, and NumToxic and NumEff are -9999.
 
 ### Common simulations.csv and cohortsNNN.csv columns
 
@@ -1915,7 +1954,7 @@ For the cohorts files if two groups are being simulated, the files names ‘coho
 | Model OSD | 1 \[simulations only\] | The index of the dose selected as the Optimal Safe Dose (OSD). If there is no efficacy endpoint, this will always be the MTD. If there is no safety endpoint, this will always be the MED. If there are both safety and efficacy endpoints, the OSD is either the MED, if MED <= MTD; otherwise there is OSD (a dose that is safe but not efficacious does not qualify as an "optimal" dose). |
 | Highest Cleared Dose | 1 | The highest cleared dose  |
 | Selected MTD | 1 | The dose index of the selected MTD (minimum of the Highest Cleared Dose and the model MTD+) |
-| Selected MED | 1 | The dose index of the selected MED (minimum of the Highest Cleared Dose and the model MED+) |
+| Selected MED | 1 – Efficacy only | The dose index of the selected MED (minimum of the Highest Cleared Dose and the model MED+) |
 | Selected OSD | 1 \[simulations only\] | The dose index of the selected OSD (minimum of the Highest Cleared Dose and the model OSD+) |
 | No. Ph1 | 1 – Efficacy only | The number of subjects enrolled during the first, MTD locating, phase, before switching to the MED locating phase |
 | Toxicity \<dose index\> | One per dose | The mean of the final posterior estimate of the toxicity rate at each dose. |
@@ -1926,7 +1965,7 @@ For the cohorts files if two groups are being simulated, the files names ‘coho
 | Known per dose \<dose index\> | One per dose | The number of subjects for whom final results are available at each dose. |
 | Tox CI | 1 – MTD target only | Only used if targeting a single dose. It’s the CI used in the stopping rule “range of dose strength within the credible interval”, where the credible interval has a default alpha of 0.05.  |
 | Eff CI | 1 – Efficacy only | It’s the CI used in the stopping rule “range of dose strength within the credible interval”, where the credible interval has a default alpha of 0.05. |
-| Flags | 1 | A flag value comprising a number of (possible) flag values ‘OR’d together to show the current allocation or stopping decisions. See the Flag Values table below for details |
+| Flags | 1 | A flag value comprising a number of (possible) flag values ‘OR’d together to show the current allocation or stopping decisions, written in hexadecimal. See the Flag Values table below for details |
 | Pr(MTD) \<dose index\> | One per dose – MTD target only | The posterior probability for each dose that that dose is the MTD. |
 | Pr(MED) \<dose index\> | One per dose – Efficacy only | The posterior probability for each dose that that dose is the MED. |
 | 1st full size | 1 \[simulations only\] | The number of the first full sized cohort, this will be ‘1’ unless the small cohort run-in is enabled. If the small cohort run-in is enabled, then this is the index of the first full size cohort. |
@@ -1934,20 +1973,32 @@ For the cohorts files if two groups are being simulated, the files names ‘coho
 | MTD+ | 1 | The dose index of the model MTD+, this is the model MTD using the dose range extended by one dose either end. Dose 0 will be selected if all doses are too toxic and dose D+1 will be selected if no doses are toxic enough. |
 | MED+ | 1 – Efficacy only | The dose index of the model MED+, this is the model MED using the dose range extended by one dose either end. Dose 0 will be selected if all doses are efficacious enough and dose D+1 will be selected if no doses are efficacious enough. |
 | OSD+ | 1 \[simulations only\] | The dose index of the model OSD+, will be the same as the model MED+ unless this is above the model MTD+, in which case it is same as the model MTD+. If there is no efficacy to take into consideration this is the same as the model MTD+.. |
+| ToxCat\>=2 \<dose index\> | One per dose – Ordinal toxicity only | The number of category 2 or higher toxicities that have been observed at each dose. |
+| ToxCat=4 \<dose index\> | One per dose – 4 category ordinal toxicity only | The number of category 4 toxicities that have been observed at each dose. |
+| Pr(Good) \<dose index\> | One per dose – Efficacy only | The posterior probability for each dose of observing efficacy without observing toxicity. |
+| Best | 1 – Efficacy only | The index of the dose with the highest Pr(Good) |
 | Pr(MTD+) 0 | 1 – MTD target only | The probability that the model MTD+ is at a dose below the lowest tested doses. |
 | Pr(MTD+) D+1 | 1 – MTD target only | The probability that the model MTD+ is at a dose above the highest tested doses. |
-| Pr(Good) \<dose index\> | 1 – Efficacy only | The posterior probability for each dose of observing efficacy without observing toxicity. |
-| Best | 1 – Efficacy only | The index of the dose with the highest Pr(Good) |
 | Pr(MED+) 0 | 1 – Efficacy only | The probability that the model MED+ is at a dose below the lowest tested doses. |
 | Pr(MED+) D+1 | 1 – Efficacy only | The probability that the model MED+ is at a dose above the highest tested doses. |
 | Pr(Under) Tox \<dose index\> | One per dose | The posterior probability for each dose that its toxicity rate is in the ‘Under-dosing’ toxicity band. |
 | Pr(Target) Tox \<dose index\> | One per dose | The posterior probability for each dose that its toxicity rate is in the ‘Acceptable’ toxicity band. |
 | Pr(Excess) Tox \<dose index\> | One per dose | The posterior probability for each dose that its toxicity rate is in the ‘Excessive’ toxicity band. |
 | Pr(Unacc) Tox \<dose index\> | One per dose | The posterior probability for each dose that its toxicity rate is in the ‘Unacceptable’ toxicity band. |
+| Prior Mean ln(Beta) Tox | 1 | The mean of the prior distribution of log Beta in the toxicity model. |
+| Prior s.d. ln(Beta) Tox | 1 | The standard deviation of the prior distribution of log Beta in the toxicity model. |
+| Prior Mean Alpha Tox | 1 | The mean of the prior distribution of Alpha in the toxicity model (Alpha 3 if modelling ordinal toxicity). |
+| Prior s.d. Alpha Tox | 1 | The standard deviation of the prior distribution of Alpha in the toxicity model (Alpha 3 if modelling ordinal toxicity). |
+| Prior Mean Rho Tox | 1 | The correlation between Alpha and log Beta in the bivariate Normal prior of the toxicity model. |
+| Prior Mean ln(Beta) Eff | 1 – Efficacy only | The mean of the prior distribution of log Beta in the efficacy model. |
+| Prior s.d. ln(Beta) Eff | 1 – Efficacy only | The standard deviation of the prior distribution of log Beta in the efficacy model. |
+| Prior Mean Alpha Eff | 1 – Efficacy only | The mean of the prior distribution of Alpha in the efficacy model. |
+| Prior s.d. Alpha Eff | 1 – Efficacy only | The standard deviation of the prior distribution of Alpha in the efficacy model. |
+| Prior Mean Rho Eff | 1 – Efficacy only | The correlation between Alpha and log Beta in the bivariate Normal prior of the efficacy model. |
 | Duration | 1 (simulations only) | Duration of the trial in weeks. |
 | True Toxicity \<Dose\> | One per dose | The toxicity rate being simulated for that dose in the scenario. |
 | True Efficacy \<Dose\> | One per dose – Efficacy only | The efficacy rate being simulated for that dose in the scenario. |
-| Rec Time | 1 \- Cohorts only | If the trial is using open enrolment this column record the time the subject was available to be dosed. |
+| Rec Time | 1 – Open enrolment only (cohorts only) | If the trial is using open enrolment this column record the time the subject was available to be dosed. |
 | Num Lost | 1 – Open enrolment only (simulations only) | If the trial is using open enrolment this is the total number of subjects ‘lost’ during the simulation, that is they couldn’t be allocated a dose because there were already the maximum number of subjects treated but not complete. |
 | PostCE MTD | 1 – Expansion cohort only (simulations only) | In the case of a trial using an expansion cohort, this is the dose that is the model MTD at the end of the dose escalation phase, after the expansion cohort. |
 | PostCE MED | 1 – Expansion cohort & Efficacy only (simulations only) | In the case of a trial using an expansion cohort, and simulating efficacy, this is the dose that is the model MED at the end of the dose escalation phase, after the expansion cohort. |
@@ -1962,7 +2013,7 @@ For the cohorts files if two groups are being simulated, the files names ‘coho
 
 
 
-The ‘Flags’ column is a number comprised of a number of binary flags that are used to indicate the ‘state’ of the simulator at different analyses. These flags are:
+The ‘Flags’ column is a number comprised of a number of binary flags that are used to indicate the ‘state’ of the simulator at different analyses. It is written in hexadecimal without a `0x` prefix, so `14` means 0x0014 (stopping because the MTD is found) and `2014` means 0x2014. The lowest 5 bits (mask 0x001F) hold a single allocation or stopping mode; the other flags are added to it. These flags are:
 
 | Flag Values |  |  |
 |------------|-----------|--------------------------|
@@ -1970,13 +2021,14 @@ The ‘Flags’ column is a number comprised of a number of binary flags that ar
 | 0x001F | 0x0001 | Allocating to MTD |
 | 0x001F | 0x0002 | Allocating to MED |
 | 0x001F | 0x0003 | Allocating to initial dose |
-| 0x001F | 0x0004 | Allocating new single patient cohort |
+| 0x001F | 0x0004 | Allocating to a run-in dose (small cohort run-in) |
 | 0x001F | 0x0005 | Allocating 1st dose of 2nd sample to dose below MTD from 1st sample |
 | 0x001F | 0x0006 | Allocating 1st dose of 2nd sample to MTD from 1st sample |
 | 0x001F | 0x0007 | Allocating expansion cohort |
 | 0x001F | 0x0008 | Allocating to MTD because can’t allocate to MED because its above MTD |
 | 0x001F | 0x0009 | Expanding at the current dose |
 | 0x001F | 0x000A | Expanding at the dose below |
+| 0x001F | 0x000B | Expanding at the current dose because of a category 2 toxicity in the run-in |
 | 0x001F | 0x000D | Allocating as a backfill |
 | 0x001F | 0x000E | Allocating as a frontfill |
 | 0x001F | 0x000F | Allocating to max/min for fixed probability |
@@ -1985,13 +2037,13 @@ The ‘Flags’ column is a number comprised of a number of binary flags that ar
 | 0x001F | 0x0013 | Stopping because all doses are toxic |
 | 0x001F | 0x0014 | Stopping because MTD is found |
 | 0x001F | 0x0015 | Stopping because MTD is found but there is no MED |
-| 0x0020 | 0x0020 | Reached max subjects on MTD |
-| 0x0030 | 0x0030 | Reached min required subjects on MTD |
+| 0x0020 | 0x0020 | Reached min required subjects on MTD |
 | 0x0040 | 0x0040 | Toxicity confidence interval test passed |
 | 0x0080 | 0x0080 | Pr(MTD) test passed |
 | 0x0100 | 0x0100 | Reached max subjects on MED |
 | 0x0200 | 0x0200 | Efficacy confidence interval test passed |
 | 0x0400 | 0x0400 | Pr(MED) test passed |
+| 0x0800 | 0x0800 | Test cohort rule passed (testing another cohort would not change the MTD, toxicity stopping rule 4) |
 | 0x1000 | 0x1000 | No MED so using maximum instead |
 | 0x2000 | 0x2000 | Using maximum permitted dose in place of MTD |
 | 0x4000 | 0x4000 | Unable to escalate due to part filled dose |
@@ -2010,9 +2062,9 @@ The MCMC file, if requested for output by the user, contains all the MCMC sample
 | Cohort | 1 | The index of the analysis (interim) in the simulation |
 | Sample | 1 | The index of the sample within the analysis |
 | Beta | 1 | The estimate of the slope of the logistic regression |
-| Alpha \<O\> | O | The estimate of intercept of the logistic regression – if the endpoint is not Ordinal, this is just Alpha, if the endpoint is Ordinal there will be columns Alpha 2, Alpha 3 and (if using four category toxicity), Alpha 4 |
-| b | 1 | If a second group is included this is the estimate of ‘b’ the slope offset for the second group. |
-| a | 1 | If a second group is included this is the estimate of the offset for the intercept of the cat-3 toxicity model. |
+| Alpha \<O\> | O | The estimate of intercept of the logistic regression – if the endpoint is not Ordinal, this is just Alpha, if the endpoint is Ordinal there will be columns Alpha 2, Alpha 3 and (if using four category toxicity), Alpha 4. Alpha (or Alpha 3) is omitted if Alpha is fixed. |
+| b | 1 | If a second group is included this is the estimate of ‘b’ the slope offset for the second group. Titled B if the endpoint is not Ordinal. Omitted if a common slope is used for both groups. |
+| a | 1 | If a second group is included this is the estimate of the offset for the intercept of the cat-3 toxicity model. Titled A if the endpoint is not Ordinal. |
 
 ### MCMC File if Efficacy is included
 
@@ -2024,11 +2076,11 @@ If an efficacy endpoint is included in the design, then all the model parameters
 | Sample | 1 | The index of the sample within the analysis |
 | Beta Tox | 1 | The estimate of the slope of the logistic regression of the toxicity model |
 | Alpha \<O\> Tox | O | The estimate of intercept of the logistic regression of the toxicity model – if the endpoint is not Ordinal, this is just Alpha, if the endpoint is Ordinal there will be columns Alpha 2, Alpha 3 and (if using four category toxicity), Alpha 4 |
-| b Tox | 1 | If a second group is included this is the estimate of ‘b’ the slope offset for the toxicity model for the second group. |
-| a Tox | 1 | If a second group is included this is the estimate of the offset of the intercept for the cat-3 toxicity model. |
+| b Tox | 1 | If a second group is included this is the estimate of ‘b’ the slope offset for the toxicity model for the second group. Titled B Tox if toxicity is not Ordinal. Omitted if a common slope is used for both groups. |
+| a Tox | 1 | If a second group is included this is the estimate of the offset of the intercept for the cat-3 toxicity model. Titled A Tox if toxicity is not Ordinal. |
 | Beta Eff | 1 | The estimate of the slope of the logistic regression of the efficacy model |
 | Alpha Eff | 1 | The estimate of intercept of the logistic regression of the efficacy model. |
-| B Eff | 1 | If a second group is included this is the estimate of ‘B’ the slope offset for the efficacy model for the second group. |
+| B Eff | 1 | If a second group is included this is the estimate of ‘B’ the slope offset for the efficacy model for the second group. Omitted if a common slope is used for both groups. |
 | A Eff | 1 | If a second group is included this is the estimate of the offset of the intercept for the efficacy model. |
 
 ## Exporting the Results {#exporting-the-results}

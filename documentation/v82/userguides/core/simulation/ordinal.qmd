@@ -416,51 +416,6 @@ where the arm was retained.
 
 :::
 
-### Frequentist
-
-These graphs are available if frequentist analysis is enabled.
-
-#### Frequentist P(significance) {#freq-psignificance}
-
-These graphs are the box and whisker plots of various p-values that are
-automatically calculated (that is to say they do not need to be defined
-as QOIs for them to be calculated) for the final analysis. The user can
-select from Unadjusted, Bonferroni and Dunnett\'s and LOCF, BOCF (if
-baseline is simulated) or PP (per-protocol) treatment of missing values.
-
-:::{.panel-tabset}
-
-### Continuous
-
-![Distribution of [P(LOCF. Bonferroni Adjusted Significance)]{.fake-code-block} Across Simulations](../coreUGattachments/continuous/media/image58.png){#fig-58c}
-
-### Dichotomous
-
-![Distribution of [P(LOCF. Unadjusted Adjusted Significance)]{.fake-code-block} Across Simulations](../coreUGattachments/dichotomous/media/image53.png){#fig-53d}
-
-:::
-
-#### Frequentist: Response and Significance
-
-This graph plots the mean and 2.5-97.5 percentile of the mean across the
-simulations or the simple frequentist estimate of the response for each
-arm, along with a histogram plot of the ppn of times the response on
-each arm was significant. The user can select from Unadjusted,
-Bonferroni or Dunnett's and LOCF, BOCF (if baseline is simulated) or PP
-(per-protocol) treatment of missing values.
-
-:::{.panel-tabset}
-
-### Continuous
-
-![Response and Ppn LOCF. Bonferroni Significance](../coreUGattachments/continuous/media/image59.png){#fig-59c}
-
-### Dichotomous
-
-![Response and Ppn Fail. Dunnett Significance](../coreUGattachments/dichotomous/media/image54.png){#fig-54d}
-
-:::
-
 ### Per Sim: Response and Subject Alloc
 
 This graph shows the final analysis at the end of individual
@@ -1289,12 +1244,11 @@ or using independent Dirichlet models.
 |          |         | This is the same name as used for the results  |
 |          |         | directory                                      |
 +----------+---------+------------------------------------------------+
-| \<QOI\>  | One per | For each Posterior Probability and Predictive  |
-| \<Dose\> | arm per | Probability QOI defined on this endpoint, this |
-|          | QOI     | is the mean over the simulations of the        |
-|          |         | estimate of the probability of the QOI for     |
-|          |         | each dose. (P-value QOIs are reported in the   |
-|          |         | frequentist results table).                    |
+| \<QOI\>  | One per | For each Posterior Probability, Predictive     |
+| \<Dose\> | arm per | Probability and P-value QOI defined on this    |
+|          | QOI     | endpoint, this is the mean over the            |
+|          |         | simulations of the value of the QOI for each   |
+|          |         | dose.                                          |
 |          |         |                                                |
 |          |         | For each Target QOI this is the proportion of  |
 |          |         | simulations where this dose was selected at    |
@@ -1446,21 +1400,23 @@ where NNNNN is the number of the simulation. By default this file is
 written out only for the first simulation, but this can be changed on
 the simulations tab.
 
-**weeksNNNNN.csv** Contains one row for each cohort during a simulation
-where NNN is the number of the simulation. By default this file is
-written only for the first 100 simulations, but this can be changed via
-the simulation tab. The values in the last row of the cohorts file will
-be the same as the final values for that simulation in the simulations
-file.
+**weeksNNNNN.csv** Contains one row for each interim analysis during a
+simulation, plus a row for the final analysis, where NNNNN is the number
+of the simulation. By default this file is written only for the first
+100 simulations, but this can be changed via the simulation tab. The
+values in the last row of the weeks file will be the same as the final
+values for that simulation in the simulations file.
 
 ## Contents of summary.csv
 
-The first line is a header line, starting with a '#', containing the
-FACTS GUI version number, the name of the FACTS file, the name of the
-scenario, and the time stamp of the start of the simulation.
-
-The second line is a header line, starting with a '#', containing the following
-column headings.
+The first two lines are header lines, starting with a '#', and both list
+the following column headings. The first line uses the full QOI
+descriptions (for example `Pr(OR_d <= 1)`) and `Mean LP Enrolled time`;
+the second line uses the QOI short labels (for example `Pr(PBO)`) and
+`Mean LPFV time`. The third line holds the data. There is no separate
+version line: the FACTS version, the name of the FACTS file, the name of
+the scenario and the time stamp are given in the Version, Project,
+Scenario and Timestamp columns.
 
 :::{.panel-tabset}
 
@@ -1559,33 +1515,18 @@ column headings.
 |           |         | arm, either the log odds ratio or the expected |
 |           |         | utility as above.                              |
 +-----------+---------+------------------------------------------------+
-| log OR    | D       | The lower limit of a 95% credible interval for |
-| (lower CI)|         | the log odds ratio (zero for control).         |
-| \<Dose\>  |         | Available only when using cumulative logistic  |
-|           |         | modeling.                                      |
-+-----------+---------+------------------------------------------------+
-| log OR    | D       | The upper limit of a 95% credible interval for |
-| (upper CI)|         | the log odds ratio (zero for control).         |
-| \<Dose\>  |         | Available only when using cumulative logistic  |
-|           |         | modeling.                                      |
-+-----------+---------+------------------------------------------------+
 | True Mean | D       | The true expected utility for each treatment   |
-| resp      |         | arm used when sampling the simulated           |
-| \<Dose\>  |         | subject responses. Note that in general the    |
-|           |         | true log-odds ratio is undefined.              |
-+-----------+---------+------------------------------------------------+
-| True SD   | D       | The true SD of utility for each treatment      |
 | resp      |         | arm used when sampling the simulated           |
 | \<Dose\>  |         | subject responses.                             |
 +-----------+---------+------------------------------------------------+
-| Mean Raw  | D       | The average, over simulations, of the mean     |
-| Response  |         | observed utility for each arm.                 |
-| \<Dose\>  |         |                                                |
-+-----------+---------+------------------------------------------------+
-| SE Mean   | D       | The standard error, over simulations, of the   |
-| Raw       |         | mean observed utility for each arm.            |
-| Response  |         |                                                | 
-| <\<Dose\> |         |                                                |
+| True Log  | D       | The true log odds ratio of each treatment arm  |
+| OR        |         | relative to the control arm (zero for          |
+| \<Dose\>  |         | control), obtained by fitting a proportional   |
+|           |         | odds model to the true outcome probabilities   |
+|           |         | used when sampling the simulated subject       |
+|           |         | responses. If the true outcome probabilities   |
+|           |         | do not have proportional odds, this is an      |
+|           |         | approximation.                                 |
 +-----------+---------+------------------------------------------------+
 | Mean      | D       | The mean number of completers for each         |
 | Complete  |         | treatment arm                                  |
@@ -1647,6 +1588,11 @@ design. The columns in the following order:
 | Target Probabilities | The summary file contains the proportion of times (over the simulations) each dose had the greatest probability of being the target. |
 | Decision QOIs | The summary file contains the mean (over the simulations) of the final value of the decision QOI at the target. |
 
+Each posterior probability, predictive probability and p-value QOI takes
+D columns, one per dose. Each target QOI also takes D columns, headed
+`Ppn <QOI name> <Dose>`. Each decision QOI takes 1 column. Unlike the
+simulations and weeks files, summary.csv has no `<QOI name> Dose` column.
+
 
 ## Contents of simulations.csv and weeksNNNNN.csv
 
@@ -1671,12 +1617,16 @@ The first line is a header line, starting with a '#', containing the
 FACTS GUI version number, the name of the FACTS file, the name of the
 scenario, and the time stamp of the start of the simulation.
 
-The second line is a header line, starting with a '#', containing the following
-column headings.
+The second and third lines are header lines, starting with a '#', and
+both list the following column headings. The second line uses the full
+QOI descriptions (for example `Pr(OR_d <= 1)`) and `LP Enrolled`; the
+third line uses the QOI short labels (for example `Pr(PBO)`) and `LPFV`.
 
-Most of the columns are common to the two file types, but the weeks file
-does not contain columns for the 'final' values of the evaluation
-criteria.
+The two file types have the same columns, including the success and
+futility flags of the evaluation criteria, except for the first few:
+simulations.csv starts with #Sim, Random Number Seed and
+LastInterimNumber, and the weeks file starts with #Weeks and
+InterimNumber.
 
 :::{.panel-tabset}
 
@@ -1686,10 +1636,11 @@ criteria.
 |----------|----------|--------|--------|--------------------------------|
 | # Weeks (Duration) | 1 | | ✔ | The week of the analysis |
 | #Sim | 1 | ✔ | | The number of the simulation. |
-| Random Number Seed | 1 | ✔ | ✔ | Base random number seed. |
-| LastInterim | 1 | ✔ | | The index of the last interim performed the index of the interim immediately before the final interim (index '999'). Note this is not necessarily the interim when the trial stopped if the design includes follow-up after stopping. |
+| Random Number Seed | 1 | ✔ | | Base random number seed. |
+| InterimNumber | 1 | | ✔ | The index of the analysis the row reports: 1, 2, ... for the interims and 999 for the final analysis. |
+| LastInterimNumber | 1 | ✔ | | The index of the last interim performed the index of the interim immediately before the final interim (index '999'). Note this is not necessarily the interim when the trial stopped if the design includes follow-up after stopping. |
 | #Subjects | 1 | ✔ | ✔ | The number of subjects recruited in the simulation. |
-| Outcome | 1 | ✔ | ✔ | A flag categorizing final study outcome:<br>1 = Early success<br>2 = Late success<br>3 = Late futility<br>4 = Early futility<br>5 = Success to futility flip-flop<br>6 = Futility to success flip-flop<br>7 = Inconclusive |
+| Outcome | 1 | ✔ | ✔ | A flag categorizing final study outcome:<br>1 = Early success<br>2 = Late success<br>3 = Late futility<br>4 = Early futility<br>5 = Success to futility flip-flop<br>6 = Futility to success flip-flop<br>7 = Inconclusive<br>In the weeks file this is -9999 on every row except the final analysis. |
 | Early Success Time | 1 | ✔ | ✔ | This is the time to the early success decision (-9999 if there was no early success decision). The from the start of the trial to the interim where the early success conditions were first met. It does not include the subsequent follow up time. |
 | Alloc \<Dose\> | D | ✔ | ✔ | The number of subjects allocated to each arm. |
 | Pr(Alloc) \<Dose\> | D | ✔ | ✔ | The probability of allocation to the different arms following the interim. |
@@ -1699,16 +1650,19 @@ criteria.
 | log OR (upper CI) \<Dose\> | D | ✔ | ✔ | The upper bound of a 95% credible interval for the log odds ratio, only when cumulative logistic modeling is used. |
 | True Mean resp \<Dose\> | D | ✔ | ✔ | The true expected utility of each treatment arm for this simulation. |
 | True SD resp \<Dose\> | D | ✔ | ✔ | The true SD of the utility of each treatment arm for this simulation |
+| True Log OR \<Dose\> | D | ✔ | ✔ | The true log odds ratio of each treatment arm relative to the control arm (zero for control), obtained by fitting a proportional odds model to the true outcome probabilities. If the true outcome probabilities do not have proportional odds, this is an approximation. |
 | Mean Raw Response \<Dose\> | D | ✔ | ✔ | The observed mean utility on each treatment arm (unadjusted by any modeling). |
 | SE Mean Raw Response \<Dose\> | D | ✔ | ✔ | The SE of the estimate of the expected utility on each dose. |
+| Raw Log OR \<Dose\> | D | ✔ | ✔ | The log odds ratio of each treatment arm relative to the control arm (zero for control), estimated by fitting a frequentist proportional odds model to the observed outcome counts of the two arms (unadjusted by any dose response modeling). Zero if either arm has no observed outcomes. |
+| SE Raw Log OR \<Dose\> | D | ✔ | ✔ | The standard error of the raw log odds ratio above (zero for control, -9999 if either arm has no observed outcomes). |
 | Complete \<Dose\> | D | ✔ | ✔ | The number of completed subjects on each treatment arm at the time of the analysis. |
 | Complete Information \<Dose\> | D | ✔ | ✔ | The number of subject who count as complete for the purposes of timing interims -- whether complete or opportunity to complete and at which visit is as defined on the Interims tab. If interims are by enrolment then CompleteInformation is the number of subjects that have completed -- final endpoint data is available. |
 | #Dropouts \<Dose\> \<Visit\> | D * V | ✔ | ✔ | The number of subjects dropped out on each treatment arm and each visit. |
 | Mean P \<Dose\> \<Outcome\> | D * K |  ✔ | ✔ | Posterior mean of the probability of each ordinal outcome for each arm |
 | SD P \<Dose\> \<Outcome\> | D * K |  ✔ | ✔ | Posterior SD of the probability of each ordinal outcome for each arm |
 | N \<Dose\> \<Outcome\> | D * K | ✔ | ✔ | Number of subjects for each treatment arm and outcome. |
-| DR Param \<Param\> | 10 | ✔ | ✔ | The estimate of the mean value of each of the response model parameters. The response models require up to 10 parameters, most less. The model parameters are labeled $\alpha_1$, $\alpha_2$, .. the subscripts corresponding to the index "\<Param\>". |
-| Sd DR Param \<Param\> | 4 | ✔ | ✔ | The standard deviation of the estimate of the mean value of the corresponding response model parameter. |
+| DR Param \<Param\> | 10 | ✔ | ✔ | The estimate of the mean value of each of the response model parameters. The response models require up to 10 parameters, most less. The model parameters are labeled $\alpha_1$, $\alpha_2$, .. the subscripts corresponding to the index "\<Param\>". Only when cumulative logistic modeling is used. |
+| Sd DR Param \<Param\> | 10 | ✔ | ✔ | The standard deviation of the estimate of the mean value of the corresponding response model parameter. Only when cumulative logistic modeling is used. |
 | Duration | 1 | ✔ | ✔ | The time in weeks to the analysis shown. |
 | Arm Drop Time \<Dose\> | D | ✔ | ✔ | For each treatment arm, the time in weeks when it was decided to drop the arm. |
 | LPFV | 1 | ✔ | ✔ | The time in weeks to the last patient first visit. |
@@ -1731,6 +1685,12 @@ design. The columns are grouped in the following order:
 | Success Futile | A flag for each QOI decision criteria indicating if the decision QOI was evaluated and compared to a threshold at the interim (weeks file) or final analysis (simulation file). The flag value is -1 if the decision QOI was not evaluated, 0 if it did not meet the threshold and 1 if it did. |
 | Success / Futile Combined | Flags indicating if the interim or final analysis determined success or futility taking all the factors defined for Success/Futility into account: 0 if the conditions were not met, 1 it the conditions were met. If success and futility conditions have been defined that are not mutually exclusive and both sets of combined conditions are met, FACTS will pick one of the outcomes as met but not the other. In order to discourage defining Success and Futility rules that can both be true FACTS does not guarantee which outcome will be selected. |
 
+Each posterior probability, predictive probability, p-value and target
+probability QOI has one column per dose, followed by one extra column,
+`<QOI name> Dose`, so it takes D+1 columns. The Dose column holds the
+index (1, ...) of the arm with the highest value (the lowest p-value for
+p-value QOIs, or the target dose for target QOIs).
+
 ## Contents of PatientsNNNNN.csv
 
 :::{.panel-tabset}
@@ -1745,7 +1705,7 @@ design. The columns are grouped in the following order:
 | Dose    | 1 | The index number (1, ...) of the treatment arm the subject belongs to. |
 | LastVisit# | 1 | The index of the last visit for which the subjects data was collected, if the subject did not complete all of its visits it could be because they dropped-out, the subject's treatment arm was dropped (and there was no follow-up), or the study stopped early (and there was no follow-up). |
 | Dropout | 1 | Whether the subject dropped out of the trial (1) or not (0) before reaching their final visit. |
-| Baseline | 1 | Subject baseline response, if simulated. If not simulated, then fixed at -9999. |
+| Baseline | 1 | Not used in ordinal designs, which do not simulate a baseline response; always -9999. |
 | Visit \<Visit\> | V | Subject's response at each visit; possible values are 1 through the number of ordinal values. |
 
 At present, the ordinal engine does not feature longitudinal modeling so there is 
@@ -1758,12 +1718,16 @@ only one visit and only the final endpoint is given.
 The MCMC file if requested for output by the user, contains all the MCMC
 samples for the fitted parameters in the design. There is one row per
 sample (including the burnin) and the samples from all the analyses in
-the simulation are included. The first two columns are the analysis
+the simulation are included. The first line is a header line, starting
+with a '#', containing the FACTS GUI version number, the name of the
+FACTS file, the name of the scenario, and the time stamp of the start of
+the simulation. The second line holds the column headings. The first two
+columns are the analysis
 index and the sample (within analysis) index. The remaining columns are
 the parameters whose sample values are being reported, the number and
-constituents of these columns depend in particular on whether cumulative 
-logistic modeling or Dirichlet modeling has been selected for the ordinal 
-outcome.  
+constituents of these columns depend in particular on whether cumulative
+logistic modeling or Dirichlet modeling has been selected for the ordinal
+outcome, and on the dose response model.
 
 :::{.panel-tabset}
 
@@ -1776,5 +1740,6 @@ outcome.
 | Theta[Arm] | D | (Cumulative logistic modeling only).  The estimate of the log odds ratio for each arm, based on the dose response model fitted. The control arm has Theta1 = 0. |
 | P0[Outcome] | K | (Cumulative logistic modeling). Estimates of the probability of each ordinal outcome for the control arm. The outcome probabilities for the other arms are derived from these control arm probabilities and the Theta parameters above. |
 | P[Arm][Outcome] | D * K | (Dirichlet modeling).  Estimates of the probability of each ordinal outcome for each arm. |
+| Dose response model parameters | 0 to 7 | (Cumulative logistic modeling). The sampled parameters of the dose response model, which depend on the model:<br>Simple, Monotonic or Second Order NDLM: Tau<br>3-Parameter Logistic: A1, A2, A3<br>Hierarchical Logistic or Sigmoid: A1, A2, A3, A4<br>Linear: A1, A2<br>Hierarchical Linear: A1, A2, ZetaSD<br>Hierarchical Model: Mu, ZetaSD<br>U-Shaped: theta0, delta, pmin, pwidth, alpha, wwidth, beta<br>Plateau: theta0, delta, pmin, alpha<br>The Independent Dose Model has no such columns. |
 
 :::

@@ -213,34 +213,19 @@ In the scenario directory there are the following types of results file:
 simulation results. This is the source of the shown on the simulations
 tab.
 
-**Summary_freq_bocf.csv**
-
-**Summary_freq_fail.csv**
-
-**Summary_freq_ignore.csv**
-
-**Summary_freq_locf.csv** Contains a single row of data that that
-summarizes the frequentist analysis of the simulations. A file is output
-for each of the different methods for dealing with missing data that are
-applicable: BOCF if the baseline score is being simulated (Continuous
-Only), LOCF and “ignore” (referred to as PP (Per-Protocol) in the GUI)
-and Fail (Dichotomous only).
+**Summary_freq.csv** Contains a single row of data that summarizes the
+frequentist analysis of the simulations.
 
 **Simulations.csv** Contains one row per simulation describing the final
 state of each simulation for every trial simulated.
 
-**Simulations_freq_bocf.csv**
-
-**Simulations_freq_fail.csv**
-
-**Simulations_freq_ignore.csv**
-
-**Simulations_freq_locf.csv** Contains one row per simulation describing
+**Simulations_freq.csv** Contains one row per simulation describing
 the frequentist analysis of the final state of each simulation for every
-trial simulated. A file is output for each of the different methods for
-dealing with missing data that are applicable: BOCF if the baseline
-score is being simulated (Continuous only), LOCF and “ignore” (referred
-to as PP (Per-Protocol) in the GUI) and Fail (Dichotomous only).
+trial simulated.
+
+The frequentist files (Summary_freq, Simulations_freq and weeks_freq)
+are only written if frequentist analysis is enabled on the Design \>
+Frequentist Analysis tab.
 
 **PatientsNNNNN.csv** Contains one row per patient in simulation, where
 NNNNN is the number of the simulation. By default this file is written
@@ -254,23 +239,15 @@ the simulation tab. The values in the last row of the “weeks” file will
 be the same as the final values for that simulation in the simulations
 file.
 
-**weeks_freq_bocf_NNNNN.csv,**
-
-**weeks_freq_fail_NNNN.csv,**
-
-**weeks_freq_ignore_NNNN.csv,**
-
-**weeks_freq_locf_NNNNN.csv,**
-
-Contains one row for each interim during a simulation where NNNNN is the
-number of the simulation. A file is output for each simulation for which
-a frequentist “weeks file” is to be output, and for each of the
-different methods for dealing with missing data that are applicable:
-BOCF if the baseline score is being simulated (Continuous Only), LOCF
-and “ignore” (referred to as PP (Per-Protocol) in the GUI) and Fail
-(Dichotomous only)
+**weeks_freqNNNNN.csv** Contains one row for each interim during a
+simulation, giving the frequentist analysis at that interim, where
+NNNNN is the number of the simulation. A file is output for each
+simulation for which a frequentist “weeks file” is to be output.
 
 ## Contents of summary.csv
+
+The file has a single header line, starting with ‘#’, that holds the
+column titles. It is followed by one row of data.
 
 | Column Title                                | Number of columns | Description |
 |------|----|-------------------|
@@ -279,10 +256,12 @@ and “ignore” (referred to as PP (Per-Protocol) in the GUI) and Fail
 | Timestamp                                   | 1                 | The date and time when the simulations started. |
 | Version                                     | 1                 | The version number of the FACTS GUI that ran the simulations. |
 | Nsim                                        | 1                 | The number of simulation runs. |
+| Random Number Seed                          | 1                 | The base random number seed used to perform the simulations. |
 | No. Subj                                    | 1                 | The mean, over the simulations, of the total number of subjects recruited in the trial. |
 | SE Subj.                                    | 1                 | The standard error of the total number of subjects recruited into the trials. |
 | 80-ile                                      | 1                 | The 80th percentile, over the simulations, of the total number of subjects recruited in the trial. |
 | Mean Alloc \<Group\> <arm>                     | 2*G               | The mean number of subjects recruited into each arm in each group. If a control arm is not included the column is still present, with value ‘0’. |
+| SE Alloc \<Group\> <arm>                       | 2*G               | The standard error, over the simulations, of the number of subjects recruited into each arm in each group. |
 | Mean Odds Ratio \<Group\>                     | G                 | The mean of the response odds ratio estimates between treatment and control. |
 | Mean Odds Ratio (Overall)                   | 1                 | The mean of the means of the response odds ratio estimates across all groups. |
 | SE Odds Ratio \<Group\>                       | G                 | The standard error, over the simulations, of the mean estimate of the response odds ratio in each group. |
@@ -294,7 +273,7 @@ and “ignore” (referred to as PP (Per-Protocol) in the GUI) and Fail
 | Mean Control Resp \<Group\>                   | G                 | The mean of the mean estimates of response rate on the control arm in each group. |
 | Avg. Control Resp (Overall)                 | 1                 | The mean of the average of the control response rate across the groups. |
 | SE Control Resp \<Group\>                     | G                 | The standard error, over the simulations, of the mean estimate of response rate on the control arm in each group. |
-| SE Avg. Control Effect (Overall)            | 1                 | The standard error, over the simulations, of the mean estimate of the across groups control response rate. |
+| SE Avg. Control Resp (Overall)              | 1                | The standard error, over the simulations, of the mean estimate of the across groups control response rate. |
 | True Mean Trt Resp \<Group\>                  | G                 | True mean treatment response for the scenario. |
 | True Mean Control Resp \<Group\>              | G                 | True mean control response for the scenario. |
 | Mean Mu Theta                               | 1                 | The mean, over the simulations, of the mean estimate of the mean of hierarchical distribution of the mean log-odds study treatment response rate from control in each group. |
@@ -305,12 +284,13 @@ and “ignore” (referred to as PP (Per-Protocol) in the GUI) and Fail
 | SE Mu Gamma                                 | 1                 | The standard error, over the simulations, of the mean estimate of the mean of the hierarchical distribution of the mean log-odds response rate on the control arm in each group. |
 | Mean Tau Gamma                              | 1                 | The mean, over the simulations, of the mean estimate of the standard deviation of hierarchical distribution of the mean log-odds response rate on the control arm in each group. |
 | SE Tau Gamma                                | 1                 | The standard error, across the simulations, of the mean estimate of the standard deviation of hierarchical distribution of the mean log-odds response rate on the control arm in each group. |
-| Mean Pr Ph3 Success \<Group\>                 | G                 | The mean, over the simulations, of the mean probability of success in phase 3 of the study treatment in each group. |
+| No.Dropouts \<Group\> <Arm>                    | 2*G               | The mean, over the simulations, of the number of subjects who dropped out on each arm in each group. These columns are only present if a longitudinal model is being used. |
+| Mean Pr Ph3 Success \<Group\>                 | G               | The mean, over the simulations, of the mean probability of success in phase 3 of the study treatment in each group. |
 | Mean Pr Ph3 Success 99                      | 1                 | The mean, across the simulations, of the mean probability of success in phase 3 of the across groups treatment difference. |
-| Mean Pr CSD (Success) \<Group\>               | G                 | The mean, over the simulations, of the mean probability of the study treatment arm being better than the control by the CSD for success in each group. |
-| Mean Pr CSD (Success) 99                    | 1                 | The mean, over the simulations, of the mean probability of the across groups treatment difference being better than the CSD for success. |
-| Mean Pr CSD (Futility) \<Group\>              | G                 | The mean, over the simulations, of the mean probability of the study treatment arm being better than the control by the CSD for futility in each group. |
-| Mean Pr CSD (Futility) 99                   | 1                 | The mean, over the simulations, of the mean probability of the across groups treatment difference being better than the CSD for futility. |
+| Mean Pr of success based on success CSD \<Group\> | G             | The mean, over the simulations, of the mean probability of the study treatment arm being better than the control by the CSD for success in each group. |
+| Mean Pr of success based on success CSD 99  | 1                 | The mean, over the simulations, of the mean probability of the across groups treatment difference being better than the CSD for success. |
+| Mean Pr of success based on futility CSD \<Group\> | G            | The mean, over the simulations, of the mean probability of the study treatment arm being better than the control by the CSD for futility in each group. |
+| Mean Pr of success based on futility CSD 99 | 1                 | The mean, over the simulations, of the mean probability of the across groups treatment difference being better than the CSD for futility. |
 | Ppn CSD Futility \<Group\>                    | G                 | The proportion of simulations in which the estimate of the response on the study treatment arm met its CSD futility criterion in each group. |
 | Ppn CSD Futility 99                         | 1                 | The proportion of simulations in which the across group treatment difference met its CSD futility criterion. |
 | Ppn Ph3 Futility \<Group\>                    | G                 | The proportion of simulations in which the predicted probability of success in phase 3 of the response on the study treatment arm met its futility criterion in each group. |
@@ -324,9 +304,9 @@ and “ignore” (referred to as PP (Per-Protocol) in the GUI) and Fail
 | Ppn Combined Success \<Group\>                | G                 | The proportion of simulations that each group met both the CSD success criteria and the probability of success in Phase 3 success criteria. |
 | Ppn Combined Success 99                     | 1                 | The proportion of simulations that the across groups treatment effect met both the CSD success criteria and the probability of success in Phase 3 success criteria. |
 | Ppn Success Criteria Met \<Group\>            | G                 | The proportion of simulations that each groups success criteria have been met either for early stopping or final evaluation – for early stopping this means that the Phase 3 and/or CSD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied. |
-| Ppn Study Success                           | 1                 | The proportion of simulations where the study was a success (whether stopping early or reaching full accrual). |
+| Ppn Success Criteria Met 99                 | 1                 | The proportion of simulations where the across groups success criteria have been met, either for early stopping or final evaluation. |
 | Ppn Futility Criteria Met \<Group\>           | G                 | The proportion of simulations that each groups futility criteria have been met either for early stopping or final evaluation – for early stopping this means that the Phase 3 and/or CSD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied. |
-| Ppn Study Futile                            | 1                 | The proportion of simulations where the study was futile (whether stopping early or reaching full accrual). |
+| Ppn Futility Criteria Met 99                | 1                 | The proportion of simulations where the across groups futility criteria have been met, either for early stopping or final evaluation. |
 | Ppn CSD Futility (Final) \<Group\>            | G                 | The proportion of simulations in which the estimate after all data has been collected of the response on the study treatment arm met its CSD futility criterion in each group. |
 | Ppn CSD Futility (Final) 99                 | 1                 | The proportion of simulations in which after all data has been collected the across group treatment difference met its CSD futility criterion. |
 | Ppn Ph3 Futility (Final) \<Group\>            | G                 | The proportion of simulations in which the predicted probability after all data has been collected of success in phase 3 of the response on the study treatment arm, met its futility criterion in each group. |
@@ -340,24 +320,37 @@ and “ignore” (referred to as PP (Per-Protocol) in the GUI) and Fail
 | Ppn Combined Success (Final) \<Group\>        | G                 | The proportion of simulations where after all data has been collected each group met both the CSD success criteria and the probability of success in Phase 3 success criteria. |
 | Ppn Combined Success (Final) 99             | 1                 | The proportion of simulations where after all data has been collected the across groups treatment effect met both the CSD success criteria and the probability of success in Phase 3 success criteria. |
 | Ppn Success Criteria Met (Final) \<Group\>    | G                 | The proportion of simulations where after all data has been collected each groups success criteria have been met either for early stopping or final evaluation – for early stopping this means that the Phase 3 and/or CSD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied. |
-| Ppn Study Success (Final)                   | 1                 | The proportion of simulations where after all data has been collected the study was a success (whether stopping early or reaching full accrual). |
+| Ppn Success Criteria Met (Final) 99         | 1                 | The proportion of simulations where after all data has been collected the across groups success criteria have been met. |
+| Ppn Study Success (Final)                   | 1                | The proportion of simulations where after all data has been collected the study was a success (whether stopping early or reaching full accrual). |
 | Ppn Futility Criteria Met (Final) \<Group\>    | G                 | The proportion of simulations where after all data has been collected each groups futility criteria have been met either for early stopping or final evaluation – for early stopping this means that the Phase 3 and/or CSD criteria, the across groups criteria and the minimum number of subjects to stop were all satisfied. |
-| Ppn Study Futile (Final)                    | 1                 | The proportion of simulations after all data has been collected where the study was futile (whether stopping early or reaching full accrual). |
-| Ppn Outcome 1                               | 1                 | The proportion of simulations that stopped early for success. |
+| Ppn Futility Criteria Met (Final) 99        | 1                 | The proportion of simulations where after all data has been collected the across groups futility criteria have been met. |
+| Ppn Study Futile (Final)                    | 1                | The proportion of simulations after all data has been collected where the study was futile (whether stopping early or reaching full accrual). |
+| Ppn Overall Success                         | 1                 | The proportion of simulations that were successful, either early success or late success (Outcome 1 or 2). |
+| Ppn Overall Futility                        | 1                 | The proportion of simulations that were futile, either early futility or late futility (Outcome 4 or 3). |
+| Ppn Outcome 1                              | 1                 | The proportion of simulations that stopped early for success. |
 | Ppn Outcome 2                               | 1                 | The proportion of simulations that reached full accrual and declared success on final evaluation. |
 | Ppn Outcome 3                               | 1                 | The proportion of simulations that reached full accrual and declared futility on final evaluation. |
 | Ppn Outcome 4                               | 1                 | The proportion of simulations that stopped early for futility. |
 | Ppn Outcome 5                               | 1                 | The proportion of simulations that stopped early for success but were deemed futile on final evaluation. |
 | Ppn Outcome 6                               | 1                 | The proportion of simulations that stopped early for futility but were deemed successful on final evaluation. |
 | Ppn Outcome 7                               | 1                 | The proportion of simulations that reached full accrual and were inconclusive. |
-| Mean Study Accrual Stop Week                | 1                 | The mean study duration of accrual – from start of accrual to last patient first visit. |
+| Mean Complete \<Group\> <Arm>                  | 2*G               | The mean, over the simulations, of the number of subjects with their final endpoint available on each arm in each group at the end of the trial. |
+| Mean Complete Info \<Group\> <Arm>             | 2*G               | The mean, over the simulations, of the amount of complete information on each arm in each group at the end of the trial, as defined for interim timing. |
+| Mean Study Accrual Stop Week               | 1                 | The mean study duration of accrual – from start of accrual to last patient first visit. |
 | Mean BAC Mu \<Group\>                          | G                 | The mean, over the simulations, of the posterior mean of the Bayesian Augmented Control hierarchical distribution for each group. |
 | SE BAC Mu \<Group\>                           | G                 | The standard error, over the simulations, of the posterior mean of the Bayesian Augmented Control hierarchical distribution for each group. |
 | Mean BAC Tau \<Group\>                         | G                 | The mean, over the simulations, of the posterior standard deviation of the Bayesian Augmented Control hierarchical distribution for each group. |
 | SE BAC Tau \<Group\>                          | G                 | The standard error, over the simulations, of the posterior standard deviation of the Bayesian Augmented Control hierarchical distribution for each group. |
+| Ppn Correct Groups                          | 1                 | The proportion of the groups marked as “should succeed” on the Virtual Subject Response \> Explicitly Defined \> Group Response tab that were successful in a simulation where the study was successful, averaged over all the simulations. |
+| Ppn Incorrect Groups                        | 1                 | The proportion of the groups **not** marked as “should succeed” on the Virtual Subject Response \> Explicitly Defined \> Group Response tab that were successful in a simulation where the study was successful, averaged over all the simulations. |
 
 
 ## Contents of Summary_freq.csv
+
+The file has two header lines starting with ‘#’: the first gives the
+FACTS version, the project name, the scenario name and the date and time
+of the simulations; the second holds the column titles. They are
+followed by one row of data.
 
 | Column Title | Number of columns | Description |
 |------|----|-------------------|
@@ -365,8 +358,10 @@ and “ignore” (referred to as PP (Per-Protocol) in the GUI) and Fail
 | Mean Overall OR | 1 | The mean (over the simulations) overall Odds Ratio |
 | SE Mean Overall OR | 1 | The SE (over the simulations) of the mean overall Odds Ratio |
 | ppn Significant (Chisq) (By Group) \<group\> | G | The proportion of simulations in which the treatment effect was significant according to a Chi-Square Test in each group. |
-| ppn Significant (Chisq) (By Group) \<group\> | G | The proportion of simulations in which the treatment effect was significant according to a Fisher exact test in each group. |
+| ppn Significant (Fisher Exact) (By Group) \<group\> | G | The proportion of simulations in which the treatment effect was significant according to a Fisher exact test in each group. |
 | Ppn Significant (Binomial) (By Group) \<group\> | G | The proportion of simulations in which the treatment effect was significant according to a Binomial test in each group. |
+| Bias \<group\> | G | The mean, over the simulations, of the difference between the frequentist estimate of the treatment effect (the difference in response rates between treatment and control) in each group and the true treatment effect in that group (the true treatment response rate minus the true control response rate, reversed if a lower response is better). |
+| Coverage \<group\> | G | The proportion of simulations in which the confidence interval for the treatment effect in each group contains the true treatment effect in that group. |
 | Mean Trt Effect (By Group) \<group\> | G | The mean (over the simulations) of the frequentist estimate of the mean treatment effect in each group. |
 | SE Mean Trt Effect (by Group) \<group\> | G | The SE (over the simulations) of the frequentist estimate of the mean treatment effect in each group. |
 | Ppn Significant (Trt) | 1 | The proportion of simulations with an overall significant treatment effect. |
@@ -376,6 +371,11 @@ and “ignore” (referred to as PP (Per-Protocol) in the GUI) and Fail
 
 ## Contents of simulations.csv and weeksNNNNN.csv
 
+Both files have two header lines starting with ‘#’: the first gives the
+FACTS version, the project name, the scenario name and the date and time
+of the simulations; the second holds the column titles. simulations.csv
+then has one row per simulation, and the weeks file one row per interim.
+
 Most of the columns are common to the two file types, but the weeks file
 does not contain columns for the ‘final’ values of the evaluation
 criteria.
@@ -383,19 +383,21 @@ criteria.
 | Column Title                                | Number of columns | In simulations file | In weeks file | Description |
 |------------------|-----------|-----------|----------|-------------------------|
 | #Sim                                        | 1                 | ✔                   |               | Simulation number |
+| Random Number Seed                          | 1                 | ✔                   |               | The base random number seed used to perform the simulations (the same on every row). |
 | Weeks (Duration)                            | 1                 | ✔                   |               | The week of final analysis – the total duration of the simulation. |
 | #Week                                       | 1                 |                     | ✔             | Week |
 | No.Subj                                     | 1                 | ✔                   | ✔             | The number of subjects recruited in the simulation. |
 | Alloc \<Group\> <arm>                          | 2 * G             | ✔                   | ✔             | The number of subjects allocated to each arm in each group. |
-| Mean Odds Ratio                             | G                 | ✔                   | ✔             | The estimated mean response odds ratio between the treatment and control arms |
+| Mean Odds Ratio \<Group\>                     | G                 | ✔                   | ✔             | The estimated mean response odds ratio between the treatment and control arms in the group |
+| Mean Odds Ratio (Overall)                   | 1                 | ✔                   | ✔             | The estimated mean response odds ratio between the treatment and control arms across the groups |
 | Mean Trt Resp \<Group\>                       | G                 | ✔                   | ✔             | The estimated mean response of the study treatment in the group. |
 | Trt Effect (Overall)                        | 1                 | ✔                   | ✔             | The estimated mean treatment difference across the groups. |
 | SD Mean Trt Resp \<Group\>                    | G                 | ✔                   | ✔             | The standard deviation of the estimate of the mean response of the study treatment in the group. |
 | SD Trt Effect (Overall)                     | 1                 | ✔                   | ✔             | The standard deviation of the estimate of the mean treatment difference across the groups. |
 | Trt Resp Lower                              | G                 | ✔                   | ✔             | The lower bounds of the confidence interval around the estimate of the treatment response. |
-| Trt Resp Lower (Overall)                    | 1                 | ✔                   | ✔             | The lower bounds of the confidence interval around the estimate of the treatment response across the groups |
+| Trt Effect (Overall) Lower                  | 1                | ✔                   | ✔             | The lower bounds of the confidence interval around the estimate of the treatment response across the groups |
 | Trt Resp Upper                              | G                 | ✔                   | ✔             | The upper bounds of the confidence interval around the estimate of the treatment response. |
-| Trt Resp Upper (Overall)                    | 1                 | ✔                   | ✔             | The upper bounds of the confidence interval around the estimate of the treatment response across the groups |
+| Trt Effect (Overall) Upper                  | 1                | ✔                   | ✔             | The upper bounds of the confidence interval around the estimate of the treatment response across the groups |
 | Mu Theta                                    | 1                 | ✔                   | ✔             | The mean of the hierarchical distribution of the treatment differences over all the groups. |
 | Tau Theta                                   | 1                 | ✔                   | ✔             | The standard deviation of the hierarchical distribution of the treatment differences over all the groups. |
 | Mean Control Resp \<Group\>                   | G                 | ✔                   | ✔             | The estimated mean response of the control arm in each group. |
@@ -403,9 +405,9 @@ criteria.
 | SD Mean Control Resp \<Group\>                | G                 | ✔                   | ✔             | The standard deviation of the estimate of the mean response of the control arm in each group. |
 | SD Avg. Control Resp (Overall)              | 1                 | ✔                   | ✔             | The standard deviation of the estimate of the average response over all the control arms. |
 | Control Resp Lower                          | G                 | ✔                   | ✔             | The lower bounds of the confidence interval around the estimate of the control response. |
-| Avg. Control Resp Lower (Overall)           | 1                 | ✔                   | ✔             | The lower bounds of the confidence interval around the estimate of the control response across the groups |
+| Avg. Control Resp (Overall) Lower           | 1                | ✔                   | ✔             | The lower bounds of the confidence interval around the estimate of the control response across the groups |
 | Control Resp Upper                          | G                 | ✔                   | ✔             | The upper bounds of the confidence interval around the estimate of the control response. |
-| Avg. Control Resp Upper (Overall)           | 1                 | ✔                   | ✔             | The upper bounds of the confidence interval around the estimate of the control response across the groups |
+| Avg. Control Resp (Overall) Upper           | 1                | ✔                   | ✔             | The upper bounds of the confidence interval around the estimate of the control response across the groups |
 | Mu Gamma                                    | 1                 | ✔                   | ✔             | The mean of the hierarchical distribution of the responses on the control arms across all the groups. |
 | Tau Gamma                                   | 1                 | ✔                   | ✔             | The standard deviation of the hierarchical distribution of the responses on the control arms across all the groups. |
 | True Mean Trt Resp \<Group\>                  | G                 | ✔                   | ✔             | True mean treatment response for the scenario |
@@ -413,7 +415,7 @@ criteria.
 | Num Completed \<Group\> <arm>                   | 2 * G             | ✔                   | ✔             | The number of subjects completed (final endpoint available) in each arm in each group. |
 | Complete Info \<Group\> <arm>                   | 2 * G             | ✔                   | ✔             | The amount of complete information in each arm in each group – however that has been defined in the definition of interim timing – subjects enrolled, subjects complete at a certain visit or subjects who had the opportunity to complete at a certain visit. |
 | Mean Raw Response \<Group\> <arm>               | 2 * G             | ✔                   | ✔             | The mean raw response |
-| SE Raw Response \<Group\> <arm>                 | 2 * G             | ✔                   | ✔             | The standard deviation of the raw response |
+| SE Mean Raw Response \<Group\> <arm>            | 2 * G             | ✔                   | ✔             | The standard error of the mean raw response |
 | Num Dropouts \<Group\> <arm>                    | 2 * G             | ✔                   | ✔             | Number of dropouts seen |
 | Pr Ph3 Success \<Group\>                       | G                 | ✔                   | ✔             | The probability of success in phase 3 of the study treatment for each group. |
 | Pr Ph3 Success 99                           | 1                 | ✔                   | ✔             | The probability of success in phase 3 of the across groups treatment difference. |
@@ -434,7 +436,9 @@ criteria.
 | Combined Success \<Group\>                     | G                 | ✔                   | ✔             | A flag: 1 = the required CSD, success in phase 3 and minimum sample size criteria are all met for early stopping for success for each group, 0 = they are not all met. Whether the across group stopping condition is also met if required is not included in this flag. |
 | Combined Success 99                          | 1                 | ✔                   | ✔             | A flag: 1 = the required CSD, success in phase 3 and minimum sample size criteria are all met for early stopping for success in the across groups analysis, 0 = they are not all met. |
 | Success Criteria Met \<Group\>                 | G                 | ✔                   | ✔             | A flag: 1 = the group’s success criteria were met, 0 = otherwise. |
+| Success Criteria Met 99                      | 1                 | ✔                   | ✔             | A flag: 1 = the across groups success criteria were met, 0 = otherwise. |
 | Futility Criteria Met \<Group\>                | G                 | ✔                   | ✔             | A flag: 1 = the group’s futility criteria were met, 0 = otherwise. |
+| Futility Criteria Met 99                     | 1                 | ✔                   | ✔             | A flag: 1 = the across groups futility criteria were met, 0 = otherwise. |
 | CSD Futility (Final) \<Group\>                 | G                 | ✔                   |               | A flag: 1 = the posterior probability of being better than control by the futility CSD was below the threshold for the final evaluation for futility for each group, 0 = the posterior probability was above the threshold. |
 | CSD Futility (Final) 99                      | 1                 | ✔                   |               | A flag: 1 = the posterior probability of being better than control by the futility CSD was below the threshold for the final evaluation for futility in the across groups analysis, 0 = the posterior probability was above the threshold. |
 | Ph3 Futility (Final) \<Group\>                 | G                 | ✔                   |               | A flag: 1 = the posterior probability of successful in a subsequent phase 3 trial was below the threshold for the final evaluation for futility for each group, 0 = the posterior probability was above the threshold. |
@@ -447,8 +451,10 @@ criteria.
 | Combined Futility (Final) 99                 | 1                 | ✔                   |               | A flag: 1 = the required CSD and success in phase 3 criteria are all met for the final evaluation for futility in the across groups analysis, 0 = they are not all met. |
 | Combined Success (Final) \<Group\>             | G                 | ✔                   |               | A flag: 1 = the required CSD and success in phase 3 criteria are all met for the final evaluation for success for each group, 0 = they are not all met. Whether the across group final success condition is also met if required is not included in this flag. |
 | Combined Success (Final) 99                  | 1                 | ✔                   |               | A flag: 1 = the required CSD and success in phase 3 criteria are all met for the final evaluation for success in the across groups analysis, 0 = they are not all met. |
-| Success Criteria Met (Final) \<Group\>         | G                 | ✔                   | ✔             | A flag: 1 = the group’s success criteria were met, 0 = otherwise. |
-| Futility Criteria Met (Final) \<Group\>        | G                 | ✔                   | ✔             | A flag: 1 = the group’s futility criteria were met, 0 = otherwise. |
+| Success Criteria Met (Final) \<Group\>         | G                 | ✔                   |               | A flag: 1 = the group’s success criteria were met at the final evaluation, 0 = otherwise. |
+| Success Criteria Met (Final) 99              | 1                 | ✔                   |               | A flag: 1 = the across groups success criteria were met at the final evaluation, 0 = otherwise. |
+| Futility Criteria Met (Final) \<Group\>        | G                 | ✔                   |               | A flag: 1 = the group’s futility criteria were met at the final evaluation, 0 = otherwise. |
+| Futility Criteria Met (Final) 99             | 1                 | ✔                   |               | A flag: 1 = the across groups futility criteria were met at the final evaluation, 0 = otherwise. |
 | Futile Study                                | 1                 | ✔                   | ✔             | A flag: 1 = the study was futile overall, 0 = otherwise. |
 | Successful Study                            | 1                 | ✔                   | ✔             | A flag: 1 = the study was successful overall, 0 = otherwise. |
 | Outcome                                     | 1                 | ✔                   | ✔             | A flag categorizing final study outcome: 1. Early success; 2. Late success; 3. Late futility; 4. Early futility; 5. Success to futility flip-flop; 6. Futility to success flip-flop; 7. Inconclusive. In weeks files written before the final analysis it is -9999. |
@@ -476,22 +482,36 @@ criteria.
 
 ## Contents of Simulations_freq.csv
 
+Like simulations.csv, the file has two header lines starting with ‘#’: a
+line giving the FACTS version, project, scenario and date and time, then
+the column titles.
+
 | Column Title | Number of columns | Description |
 |------|----|-------------------|
 | \# Trial | 1 | The number of the simulation. |
-| Overall (Chisq) Group p-value | 1 | The overall Chi-Squared p-value |
+| Overall (Chisq) p-value | 1 | The overall Chi-Squared p-value |
 | Overall OR | 1 | The overall Odds Ratio |
 | Exp\[SD Overall log(OR)\] | 1 | The estimated SD of the Overall Log Odds Ratio |
-| Overall Grp in Trt p-value | 1 | The overall treatment p-value |
+| Overall Grp in Trt p-val | 1 | The overall treatment p-value |
 | Group in Ctl p-value | 1 | The treatment-group interaction p-value |
 | Group (ChiSq) p-values | G | The Chi-Squared p-value for each group |
 | Group (Fisher Exact) p-values | G | The Fisher Exact p-value for each group |
 | Group (Binomial) p-values | G | The Binomial p-value for each group |
-| Grp Trt Effects | G | The treatment difference in rates compared to Control per group |
+| Group Trt Effects | G | The treatment difference in rates compared to Control per group |
+| Group Trt Effects CI lower | G | The lower bound of the two-sided confidence interval, at the overall alpha level, for the treatment difference in rates in each group |
+| Group Trt Effects CI upper | G | The upper bound of the two-sided confidence interval, at the overall alpha level, for the treatment difference in rates in each group |
 | CMH p-value | 1 | Cochran-Mantel-Haenszel test p-value |
 | Breslow-Day p-value | 1 | Breslow-Day test p-value |
 | Agresti Score Upper CI | 1 | Upper bound of Agresti Score interval |
-| Agresti Score Loser CI | 1 | Lower bound of Agresti Score interval |
+| Agresti Score Lower CI | 1 | Lower bound of Agresti Score interval |
+
+## Contents of weeks_freqNNNNN.csv
+
+The weeks_freq files have the same header lines and columns as
+Simulations_freq.csv, except that the first column is ‘\# Interim’, the
+number of the interim, in place of ‘\# Trial’. There is one row for each
+interim of the simulation, giving the frequentist analysis of the data
+available at that interim.
 
 ## Contents of PatientsNNNNN.csv
 
@@ -503,7 +523,9 @@ criteria.
 | Group | 1 | The index number of the group the subject belongs to. |
 | Arm | 1 | A flag indicating the arm the subject was randomized to: 0 = Control, 1 = Study Treatment. |
 | LastVisit# | 1 | The index of the last visit for which subject data is available |
+| Dropout | 1 | A flag indicating if the subject has dropped out, 0 = not dropped out, 1= dropped out. |
 | Visit \<visit\> | V | The subject’s endpoint score for that visit: -9999 = not available. |
+| externalFileSubjectID | 1 | The subject’s ID in the external data file. Only present if the virtual subject responses are resampled from an external data file and the option to include the subject ID is selected. |
 
 ## Contents of MCMCNNNNN.csv
 
@@ -524,8 +546,12 @@ the statistical analysis.
 | Sample | 1 | The index of the sample within the analysis |
 | Pi1 \<group\> | G | The estimate of the response rate on the treatment arm in each group |
 | OverallTheta | 1 | The overall treatment difference in log-odds |
-| Pi0 \<group\> | G | The estimate of the response rate on the control arm in each group. |
-| OverallGamma \<group\> | G | The log odds of the response rate on control in each group |
+| Pi0 \<group\> | G | The estimate of the response rate on the control arm in each group. Only present if a control arm is included. |
+| OverallGamma \<group\> | G | The log odds of the response rate on control in each group. Only present if a control arm is included. |
+| Theta ClusterNumber \<group\> | G | The index of the cluster the group’s treatment effect is assigned to. Only present if the treatment effects are clustered. |
+| Gamma ClusterNumber \<group\> | G | The index of the cluster the group’s control response is assigned to. Only present if a control arm is included and the control responses are clustered. |
+| Prob0 \<model\> \<visit\> | M \* V | Only if using the Beta Binomial or Logistic Regression longitudinal model: the probability of 1 being the final result if the result at the visit is 0 |
+| Prob1 \<model\> \<visit\> | M \* V | Only if using the Beta Binomial or Logistic Regression longitudinal model: the probability of 1 being the final result if the result at the visit is 1 |
 |  |  | Longitudinal parameters – the number and names of the longitudinal parameters will depend on which longitudinal model is being used in the analysis (if any) and how many model instances are being used. The reported parameter names can be matched up against the symbols used on the Design \> Longitudinal Model tab |
 
 ### Contents if using a Restricted Markov endpoint
@@ -536,13 +562,12 @@ the statistical analysis.
 | Sample | 1 | The index of the sample within the analysis |
 | Pi1 \<group\> | G | The estimate of the response rate on the treatment arm in each group |
 | OverallTheta | 1 | The overall treatment difference in log-odds |
-| Pi0 \<group\> | G | The estimate of the response rate on the control arm in each group. |
-| OverallGamma \<group\> | G | The log odds of the response rate on control in each group |
-| Alpha0 \<model\> \<visit\> | M \* V | The Dirichlet parameter: the number of observed fails in this model at this visit |
-| AlphaS \<model\> \<visit\> | M \* V | The Dirichlet parameter: the number of observed stable in this model at this visit |
-| Alpha1 \<model\> \<visit\> | M \* V | The Dirichlet parameter: the number of observed responses in this model at this visit |
+| Pi0 \<group\> | G | The estimate of the response rate on the control arm in each group. Only present if a control arm is included. |
+| OverallGamma \<group\> | G | The log odds of the response rate on control in each group. Only present if a control arm is included. |
+| Theta ClusterNumber \<group\> | G | The index of the cluster the group’s treatment effect is assigned to. Only present if the treatment effects are clustered. |
+| Gamma ClusterNumber \<group\> | G | The index of the cluster the group’s control response is assigned to. Only present if a control arm is included and the control responses are clustered. |
 | Prob0 \<model\> \<visit\> | M \* V | The probability of becoming a fail in this model in this visit |
 | ProbS \<model\> \<visit\> | M \* V | The probability of remaining stable in this model in this visit |
-| Prob0 \<model\> \<visit\> | M \* V | The probability of becoming a responder in this model in this visit |
+| Prob1 \<model\> \<visit\> | M \* V | The probability of becoming a responder in this model in this visit |
 
 
