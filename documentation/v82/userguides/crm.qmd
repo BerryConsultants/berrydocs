@@ -726,6 +726,7 @@ Extensions:
     -   Where $a$ and $ln(b)$ have their own bi-variate normal prior. Note that as the response of the second group is modelled as an offset from the first an informative prior can be used to limit how large the offset is.
     -   Optionally $b$ can be fixed at 1, so the two groups are modelled with a common estimate of the slope ($\beta$)
     -   Optionally a may be constrained to be +ve or -ve so that (if there is a common estimate of the slope) the estimate of the toxicity rate for the second group can be constrained being higher or lower than that of the first group.
+    -   If the toxicity model is ordinal (see below), a single $a$ and $b$ apply to all the toxicity categories, so for the second group $logit(Pr(Y \geq j | \hat{x})) = \alpha_j + a + \beta b \hat{x}$.
 
 To allow N-CRM to be used to simulate old CRM designs, an option to fix the value of Alpha is included (for both toxicity and efficacy), this option is not recommended for new designs. Fixing the alpha means that the response model has a fixed rate of response at the reference dose – in the old CRM designs in effect the reference dose was above the highest dose.
 
@@ -744,6 +745,8 @@ If the rate given by the BLRM is $p’_j$ then the actual estimated rate is $p_j
 $$
 p_j = p’_j(p^{max} - p^{min}) + p^{min}
 $$
+
+The posterior distribution of the model parameters is estimated by MCMC each time the model is fitted, see [MCMC Settings](#sec-mcmc-settings) for how the sampler works.
 
 ## X-Hats
 
@@ -834,6 +837,30 @@ Derivation of the parameters of the bivariate Normal prior for $\alpha$ and $ln(
 -   Previously and following [@neuenschwander2008critical], the parameters of the bivariate Normal distribution were found using a stochastic fit to the prior expectations of toxicity, minimizing the error in the prior toxicity rates at the 2.5%, 50% and 97.5% quantiles. This is still used in the **All quantiles** and **Legacy prior** cases. However experience with this method with the standard priors (previously called “uninformative”) showed that it yielded priors with too little uncertainty in the $ln(\beta)$) and too high a value for the correlation parameter for many cases and certainly for the prior to be called “uninformative”.
 
 -   Consequently, in the **Quantiles at lowest and highest dose** and **Specific quantiles** cases, the prior is now derived by sampling from the minimally informative unimodal Beta distributions, and fitting the model to each set of sampled toxicity rates. The parameters of the bivariate normal are then calculated from resulting set of pairs of values for $\alpha$ and $ln(\beta)$.
+
+In the **Quantiles at lowest and highest dose** and **Specific quantiles** cases the calculation is:
+
+1.  Each prior statement has the form "the probability that the toxicity rate $p$ at $\hat{x}$ is $q$ or less is $P$". For each statement a minimally informative unimodal Beta distribution (MIBD) that satisfies it is constructed, using
+    $$
+    a = \frac{ln(P)}{ln(q)}, \quad b = \frac{ln(1-P)}{ln(1-q)}
+    $$
+    If $a > b$ (which happens when $P < q$) the MIBD is $Beta(a, 1)$, otherwise it is $Beta(1, b)$. Both distributions satisfy the statement; the one used is the one whose parameter $a$ or $b$ is at least 1.
+
+2.  For **Quantiles at lowest and highest dose** the statements are:
+
+    -   at the lowest dose, $Pr(p \le q_{U}) = 1 - P_{low}$, where $q_{U}$ is the lower bound of the unacceptable toxicity band and $P_{low}$ is the probability of unacceptable toxicity at the lowest dose,
+    -   at the highest dose, $Pr(p \le q_{L}) = P_{high}$, where $q_{L}$ is the lower bound of the target toxicity band and $P_{high}$ is the probability of under-dosing at the highest dose,
+    -   optionally, at $\hat{x} = 0$, $Pr(p \le q_{mid}) = P_{mid}$, where $q_{mid}$ is the target toxicity rate if targeting a single dose, or the mid-point of the target toxicity band otherwise. $\hat{x} = 0$ is the reference dose, which is the median dose when **Median dose is reference** is selected.
+
+    For efficacy, the rates used are the efficacy target at the lowest dose and at $\hat{x} = 0$, and half the efficacy target at the highest dose. For **Specific quantiles** the statements are the user's rows of dose, toxicity rate and probability. With ordinal toxicity, each category is derived separately from its own probabilities.
+
+3.  10,000 sets of toxicity rates are sampled, each set taking one rate from each MIBD independently. A fixed random number seed is used, so deriving the prior again from the same inputs gives the same result.
+
+4.  The model is fitted to each sampled set by least squares on the logit scale. Each rate is rescaled to the model's **Minimum** and **Maximum**, $p' = \frac{p - p^{min}}{p^{max} - p^{min}}$, limited to the range $[0.0001, 0.9999]$, and a straight line is fitted to $logit(p')$ against $\hat{x}$. The intercept is $\alpha$ and the slope is $\beta$. Fits with $\beta \le 0$ are discarded.
+
+5.  The prior means and standard deviations of $\alpha$ and $ln(\beta)$, and the correlation $\rho$, are the sample means, standard deviations and correlation of the remaining pairs of $\alpha$ and $ln(\beta)$. With ordinal toxicity, the mean and standard deviation of each $\alpha_j$ come from that category's fits, while those of $ln(\beta)$ and $\rho$ are calculated from the fits of all the categories together.
+
+The **Scenarios** method uses the same least squares fit (step 4) on each scenario's toxicity rates, after limiting them to between **Minimum** + 0.01 and **Maximum** − 0.01, followed by step 5.
 
 If a control arm has been included, it may be included in the model, or modelled separately using a beta-binomial model, the user specifies the prior values for the Beta distribution.
 
@@ -1170,7 +1197,7 @@ In the main screen the summary results that are usually of principal interest ar
 
 ***Right Click Menu***: right clicking the mouse on a row of results in the simulation tab brings up a ‘local’ menu of options corresponding to the above options that can be reached from the buttons, in what is sometimes a more ergonomic manner.
 
-### MCMC Settings
+### MCMC Settings {#sec-mcmc-settings}
 
 ![](crmUGattachments/images/clipboard-1013451560.png){#fig-sec-sim-mcmc1}
 
@@ -1179,11 +1206,20 @@ The first two values specify two standard MCMC parameters –
 -   The length of burn-in is the number of the initial iterations whose results are discarded, to allow the sampled values to settle down.
 -   The number of samples is the number of subsequent iterations whose results are recorded in order to give posterior estimates of the values of interest (in this case α and β).
 
+The N-CRM model is fitted using a random walk Metropolis–Hastings sampler that updates one parameter at a time. The sampler is restarted every time the model is fitted:
+
+-   The sampled parameters are $\alpha$ (unless Alpha is fixed) and $ln(\beta)$, plus $a$ and $ln(b)$ if there are two groups ($ln(b)$ is not sampled if $b$ is fixed at 1). If there is an efficacy model, its parameters are sampled separately in the same loop.
+-   With an ordinal toxicity model the sampled parameters are $\alpha_3$, the gaps $\alpha_2 - \alpha_3$ and $\alpha_3 - \alpha_4$, and $ln(\beta)$. Updating $\alpha_3$ moves all the $\alpha$s together, and a proposal that would make a gap zero or negative is rejected, which keeps $\alpha_2 > \alpha_3 > \alpha_4$.
+-   At the start, each parameter is set to its prior mean, and its proposal standard deviation to half its prior standard deviation (for the ordinal gaps, three quarters of the gap between the prior means).
+-   In each iteration each parameter in turn is given a proposed new value drawn from a Normal distribution centred on its current value. The proposal is accepted with probability $min(1, \frac{\pi_{new}}{\pi_{current}})$, where $\pi$ is the posterior density (prior × likelihood); otherwise the current value is kept. If $a$ is constrained to be positive (or negative), proposals on the wrong side of 0 are rejected.
+-   Every 100 iterations the proposal standard deviation of each parameter is adjusted, aiming for about 30% of proposals to be accepted: it is multiplied by (number accepted in the last 100)/30, or by 1/3 if fewer than 11 were accepted.
+-   After the burn-in, every $k^{th}$ iteration is used for the posterior estimates, where $k$ is the MCMC output thinning parameter (see below).
+
 The **Number of samples per imputation** value only applies to analyses using imputed data from a longitudinal model and is irrelevant for N-CRM, hence it is greyed out.
 
 If the **Number of MCMC files to output** value is set to N, where N \> 0, then all the sampled values at each interim in the first N simulations are output, allowing the user to check convergence.
 
-**The MCMC output thinning parameter** can be used to reduce the amount of data output to the MCMC file. It does not reduce the amount of MCMC samples used within the model fitting.
+**The MCMC output thinning parameter** can be used to reduce the amount of data output to the MCMC file. In N-CRM it also reduces the number of MCMC samples used within the model fitting: only every $k^{th}$ iteration after the burn-in is used, and these are the iterations written to the MCMC file.
 
 To obtain the MCMC sampled values for a particular simulation, keep the same Random number seed and use **Start at simulation** to specify the simulation in question and run just 1 simulation.
 
