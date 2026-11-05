@@ -765,6 +765,48 @@ different stages:
     -   The user specifies in the QoI definition the number of arms
         assumed to have been taken into Stage 2.
 
+    For continuous, dichotomous, ordinal and multiple endpoint designs,
+    the "Stage 2 Future" calculation is constructed as follows:
+
+    -   Stage 2 is assumed to use equal, fixed allocation. The Stage 2
+        sample size is the Stage 2 maximum sample size for the specified
+        number of arms, limited to the number of subjects still
+        available under the overall maximum sample size. It is divided
+        equally between the specified number of treatment arms plus the
+        Control and Active Comparator arms, if these are taken into
+        Stage 2. Any remainder is ignored.
+
+    -   The predictive probability for each arm is based only on the
+        comparison of that arm with Control (or, if there is no Control
+        arm, on that arm alone).
+
+    -   If Stage 1 data is not used in Stage 2, the calculation uses the
+        Stage 2 subjects alone. For each posterior sample, FACTS
+        calculates the probability that the Stage 2 comparison will be
+        successful, treating the sampled response parameters (including
+        the standard deviation for continuous endpoints) as known, and
+        averages these probabilities. If Stage 1
+        data is restricted to the subjects that did not complete in
+        Stage 1, the calculation is the same, but the Stage 1 subjects on
+        each arm that have not dropped out and have not yet reached the
+        specified visit are added to that arm's sample size.
+
+    -   If Stage 1 data is included in full, included for the kept arms,
+        or pooled, the current Stage 1 data on the arm and on Control is
+        combined with simulated Stage 2 subjects on those two arms only.
+        Stage 1 subjects who are still being followed have their final
+        response imputed from the current posterior (using the
+        longitudinal model, if there is one), and Stage 1 dropouts are
+        handled using the QoI's missing data option. For each posterior
+        sample the test is carried out on the combined data, and the
+        predictive probability is the proportion of samples in which it
+        is successful. The test statistic, including the estimate of the
+        standard deviation, the baseline effect or the control rate,
+        uses no data from the other treatment arms, except that with the
+        pooled option the Stage 1 data from the other treatment arms is
+        pooled with the arm. For the "kept arms" option, the calculation
+        for each arm assumes that the arm is kept.
+
 -   When defining decision QOIs for use in Stage 2, and only one or two
     arms are being selected for inclusion in Stage 2 it is not
     immediately obvious how to specify the Evaluation Dose when what is
@@ -818,6 +860,13 @@ Note, mirroring of Dose Response and Hazard Model data which has
 hierarchical priors defined, will also lead to the related hierarchical
 priors data being mirrored (i.e. on the separate "Hierarchical Priors"
 tab).
+
+The longitudinal model can differ between the stages, but the simulated
+subject data does not depend on it. When longitudinal modeling is used,
+visit data is simulated at every visit in both stages from the VSR,
+whichever longitudinal model is selected for each stage's analysis. The
+longitudinal model of a stage only affects how that stage's data is
+analyzed.
 
 ## Stage 1 Interims
 
@@ -1149,6 +1198,13 @@ rules defined at this level are a simple selection from the list of
 available "Probability of being Target" QoIs (such as Pr(Max), Pr(MED),
 etc), and the arm that has the highest probability of meeting that target
 criteria is kept.
+
+The arm with the highest probability is found among all the treatment
+arms (excluding Control and the Active Comparator), including arms that
+have already been decided. If that arm has already been kept or dropped,
+by Stage 1 arm dropping, by an Individual Dose Decision, or by an earlier
+Target Dose Decision, then this Target Dose Decision keeps no arm. The arm
+with the next highest probability is **not** kept instead.
 
 ![The Transition > Dose Selection > Target Dose Decisions tab that keeps the dose with the highest Pr(Max).](./stagedUGattachments/media/image16.png){#fig-transitiontargetdose}
 
