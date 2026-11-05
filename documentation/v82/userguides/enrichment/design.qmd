@@ -36,6 +36,73 @@ If control arms are present they can be modeled either:
 
 - or jointly in a hierarchical model.
 
+### Model
+
+The final endpoint $Y$ of a subject in group $g$ is modeled in terms of
+a control parameter $\gamma_{g}$ and a treatment effect $\theta_{g}$:
+
+- Continuous endpoint:
+
+  $$
+  Y\sim N\left( \gamma_{g},\ \sigma^{2} \right)\ \text{on control},\qquad Y\sim N\left( \gamma_{g} + \theta_{g},\ \sigma^{2} \right)\ \text{on treatment}
+  $$
+
+  where $\gamma_{g}$ is the mean response on control, $\theta_{g}$ is
+  the difference in mean response between treatment and control, and
+  $\sigma^{2}$ is a single variance common to all groups and arms. If
+  the model is baseline adjusted a term $\beta Z$ is added to the mean
+  (see Baseline adjustment under Treatment Model).
+
+- Dichotomous endpoint: the number of responders on control and on
+  treatment in group $g$ are Binomial with response rates $\lambda_{g}$
+  and $\pi_{g}$, where
+
+  $$
+  \text{logit}\left( \lambda_{g} \right) = \gamma_{g},\qquad \text{logit}\left( \pi_{g} \right) = \gamma_{g} + \theta_{g}
+  $$
+
+  so $\theta_{g}$ is the log-odds ratio of response on treatment
+  relative to control. The model is fitted on the log-odds scale, but
+  the treatment effect used in the stopping and evaluation criteria is
+  the difference in response rates
+  $\text{logit}^{-1}\left( \gamma_{g} + \theta_{g} \right) - \text{logit}^{-1}\left( \gamma_{g} \right)$.
+
+The prior for $\gamma_{g}$ depends on the control model selected:
+
+- Historical control: $\gamma_{g}$ is fixed at the historical control
+  response $R_{g}$ entered for the group: $\gamma_{g} = R_{g}$
+  (continuous) or $\gamma_{g} = \text{logit}\left( R_{g} \right)$
+  (dichotomous).
+
+- Controls modeled separately: independent priors
+  $\gamma_{g}\sim N\left( \mu_{g},s_{g}^{2} \right)$, with the prior
+  mean $\mu_{g}$ and SD $s_{g}$ entered for each group.
+
+- Hierarchical Prior (BAC) for group $g$: this replaces the Normal prior
+  for that group. $\gamma_{g}$ and the control parameters
+  $\gamma_{gk}$ of the historic studies $k = 1,\ldots,K_{g}$ share a
+  hierarchical model:
+  $\gamma_{g},\gamma_{gk}\sim N\left( \mu,\tau^{2} \right)$, with
+  $\mu\sim N\left( \mu_{0},\tau_{0}^{2} \right)$ and
+  $\tau^{2}\sim IG\left( \alpha_{0},\beta_{0} \right)$. The data of
+  historic study $k$, with $n_{k}$ subjects, enter the likelihood as
+  $\bar{y}_{k}\sim N\left( \gamma_{gk},\sigma^{2}/n_{k} \right)$
+  (continuous; the SD of the historic study also contributes to the
+  estimate of $\sigma^{2}$) or as a Binomial number of responders out
+  of $n_{k}$ with log-odds $\gamma_{gk}$ (dichotomous).
+
+- Hierarchical model across groups:
+  $\gamma_{g}\sim N\left( \mu,\tau^{2} \right)$, with
+  $\mu\sim N\left( \mu_{0},\tau_{0}^{2} \right)$ and
+  $\tau^{2}\sim IG\left( \alpha_{0},\beta_{0} \right)$.
+
+- Hierarchical model plus clustering: see below.
+
+In each case $\mu_{0}$, $\tau_{0}$, $\alpha_{0}$ and $\beta_{0}$ are the
+user-specified hyper-parameters (the prior mean and SD of Mu and the
+prior for tau). The priors for $\theta_{g}$ and $\sigma^{2}$ are set on
+the Treatment Model tab.
+
 ### Historical Control
 
 If on the Study \> Study Info tab, ‘include historical control’ has been
@@ -223,6 +290,49 @@ If control arms are present they can be modeled either:
 
 - or using the Cox proportional hazard model.
 
+### Model
+
+Except with the Cox proportional hazard model, the time to event is
+modeled with a piecewise exponential model. The time axis is divided
+into segments $s = 1,\ldots,S$ at the user-specified segment starts. In
+segment $s$ the hazard rate on the control arm of group $g$ is
+$\lambda_{sg}$ and the hazard rate on the treatment arm is
+$\lambda_{sg}\exp\left( \theta_{g} \right)$, so $\exp\left( \theta_{g} \right)$
+is the hazard ratio of treatment to control in group $g$, constant over
+time. Each subject contributes their events and their exposure time in
+each segment to a piecewise exponential likelihood.
+
+The prior for $\lambda_{sg}$ depends on the control model selected:
+
+- Historical control: $\lambda_{sg}$ is fixed at the historical hazard
+  rate $R_{sg}$ entered for the segment and group.
+
+- Controls modeled separately: independent priors
+  $\lambda_{sg}\sim \text{Gamma}\left( \alpha_{sg},\beta_{sg} \right)$,
+  entered as a mean $\alpha_{sg}/\beta_{sg}$ and a weight
+  $\alpha_{sg}$ for each group and segment.
+
+- Hierarchical Prior (BAC) for group $g$: in addition to the Gamma
+  prior above, the events and exposure of each historic study
+  $k = 1,\ldots,K_{g}$ enter the likelihood with hazard rate
+  $\lambda_{sg}\exp\left( \gamma_{gk} \right)$ in segment $s$. The log
+  hazard ratios $\gamma_{gk}$ of the historic studies relative to the
+  current study, together with the current study's own log hazard
+  ratio (fixed at 0), are modeled as draws from
+  $N\left( \mu,\tau^{2} \right)$, with
+  $\mu\sim N\left( \mu_{0},\tau_{0}^{2} \right)$ and
+  $\tau^{2}\sim IG\left( \alpha_{0},\beta_{0} \right)$.
+
+- Hierarchical model across groups: in each segment
+  $\lambda_{sg}\sim \text{Gamma}\left( \alpha_{s},\beta_{s} \right)$
+  across the groups, and $\alpha_{s}$ and $\beta_{s}$ each have a Gamma
+  prior, entered as a mean and a weight for each segment.
+
+- Cox proportional hazard model: the control hazard is not modeled, see
+  below.
+
+The priors for $\theta_{g}$ are set on the Treatment Model tab.
+
 ### Historical Control
 
 If on the Study \> Study Info tab, ‘include historical control’ has been
@@ -356,6 +466,36 @@ When using the Cox proportional hazard mode the control hazard rate is
 not modeled but instead cancels from the calculation, so there are no
 parameters to enter.
 
+The Cox model is only available if the study includes a control arm.
+The hazard of a subject in group $g$ at time $t$ is
+
+$$
+h(t) = h_{0g}(t)\exp\left( \theta_{g}x \right)
+$$
+
+where $x = 1$ on the treatment arm and $x = 0$ on the control arm and
+$h_{0g}(t)$ is an unspecified baseline hazard. The analysis is a
+Bayesian Cox model that uses the Cox partial likelihood as the
+likelihood for $\theta_{g}$, as justified by
+[Sinha, Ibrahim and Chen (2003)](#sinha "Sinha D, Ibrahim JG, Chen M-H. A Bayesian justification of Cox's partial likelihood. Biometrika. 2003; 90(3): 629-641."),
+so $h_{0g}(t)$ cancels. The partial likelihood is calculated within each
+group, so the baseline hazard can differ between groups. Tied event
+times are handled with the Breslow approximation. The priors for
+$\theta_{g}$ are the same as with the piecewise exponential model (see
+Treatment Model).
+
+The across groups analysis does not use the partial likelihood. It uses
+an exponential likelihood (a single segment) in which the control hazard
+rate of each group is held fixed at a constant rate estimated from that
+group's control arm in the current study:
+$\left( d_{g} + 0.1 \right)/\left( E_{g} + 0.1 \right)$, where $d_{g}$
+is the number of events and $E_{g}$ the total exposure time on the
+control arm.
+
+The predicted probability of success in a phase 3 trial depends only on
+the hazard ratio and the phase 3 number of events, so it is calculated
+in the same way as with the piecewise exponential model.
+
 :::
 
 
@@ -364,6 +504,39 @@ parameters to enter.
 :::{.panel-tabset}
 
 ## Continuous/Dichotomous
+
+### Priors for the treatment effects
+
+The treatment effects $\theta_{g}$ (the difference in mean response for
+a continuous endpoint, the log-odds ratio of response for a dichotomous
+endpoint) are defined in the model given under Control Model. Their
+prior depends on the treatment model selected:
+
+- Groups modeled separately: independent priors
+  $\theta_{g}\sim N\left( \mu_{g},s_{g}^{2} \right)$, with the prior
+  mean $\mu_{g}$ and SD $s_{g}$ entered for each group.
+
+- Hierarchical model across groups:
+  $\theta_{g}\sim N\left( \mu,\tau^{2} \right)$, with
+  $\mu\sim N\left( \mu_{0},\tau_{0}^{2} \right)$ and
+  $\tau^{2}\sim IG\left( \alpha_{0},\beta_{0} \right)$, where
+  $\mu_{0}$, $\tau_{0}$, $\alpha_{0}$ and $\beta_{0}$ are the
+  user-specified hyper-parameters.
+
+- Hierarchical model plus clustering: see below.
+
+For a continuous endpoint the common variance has the prior
+$\sigma^{2}\sim IG\left( \alpha_{\sigma},\beta_{\sigma} \right)$,
+entered as the ‘sigma prior mean’ and weight described below.
+
+The across groups analysis is a second, pooled model fitted alongside
+the main model. In it all groups have a common treatment effect,
+$\theta_{g} = \theta$ for all $g$, with prior
+$\theta\sim N\left( \mu_{p},s_{p}^{2} \right)$ from the across groups
+prior mean and SD. The control model and its priors are the same as in
+the main model. For a dichotomous endpoint the across groups difference
+in response rates is calculated at the average of the $\gamma_{g}$
+across the groups.
 
 ### Groups modeled separately
 
@@ -520,27 +693,75 @@ with user specified mean and standard deviation.
 
 ### Handling of Missing Data Due to Dropouts
 
-There are three options here:
+The options are:
 
 - Bayesian multiple imputation from post baseline – This is the default
   and treats dropouts in exactly the same way as subjects which have not
-  yet completed. If subjects have no intermediate visits in the design
-  (“Use longitudinal modeling” is unchecked on the Study \> Study Info
-  tab), then this is the only option, it has the effect that a subject
-  that drops out is included in subject randomization counts but
-  excluded from the frequentist analysis and makes no net contribution
-  to the Bayesian modelling.
+  yet completed. The option is labeled “Bayesian multiple imputation”
+  if no baseline is included, and “Missing data is ignored” if subjects
+  have no intermediate visits in the design (“Use longitudinal
+  modeling” is unchecked on the Study \> Study Info tab). In that case
+  it has the effect that a subject that drops out is included in
+  subject randomization counts but excluded from the frequentist
+  analysis and makes no net contribution to the Bayesian modelling.
 
-- BOCF – This treats each subject who drops out as having a final
-  response which is the same as their baseline value (i.e. final
-  response is zero if response is change from baseline).
+- BOCF (continuous endpoint only, available if baseline is included) –
+  This treats each subject who drops out as having a final response
+  which is the same as their baseline value (i.e. final response is
+  zero if response is change from baseline).
 
-- LOCF – This sets the final response equal to the last observed value.
+- Missing data is considered failure (dichotomous endpoint only) – This
+  treats each subject who drops out as having a final outcome that is a
+  failure: a non-response if a response is a good outcome, a response
+  if a response is a bad outcome.
 
-NB Setting BOCF or LOCF here does not affect the longitudinal model used
-for incomplete subjects.
+- LOCF (available if “Use longitudinal modeling” is checked) – This sets
+  the final response equal to the last observed post-baseline visit
+  value.
+
+Subjects with at least one observed post-baseline visit are always
+included in the Bayesian analysis. A subject who drops out before their
+first post-baseline visit is included only with BOCF or “Missing data is
+considered failure”, as these give the subject a known final endpoint.
+With Bayesian multiple imputation or LOCF such a subject is excluded
+from the Bayesian analysis, even if they have a baseline value (with
+LOCF the observed mean responses reported in the simulation output do
+use the baseline value for such a subject).
+
+NB Setting BOCF, LOCF or “Missing data is considered failure” here does
+not affect the longitudinal model used for incomplete subjects. The
+final values these options give to dropouts are not used to estimate
+the parameters of the longitudinal model.
 
 ## Time-to-Event
+
+### Priors for the treatment effects
+
+The treatment effects $\theta_{g}$ are the log hazard ratios of
+treatment to control defined in the model given under Control Model /
+Hazard Model.
+Their prior depends on the treatment model selected:
+
+- Groups modeled separately: independent priors
+  $\theta_{g}\sim N\left( \mu_{g},s_{g}^{2} \right)$, with the prior
+  mean $\mu_{g}$ and SD $s_{g}$ entered for each group.
+
+- Hierarchical model across groups:
+  $\theta_{g}\sim N\left( \mu,\tau^{2} \right)$, with
+  $\mu\sim N\left( \mu_{0},\tau_{0}^{2} \right)$ and
+  $\tau^{2}\sim IG\left( \alpha_{0},\beta_{0} \right)$, where
+  $\mu_{0}$, $\tau_{0}$, $\alpha_{0}$ and $\beta_{0}$ are the
+  user-specified hyper-parameters.
+
+- Hierarchical model plus clustering: see below.
+
+The across groups analysis is a second, pooled model fitted alongside
+the main model. In it all groups have a common log hazard ratio,
+$\theta_{g} = \theta$ for all $g$, with prior
+$\theta\sim N\left( \mu_{p},s_{p}^{2} \right)$ from the across groups
+prior mean and SD. The hazard model and its priors are the same as in
+the main model (for the Cox model see Cox proportional hazard model
+under Control Model / Hazard Model).
 
 ### Groups modeled separately
 
@@ -725,10 +946,9 @@ There are five options for handling longitudinal modeling with a continuous endp
 
 5.  ITP
 
-These are the same as available for longitudinal modeling in Dose
-Finding with a continuous endpoint. See the FACTS DF Design User Guide
-section on longitudinal models for a slightly fuller discussion of the
-models available.
+These models are described in more detail in
+[Longitudinal Models for Continuous Endpoints](../core/longitudinalmodels/continuous.qmd)
+in the FACTS Core user guide.
 
 ### Last Observation Carried Forward (LOCF)
 
@@ -886,10 +1106,10 @@ dichotomous endpoint:
 
 3.  Logistic Regression
 
-These are the same as available for longitudinal modeling in Dose
-Finding with a continuous endpoint. See the FACTS DF Design User Guide
-section on longitudinal models for a slightly fuller discussion of the
-models available.
+These models, and the Restricted Markov model below, are described in
+more detail in
+[Longitudinal Models for Dichotomous Endpoints](../core/longitudinalmodels/dichotomous.qmd)
+in the FACTS Core user guide.
 
 If the special Restricted Markov model is being used then this has its
 own longitudinal model.
