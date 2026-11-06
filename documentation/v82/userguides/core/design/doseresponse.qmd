@@ -1115,7 +1115,11 @@ hierarchical model, and then the in-study data collected on subjects randomized
 to that arm are used to estimate the posterior distribution for the arm.
 
 To specify a hierarchical prior, the user specifies the sufficient statistics
-from each historical study. These are:
+from each historical study. Up to 10 historical studies can be entered
+for each arm. For continuous and dichotomous endpoints, a hierarchical
+prior for the Control arm is only available when the Control arm is
+modeled separately from the dose response model. These are the
+sufficient statistics:
 
 -   Continuous: the mean response and the SD of the response of the
     control or active comparator arm and the number of subjects
@@ -1416,8 +1420,18 @@ distribution is parameterized (Settings > Options > Gamma
 Distribution Parameters), use the ‘center and weight’ options and use a
 weight of 1, with a ‘reasonable’ expectation for the upper limit
 difference in the values being modeled entered as the center for the
-SD. The inverse gamma distribution is the prior of the variance, so the center parameter being specified is more correctly an expectation of the square
-root of the mean of the variance.
+SD.
+
+With center $\mu$ and weight $n$, the prior on a variance $\sigma^2$ is
+
+$$\sigma^2 \sim \text{IG}\left(\alpha = \frac{n}{2}, \beta = \frac{n \mu^2}{2}\right)$$
+
+This is the information in $n$ prior observations with a sample
+standard deviation of $\mu$. The center is set so that
+$E\left[1/\sigma^2\right] = 1/\mu^2$. So $\mu$ is only approximately
+the prior expected standard deviation. The prior mean of $\sigma^2$ is
+$n\mu^2/(n-2)$, which only exists when $n > 2$. With the recommended
+weight of 1, the prior has no mean.
 
 :::{.callout-tip}
 ## Help with Inverse Gamma specification

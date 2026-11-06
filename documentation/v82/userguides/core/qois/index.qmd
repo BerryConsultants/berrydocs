@@ -88,6 +88,9 @@ importation of past FACTS designs. These are:
     select a dose in a decision quantity [… $d$=Greatest Pr(EDq relative
     to Control: Quantile=$Q$)]{.fake-code-block} is used.
 
+The Control and Active Comparator arms are never candidates for a
+target dose. Their target dose probabilities are always 0.
+
 ![Execution > Quantities of Interest tab overview.](../coreUGattachments/CoreUserGuide/media/image5.png){#fig-qois}
 
 In each panel for each type of quantity, existing quantities can be
@@ -414,6 +417,25 @@ then averaged. This predicted probability of success can then be used in
 the stopping criteria and final evaluation criteria for the current
 trial.
 
+The future trial compares the study arm against Control, with equal
+numbers on each arm. For a continuous or dichotomous endpoint, if the
+current trial has no control arm, the future trial is a single-arm trial that compares the study arm against the margin. The
+power of the future trial is calculated with:
+
+-   **Continuous:** a Z-test of the difference in means, using the
+    variance from the MCMC sample.
+
+-   **Dichotomous:** a Z-test of the difference in proportions.
+
+-   **Time-to-event:** a log-rank test. The power uses the approximation
+    that the estimated log hazard ratio has variance $4/E$, where $E$ is
+    the total number of events in the future trial.
+
+Power is not a linear function of the treatment effect, so the
+averaged power is not the same as the power at the posterior mean
+treatment effect. When the power at the posterior mean is high, the
+averaged power is usually lower.
+
 This QOI is an extension of the “probability of success in phase 3” in
 earlier versions of FACTS – the difference now is that multiple
 different possible future trials can be specified in different QOIs and
@@ -427,7 +449,8 @@ specified:
 -   Whether the future trial will be for Superiority or Non-inferiority.
 
 -   The size of the future trial in terms of the number of subjects on
-    each arm.
+    each arm. For a time-to-event endpoint, the size is the total
+    number of events in the future trial.
 
 -   The (one sided) alpha level that will be used to determine the
     significance of the trial.
@@ -798,6 +821,12 @@ QOIs are comparisons against a fixed response or fixed rate that is
 specified at the bottom of the QOI tab (it cannot be set differently for
 separate QOIs).
 
+Missing data is only imputed for subjects who have dropped out and who
+have had the opportunity to reach their final visit. Subjects who are
+still in follow-up are not included. With LOCF, a dropout with no
+observed post-baseline visit has their baseline value carried forward.
+If there is no baseline either, the subject is not included.
+
 Note that for dichotomous endpoints p-value are calculated using the
 Test of Proportions, this test statistic asymptotically approaches a
 normal distribution, and at least <span class="custom-tooltip"> 5 success and 5 failures <span class="tooltip-text">Sometimes this is said to be 10 and 10, or 15 and 15. Your rule of thumb can be based on your comfort level for allowing CLT to kick in.</span> </span> should be
@@ -859,7 +888,9 @@ sampling of how often each dose meets the specified target criteria.
 There are 3 types of target specifiable
 
 -   Max – the dose with the maximum response, this has no parameters to
-    specify, so is available as a pre-defined default QOI.
+    specify, so is available as a pre-defined default QOI. If, in an
+    MCMC sample, several doses share the maximum response, the lowest of
+    these doses is counted.
 
 -   MED – a Minimum Effective Dose, the lowest dose that has a response
     better than an absolute or relative target.
