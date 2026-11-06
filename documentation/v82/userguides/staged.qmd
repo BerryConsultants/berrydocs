@@ -264,6 +264,8 @@ the visit schedule for a patient should be specified in the "Schedule of Post-Ba
 
 The value provided in this box creates an operational delay between when arms are
 selected for inclusion in Stage 2 and the start of accrual in Stage 2.
+Stage 1 subjects who are still being followed up continue to be observed
+during the delay (see [Data Inclusion](#data-inclusion)).
 
 ## Multiple Endpoint
 
@@ -364,6 +366,8 @@ Study > Endpoints tab.
 
 The value provided in this box creates an operational delay between when arms are
 selected for inclusion in Stage 2 and the start of accrual in Stage 2.
+Stage 1 subjects who are still being followed up continue to be observed
+during the delay (see [Data Inclusion](#data-inclusion)).
 
 ## Time-to-Event
 
@@ -513,17 +517,38 @@ stop early.
 
 If the maximum follow-up is specified as maximum follow-up beyond full
 accrual in both stages then it is also possible to specify that Stage 1
-subjects are further followed into Stage 2:
+subjects are further followed into Stage 2, with the option "Subjects
+included in Stage 2 followed up using Stage 2 rules". It only affects
+the Stage 1 subjects that the [Data Inclusion](#data-inclusion) option
+includes in Stage 2:
 
--   if this is not checked then Stage 1 subjects are not followed up
-    after Stage 1;
+-   if this is not checked then these Stage 1 subjects keep the Stage 1
+    follow-up rule. They are followed until the Stage 1 follow-up ends
+    (the specified time after the last Stage 1 subject was enrolled),
+    which can be after Stage 2 has started. Their data in the Stage 2
+    analyses is the same as in the Stage 1 complete data analysis;
 
--   if this is checked then Stage 1 subjects included in Stage 2 are
-    followed up using Stage 2 follow-up rules. Note that if Stage 1
+-   if this is checked then these Stage 1 subjects stay in follow-up
+    until each Stage 2 analysis, unless they have had an event or
+    dropped out. The Stage 2 analyses can then include events that
+    happen after the end of the Stage 1 follow-up, which the Stage 1
+    complete data analysis counts as censored. Note that if Stage 1
     completes and graduates to stage 2 at the final evaluation (after
     all S1 subjects have been fully followed up) then all Stage 1
     subjects are complete and are not be further followed up in Stage 2,
     even if they have not yet had an event.
+
+If Stage 1 uses "Max follow-up per subject", Stage 1 subjects included
+in Stage 2 always keep the Stage 1 maximum. Their follow-up is not
+shortened to a shorter Stage 2 maximum: for example, with a 52 week
+maximum in Stage 1 and a 26 week maximum in Stage 2, Stage 1 subjects
+can contribute up to 52 weeks of follow-up to the Stage 2 analyses.
+
+The Bayesian and frequentist Stage 2 analyses use the same data for
+Stage 1 subjects. The follow-up rules never censor an event that the
+Stage 1 complete data analysis observed; such an event only appears
+censored in a Stage 2 analysis that takes place before the event, for
+example at a Stage 2 interim.
 
 Maximum follow-up is specified separately for each stage and can use
 different rules and durations.
@@ -765,6 +790,48 @@ different stages:
     -   The user specifies in the QoI definition the number of arms
         assumed to have been taken into Stage 2.
 
+    For continuous, dichotomous, ordinal and multiple endpoint designs,
+    the "Stage 2 Future" calculation is constructed as follows:
+
+    -   Stage 2 is assumed to use equal, fixed allocation. The Stage 2
+        sample size is the Stage 2 maximum sample size for the specified
+        number of arms, limited to the number of subjects still
+        available under the overall maximum sample size. It is divided
+        equally between the specified number of treatment arms plus the
+        Control and Active Comparator arms, if these are taken into
+        Stage 2. Any remainder is ignored.
+
+    -   The predictive probability for each arm is based only on the
+        comparison of that arm with Control (or, if there is no Control
+        arm, on that arm alone).
+
+    -   If Stage 1 data is not used in Stage 2, the calculation uses the
+        Stage 2 subjects alone. For each posterior sample, FACTS
+        calculates the probability that the Stage 2 comparison will be
+        successful, treating the sampled response parameters (including
+        the standard deviation for continuous endpoints) as known, and
+        averages these probabilities. If Stage 1
+        data is restricted to the subjects that did not complete in
+        Stage 1, the calculation is the same, but the Stage 1 subjects on
+        each arm that have not dropped out and have not yet reached the
+        specified visit are added to that arm's sample size.
+
+    -   If Stage 1 data is included in full, included for the kept arms,
+        or pooled, the current Stage 1 data on the arm and on Control is
+        combined with simulated Stage 2 subjects on those two arms only.
+        Stage 1 subjects who are still being followed have their final
+        response imputed from the current posterior (using the
+        longitudinal model, if there is one), and Stage 1 dropouts are
+        handled using the QoI's missing data option. For each posterior
+        sample the test is carried out on the combined data, and the
+        predictive probability is the proportion of samples in which it
+        is successful. The test statistic, including the estimate of the
+        standard deviation, the baseline effect or the control rate,
+        uses no data from the other treatment arms, except that with the
+        pooled option the Stage 1 data from the other treatment arms is
+        pooled with the arm. For the "kept arms" option, the calculation
+        for each arm assumes that the arm is kept.
+
 -   When defining decision QOIs for use in Stage 2, and only one or two
     arms are being selected for inclusion in Stage 2 it is not
     immediately obvious how to specify the Evaluation Dose when what is
@@ -818,6 +885,13 @@ Note, mirroring of Dose Response and Hazard Model data which has
 hierarchical priors defined, will also lead to the related hierarchical
 priors data being mirrored (i.e. on the separate "Hierarchical Priors"
 tab).
+
+The longitudinal model can differ between the stages, but the simulated
+subject data does not depend on it. When longitudinal modeling is used,
+visit data is simulated at every visit in both stages from the VSR,
+whichever longitudinal model is selected for each stage's analysis. The
+longitudinal model of a stage only affects how that stage's data is
+analyzed.
 
 ## Stage 1 Interims
 
@@ -963,6 +1037,8 @@ analysis in Stage 1, but no active arms meet the criteria for moving to Stage 2.
 #### Outcomes Specific to the Complete Data Analysis
 
 If the option to "Perform Stage 1 complete data analysis" is checked in the Stage 1 Design > Interims tab, then after an early graduation decision is made in Stage 1, the complete data analysis is conducted after full information is collected on all subjects enrolled during Stage 1. The complete data analysis row is recorded in the Stage 1 weeks files in the row with Interim Number equal to 1000. This row is distinct from the rest of the trial operation, and is not truly an interim analysis at which a trial decision can be made.
+
+The complete data analysis is a single analysis. There are no further Stage 1 interims between the graduation and the complete data analysis. It has no effect on Stage 2: the arms selected, the start of Stage 2 and the Stage 1 data passed to Stage 2 are all fixed at the graduation, so the complete data analysis and Stage 2 effectively run in parallel. Each subject's responses are simulated only once. A Stage 1 subject who is still being followed up at the graduation therefore has the same follow-up data in the complete data analysis and in Stage 2; the two analyses differ only in how much of that data has been observed, or censored, at the time of each analysis.
 
 The special decisions, beyond the first 6 decisions that can be made for a trial that stops early in Stage 1, are:
 
@@ -1150,6 +1226,13 @@ available "Probability of being Target" QoIs (such as Pr(Max), Pr(MED),
 etc), and the arm that has the highest probability of meeting that target
 criteria is kept.
 
+The arm with the highest probability is found among all the treatment
+arms (excluding Control and the Active Comparator), including arms that
+have already been decided. If that arm has already been kept or dropped,
+by Stage 1 arm dropping, by an Individual Dose Decision, or by an earlier
+Target Dose Decision, then this Target Dose Decision keeps no arm. The arm
+with the next highest probability is **not** kept instead.
+
 ![The Transition > Dose Selection > Target Dose Decisions tab that keeps the dose with the highest Pr(Max).](./stagedUGattachments/media/image16.png){#fig-transitiontargetdose}
 
 #### All Dose Decisions
@@ -1165,14 +1248,19 @@ These rules comprise:
 
 2.  The Minimum and the Maximum number of arms to Keep or Drop. Note
     that this minimum and maximum takes into account the number of arms
-    kept or dropped by the rules at the earlier levels, and does not
-    overrule them. For example: if the level 1 & 2 rules have caused
+    already given the same decision before this level, and does not
+    overrule them. For a Keep rule these are the arms already kept; for a
+    Drop rule they are the arms already dropped, including arms dropped
+    in Stage 1. Only treatment arms are counted, not Control or the
+    Active Comparator. For example: if the level 1 & 2 rules have caused
     3 arms to be kept and the maximum is specified here to be 2, the
     number of arms kept is not reduced to 2, but no further arms, no
     matter how many meet this rule will be kept. Conversely if the
     previous levels have not caused any arms to be kept and the minimum
     is specified here to be 1, then 1 arm will be selected for keeping
-    even if it does not fully meet the criteria.
+    even if it does not fully meet the criteria. If the number of arms
+    still needed to reach the minimum is at least the number of undecided
+    arms, then all the undecided arms are given this rule's decision.
 
 3.  The QoI to be used for the sort criterion is specified and the sort
     priority. The arms will be sorted by their value of this QoI when
@@ -1205,6 +1293,10 @@ These rules comprise:
 
 9.  If no criteria are specified, then arms are simply selected in sort
     order.
+
+10. After this rule has been applied, every arm that is still undecided
+    is given the opposite decision. With a Keep rule the remaining arms
+    are dropped; with a Drop rule they are kept and go on to Stage 2.
 
 #### Decision Summary Tab
 
@@ -1330,6 +1422,32 @@ selected will be the group where the representative arm has the Greatest
 
 ![The transition tab when using Representative Arm Decisions and keeping one entire group.](./stagedUGattachments/media/image24.png){#fig-transitionreparms2}
 
+:::{.callout-note}
+
+### Representative Arm Logic after Stage 1 Arm Dropping
+
+An arm dropped in Stage 1 never goes to Stage 2, so the Representative
+Arm Logic works with the arms of each group that were not dropped:
+
+-   Keep one from each group: the arm for a group is chosen from its arms
+    that were not dropped. A group whose arms have all been dropped
+    contributes no arm.
+
+-   Keep group based on representative: a representative chosen by a
+    Target QoI is chosen from the group's arms that were not dropped. If
+    the group is kept, only its arms that were not dropped go to Stage 2.
+
+-   Keep one group: a group cannot be chosen if all its arms have been
+    dropped, or if its representative is the Pre-selected Top Dose and
+    that arm has been dropped. "Sum" adds up the QoI over the arms that
+    were not dropped. Only the chosen group's arms that were not dropped
+    go to Stage 2.
+
+If every group has had all its arms dropped, no arms are selected and
+Stage 2 is null.
+
+:::
+
 ## Data Inclusion
 
 On the Data inclusion tab, the user specifies how much Stage 1 data is
@@ -1368,6 +1486,20 @@ the probability that it meets some target criteria.
 
 Regardless of whether and how Stage 1 data is used in Stage 2, all Stage
 1 data is always used in the Stage 1 analysis.
+
+For continuous, dichotomous, ordinal and multiple endpoint designs, the
+Stage 1 data included in Stage 2 is not frozen at the arm selection.
+Stage 1 subjects who are still being followed up keep attending their
+visits, on the visit schedule that started at their own enrolment, during
+the Stage 2 Delay and during Stage 2. These later visits are used in the
+Stage 2 analyses. So some included Stage 1 subjects are already complete
+when Stage 2 starts, while others are still adding visit data during
+Stage 2. This also applies to the subjects included by the "restricted to
+only those subjects that did not complete in Stage 1" option: they are
+chosen using the visits observed at the arm selection, and may then
+complete during the delay or in Stage 2. For time-to-event designs, see
+[Stage 2 follow-up](#stage-2-follow-up) for how Stage 1 subjects are
+followed in Stage 2.
 
 # Stage 2 Design
 

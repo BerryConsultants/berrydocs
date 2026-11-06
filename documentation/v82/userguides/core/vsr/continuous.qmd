@@ -474,6 +474,11 @@ baseline.
 Be aware that performing a baseline adjustment for subject response can
 change the marginal distribution of the dose response VSR.
 
+The simulated baseline does not have to be an earlier measurement of
+the endpoint. If the response is the final endpoint value and the
+baseline adjustment is used, the baseline acts as a general covariate
+that shifts each subject's response.
+
 ##### Example
 
 In the above screenshot a baseline of mean 25 and SD 10 has
@@ -487,8 +492,8 @@ follows:
 
 -   The SD of the simulated response is set to $\sqrt{\left( 25*\frac{1}{3} \right)} = 2.89$
 
--   The SD of the scaled baseline score is 1, so to contribute half the
-    final variance of 25, Beta is set to $\sqrt{\left( 25*\frac{2}{3} \right)} = 4.08$
+-   The SD of the scaled baseline score is 1, so to contribute two-thirds
+    of the final variance of 25, Beta is set to $\sqrt{\left( 25*\frac{2}{3} \right)} = 4.08$
 
 -   Note that when simulating a baseline effect in this way, limiting
     the range of baseline by specifying upper and lower cut-offs --
@@ -500,8 +505,8 @@ follows:
 
 As well as simulating subject responses within FACTS they can be
 simulated externally, and imported into
-FACTS where the supplied responses are sampled from when simulating the
-trial. The selection of a file containing subject response data (which
+FACTS where the supplied responses are sampled from with replacement
+when simulating the trial. The selection of a file containing subject response data (which
 must be in the required format) can be done from the External Files
 sub-tab depicted below.
 
@@ -512,6 +517,21 @@ locate the external file on their computer with a dialog box.
 
 As with other virtual subject responses, the user can specify which arms
 "should succeed" at the bottom of the tab.
+
+Each time a subject is randomized to an arm, FACTS picks one of the
+subjects in the file on that arm at random, and uses all of that
+subject's visit data. The same subject in the file can be picked more
+than once.
+
+FACTS applies the dropouts from the Execution > Dropout Rate tab to the
+sampled data. The file should therefore hold complete data for every
+subject, with no dropouts. The GUI checks that all subjects have data
+for the same number of visits.
+
+The "true" mean and standard deviation that FACTS reports for each arm
+in the output files are estimated from the file. They are the mean and
+standard deviation of the final visit responses of the subjects in the
+file on that arm.
 
 ![The external VSR tab in the Core Continuous engine loading a single VSR from a file.](../coreUGattachments/continuous/media/image29.png){#fig-extVSRcont}
 

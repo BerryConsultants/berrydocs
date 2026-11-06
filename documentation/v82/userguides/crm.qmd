@@ -419,7 +419,11 @@ Enable Final Expansion Cohort: if this is enabled a final cohort of specified si
 
 -   If the study includes a control arm, the number of subjects in this expansion cohort to be allocated to control is also specified.
 -   If the study has two groups, two separate expansion cohorts will be allocated, their sizes are set separately.
--   If the study includes observing efficacy then the target dose can be changed from MTD to MED or OSD.
+-   If the study includes observing efficacy then the target dose can be changed from MTD to MED or OSD. If the target is the MED, the expansion cohort is allocated to the lower of the MED and the MTD.
+
+Before the expansion dose is chosen, FACTS waits for the final results of all the subjects already in the trial, and uses an analysis that includes them. If this analysis finds no acceptable dose for the target (for example because all doses are too toxic), there is no expansion cohort.
+
+With cohort enrolment, the model is then fitted again including the expansion cohort. The results of this fit are reported only in the "PostCE" (post cohort expansion) columns and the MTD Change on Expansion graph. The other final model results, such as the selected MTD and the fitted toxicity, come from the analysis before the expansion cohort.
 
 ![](crmUGattachments/images/clipboard-809393512.png){#fig-sec-study-study5}
 
@@ -456,7 +460,8 @@ Targeting a toxicity band or interval is an innovation introduced with the N-CRM
     -   Under-dosing: this band always starts at 0.0; the user specifies the upper bound.
     -   Target band: this band always starts at the upper-bound of the under-dosing band; the user specifies the upper bound.
     -   Excess toxicity: this band always starts at the upper-bound of the target band; the user specifies the upper bound.
-    -   Unacceptable toxicity: this band always starts at the upper-bound of the target band, with an upper bound of 1.0. The graph shows the width of the different bands using a simple, fixed, example posterior probability distribution of a toxicity rate.
+    -   Unacceptable toxicity: this band always starts at the upper-bound of the excess toxicity band, with an upper bound of 1.0. The graph shows the width of the different bands using a simple, fixed, example posterior probability distribution of a toxicity rate.
+    -   In a new design the boundaries between the bands default to 0.16, 0.33 and 0.6.
 -   Intervals are relative to control: if a control arm is included in the study, then toxicity bands can be defined as the difference in toxicity rate relative to control. Negative differences (a lower toxicity rate than control) are always treated as under-dosing. To enable this option it is necessary to first go to the Study \> Treatment Arms tab and select Include Control.
 -   Limit max excess/unacceptable toxicity: the ‘overdose control’ in terms of a maximum allowed posterior probability that a dose’s toxicity rate lies in either the ‘Excess’ or the ‘Unacceptable’ toxicity bands. Any dose with a posterior probability of having a toxicity rate in either of these two bands that is higher than the specified limit, cannot be selected for allocation to the next cohort, nor selected as MTD at the end of the study (this gives rise to slightly different results compared to those in [@neuenschwander2008critical] where the overdose control was not applied to final selection).\
 -   It is possible to have the overdose control limit vary with the number of cohorts allocated. In particular this can be used to reduce the overdose limit as the number of cohorts (and the amount of information) grows. For example for a particular prior and final level of overdose control, it may be that initial escalation is excessively constrained, one way to allow early escalation in this setting is to use these parameters to allow an higher initial overdose control limit and gradually reduce it over time to the final desired limit. Tuning the parameters will require some iteration and simulation. A varying limit is specified by the specifying amount to change the limit by per cohort and the final limit. The amount to change by is always entered as a number in the range (0,1), whether this is an increment or decrement depends on whether the target limit is greater or less than the initial limit. Leaving the change in limit at its default of 0 means the limit does not vary.
@@ -569,7 +574,7 @@ Specifying offsets: to ensure that the specified category 3 rate plus the catego
 Thus for the category 2+ rate:
 
 $$
-ln(\frac{p_{2+}}{1-p_{2+}}) = ln(\frac{p_{3}}{1-p_{3}} + \Delta_2)
+ln(\frac{p_{2+}}{1-p_{2+}}) = ln(\frac{p_{3}}{1-p_{3}}) + \Delta_2
 $$
 
 where:
@@ -726,6 +731,7 @@ Extensions:
     -   Where $a$ and $ln(b)$ have their own bi-variate normal prior. Note that as the response of the second group is modelled as an offset from the first an informative prior can be used to limit how large the offset is.
     -   Optionally $b$ can be fixed at 1, so the two groups are modelled with a common estimate of the slope ($\beta$)
     -   Optionally a may be constrained to be +ve or -ve so that (if there is a common estimate of the slope) the estimate of the toxicity rate for the second group can be constrained being higher or lower than that of the first group.
+    -   If the toxicity model is ordinal (see below), a single $a$ and $b$ apply to all the toxicity categories, so for the second group $logit(Pr(Y \geq j | \hat{x})) = \alpha_j + a + \beta b \hat{x}$.
 
 To allow N-CRM to be used to simulate old CRM designs, an option to fix the value of Alpha is included (for both toxicity and efficacy), this option is not recommended for new designs. Fixing the alpha means that the response model has a fixed rate of response at the reference dose – in the old CRM designs in effect the reference dose was above the highest dose.
 
@@ -744,6 +750,8 @@ If the rate given by the BLRM is $p’_j$ then the actual estimated rate is $p_j
 $$
 p_j = p’_j(p^{max} - p^{min}) + p^{min}
 $$
+
+The posterior distribution of the model parameters is estimated by MCMC each time the model is fitted, see [MCMC Settings](#sec-mcmc-settings) for how the sampler works.
 
 ## X-Hats
 
@@ -834,6 +842,30 @@ Derivation of the parameters of the bivariate Normal prior for $\alpha$ and $ln(
 -   Previously and following [@neuenschwander2008critical], the parameters of the bivariate Normal distribution were found using a stochastic fit to the prior expectations of toxicity, minimizing the error in the prior toxicity rates at the 2.5%, 50% and 97.5% quantiles. This is still used in the **All quantiles** and **Legacy prior** cases. However experience with this method with the standard priors (previously called “uninformative”) showed that it yielded priors with too little uncertainty in the $ln(\beta)$) and too high a value for the correlation parameter for many cases and certainly for the prior to be called “uninformative”.
 
 -   Consequently, in the **Quantiles at lowest and highest dose** and **Specific quantiles** cases, the prior is now derived by sampling from the minimally informative unimodal Beta distributions, and fitting the model to each set of sampled toxicity rates. The parameters of the bivariate normal are then calculated from resulting set of pairs of values for $\alpha$ and $ln(\beta)$.
+
+In the **Quantiles at lowest and highest dose** and **Specific quantiles** cases the calculation is:
+
+1.  Each prior statement has the form "the probability that the toxicity rate $p$ at $\hat{x}$ is $q$ or less is $P$". For each statement a minimally informative unimodal Beta distribution (MIBD) that satisfies it is constructed, using
+    $$
+    a = \frac{ln(P)}{ln(q)}, \quad b = \frac{ln(1-P)}{ln(1-q)}
+    $$
+    If $a > b$ (which happens when $P < q$) the MIBD is $Beta(a, 1)$, otherwise it is $Beta(1, b)$. Both distributions satisfy the statement; the one used is the one whose parameter $a$ or $b$ is at least 1.
+
+2.  For **Quantiles at lowest and highest dose** the statements are:
+
+    -   at the lowest dose, $Pr(p \le q_{U}) = 1 - P_{low}$, where $q_{U}$ is the lower bound of the unacceptable toxicity band and $P_{low}$ is the probability of unacceptable toxicity at the lowest dose,
+    -   at the highest dose, $Pr(p \le q_{L}) = P_{high}$, where $q_{L}$ is the lower bound of the target toxicity band and $P_{high}$ is the probability of under-dosing at the highest dose,
+    -   optionally, at $\hat{x} = 0$, $Pr(p \le q_{mid}) = P_{mid}$, where $q_{mid}$ is the target toxicity rate if targeting a single dose, or the mid-point of the target toxicity band otherwise. $\hat{x} = 0$ is the reference dose, which is the median dose when **Median dose is reference** is selected.
+
+    For efficacy, the rates used are the efficacy target at the lowest dose and at $\hat{x} = 0$, and half the efficacy target at the highest dose. For **Specific quantiles** the statements are the user's rows of dose, toxicity rate and probability. With ordinal toxicity, each category is derived separately from its own probabilities.
+
+3.  10,000 sets of toxicity rates are sampled, each set taking one rate from each MIBD independently. A fixed random number seed is used, so deriving the prior again from the same inputs gives the same result.
+
+4.  The model is fitted to each sampled set by least squares on the logit scale. Each rate is rescaled to the model's **Minimum** and **Maximum**, $p' = \frac{p - p^{min}}{p^{max} - p^{min}}$, limited to the range $[0.0001, 0.9999]$, and a straight line is fitted to $logit(p')$ against $\hat{x}$. The intercept is $\alpha$ and the slope is $\beta$. Fits with $\beta \le 0$ are discarded.
+
+5.  The prior means and standard deviations of $\alpha$ and $ln(\beta)$, and the correlation $\rho$, are the sample means, standard deviations and correlation of the remaining pairs of $\alpha$ and $ln(\beta)$. With ordinal toxicity, the mean and standard deviation of each $\alpha_j$ come from that category's fits, while those of $ln(\beta)$ and $\rho$ are calculated from the fits of all the categories together.
+
+The **Scenarios** method uses the same least squares fit (step 4) on each scenario's toxicity rates, after limiting them to between **Minimum** + 0.01 and **Maximum** − 0.01, followed by step 5.
 
 If a control arm has been included, it may be included in the model, or modelled separately using a beta-binomial model, the user specifies the prior values for the Beta distribution.
 
@@ -936,11 +968,27 @@ For all run-in schemes there are options:
 
 -   When run-in ends expand last cohort to full size
 
-    -   If this ***is not*** set then N-CRM model is applied and the next cohort is allocated as close to the target as possibly, restricted by the overdose restrictions and not allocating any higher than the dose reached in the run-in.
+    -   If this ***is not*** set then the N-CRM model is applied when the run-in ends and the next cohort is a full cohort (see below for which dose).
 
-    -   If this option ***is*** set then last allocated small cohort is treated as the start of a full cohort and the remaining subjects are allocated at the same dose. The N-CRM model is then applied and the next cohort allocated according to the overdose restrictions and allocation rules. \[Note it is possible that after observing no toxicities in the run-in or in the expanded cohort, that the overdose control will force a de-escalation in dose, depending on the priors for the model parameters and the overdose control limits\]
+    -   If this option ***is*** set and the run-in ended because of a toxicity, the last allocated small cohort is treated as the start of a full cohort and the remaining subjects are allocated at the same dose. The N-CRM model is then applied and the next cohort allocated according to the overdose restrictions and allocation rules. \[Note it is possible that after observing no toxicities in the expanded cohort, that the overdose control will force a de-escalation in dose, depending on the priors for the model parameters and the overdose control limits\]
+
+    -   If this option ***is*** set but the run-in ended without a toxicity, there is no expansion: the next dose is chosen as if the option were not set. If that dose already has run-in subjects, the cohort is smaller by that number, so that together they make a full cohort.
+
+How the run-in ends with cohort enrolment:
+
+-   **The last run-in dose is reached with no toxicity.** This is the last dose of a custom run-in, the "Run-in cannot go beyond" dose, or the highest dose. The last run-in dose then counts as cleared, even though it has fewer subjects than a full cohort. The next cohort is a full cohort at the N-CRM target, limited by overdose control and by the maximum increment from the last run-in dose. So it may escalate above the last run-in dose, stay there, or go lower. Escalation then continues under the normal rules.
+-   **A toxicity is seen in the run-in.** Without expansion, the next cohort is a full cohort at the N-CRM target, limited by overdose control and not higher than the dose where the run-in ended. If the toxicity was at the lowest dose, this is the lowest dose. However, if no dose meets the overdose control criteria and the minimum number of toxicities for stopping has been reached, the trial stops instead.
+-   With "expand last cohort to full size", a toxicity always leads to the expansion at that dose, including at the lowest dose. The stopping rules are checked after the expansion cohort.
+-   With open enrolment, "expand last cohort to full size" is not available. If the run-in ended without a toxicity, the next dose is the lower of the N-CRM target and one increment above the last run-in dose; after a toxicity it is the lower of the N-CRM target and the dose where the run-in ended.
 
 If simulating 2 groups, and a run-in is specified, group 2 will only use a run-in if on the Study tab the option “Recruit Group 1 and Group 2 together” has been selected. Otherwise only group 1 will use the specified run-in, once group 2 starts it starts with the full cohort (or if open enrollment is being used, the full number of subjects to clear the dose). If using a run-in and recruiting groups 1 and 2 together then both use the same run-in rules, and both will stop on the first toxicity regardless of which group the toxicity occurs in.
+
+Some further details of how the run-in is simulated:
+
+-   With cohort enrolment, the **Cohort information delay** does not apply during the run-in: the results of each small cohort are known before the next small cohort is allocated.
+-   If the run-in subjects count towards the overall maximum, the last cohort of the trial may be smaller than the full cohort size, because recruitment stops as soon as the maximum is reached.
+-   No subjects are allocated to the control arm during the run-in.
+-   With open enrolment and a simple or custom run-in, subjects are allocated as they arrive to the current run-in dose until it has its specified number of subjects. The run-in only moves to the next dose once all the subjects allocated so far have their final results. Subjects who arrive while the run-in is waiting for results are turned away (they are counted as 'lost').
 
 If used, the Allocation rules have the effect of setting a Highest Allocatable Dose that specifies the highest dose level that can be allocated to by the allocation rules.
 
@@ -974,11 +1022,17 @@ If used, the Allocation rules have the effect of setting a Highest Allocatable D
 
     -   it is reduced to the dose level selected by N-CRM, and further increments are applied relative to the **Most recently** **allocated dose**.
 
--   If a Control arm has been included, the user must specify the number of subjects per cohort to be allocated to Control. (The Control arm will never be the MTD and thus whole cohorts will never be assigned to it, so it must have a fixed number of subjects assigned from each cohort).
+-   If a Control arm has been included, the user must specify the number of subjects per cohort to be allocated to Control. (The Control arm will never be the MTD and thus whole cohorts will never be assigned to it, so it must have a fixed number of subjects assigned from each cohort). This number must be less than the cohort size.
 
 The “Fastest Possible Dose Escalation” graph shows the dose allocation permitted by the rules if no toxicities are observed. Or the graph can be changed to show the allocation if a toxicity occurs at a specific dose during the run-in.
 
-If there are 2 groups and recruitment to the second group is delayed (either until the first group is complete, has reached a specific dose, or tested a specified number of subjects). Then starting dose for the second dose can be specified as
+If there are 2 groups and recruitment to the second group is delayed (either until the first group is complete, has reached a specific dose, or tested a specified number of subjects), then with cohort enrolment the starting dose for the second group can be specified as:
+
+-   **Initial dose of group 1**: the second group starts at the same starting dose as the first group.
+-   **Selected MTD of group 1**: the second group starts at the current estimate of the MTD for the first group.
+-   **One dose below selected MTD of group 1**: the second group starts one dose below the current estimate of the MTD for the first group (or at the MTD, if that is the lowest dose).
+
+The group 1 MTD used here is limited to the dose that group 1 escalation is currently measured from (its highest cleared dose, or its most recently allocated dose, see above), so group 2 never starts above where group 1 has been. If group 1 has no acceptable dose, group 2 starts at the group 1 starting dose.
 
 ![Design - Allocation Rule Initial Dose Second Group](crmUGattachments/images/clipboard-2316708456.png){#fig-sec-des-tox-prior-alloc4}
 
@@ -1065,13 +1119,13 @@ The available stopping rules are:
 
 -   **The Additional Stopping Rules**:
 
-    -   **Range/Ratio of dose strengths within the credible interval is less than or equal to**: This is only enabled if on the Study \> Study Info tab, the Type of Target has been set to “Target a single dose”. In this case the credible interval of the dose range that might contain the MTD is calculated, and this option allows the user to specify the width of the credible interval in “dose strength” to consider. How this works is a little counter intuitive: in each MCMC sample the engine determines which dose is the MTD and each doses’ Pr(MTD) is the proportion of the samples it was the MTD. The engine then calculates the minimum range of dose strengths required so that the sum of Pr(MTD) of the doses in the range exceeds 1 – Alpha. (So if a single dose has Pr(MTD) \> 1-Alpha, the CI has zero width). If the xhats are log(dose strength) then the minimum range of log(dose strength) is found and exp() of this range returned.
+    -   **Range/Ratio of dose strengths within the credible interval is less than or equal to**: This is only enabled if on the Study \> Study Info tab, the Type of Target has been set to “Target a single dose”. In this case the credible interval of the dose range that might contain the MTD is calculated, and this option allows the user to specify the width of the credible interval in “dose strength” to consider. How this works is a little counter intuitive: in each MCMC sample the engine determines which dose is the MTD and each doses’ Pr(MTD) is the proportion of the samples it was the MTD. The engine then calculates the minimum range of dose strengths required so that the sum of Pr(MTD) of the doses in the range exceeds 1 – Alpha. (So if a single dose has Pr(MTD) \> 1-Alpha, the CI has zero width). If the xhats are log(dose strength) then the minimum range of log(dose strength) is found and exp() of this range returned. The range is the narrowest one that meets this condition; it need not be centred on the current MTD. The probability that the MTD is below the lowest dose is counted with the lowest dose, and the probability that it is above the highest dose is counted with the highest dose. If no narrower range meets the condition, the width is that of the full dose range.
 
         -   The stopping rule is met if the width of the CI returned is less than that specified by the user.
 
         -   If fine grain dosing is being used then the width of the target credible interval is defined as a dose strength ratio rather than a number of doses.
 
-    -   **Stop if adding another DLT free cohort does not alter the MTD**: this rule is evaluated by analyzing the existing data supplemented by an additional cohort of a specified size where all the responses are no-toxicity; if this results in no change in selection of MTD then this stopping rule is met. If the study is using Open Enrolment, the user additionally specifies the size of the ‘virtual’ cohort to use.
+    -   **Stop if adding another DLT free cohort does not alter the MTD**: this rule is evaluated by analyzing the existing data supplemented by an additional cohort of a specified size where all the responses are no-toxicity; if this results in no change in selection of MTD then this stopping rule is met. The results of the additional cohort are treated as known straight away, even if there is a cohort information delay. If the study is using Open Enrolment, the user additionally specifies the size of the ‘virtual’ cohort to use.
 
     -   **Probability of dose being in the target band greater than**: in order to stop, the MTD’s posterior probability that its toxicity rate lies in the Target Toxicity band must be at or above the required threshold.
 
@@ -1170,7 +1224,7 @@ In the main screen the summary results that are usually of principal interest ar
 
 ***Right Click Menu***: right clicking the mouse on a row of results in the simulation tab brings up a ‘local’ menu of options corresponding to the above options that can be reached from the buttons, in what is sometimes a more ergonomic manner.
 
-### MCMC Settings
+### MCMC Settings {#sec-mcmc-settings}
 
 ![](crmUGattachments/images/clipboard-1013451560.png){#fig-sec-sim-mcmc1}
 
@@ -1179,11 +1233,20 @@ The first two values specify two standard MCMC parameters –
 -   The length of burn-in is the number of the initial iterations whose results are discarded, to allow the sampled values to settle down.
 -   The number of samples is the number of subsequent iterations whose results are recorded in order to give posterior estimates of the values of interest (in this case α and β).
 
+The N-CRM model is fitted using a random walk Metropolis–Hastings sampler that updates one parameter at a time. The sampler is restarted every time the model is fitted:
+
+-   The sampled parameters are $\alpha$ (unless Alpha is fixed) and $ln(\beta)$, plus $a$ and $ln(b)$ if there are two groups ($ln(b)$ is not sampled if $b$ is fixed at 1). If there is an efficacy model, its parameters are sampled separately in the same loop.
+-   With an ordinal toxicity model the sampled parameters are $\alpha_3$, the gaps $\alpha_2 - \alpha_3$ and $\alpha_3 - \alpha_4$, and $ln(\beta)$. Updating $\alpha_3$ moves all the $\alpha$s together, and a proposal that would make a gap zero or negative is rejected, which keeps $\alpha_2 > \alpha_3 > \alpha_4$.
+-   At the start, each parameter is set to its prior mean, and its proposal standard deviation to half its prior standard deviation (for the ordinal gaps, three quarters of the gap between the prior means).
+-   In each iteration each parameter in turn is given a proposed new value drawn from a Normal distribution centred on its current value. The proposal is accepted with probability $min(1, \frac{\pi_{new}}{\pi_{current}})$, where $\pi$ is the posterior density (prior × likelihood); otherwise the current value is kept. If $a$ is constrained to be positive (or negative), proposals on the wrong side of 0 are rejected.
+-   Every 100 iterations the proposal standard deviation of each parameter is adjusted, aiming for about 30% of proposals to be accepted: it is multiplied by (number accepted in the last 100)/30, or by 1/3 if fewer than 11 were accepted.
+-   After the burn-in, every $k^{th}$ iteration is used for the posterior estimates, where $k$ is the MCMC output thinning parameter (see below).
+
 The **Number of samples per imputation** value only applies to analyses using imputed data from a longitudinal model and is irrelevant for N-CRM, hence it is greyed out.
 
 If the **Number of MCMC files to output** value is set to N, where N \> 0, then all the sampled values at each interim in the first N simulations are output, allowing the user to check convergence.
 
-**The MCMC output thinning parameter** can be used to reduce the amount of data output to the MCMC file. It does not reduce the amount of MCMC samples used within the model fitting.
+**The MCMC output thinning parameter** can be used to reduce the amount of data output to the MCMC file. In N-CRM it also reduces the number of MCMC samples used within the model fitting: only every $k^{th}$ iteration after the burn-in is used, and these are the iterations written to the MCMC file.
 
 To obtain the MCMC sampled values for a particular simulation, keep the same Random number seed and use **Start at simulation** to specify the simulation in question and run just 1 simulation.
 

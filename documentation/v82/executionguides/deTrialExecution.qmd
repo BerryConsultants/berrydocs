@@ -322,7 +322,7 @@ Cohort ID The index of the cohort. During the run-in each individual subject/sma
 
 Dose 1 The index of the dose from the first drug. The doses are indexed from 1.
 
-Dose 2 The index of the dose from the first drug. The doses are indexed from 1.
+Dose 2 The index of the dose from the second drug. The doses are indexed from 1.
 
 Toxicity Whether a toxicity was observed for that subject ('1') or not ('0').
 
@@ -403,9 +403,9 @@ rvseed.upd Contains the random number seeds at the end of the run.
 
 The random seeds work as a chain. The initial values are used to generate the next values, which are then used to generate another set, and so on. At the end of the execution, regardless of the value of append, the ending values of the seeds will be written to rvseed.upd. Because the values are updated after each run, this file should be backed up to a safe location following each allocation execution so that your actions can be repeated. Final seed values are also reported in the simulations.csv results file.
 
-At the start of the run, if init.bcrm contains "append 1" and this file exists, it will be read by the program and the seeds used as the starting point for the next run.
+At the start of the run, if init.combi contains "append 1" and this file exists, it will be read by the program and the seeds used as the starting point for the next run.
 
-If the file does not exist, or "append 0" is set, the rv_seeds in the init.bcrm parameter file will be used as the starting point for the next run.
+If the file does not exist, or "append 0" is set, the rv_seeds in the init.combi parameter file will be used as the starting point for the next run.
 
 simulations.csv This has the same format as the simulations file written by FACTS and contains a single row of data representing the current state of the trial, and reports all of the analysis results.
 
@@ -416,3 +416,35 @@ phase.txt This output file reports the phase of the trial going forward:
 1 -- dose escalation
 
 2 -- trial stopped / complete
+
+# Errors and logging
+
+`bCRM.exe` and `combiF.exe` write all their messages to the console (standard output), including error messages. They write nothing to standard error and do not create a log file. To keep the messages, redirect the output to a file, for example **bCRM.exe a \> output.txt**. When FACTS runs the engine, this output is saved in a file called `stdout` in the results folder.
+
+The amount of output is set by the `verbose` parameter in `init.bcrm` or `init.combi`, not on the command line; the `v` flag only prints the version number. FACTS does not write `verbose` to the parameter file, so the default of 1 is used. To change it, add these two lines to the parameter file:
+
+``` text
+verbose
+0
+```
+
+| Value     | Output                                                                                                    |
+|-----------|-----------------------------------------------------------------------------------------------------------|
+| 0         | Errors only, plus the version and the "Running ... simulations" line                                      |
+| 1         | Default. Adds a short message for each allocation decision                                                |
+| 2 or more | More debugging detail, for example parameters missing from the parameter file and the default value used |
+
+Error messages start with `** ERROR:`. For example, if the parameter file is missing:
+
+``` text
+** ERROR: interface.c, function 'openIn', failed opening file for input: init.bcrm
+```
+
+A line in `subject.csv` that cannot be read gives a `** WARNING:` message and is skipped. The run continues, so check the output for warnings.
+
+Exit codes:
+
+-   0: the run finished normally.
+-   1: the run stopped because of an error, for example a missing parameter file or `subject.csv`, a missing required parameter, or a `d` directory that does not exist. The error message is in the output.
+
+An unknown command-line option is not treated as an error: the engine prints the usage message, does not run, and exits with code 0.

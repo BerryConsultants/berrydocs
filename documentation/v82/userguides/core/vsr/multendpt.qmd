@@ -20,6 +20,13 @@ explicitly defined VSR tabs for specifying their response profiles. See the
 [continuous](./continuous.qmd) or [dichotomous](./dichotomous.qmd)
 VSR pages for descriptions on these tabs.
 
+FACTS simulates each endpoint independently of the other endpoints, using
+that endpoint's own VSR. There is no within-subject correlation between
+the endpoints. The only thing a subject's endpoints share is the dropout
+time, which is simulated once per subject. To simulate correlated
+endpoints, generate the subjects outside FACTS and supply them with the
+[External File VSR](#external-file-vsr).
+
 ## Composite Response
 
 In addition to the standard VSR
@@ -81,6 +88,12 @@ If specifying the VSR through External files, the file inputs are the same
 as the single endpoint files, except for the inclusion of a column that
 indicates which endpoint the row is providing a value for.
 
+The External File VSR is the way to simulate subjects whose endpoints are
+correlated. Explicitly defined VSRs simulate each endpoint independently
+(see [Explicitly Defined VSR](#explicitly-defined-vsr)), but a resampled
+subject keeps all of their supplied endpoint values together, so any
+correlation in the supplied data is carried into the simulations.
+
 ![The VSR > External tab for specifying an external file to bootstrap patients from.](../coreUGattachments/multendpt/media/image35.png){#fig-extvsrme}
 
 ## Required Format of Externally Simulated File
@@ -95,7 +108,12 @@ data in comma separated value format with the following columns:
 3)  Endpoint Index (1 = primary, 2 = first auxiliary, ...)
 
 4)  Visit Index (1 = first visit, 2 = second visit, ...), if baseline is
-    included, then baseline is visit 0.
+    included, then baseline is visit 0. The visit index refers to the
+    overall schedule of visits on the Study \> Study Info tab, not to the
+    endpoint's own visits. For example, if the overall schedule has
+    visits at weeks 4, 8, 12 and 16 and an endpoint is observed only at
+    weeks 8 and 16, that endpoint's rows use visit indexes 2 and 4. Rows
+    for a visit at which the endpoint is not observed are ignored.
 
 5)  Response
 
@@ -115,6 +133,27 @@ data in comma separated value format with the following columns:
 Subjects need to have unique, positive integer IDs, all records for each
 subject should be contiguous and all records for a particular endpoint
 for each subject should be contiguous.
+
+The supplied subjects are used as follows:
+
+-   Each time a subject is randomized to an arm, FACTS picks one of the
+    supplied subjects on that arm at random, with replacement, and uses
+    all of that subject's endpoint values (and baselines). If a subject
+    is allocated to an arm that has no subjects in the file, the
+    simulation stops with an error.
+
+-   FACTS applies the dropout rates specified on the Execution \>
+    Dropout Rate tab to the resampled subjects, so the supplied subjects
+    should have complete data with no dropouts. If a supplied subject is
+    missing a visit and dropouts are being simulated, the subject is
+    treated as having dropped out before the first missing visit on any
+    endpoint.
+
+-   There is no "true" response specified for a supplied population, so
+    the true response of each arm that FACTS reports in the simulation
+    results is estimated from the supplied data. For each endpoint it is
+    the mean response (continuous) or the response rate (dichotomous) of
+    the supplied subjects on that arm at the endpoint's final visit.
 
 The GUI requires that the file name has a ".dat" suffix.
 

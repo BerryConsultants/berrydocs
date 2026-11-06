@@ -30,8 +30,14 @@ There are essentially two different models for modeling the
 control hazard rate:
 
 First is the Cox proportional hazards model, which is a non-parametric model
-that requires no prior distributions or model specification. The treatment effects are
+of the control hazard. The control hazard needs no prior distributions or model
+specification. The treatment effects are
 estimated as modifiers to the non-parametric survival curve estimate.
+With this option, the Cox partial likelihood replaces the piecewise
+exponential likelihood. The log hazard ratios $\theta_d$ still get their
+prior from the dose response model specified on the Dose Response tab.
+Hierarchical modeling of the control arm is not available with the
+Cox model.
 
 ![The Design > Hazard Model tab, with "Use Cox proportional hazard model" selected.](../coreUGattachments/tte/media/image43.png){#fig-ttecoxph}
 
@@ -49,6 +55,15 @@ If "Enable hierarchical data modeling for the control arm" is not selected, then
 specified in Hazard Rate tab's table are used. The gamma parameters have been
 reparameterized so that the mean hazard rate and a weight (in terms of number
 of events) are provided instead of the traditional $\alpha$ and $\beta$ parameters.
+
+If $\lambda_\mu$ is the prior mean hazard rate and $\lambda_n$ is the
+weight for a segment $s$, the prior for that segment's hazard rate is
+
+$$\lambda_s \sim \text{Gamma}\left(\lambda_n, \frac{\lambda_n}{\lambda_\mu}\right)$$
+
+where the Gamma is parameterized by shape and rate. This prior carries
+the same information as observing $\lambda_n$ events over
+$\lambda_n / \lambda_\mu$ subject-weeks of exposure.
 
 ![Specifying a fixed prior for a piecewise exponential model with 2 time segments.](../coreUGattachments/tte/media/image44.png){#fig-fixedprior}
 

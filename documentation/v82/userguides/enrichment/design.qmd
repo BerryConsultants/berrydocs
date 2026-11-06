@@ -18,6 +18,14 @@ are allocation, the timing of interims, and the criteria for stopping
 groups or the study for early success or futility, and the criteria for
 judging final success or futility of each group and the study. Wherever applicable, this user guide is separated by type of endpoint used (continuous/dichotomous or time-to-event).
 
+At each interim and at the final analysis, FACTS fits the Bayesian model
+(the control and treatment models below and, for a continuous or
+dichotomous endpoint, the longitudinal model) to the data available at
+that time. The posterior is evaluated by MCMC, with each parameter
+updated by Gibbs sampling where possible and by Metropolis-Hastings
+otherwise. This is the same approach as in FACTS Core, see
+[Evaluation of Bayesian Posterior Estimates](../core/design/index.qmd#evaluation-of-bayesian-posterior-estimates).
+
 # Control Model / Hazard Model
 
 :::{.panel-tabset}
@@ -35,6 +43,73 @@ If control arms are present they can be modeled either:
   prior studies is incorporated via a hierarchical model,
 
 - or jointly in a hierarchical model.
+
+### Model
+
+The final endpoint $Y$ of a subject in group $g$ is modeled in terms of
+a control parameter $\gamma_{g}$ and a treatment effect $\theta_{g}$:
+
+- Continuous endpoint:
+
+  $$
+  Y\sim N\left( \gamma_{g},\ \sigma^{2} \right)\ \text{on control},\qquad Y\sim N\left( \gamma_{g} + \theta_{g},\ \sigma^{2} \right)\ \text{on treatment}
+  $$
+
+  where $\gamma_{g}$ is the mean response on control, $\theta_{g}$ is
+  the difference in mean response between treatment and control, and
+  $\sigma^{2}$ is a single variance common to all groups and arms. If
+  the model is baseline adjusted a term $\beta Z$ is added to the mean
+  (see Baseline adjustment under Treatment Model).
+
+- Dichotomous endpoint: the number of responders on control and on
+  treatment in group $g$ are Binomial with response rates $\lambda_{g}$
+  and $\pi_{g}$, where
+
+  $$
+  \text{logit}\left( \lambda_{g} \right) = \gamma_{g},\qquad \text{logit}\left( \pi_{g} \right) = \gamma_{g} + \theta_{g}
+  $$
+
+  so $\theta_{g}$ is the log-odds ratio of response on treatment
+  relative to control. The model is fitted on the log-odds scale, but
+  the treatment effect used in the stopping and evaluation criteria is
+  the difference in response rates
+  $\text{logit}^{-1}\left( \gamma_{g} + \theta_{g} \right) - \text{logit}^{-1}\left( \gamma_{g} \right)$.
+
+The prior for $\gamma_{g}$ depends on the control model selected:
+
+- Historical control: $\gamma_{g}$ is fixed at the historical control
+  response $R_{g}$ entered for the group: $\gamma_{g} = R_{g}$
+  (continuous) or $\gamma_{g} = \text{logit}\left( R_{g} \right)$
+  (dichotomous).
+
+- Controls modeled separately: independent priors
+  $\gamma_{g}\sim N\left( \mu_{g},s_{g}^{2} \right)$, with the prior
+  mean $\mu_{g}$ and SD $s_{g}$ entered for each group.
+
+- Hierarchical Prior (BAC) for group $g$: this replaces the Normal prior
+  for that group. $\gamma_{g}$ and the control parameters
+  $\gamma_{gk}$ of the historic studies $k = 1,\ldots,K_{g}$ share a
+  hierarchical model:
+  $\gamma_{g},\gamma_{gk}\sim N\left( \mu,\tau^{2} \right)$, with
+  $\mu\sim N\left( \mu_{0},\tau_{0}^{2} \right)$ and
+  $\tau^{2}\sim IG\left( \alpha_{0},\beta_{0} \right)$. The data of
+  historic study $k$, with $n_{k}$ subjects, enter the likelihood as
+  $\bar{y}_{k}\sim N\left( \gamma_{gk},\sigma^{2}/n_{k} \right)$
+  (continuous; the SD of the historic study also contributes to the
+  estimate of $\sigma^{2}$) or as a Binomial number of responders out
+  of $n_{k}$ with log-odds $\gamma_{gk}$ (dichotomous).
+
+- Hierarchical model across groups:
+  $\gamma_{g}\sim N\left( \mu,\tau^{2} \right)$, with
+  $\mu\sim N\left( \mu_{0},\tau_{0}^{2} \right)$ and
+  $\tau^{2}\sim IG\left( \alpha_{0},\beta_{0} \right)$.
+
+- Hierarchical model plus clustering: see below.
+
+In each case $\mu_{0}$, $\tau_{0}$, $\alpha_{0}$ and $\beta_{0}$ are the
+user-specified hyper-parameters (the prior mean and SD of Mu and the
+prior for tau). The priors for $\theta_{g}$ and $\sigma^{2}$ are set on
+the Treatment Model tab.
 
 ### Historical Control
 
@@ -89,11 +164,15 @@ has its own prior, which can be either:
 If a Hierarchical Prior for a control arm (Bayesian Augmented Control)
 is specified for the control arm in a group then the user specifies:
 
-- The sufficient statistics for each historic study to be included,
-  these are: the observed mean response of the control group, the number
-  of subjects in the control group and the SD of the responses across
-  the group. This data can be ‘down-weighted’ by reducing the number of
-  subjects entered relative to the number in the actual study.
+- The sufficient statistics for each historic study to be included.
+  For a continuous endpoint these are: the observed mean response of the
+  control group, the number of subjects in the control group and the SD
+  of the responses across the group. For a dichotomous endpoint they are
+  the number of subjects in the control group and the number of those
+  subjects who responded. This data can be ‘down-weighted’ by reducing
+  the number of subjects (and, for a dichotomous endpoint, the number of
+  responders pro-rata) entered relative to the number in the actual
+  study.
 
 - The hyper-parameters for the hierarchical model. These are the mean
   and standard deviation for a Normally distributed prior for the mean
@@ -222,6 +301,49 @@ If control arms are present they can be modeled either:
 - Jointly in a hierarchical model,
 
 - or using the Cox proportional hazard model.
+
+### Model
+
+Except with the Cox proportional hazard model, the time to event is
+modeled with a piecewise exponential model. The time axis is divided
+into segments $s = 1,\ldots,S$ at the user-specified segment starts. In
+segment $s$ the hazard rate on the control arm of group $g$ is
+$\lambda_{sg}$ and the hazard rate on the treatment arm is
+$\lambda_{sg}\exp\left( \theta_{g} \right)$, so $\exp\left( \theta_{g} \right)$
+is the hazard ratio of treatment to control in group $g$, constant over
+time. Each subject contributes their events and their exposure time in
+each segment to a piecewise exponential likelihood.
+
+The prior for $\lambda_{sg}$ depends on the control model selected:
+
+- Historical control: $\lambda_{sg}$ is fixed at the historical hazard
+  rate $R_{sg}$ entered for the segment and group.
+
+- Controls modeled separately: independent priors
+  $\lambda_{sg}\sim \text{Gamma}\left( \alpha_{sg},\beta_{sg} \right)$,
+  entered as a mean $\alpha_{sg}/\beta_{sg}$ and a weight
+  $\alpha_{sg}$ for each group and segment.
+
+- Hierarchical Prior (BAC) for group $g$: in addition to the Gamma
+  prior above, the events and exposure of each historic study
+  $k = 1,\ldots,K_{g}$ enter the likelihood with hazard rate
+  $\lambda_{sg}\exp\left( \gamma_{gk} \right)$ in segment $s$. The log
+  hazard ratios $\gamma_{gk}$ of the historic studies relative to the
+  current study, together with the current study's own log hazard
+  ratio (fixed at 0), are modeled as draws from
+  $N\left( \mu,\tau^{2} \right)$, with
+  $\mu\sim N\left( \mu_{0},\tau_{0}^{2} \right)$ and
+  $\tau^{2}\sim IG\left( \alpha_{0},\beta_{0} \right)$.
+
+- Hierarchical model across groups: in each segment
+  $\lambda_{sg}\sim \text{Gamma}\left( \alpha_{s},\beta_{s} \right)$
+  across the groups, and $\alpha_{s}$ and $\beta_{s}$ each have a Gamma
+  prior, entered as a mean and a weight for each segment.
+
+- Cox proportional hazard model: the control hazard is not modeled, see
+  below.
+
+The priors for $\theta_{g}$ are set on the Treatment Model tab.
 
 ### Historical Control
 
@@ -356,6 +478,36 @@ When using the Cox proportional hazard mode the control hazard rate is
 not modeled but instead cancels from the calculation, so there are no
 parameters to enter.
 
+The Cox model is only available if the study includes a control arm.
+The hazard of a subject in group $g$ at time $t$ is
+
+$$
+h(t) = h_{0g}(t)\exp\left( \theta_{g}x \right)
+$$
+
+where $x = 1$ on the treatment arm and $x = 0$ on the control arm and
+$h_{0g}(t)$ is an unspecified baseline hazard. The analysis is a
+Bayesian Cox model that uses the Cox partial likelihood as the
+likelihood for $\theta_{g}$, as justified by
+[Sinha, Ibrahim and Chen (2003)](#sinha "Sinha D, Ibrahim JG, Chen M-H. A Bayesian justification of Cox's partial likelihood. Biometrika. 2003; 90(3): 629-641."),
+so $h_{0g}(t)$ cancels. The partial likelihood is calculated within each
+group, so the baseline hazard can differ between groups. Tied event
+times are handled with the Breslow approximation. The priors for
+$\theta_{g}$ are the same as with the piecewise exponential model (see
+Treatment Model).
+
+The across groups analysis does not use the partial likelihood. It uses
+an exponential likelihood (a single segment) in which the control hazard
+rate of each group is held fixed at a constant rate estimated from that
+group's control arm in the current study:
+$\left( d_{g} + 0.1 \right)/\left( E_{g} + 0.1 \right)$, where $d_{g}$
+is the number of events and $E_{g}$ the total exposure time on the
+control arm.
+
+The predicted probability of success in a phase 3 trial depends only on
+the hazard ratio and the phase 3 number of events, so it is calculated
+in the same way as with the piecewise exponential model.
+
 :::
 
 
@@ -364,6 +516,39 @@ parameters to enter.
 :::{.panel-tabset}
 
 ## Continuous/Dichotomous
+
+### Priors for the treatment effects
+
+The treatment effects $\theta_{g}$ (the difference in mean response for
+a continuous endpoint, the log-odds ratio of response for a dichotomous
+endpoint) are defined in the model given under Control Model. Their
+prior depends on the treatment model selected:
+
+- Groups modeled separately: independent priors
+  $\theta_{g}\sim N\left( \mu_{g},s_{g}^{2} \right)$, with the prior
+  mean $\mu_{g}$ and SD $s_{g}$ entered for each group.
+
+- Hierarchical model across groups:
+  $\theta_{g}\sim N\left( \mu,\tau^{2} \right)$, with
+  $\mu\sim N\left( \mu_{0},\tau_{0}^{2} \right)$ and
+  $\tau^{2}\sim IG\left( \alpha_{0},\beta_{0} \right)$, where
+  $\mu_{0}$, $\tau_{0}$, $\alpha_{0}$ and $\beta_{0}$ are the
+  user-specified hyper-parameters.
+
+- Hierarchical model plus clustering: see below.
+
+For a continuous endpoint the common variance has the prior
+$\sigma^{2}\sim IG\left( \alpha_{\sigma},\beta_{\sigma} \right)$,
+entered as the ‘sigma prior mean’ and weight described below.
+
+The across groups analysis is a second, pooled model fitted alongside
+the main model. In it all groups have a common treatment effect,
+$\theta_{g} = \theta$ for all $g$, with prior
+$\theta\sim N\left( \mu_{p},s_{p}^{2} \right)$ from the across groups
+prior mean and SD. The control model and its priors are the same as in
+the main model. For a dichotomous endpoint the across groups difference
+in response rates is calculated at the average of the $\gamma_{g}$
+across the groups.
 
 ### Groups modeled separately
 
@@ -518,29 +703,96 @@ for baseline, where Z is standardized baseline score and $\beta$ the
 estimated parameter. The prior for $\beta$ is a Normal distribution
 with user specified mean and standard deviation.
 
+The baseline score $x$ is standardized as $Z = (x - \bar{x})/s_{x}$,
+where $\bar{x}$ and $s_{x}$ are the observed mean and SD of the baseline
+scores of all the subjects recruited so far, pooled over groups and
+arms, and recalculated at each analysis. There is a single $\beta$, common to
+all groups and arms.
+
+If the subject responses are simulated with a baseline adjustment
+$\beta_{VSR}(x - c)/s$ (see Virtual Subject Response \> Baseline), the
+estimate of $\beta$ need not equal $\beta_{VSR}$. Writing
+$x = \bar{x} + s_{x}Z$, the simulated adjustment is
+$\beta_{VSR}(\bar{x} - c)/s + \beta_{VSR}(s_{x}/s)Z$, so the fitted
+$\beta$ estimates $\beta_{VSR}s_{x}/s$, and the shift
+$\beta_{VSR}(\bar{x} - c)/s$ (zero only if $c$ equals the mean
+baseline) is absorbed into the estimated group means.
+The simulation allows a different $\beta_{VSR}$, $c$ and $s$ in each
+group, but the design model fits only one $\beta$, so if
+$\beta_{VSR}/s$ differs across groups the model cannot reproduce it and
+the estimate of $\sigma$ will be larger than the simulated SD.
+
 ### Handling of Missing Data Due to Dropouts
 
-There are three options here:
+The options are:
 
 - Bayesian multiple imputation from post baseline – This is the default
   and treats dropouts in exactly the same way as subjects which have not
-  yet completed. If subjects have no intermediate visits in the design
-  (“Use longitudinal modeling” is unchecked on the Study \> Study Info
-  tab), then this is the only option, it has the effect that a subject
-  that drops out is included in subject randomization counts but
-  excluded from the frequentist analysis and makes no net contribution
-  to the Bayesian modelling.
+  yet completed. The option is labeled “Bayesian multiple imputation”
+  if no baseline is included, and “Missing data is ignored” if subjects
+  have no intermediate visits in the design (“Use longitudinal
+  modeling” is unchecked on the Study \> Study Info tab). In that case
+  it has the effect that a subject that drops out is included in
+  subject randomization counts but excluded from the frequentist
+  analysis and makes no net contribution to the Bayesian modelling.
 
-- BOCF – This treats each subject who drops out as having a final
-  response which is the same as their baseline value (i.e. final
-  response is zero if response is change from baseline).
+- BOCF (continuous endpoint only, available if baseline is included) –
+  This treats each subject who drops out as having a final response
+  which is the same as their baseline value (i.e. final response is
+  zero if response is change from baseline).
 
-- LOCF – This sets the final response equal to the last observed value.
+- Missing data is considered failure (dichotomous endpoint only) – This
+  treats each subject who drops out as having a final outcome that is a
+  failure: a non-response if a response is a good outcome, a response
+  if a response is a bad outcome.
 
-NB Setting BOCF or LOCF here does not affect the longitudinal model used
-for incomplete subjects.
+- LOCF (available if “Use longitudinal modeling” is checked) – This sets
+  the final response equal to the last observed post-baseline visit
+  value.
+
+Subjects with at least one observed post-baseline visit are always
+included in the Bayesian analysis. A subject who drops out before their
+first post-baseline visit is included only with BOCF or “Missing data is
+considered failure”, as these give the subject a known final endpoint.
+With Bayesian multiple imputation or LOCF such a subject is excluded
+from the Bayesian analysis, even if they have a baseline value (with
+LOCF the observed mean responses reported in the simulation output do
+use the baseline value for such a subject).
+
+NB Setting BOCF, LOCF or “Missing data is considered failure” here does
+not affect the longitudinal model used for incomplete subjects. The
+final values these options give to dropouts are not used to estimate
+the parameters of the longitudinal model.
 
 ## Time-to-Event
+
+### Priors for the treatment effects
+
+The treatment effects $\theta_{g}$ are the log hazard ratios of
+treatment to control defined in the model given under Control Model /
+Hazard Model.
+Their prior depends on the treatment model selected:
+
+- Groups modeled separately: independent priors
+  $\theta_{g}\sim N\left( \mu_{g},s_{g}^{2} \right)$, with the prior
+  mean $\mu_{g}$ and SD $s_{g}$ entered for each group.
+
+- Hierarchical model across groups:
+  $\theta_{g}\sim N\left( \mu,\tau^{2} \right)$, with
+  $\mu\sim N\left( \mu_{0},\tau_{0}^{2} \right)$ and
+  $\tau^{2}\sim IG\left( \alpha_{0},\beta_{0} \right)$, where
+  $\mu_{0}$, $\tau_{0}$, $\alpha_{0}$ and $\beta_{0}$ are the
+  user-specified hyper-parameters.
+
+- Hierarchical model plus clustering: see below.
+
+The across groups analysis is a second, pooled model fitted alongside
+the main model. In it all groups have a common log hazard ratio,
+$\theta_{g} = \theta$ for all $g$, with prior
+$\theta\sim N\left( \mu_{p},s_{p}^{2} \right)$ from the across groups
+prior mean and SD. The hazard model and its priors are the same as in
+the main model (for the Cox model see Cox proportional hazard model
+under Control Model / Hazard Model).
 
 ### Groups modeled separately
 
@@ -653,10 +905,20 @@ If frequentist analysis is enabled on this tab, the alpha levels can be
 set for the various end-of-trial frequentist analyses. These are output
 in separate results files, and are not available for use within the
 simulations (e.g. for early stopping decisions). Frequentist analysis is
-enabled by default, it increases the computational overhead of
+disabled by default; enabling it increases the computational overhead of
 simulations only slightly.
 
 These tests are performed as two-sided tests for all endpoints and all p-value calculations.
+The exceptions are the within-group p-values for a continuous endpoint
+and the Fisher exact p-values for a dichotomous endpoint, which are
+one-sided p-values for an improvement on treatment (over control, or
+over the historical control response if there is no control arm). In the summary of
+the simulations a group is counted as significant by these tests if the
+p-value is below half the group alpha, which is the same as a two-sided
+test in the direction of benefit.
+
+The overall alpha is used for the tests across groups and the group
+alphas for the tests within each group.
 
 :::{.callout-note collapse="true"}
 
@@ -667,6 +929,92 @@ This differs from FACTS Core, where the frequentist tests are one-sided, testing
 :::
 
 ![Frequentist test parameters](./EDTTE/media/image38.png){#fig-fig38tte}
+
+## Analyses performed
+
+:::{.panel-tabset}
+
+### Continuous
+
+Subjects without a final response are included using their last
+observed visit response (LOCF). Subjects who drop out before their
+first post-baseline visit are excluded. If baseline is included, a
+second analysis is also run in which every subject without a final
+response is included using their baseline value (BOCF); its results are
+in the files with "bocf" in their name. Neither analysis depends on the
+dropout option selected for the Bayesian analysis on the Treatment Model
+tab.
+
+The analysis is an ANCOVA, a linear model fitted by least squares with
+F tests:
+
+- With a control arm the model is Response = Group + Treatment +
+  Group × Treatment, plus Baseline as a covariate if baseline is
+  included. The output gives F test p-values for the group effect, the
+  treatment effect and the group by treatment interaction, the
+  treatment difference in each group with its confidence interval and
+  p-value, and an overall treatment difference (the average of the
+  group differences, weighted by the number of subjects in each group).
+
+- Without a control arm the model is Response = Group, plus Baseline if
+  baseline is included. The output gives the F test p-value for the
+  group effect and, for each group, the difference between the group
+  mean and the group's historical control response, with its confidence
+  interval and p-value.
+
+The baseline covariate is included whenever baseline is included in the
+study, whether or not the Bayesian model is baseline adjusted.
+
+### Dichotomous
+
+Subjects without a final response are included using their last
+observed visit response (LOCF), or as a failure if “Missing data is
+considered failure” is selected on the Treatment Model tab. With LOCF,
+subjects who drop out before their first post-baseline visit are
+excluded.
+
+With a control arm the tests are:
+
+- Across groups: a chi-squared test (with continuity correction)
+  comparing treatment with control, ignoring groups; the Agresti score
+  confidence interval for the difference in response rates, ignoring
+  groups; the Cochran-Mantel-Haenszel test, with groups as strata; the
+  Mantel-Haenszel common odds ratio; a test of whether the odds ratio
+  differs between groups (reported as Breslow-Day); and chi-squared
+  tests of whether the response rate differs between groups, separately
+  within the treatment arms and within the control arms.
+
+- Within each group: chi-squared (with continuity correction), Fisher
+  exact and two-sample binomial (Normal approximation) tests comparing
+  treatment with control, and the difference in response rates with its
+  confidence interval.
+
+Without a control arm the tests are a chi-squared test of whether the
+response rate differs between groups and, within each group, a binomial
+(Normal approximation) test of the response rate against the group's
+historical control rate.
+
+### Time-to-Event
+
+With a control arm the analyses are:
+
+- Across groups: Cox proportional hazards models with group, treatment
+  and group by treatment interaction terms, with likelihood ratio tests
+  for the group effect, the treatment effect and the interaction; an
+  overall hazard ratio (the group hazard ratios averaged on the log
+  scale, weighted by the number of subjects in each group); and a
+  log-rank test stratified by group.
+
+- Within each group: a Cox model of treatment (hazard ratio, confidence
+  interval and Wald p-value) and a log-rank test.
+
+Without a control arm the analyses are a Cox model of group, with a
+likelihood ratio test for the group effect, and, within each group, a
+one-sample log-rank test against the group's historical control hazard
+rates and a test of the ratio of the observed number of events to the
+number expected at the historical rates.
+
+:::
 
 # Longitudinal model
 
@@ -725,10 +1073,9 @@ There are five options for handling longitudinal modeling with a continuous endp
 
 5.  ITP
 
-These are the same as available for longitudinal modeling in Dose
-Finding with a continuous endpoint. See the FACTS DF Design User Guide
-section on longitudinal models for a slightly fuller discussion of the
-models available.
+These models are described in more detail in
+[Longitudinal Models for Continuous Endpoints](../core/longitudinalmodels/continuous.qmd)
+in the FACTS Core user guide.
 
 ### Last Observation Carried Forward (LOCF)
 
@@ -886,10 +1233,10 @@ dichotomous endpoint:
 
 3.  Logistic Regression
 
-These are the same as available for longitudinal modeling in Dose
-Finding with a continuous endpoint. See the FACTS DF Design User Guide
-section on longitudinal models for a slightly fuller discussion of the
-models available.
+These models, and the Restricted Markov model below, are described in
+more detail in
+[Longitudinal Models for Dichotomous Endpoints](../core/longitudinalmodels/dichotomous.qmd)
+in the FACTS Core user guide.
 
 If the special Restricted Markov model is being used then this has its
 own longitudinal model.
@@ -1002,6 +1349,11 @@ On the allocation tab:
 In the example screenshot above, 2:2 randomizations has been specified
 for all groups, giving them 1:1 allocation with a block size of 4.
 
+Each group is randomized separately, in blocks. The block size in a
+group is the sum of the numbers entered for control and treatment, and
+each block contains exactly those numbers of control and treatment
+allocations, in a random order.
+
 
 # Interims
 
@@ -1053,8 +1405,14 @@ interim.
 
 In addition in this section there are options that allow user to specify
 whether to continue to follow-up subjects if a group or the whole study
-stops early, and (if interims are governed by time, completers or
-events) whether interims should continue after full accrual.
+stops early (see [Follow-up after a group or the study stops](#sec-ed-followup)),
+and (if interims are defined by time) whether interims should continue
+after full accrual. By default they do; checking “Discontinue interim
+analysis beyond study enrollment” stops them. Interims defined by information, in terms of
+subjects who have completed, or had the opportunity to complete, a
+visit, take place when their thresholds are reached, whether or not
+accrual is complete. Interims defined by the number of subjects
+recruited cannot take place after full accrual.
 
 In ED adaptation is limited to stopping groups and stopping the whole
 trial, thus while it is sensible to ensure that first interims decisions
@@ -1109,6 +1467,33 @@ in the trial and minimum number subjects recruited in a group) on the
 being acted on too early within specific groups.
 
 :::
+
+## Follow-up after a group or the study stops {#sec-ed-followup}
+
+Two options on the Interims tab control whether subjects already
+recruited continue to be followed up after an early stop:
+
+- “Continue follow-up if group/study stops for early success.” This is
+  checked by default.
+
+- “Continue follow-up if group/study stops for early futility.” This is
+  not checked by default.
+
+The option that applies is the one for the reason of the stop, for
+group stops and study stops alike. A group and the study can stop for
+different reasons, for example a group stops for futility and later the
+study stops for success. For a group that stopped before the study:
+
+- If follow-up is discontinued for the group's reason for stopping, its
+  subjects are no longer followed up from the group stop, whatever the
+  study does later.
+
+- Otherwise its subjects are followed up until the study stops, and
+  after that only if follow-up continues for the study's reason for
+  stopping.
+
+The analyses use only the data collected up to the time follow-up was
+discontinued.
 
 # Success/Futility Criteria
 
@@ -1187,6 +1572,26 @@ Note:
     criteria are met simultaneously, FACTS will only flag one of
     “Success Combined” and “Futile Combined” as being met, corresponding
     to how the outcome of the trial has been flagged.
+
+5.  Once a group has stopped for success or futility it keeps that
+    status, and its stopping criteria are not evaluated again. Its
+    treatment effect is still estimated at later interims, and its stop
+    still counts towards the study stopping rules. A group that stopped
+    recruiting only because it reached its cap, or because the study
+    stopped, can still stop for success or futility at a later interim.
+
+6.  Once the study has stopped for success or futility, the study
+    stopping rules are not evaluated again. If subjects are still being
+    followed up and further interims take place, the stopping rules are
+    still evaluated for the groups that have not stopped for success or
+    futility.
+
+7.  A group's outcome is classed as early success or early futility only
+    if it met its stopping criteria before all of its subjects' data
+    were complete. If it first meets them at an interim when all of its
+    data are already available (possible when interims continue after
+    full accrual), its outcome is decided by the final evaluation, as
+    for a group that recruited to its cap.
 
 :::{.panel-tabset}
 

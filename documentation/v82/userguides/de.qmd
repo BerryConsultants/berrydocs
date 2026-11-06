@@ -83,13 +83,15 @@ All (except 3+3) share in the following:
 
 - If at the highest dose the decision is to Escalate, this is converted to Stay instead,  if at the lowest dose the decision is to De-escalate, this is converted to Stay instead.
 
-- Using a Beta-binomial distribution based on the observed data (with a Beta(1, 1) prior) if the posterior probability that the toxicity rate exceeds the target rate with some probability (0.95 by default) then mark the dose as unacceptable and de-escalate (shown as "DU" in the decision tables). Stopping the trial if this is at the lowest dose.
+- Using a Beta-binomial distribution based on the observed data (with a Beta(1, 1) prior) if the posterior probability that the toxicity rate exceeds the target rate with some probability (0.95 by default) then mark the dose as unacceptable and de-escalate (shown as "DU" in the decision tables). Stopping the trial if this is at the lowest dose. In BOIN a dose is only marked unacceptable once at least 3 subjects have been treated on it; with fewer subjects the decision is De-escalate.
+
+- If the decision is to Escalate but the next higher dose is marked unacceptable (the data on that dose give a "DU" decision), the decision is converted to Stay instead.
 
 - At the end of the trial, MTD selection is after isotonic regression performed as follows:
 
   + Calculate the toxicity rate estimate at each dose (BOIN uses the observed rates, all others use the posterior mean toxicity, assuming a Beta(0.001, 0.001) prior and an independent Beta-Binomial model). Doses with no subjects are skipped. For mTPI, mTPI-2 and i3+3, the first dose where the posterior probability (under this prior) that the toxicity rate exceeds the target is greater than the threshold (0.95 by default), and all doses above it, are excluded.
   
-  + Impose monotonicity using isotonic regression (pool adjacent violators): where monotonicity is violated, the estimates of toxicity at the respective doses are replaced with their average.
+  + Impose monotonicity using isotonic regression (pool adjacent violators): where monotonicity is violated, the estimates of toxicity at the respective doses are replaced with their average. Each dose has equal weight in this average, whatever the number of subjects on it.
   
   + We then select the dose with isotonically transformed toxicity rate estimate closest to the target toxicity rate.
   
@@ -143,6 +145,27 @@ If $x$ is the number of observed toxicities at dose $d$, and $n$ the total numbe
 - Else if $\lambda_l < \frac{x}{n} < \lambda_u$ then stay at this dose (S).
 
 - Else if $\lambda_u < \frac{x}{n}$ then de-escalate (D).
+
+## 3+3 {#sec-rules-3plus3}
+
+3+3 does not use a target toxicity rate. It always uses cohorts of 3 and decides what to do next from the number of toxicities (DLTs) in the cohort just treated:
+
+- The first cohort is allocated to the dose set by **Initial dose index**.
+- After a cohort at a new dose:
+  + 0 toxicities: escalate to the next dose.
+  + 1 toxicity: treat a second, confirmation, cohort of 3 at the same dose.
+  + 2 or 3 toxicities: stop, the MTD is the dose below.
+- After a confirmation cohort:
+  + 0 toxicities: escalate to the next dose.
+  + 1 or more toxicities: stop, the MTD is the dose below.
+- If the rules say escalate from the highest dose, the trial stops and the MTD is the highest dose.
+- If the maximum number of subjects has been reached and the cohort did not stop the trial for toxicity, the trial stops and the MTD is the current dose (no confirmation cohort is treated after 1 toxicity).
+- If the MTD would be the dose below the lowest dose, the trial stops with the MTD "below the first dose", and no expansion cohort is treated.
+
+If **Include final validation cohort** is selected, then when the rules above say stop with the MTD at the dose below, a validation cohort of 3 is first treated at that dose, provided the current dose is not the lowest dose, the maximum number of subjects has not been reached, and the dose below has fewer than 6 subjects. Otherwise the trial stops as above. After a validation cohort, counting all the subjects on that dose:
+
+- Fewer than 2 toxicities: the trial stops and this dose is the MTD. If the dose still has fewer than 6 subjects (possible when it is below the initial dose) and the maximum number of subjects has not been reached, another validation cohort is treated at it first and these rules are applied again.
+- 2 or more toxicities: a validation cohort is treated at the next dose down (and these rules are applied again), provided this is not the lowest dose, the maximum number of subjects has not been reached, and the dose below has fewer than 6 subjects. Otherwise the trial stops and the MTD is the dose below.
 
 
 # The FACTS Rules-Based Dose Escalation GUI
@@ -299,7 +322,12 @@ Options that are common to all algorithms are:
 -   Cohort Expansion: The user can specify that after the dose
     escalation phase of the trial has completed, the simulation is to
     include an ‘expansion cohort’ (allocated at the final estimate of
-    the MTD) and how large that expansion cohort will be.
+    the MTD) and how large that expansion cohort will be. For 3+3 the
+    expansion dose is the last dose used, or the dose below it if that
+    dose had more than one toxicity. For the other methods it is the
+    MTD selected at the end of the trial (see [The Rules Based
+    Methods](#the-rules-based-methods)). If the MTD is below the lowest
+    dose, there is no expansion cohort.
 
 The further options depend on the chosen design algorithm chosen. Please
 select the algorithm of interest to learn more. If you are interested in
@@ -335,7 +363,11 @@ Additional options include:
     category in the decision matrix) if the posterior probability (based
     on a Beta-Binomial model per dose) that the toxicity rate is above
     the target toxicity is greater than the selected value (0.95 is the
-    default).
+    default). The posterior uses a Beta(1, 1) prior and the data on
+    that dose only. If the decision at the dose below a DU dose is
+    Escalate, the design stays at the dose below instead. If the lowest
+    dose is DU, the trial stops. In BOIN a dose can only be DU once at
+    least 3 subjects have been treated on it.
 
 -   Stop if next dose already has X subjects: This is an option that
     allows an early stopping rule to be specified that if the dose to be
@@ -387,9 +419,10 @@ BOIN has extra options compared to mTPI, mTPI-2 and i3+3:
     first dose level likely terminates the study, whereas if we had
     started at dose level 2, we have a fall back dose level to
     de-escalate to.
--   Include final validation cohort: Whether to include an additional
-    cohort at the chosen MTD after the original 3+3 algorithm has
-    terminated.
+-   Include final validation cohort: Whether, when the trial would stop
+    with the MTD at the dose below the current dose, to first treat a
+    validation cohort of 3 at that dose to confirm it (see
+    [3+3](#sec-rules-3plus3)).
 ::::
 
 # Simulation
@@ -807,7 +840,11 @@ single simulated trial after the results have been gathered for a
 specific cohort of a specific trial. Please note that isotonic
 regression ensures the monotonicity of the dose-toxicity relationship,
 but might result in the fitted toxicity rate being different (higher or
-lower) than the observed toxicity rate.
+lower) than the observed toxicity rate. The fitted curve is the
+isotonic regression of the observed toxicity rates, with each dose
+weighted by its number of subjects. (This differs from the final MTD
+selection, where each dose has equal weight and, except in BOIN, the
+posterior mean toxicity rates are used.)
 
 The graph includes a drop down selector box allowing the user to select
 which simulated trial is displayed, and a further drop down selector box

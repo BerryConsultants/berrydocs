@@ -149,6 +149,33 @@ dose” is selected then when forced to choose between two or more
 doses to drop, the one with the lowest effective dose strength will
 be dropped.
 
+At each interim, FACTS picks the arms to drop one at a time:
+
+1.  List the study arms that have not been dropped, from lowest to
+    highest dose. Control and the Active Comparator are never listed.
+
+2.  Take the arms that the pruning rules allow to be dropped next:
+
+    -   prune from the lowest dose only: the lowest listed arm;
+    -   prune from the highest dose only: the highest listed arm;
+    -   prune from both: the lowest and the highest listed arms;
+    -   no pruning: all listed arms.
+
+3.  Keep only those arms that meet at least one of the arm dropping
+    criteria.
+
+4.  If no arms are left, stop. Otherwise drop the lowest of them if
+    “Prioritize dropping the lowest dose” is selected, or the highest
+    of them if not.
+
+5.  Repeat from step 1 until no arm is dropped, or the maximum number
+    of arms that can be dropped is reached.
+
+For example, suppose there are 5 study arms, pruning from both ends is
+selected, and only arm 4 meets the arm dropping criteria. Arm 4 is not
+dropped, because arm 5 is still in the trial and does not meet the
+criteria.
+
 ### Upon arm drop
 Finally, specify what is to be done with the unused subjects
 that would have been allocated to an arm that has now been dropped. There
@@ -226,6 +253,13 @@ allocation probability. See
 ### Adaptive Allocation Targets
 
 Adaptive allocation probabilities can be driven by any combination of posterior probabilities, predictive probabilities, conditional powers, and target probability QOIs. The allocation ratio of each arm is a proportional to a function of the QOIs - simply, arms with higher QOIs have higher allocation probabilities.
+
+Target dose QOIs (Pr(Max), Pr(MED) and Pr(EDq)) are always 0 for the
+Control and Active Comparator arms. So if the Active Comparator does not
+have a fixed allocation, target dose QOIs give it no allocation weight.
+If all the allocation targets are target dose QOIs, the Active
+Comparator gets no subjects after the first interim. To keep
+randomizing to the Active Comparator, give it a fixed allocation.
 
 The way that the allocation probabilities are calculated is as follows.
 
