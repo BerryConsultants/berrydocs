@@ -287,9 +287,16 @@ diagonal. For small numbers of dose increments it is similar to the
 Huang run-in. For larger numbers of dose increments it is more
 parsimonious.
 
-Custom 
-: This explores a specific sequence of combinations stopping when
-the first toxicity is observed or the sequence is completed.
+Custom
+: This explores a user-specified list of combinations. A combination
+in the list is not tested while any combination below it in the list
+(lower or equal in both drugs) is still untested, so combinations
+that are not above one another (for example one increment of drug 1,
+and one increment of drug 2) can be ready to test at the same time.
+A toxicity excludes the combination where it was observed and every
+combination above it; the run-in carries on with the remaining
+combinations in the list and ends when all of them have been tested or
+excluded.
 
 Or run-in can be skipped.
 
@@ -576,8 +583,8 @@ On this tab the user can specify
   combinations that have been excluded from the study on the Stud \>
   Exclude tab are excluded from the run-in.
 
-- The dose allocation scheme: (only applies to the Contour and Tri-axial
-  run-in schemes):
+- The dose allocation scheme: (only applies to the Contour, Tri-axial
+  and Custom run-in schemes):
 
   - allocate a single cohort;
 
@@ -589,18 +596,34 @@ On this tab the user can specify
 
 ::: {.callout-note}
 
-The Row by row and Custom run-ins only identify one dose combination
-to test next, and so use “single cohort” allocation regardless of the
-setting of this control.
+The Row by row run-in only identifies one dose combination to test
+next, and so uses “single cohort” allocation regardless of the setting
+of this control.
+
+The Custom run-in can have more than one combination ready to test
+(combinations in the list that are not above one another). With
+“single cohort” allocation they are tested one at a time, in the order
+of the list; with “multiple simultaneous cohorts” they are tested at
+the same time.
 :::
 
-- Where to allocate after the end of the run-in it it ends due to
-  observing toxicities, either:
+- Where to allocate after the end of the run-in if toxicities were
+  observed during it, either:
 
   - expand the allocation at the combinations where toxicity has been
     observed,
 
   - or at one dose increment below where toxicity has been observed.
+
+::: {.callout-note}
+After a Custom run-in in which toxicities were observed, the first full
+cohorts go to the highest combinations tested in the run-in that are
+not excluded by a toxicity and, if expanding at the toxicity, also to
+the combinations where toxicity was observed. If a toxicity is observed
+at the lowest combination and expansion at the toxicity is not
+selected, there is no combination left to allocate to and the trial
+stops.
+:::
 
 ::: {.callout-note}
 If the run-in ends because it has reached the end of the combinations
@@ -686,11 +709,17 @@ enabled. If they are enabled, then the following may be specified:
   selection if the specified minimum number of cohorts has been
   allocated and completed.
 
-- Minimum toxicities: the trial can only stop for all combinations too
-  toxic if the required minimum number of toxicities have been observed.
-  Whilst all combinations are too toxic but this minimum number of
-  toxicities havs not been observed, subjects are allocated to the
-  lowest dose combination.
+- Minimum toxicities: the trial can only stop with a combination
+  selection if at least this number of toxicities has been observed in
+  total, across all combinations.
+
+::: {.callout-note}
+The minimum subjects on MTT, minimum cohorts accrued and minimum
+toxicities settings only delay stopping with a combination selection.
+They do not affect stopping because all combinations are too toxic: if
+the overdose control leaves no combination to allocate to, the trial
+stops at once.
+:::
 
 ## Response Model {#sec-response-model}
 
