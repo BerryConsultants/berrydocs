@@ -52,6 +52,19 @@ for each group:
 - S – a scaling element, typically set to the expected SD of the
   baseline.
 
+For a subject in the group with baseline $x$, the term
+$\beta(x - C)/S$ is added to the simulated response (at every visit,
+if visits are simulated; with the ITP method it is scaled over the
+visits along with the rest of the response). The SD entered on the Group
+Response tab is the SD before this adjustment, so the simulated final
+responses have SD $\sqrt{\sigma^{2} + \beta^{2}\sigma_{x}^{2}/S^{2}}$,
+where $\sigma$ is the SD entered and $\sigma_{x}$ the SD of the
+simulated baselines, and their mean is shifted by
+$\beta(\mu_{x} - C)/S$, where $\mu_{x}$ is the mean of the simulated
+baselines. The design model estimates a single baseline coefficient for
+all groups, which need not equal Beta, see
+[Baseline adjustment](../design.qmd#baseline-adjustment).
+
 Example – in the above screenshot for the severe group, a baseline of
 mean 55 and SD 5 has been specified – so a centering of 55 and scaling
 of 5 is used. Wishing to simulate an overall SD of 5 in the final change
@@ -396,7 +409,14 @@ first subject comes before that of the second, and so on.
 ```
 
 Simulated subjects will be drawn from this supplied list, with
-replacement, to provide the simulated response values. The treatment
+replacement, to provide the simulated response values. Dropouts are
+then simulated for the sampled subjects in the same way as for subjects
+simulated within FACTS, using the dropout rates of the scenario, so the
+supplied subjects should have complete data and no dropouts of their
+own. The ‘true’ responses used to summarize the simulations, for example
+to calculate the bias and coverage of the estimates, are calculated
+from the supplied data: the mean and SD of the final responses of the
+supplied subjects in each group and arm. The treatment
 response analysis in FACTS will be based on the values supplied – if you
 require the analysis to be on patients change from baseline, then you
 should supply change from baseline values as the subjects’ responses in

@@ -18,6 +18,14 @@ are allocation, the timing of interims, and the criteria for stopping
 groups or the study for early success or futility, and the criteria for
 judging final success or futility of each group and the study. Wherever applicable, this user guide is separated by type of endpoint used (continuous/dichotomous or time-to-event).
 
+At each interim and at the final analysis, FACTS fits the Bayesian model
+(the control and treatment models below and, for a continuous or
+dichotomous endpoint, the longitudinal model) to the data available at
+that time. The posterior is evaluated by MCMC, with each parameter
+updated by Gibbs sampling where possible and by Metropolis-Hastings
+otherwise. This is the same approach as in FACTS Core, see
+[Evaluation of Bayesian Posterior Estimates](../core/design/index.qmd#evaluation-of-bayesian-posterior-estimates).
+
 # Control Model / Hazard Model
 
 :::{.panel-tabset}
@@ -156,11 +164,15 @@ has its own prior, which can be either:
 If a Hierarchical Prior for a control arm (Bayesian Augmented Control)
 is specified for the control arm in a group then the user specifies:
 
-- The sufficient statistics for each historic study to be included,
-  these are: the observed mean response of the control group, the number
-  of subjects in the control group and the SD of the responses across
-  the group. This data can be ‘down-weighted’ by reducing the number of
-  subjects entered relative to the number in the actual study.
+- The sufficient statistics for each historic study to be included.
+  For a continuous endpoint these are: the observed mean response of the
+  control group, the number of subjects in the control group and the SD
+  of the responses across the group. For a dichotomous endpoint they are
+  the number of subjects in the control group and the number of those
+  subjects who responded. This data can be ‘down-weighted’ by reducing
+  the number of subjects (and, for a dichotomous endpoint, the number of
+  responders pro-rata) entered relative to the number in the actual
+  study.
 
 - The hyper-parameters for the hierarchical model. These are the mean
   and standard deviation for a Normally distributed prior for the mean
@@ -691,6 +703,25 @@ for baseline, where Z is standardized baseline score and $\beta$ the
 estimated parameter. The prior for $\beta$ is a Normal distribution
 with user specified mean and standard deviation.
 
+The baseline score $x$ is standardized as $Z = (x - \bar{x})/s_{x}$,
+where $\bar{x}$ and $s_{x}$ are the observed mean and SD of the baseline
+scores of all the subjects recruited so far, pooled over groups and
+arms, and recalculated at each analysis. There is a single $\beta$, common to
+all groups and arms.
+
+If the subject responses are simulated with a baseline adjustment
+$\beta_{VSR}(x - c)/s$ (see Virtual Subject Response \> Baseline), the
+estimate of $\beta$ need not equal $\beta_{VSR}$. Writing
+$x = \bar{x} + s_{x}Z$, the simulated adjustment is
+$\beta_{VSR}(\bar{x} - c)/s + \beta_{VSR}(s_{x}/s)Z$, so the fitted
+$\beta$ estimates $\beta_{VSR}s_{x}/s$, and the shift
+$\beta_{VSR}(\bar{x} - c)/s$ (zero only if $c$ equals the mean
+baseline) is absorbed into the estimated group means.
+The simulation allows a different $\beta_{VSR}$, $c$ and $s$ in each
+group, but the design model fits only one $\beta$, so if
+$\beta_{VSR}/s$ differs across groups the model cannot reproduce it and
+the estimate of $\sigma$ will be larger than the simulated SD.
+
 ### Handling of Missing Data Due to Dropouts
 
 The options are:
@@ -874,10 +905,20 @@ If frequentist analysis is enabled on this tab, the alpha levels can be
 set for the various end-of-trial frequentist analyses. These are output
 in separate results files, and are not available for use within the
 simulations (e.g. for early stopping decisions). Frequentist analysis is
-enabled by default, it increases the computational overhead of
+disabled by default; enabling it increases the computational overhead of
 simulations only slightly.
 
 These tests are performed as two-sided tests for all endpoints and all p-value calculations.
+The exceptions are the within-group p-values for a continuous endpoint
+and the Fisher exact p-values for a dichotomous endpoint, which are
+one-sided p-values for an improvement on treatment (over control, or
+over the historical control response if there is no control arm). In the summary of
+the simulations a group is counted as significant by these tests if the
+p-value is below half the group alpha, which is the same as a two-sided
+test in the direction of benefit.
+
+The overall alpha is used for the tests across groups and the group
+alphas for the tests within each group.
 
 :::{.callout-note collapse="true"}
 
@@ -888,6 +929,92 @@ This differs from FACTS Core, where the frequentist tests are one-sided, testing
 :::
 
 ![Frequentist test parameters](./EDTTE/media/image38.png){#fig-fig38tte}
+
+## Analyses performed
+
+:::{.panel-tabset}
+
+### Continuous
+
+Subjects without a final response are included using their last
+observed visit response (LOCF). Subjects who drop out before their
+first post-baseline visit are excluded. If baseline is included, a
+second analysis is also run in which every subject without a final
+response is included using their baseline value (BOCF); its results are
+in the files with "bocf" in their name. Neither analysis depends on the
+dropout option selected for the Bayesian analysis on the Treatment Model
+tab.
+
+The analysis is an ANCOVA, a linear model fitted by least squares with
+F tests:
+
+- With a control arm the model is Response = Group + Treatment +
+  Group × Treatment, plus Baseline as a covariate if baseline is
+  included. The output gives F test p-values for the group effect, the
+  treatment effect and the group by treatment interaction, the
+  treatment difference in each group with its confidence interval and
+  p-value, and an overall treatment difference (the average of the
+  group differences, weighted by the number of subjects in each group).
+
+- Without a control arm the model is Response = Group, plus Baseline if
+  baseline is included. The output gives the F test p-value for the
+  group effect and, for each group, the difference between the group
+  mean and the group's historical control response, with its confidence
+  interval and p-value.
+
+The baseline covariate is included whenever baseline is included in the
+study, whether or not the Bayesian model is baseline adjusted.
+
+### Dichotomous
+
+Subjects without a final response are included using their last
+observed visit response (LOCF), or as a failure if “Missing data is
+considered failure” is selected on the Treatment Model tab. With LOCF,
+subjects who drop out before their first post-baseline visit are
+excluded.
+
+With a control arm the tests are:
+
+- Across groups: a chi-squared test (with continuity correction)
+  comparing treatment with control, ignoring groups; the Agresti score
+  confidence interval for the difference in response rates, ignoring
+  groups; the Cochran-Mantel-Haenszel test, with groups as strata; the
+  Mantel-Haenszel common odds ratio; a test of whether the odds ratio
+  differs between groups (reported as Breslow-Day); and chi-squared
+  tests of whether the response rate differs between groups, separately
+  within the treatment arms and within the control arms.
+
+- Within each group: chi-squared (with continuity correction), Fisher
+  exact and two-sample binomial (Normal approximation) tests comparing
+  treatment with control, and the difference in response rates with its
+  confidence interval.
+
+Without a control arm the tests are a chi-squared test of whether the
+response rate differs between groups and, within each group, a binomial
+(Normal approximation) test of the response rate against the group's
+historical control rate.
+
+### Time-to-Event
+
+With a control arm the analyses are:
+
+- Across groups: Cox proportional hazards models with group, treatment
+  and group by treatment interaction terms, with likelihood ratio tests
+  for the group effect, the treatment effect and the interaction; an
+  overall hazard ratio (the group hazard ratios averaged on the log
+  scale, weighted by the number of subjects in each group); and a
+  log-rank test stratified by group.
+
+- Within each group: a Cox model of treatment (hazard ratio, confidence
+  interval and Wald p-value) and a log-rank test.
+
+Without a control arm the analyses are a Cox model of group, with a
+likelihood ratio test for the group effect, and, within each group, a
+one-sample log-rank test against the group's historical control hazard
+rates and a test of the ratio of the observed number of events to the
+number expected at the historical rates.
+
+:::
 
 # Longitudinal model
 
@@ -1222,6 +1349,11 @@ On the allocation tab:
 In the example screenshot above, 2:2 randomizations has been specified
 for all groups, giving them 1:1 allocation with a block size of 4.
 
+Each group is randomized separately, in blocks. The block size in a
+group is the sum of the numbers entered for control and treatment, and
+each block contains exactly those numbers of control and treatment
+allocations, in a random order.
+
 
 # Interims
 
@@ -1273,8 +1405,14 @@ interim.
 
 In addition in this section there are options that allow user to specify
 whether to continue to follow-up subjects if a group or the whole study
-stops early, and (if interims are governed by time, completers or
-events) whether interims should continue after full accrual.
+stops early (see [Follow-up after a group or the study stops](#sec-ed-followup)),
+and (if interims are defined by time) whether interims should continue
+after full accrual. By default they do; checking “Discontinue interim
+analysis beyond study enrollment” stops them. Interims defined by information, in terms of
+subjects who have completed, or had the opportunity to complete, a
+visit, take place when their thresholds are reached, whether or not
+accrual is complete. Interims defined by the number of subjects
+recruited cannot take place after full accrual.
 
 In ED adaptation is limited to stopping groups and stopping the whole
 trial, thus while it is sensible to ensure that first interims decisions
@@ -1329,6 +1467,33 @@ in the trial and minimum number subjects recruited in a group) on the
 being acted on too early within specific groups.
 
 :::
+
+## Follow-up after a group or the study stops {#sec-ed-followup}
+
+Two options on the Interims tab control whether subjects already
+recruited continue to be followed up after an early stop:
+
+- “Continue follow-up if group/study stops for early success.” This is
+  checked by default.
+
+- “Continue follow-up if group/study stops for early futility.” This is
+  not checked by default.
+
+The option that applies is the one for the reason of the stop, for
+group stops and study stops alike. A group and the study can stop for
+different reasons, for example a group stops for futility and later the
+study stops for success. For a group that stopped before the study:
+
+- If follow-up is discontinued for the group's reason for stopping, its
+  subjects are no longer followed up from the group stop, whatever the
+  study does later.
+
+- Otherwise its subjects are followed up until the study stops, and
+  after that only if follow-up continues for the study's reason for
+  stopping.
+
+The analyses use only the data collected up to the time follow-up was
+discontinued.
 
 # Success/Futility Criteria
 
@@ -1407,6 +1572,26 @@ Note:
     criteria are met simultaneously, FACTS will only flag one of
     “Success Combined” and “Futile Combined” as being met, corresponding
     to how the outcome of the trial has been flagged.
+
+5.  Once a group has stopped for success or futility it keeps that
+    status, and its stopping criteria are not evaluated again. Its
+    treatment effect is still estimated at later interims, and its stop
+    still counts towards the study stopping rules. A group that stopped
+    recruiting only because it reached its cap, or because the study
+    stopped, can still stop for success or futility at a later interim.
+
+6.  Once the study has stopped for success or futility, the study
+    stopping rules are not evaluated again. If subjects are still being
+    followed up and further interims take place, the stopping rules are
+    still evaluated for the groups that have not stopped for success or
+    futility.
+
+7.  A group's outcome is classed as early success or early futility only
+    if it met its stopping criteria before all of its subjects' data
+    were complete. If it first meets them at an interim when all of its
+    data are already available (possible when interims continue after
+    full accrual), its outcome is decided by the final evaluation, as
+    for a group that recruited to its cap.
 
 :::{.panel-tabset}
 
