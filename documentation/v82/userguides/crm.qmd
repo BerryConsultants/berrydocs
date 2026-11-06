@@ -968,9 +968,18 @@ For all run-in schemes there are options:
 
 -   When run-in ends expand last cohort to full size
 
-    -   If this ***is not*** set then N-CRM model is applied and the next cohort is allocated as close to the target as possibly, restricted by the overdose restrictions and not allocating any higher than the dose reached in the run-in.
+    -   If this ***is not*** set then the N-CRM model is applied when the run-in ends and the next cohort is a full cohort (see below for which dose).
 
-    -   If this option ***is*** set then last allocated small cohort is treated as the start of a full cohort and the remaining subjects are allocated at the same dose. The N-CRM model is then applied and the next cohort allocated according to the overdose restrictions and allocation rules. \[Note it is possible that after observing no toxicities in the run-in or in the expanded cohort, that the overdose control will force a de-escalation in dose, depending on the priors for the model parameters and the overdose control limits\]
+    -   If this option ***is*** set and the run-in ended because of a toxicity, the last allocated small cohort is treated as the start of a full cohort and the remaining subjects are allocated at the same dose. The N-CRM model is then applied and the next cohort allocated according to the overdose restrictions and allocation rules. \[Note it is possible that after observing no toxicities in the expanded cohort, that the overdose control will force a de-escalation in dose, depending on the priors for the model parameters and the overdose control limits\]
+
+    -   If this option ***is*** set but the run-in ended without a toxicity, there is no expansion: the next dose is chosen as if the option were not set. If that dose already has run-in subjects, the cohort is smaller by that number, so that together they make a full cohort.
+
+How the run-in ends with cohort enrolment:
+
+-   **The last run-in dose is reached with no toxicity.** This is the last dose of a custom run-in, the "Run-in cannot go beyond" dose, or the highest dose. The last run-in dose then counts as cleared, even though it has fewer subjects than a full cohort. The next cohort is a full cohort at the N-CRM target, limited by overdose control and by the maximum increment from the last run-in dose. So it may escalate above the last run-in dose, stay there, or go lower. Escalation then continues under the normal rules.
+-   **A toxicity is seen in the run-in.** Without expansion, the next cohort is a full cohort at the N-CRM target, limited by overdose control and not higher than the dose where the run-in ended. If the toxicity was at the lowest dose, this is the lowest dose. However, if no dose meets the overdose control criteria and the minimum number of toxicities for stopping has been reached, the trial stops instead.
+-   With "expand last cohort to full size", a toxicity always leads to the expansion at that dose, including at the lowest dose. The stopping rules are checked after the expansion cohort.
+-   With open enrolment, "expand last cohort to full size" is not available. If the run-in ended without a toxicity, the next dose is the lower of the N-CRM target and one increment above the last run-in dose; after a toxicity it is the lower of the N-CRM target and the dose where the run-in ended.
 
 If simulating 2 groups, and a run-in is specified, group 2 will only use a run-in if on the Study tab the option “Recruit Group 1 and Group 2 together” has been selected. Otherwise only group 1 will use the specified run-in, once group 2 starts it starts with the full cohort (or if open enrollment is being used, the full number of subjects to clear the dose). If using a run-in and recruiting groups 1 and 2 together then both use the same run-in rules, and both will stop on the first toxicity regardless of which group the toxicity occurs in.
 

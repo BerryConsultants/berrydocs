@@ -416,3 +416,35 @@ phase.txt This output file reports the phase of the trial going forward:
 1 -- dose escalation
 
 2 -- trial stopped / complete
+
+# Errors and logging
+
+`bCRM.exe` and `combiF.exe` write all their messages to the console (standard output), including error messages. They write nothing to standard error and do not create a log file. To keep the messages, redirect the output to a file, for example **bCRM.exe a \> output.txt**. When FACTS runs the engine, this output is saved in a file called `stdout` in the results folder.
+
+The amount of output is set by the `verbose` parameter in `init.bcrm` or `init.combi`, not on the command line; the `v` flag only prints the version number. FACTS does not write `verbose` to the parameter file, so the default of 1 is used. To change it, add these two lines to the parameter file:
+
+``` text
+verbose
+0
+```
+
+| Value     | Output                                                                                                    |
+|-----------|-----------------------------------------------------------------------------------------------------------|
+| 0         | Errors only, plus the version and the "Running ... simulations" line                                      |
+| 1         | Default. Adds a short message for each allocation decision                                                |
+| 2 or more | More debugging detail, for example parameters missing from the parameter file and the default value used |
+
+Error messages start with `** ERROR:`. For example, if the parameter file is missing:
+
+``` text
+** ERROR: interface.c, function 'openIn', failed opening file for input: init.bcrm
+```
+
+A line in `subject.csv` that cannot be read gives a `** WARNING:` message and is skipped. The run continues, so check the output for warnings.
+
+Exit codes:
+
+-   0: the run finished normally.
+-   1: the run stopped because of an error, for example a missing parameter file or `subject.csv`, a missing required parameter, or a `d` directory that does not exist. The error message is in the output.
+
+An unknown command-line option is not treated as an error: the engine prints the usage message, does not run, and exits with code 0.
