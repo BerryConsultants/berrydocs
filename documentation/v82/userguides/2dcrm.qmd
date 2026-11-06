@@ -174,13 +174,19 @@ The design changes that are typically considered are:
 - Modify the run-in to be more aggressive if it is taking too many
   subjects and cycles to reach the escalation phase.
 
-  - The ”Huang” diagonals method is the least aggressive, both the
-    “Ivanova” and “Tri-axial” can skip some combinations, finally
-    consider a user specified run-in sequence.
+  - The “Contour” diagonals method is the least aggressive, both the
+    “Row by row” and “Tri-axial” can skip some combinations, finally
+    consider a user specified (“Custom”) run-in sequence.
 
-  - The “Huang” and the “Tri-axial” can make use of the “multiple
-    simultaneous cohorts” option in the run-in phase to test multiple
-    combinations simultaneously.
+  - The “Contour”, “Tri-axial” and “Custom” run-ins can make use of
+    the “multiple simultaneous cohorts” option in the run-in phase to
+    test multiple combinations simultaneously.
+
+::: {.callout-note}
+The design specification and older documentation use the names of
+the original methods: “Huang” is Contour, and “Ivanova” is Row by row
+(run-in) or Walk (escalation).
+:::
 
 - If the escalation phase is too aggressive – incurring too many
   toxicities or selecting combinations with high toxicity true toxicity
@@ -245,7 +251,9 @@ described in [@neuenschwander2008critical]. The model is used to compute the
 posterior probability that the toxicity rate at each combination is in
 one of 4 toxicity bands – “underdosing”, “target toxicity”, “excess
 toxicity” and “unacceptable toxicity”. The boundaries between the bounds
-are settable by the user.
+are settable by the user. With boundaries $t_0 < t_1 < t_2$, a toxicity
+rate $p$ is under-dosing if $p < t_0$, target if $t_0 \le p \le t_1$,
+excess if $t_1 < p \le t_2$ and unacceptable if $p > t_2$.
 
 The posterior probability that the rate is in the target toxicity rate
 is used to target the dose allocation – the method attempts to allocate
@@ -254,6 +262,12 @@ rate is in the “excess toxicity” and “unacceptable” or just the
 “unacceptable” bands can be used to enforce an “overdose control”.
 Combinations with a posterior probability that exceed the specified
 threshold are excluded from selection or allocation.
+
+The two overdose limits are independent and can be used together. A
+combination is excluded if the posterior probability of excess or
+unacceptable toxicity is at least the first limit, or if the posterior
+probability of unacceptable toxicity is at least the second limit,
+for whichever limits are switched on.
 
 The dose combinations are explored in two phases:
 
@@ -356,6 +370,19 @@ Row by row
 2, then increments drug 2, steps back a specified number of doses in
 drug 1 and then increments through the doses of drug 1 again. This
 method favours escalation of drug 1 over escalation of drug 2.
+
+    - It starts at the lowest available combination and tests one
+      combination at a time, moving up in drug 1 along the row.
+    - A row ends at a toxicity, at the last dose of drug 1, or when the
+      next dose of drug 1 is not available. The run-in then moves up
+      one dose of drug 2 and steps back the specified number of drug 1
+      doses from where the row ended (the combination with the
+      toxicity, if there was one). If that combination is not
+      available, the nearest available dose of drug 1 on the new row
+      is used.
+    - The run-in ends after the highest dose of drug 2, if a row ends
+      at the lowest dose of drug 1 (there is nothing to step back
+      from), or if the new row has no available combination.
 
 Tri-axial
 : This explores the combinations on each axis and on the
@@ -723,7 +750,9 @@ On this tab the user can specify
   - If “None” is specified then the table for specifying specific dose
     combinations is used to specify the dose combination(s) to be
     assigned to the starting cohort(s). These will be the full sized
-    cohorts used in the escalation phase.
+    cohorts used in the escalation phase. If more than one combination
+    is specified, they are all allocated at the same time, whatever
+    the dose allocation scheme.
 
 - The cohort size to use in the run-in. A size of ‘1’ yields a ‘single
   patient run-in’, but other values are possible and may give better
@@ -745,13 +774,20 @@ On this tab the user can specify
 - The dose allocation scheme: (only applies to the Contour, Tri-axial
   and Custom run-in schemes):
 
-  - allocate a single cohort;
+  - allocate a single cohort (“Single cohort on single dose”): the
+    whole cohort goes to the first of the next possible combinations,
+    taken in order of drug 1 dose and then drug 2 dose (for Custom, in
+    the order of the list);
 
-  - allocate the cohort across the next possible dose combinations;
+  - allocate the cohort across the next possible dose combinations
+    (“Divide cohort between doses”): each subject in the cohort is
+    allocated at random, with equal probability, to one of the next
+    possible combinations;
 
-  - or allocate a cohort to each of the next dose combinations and
-    optionally specify a maximum number of cohorts / dose combinations
-    that can be tested at a single step.
+  - or allocate a cohort to each of the next dose combinations
+    (“Multiple simultaneous cohorts”) and optionally specify a maximum
+    number of cohorts / dose combinations that can be tested at a
+    single step.
 
 ::: {.callout-note}
 
@@ -775,12 +811,13 @@ the same time.
   - or at one dose increment below where toxicity has been observed.
 
 ::: {.callout-note}
-For the Contour and Tri-axial run-ins, if toxicities were observed the
-first full cohorts go to:
+For the Contour, Row by row and Tri-axial run-ins, if toxicities were
+observed the first full cohorts go to:
 
 - with “expand at toxicity”: for Contour, each combination where a
-  toxicity was observed; for Tri-axial, the highest of all the
-  combinations tested in the run-in, including those with a toxicity;
+  toxicity was observed; for Row by row and Tri-axial, the highest of
+  all the combinations tested in the run-in, including those with a
+  toxicity;
 - with “one dose increment below”: the highest of the combinations
   tested in the run-in that did not have a toxicity (for Contour,
   those not excluded by a toxicity).
@@ -840,9 +877,13 @@ On this tab the user can specify:
 - The dose allocation scheme: (only applies to the “Contour” and
   “Tri-axial” schemes):
 
-  - allocate a single cohort;
+  - allocate a single cohort: the whole cohort goes to the first of
+    the target combinations, taken in order of drug 1 dose and then
+    drug 2 dose;
 
-  - allocate the cohort across the next possible doses;
+  - allocate the cohort across the next possible doses: each subject
+    is allocated at random, with equal probability, to one of the
+    target combinations;
 
   - or allocate a cohort to each of the next doses.
 
@@ -966,9 +1007,21 @@ slightly (such as 0.0001).
 
 Specifying the Priors: The priors for each pair of parameters (α,β) for
 the response model for each drug are specified via a bivariate normal
-distribution (as in the single drug N-CRM), with a separate mean and SD
-for α and β, and a correlation term ρ (Rho). The prior for the
-interaction term η (Eta) is the mean and Sd of a Normal distribution. Using a Normal prior for Eta allows Eta to be -ve, modeling a negative interaction between the drugs and resulting in a non-monotonic surface. Unless a negative interaction is thought possible, it is recommended that the lognormal prior for Eta is used
+distribution on (ln(α), ln(β)) (as in the single drug N-CRM), with a
+separate mean and SD for ln(α) and ln(β), and a correlation term ρ
+(Rho). The prior for the interaction term η (Eta) is specified by a
+mean and SD:
+
+- With “Use lognormal prior for Eta” checked (the default for new
+  designs), these are the mean and SD of ln(η), so η is always
+  positive. The label in the Priors panel changes to “ln(Eta)”.
+- Unchecked, they are the mean and SD of a Normal prior on η itself.
+  This allows η to be negative, modelling a negative interaction
+  between the drugs and resulting in a non-monotonic surface.
+
+Unless a negative interaction is thought possible, it is recommended
+that the lognormal prior for Eta is used. See
+[Dose-toxicity model](#sec-2dcrm-model) for the model equations.
 
 Specifying the dose transform: For both drugs the transformation of the
 dose strengths to a range of values suited to the model is specified.
@@ -1783,8 +1836,11 @@ the following fields/columns:
   will belong to the same cohort.
 
 - Dose 1, Dose 2: these should be the **strength** of the dose of Drug 1
-  and Drug 2 that the subject was treated with, doses are indexed 1, 2,
-  3, …. Max dose.
+  and Drug 2 that the subject was treated with, as defined on the
+  Treatment Arms tab. FACTS checks each value against the available
+  strengths and converts it to a dose index for the design engine.
+  (When running the design engine directly, its subject.csv file uses
+  dose indices instead; see the execution guide.)
 
 - Toxicity: this value indicates whether the subject had a dose limiting
   toxicity or not. It should be 0 (to indicate no toxicity) or 1 (to
