@@ -596,6 +596,18 @@ baseline scores
 s
 : a scaling element, typically set to the expected SD of the baseline.
 
+The adjustment is the last step of simulating a participant's response.
+If $Y$ is the final response simulated from the Response Specification
+(with the baseline added back if the response is change from baseline)
+and $X$ is the participant's simulated baseline, the response used is
+$$Y' = Y + \beta\,\frac{X - c}{s}$$
+This adds $\beta^2\,\text{Var}(X)/s^2$ to the variance of the response.
+If $c$ is not equal to the mean of the simulated baselines, it also shifts
+the mean response of every arm by $\beta\,(\text{E}[X] - c)/s$. Check what
+mean and variance of the response your choice of $\beta$, $c$ and $s$
+implies. The same mechanism is used in FACTS Core, see the
+[Core Baseline VSR](./core/vsr/continuous.qmd#baseline-vsr).
+
 Example -- in the above screenshot a baseline of mean 25 and SD 10 has
 been specified -- so a centering of 25 and scaling of 10 is used.
 Wishing to simulate an overall SD of 5 in the final change from baseline
@@ -608,8 +620,8 @@ follows:
 -   The SD of the simulated response is set to 2.89
     $\sqrt{\left( 25*\frac{1}{3} \right)}$
 
--   The SD of the scaled baseline score is 1, so to contribute half the
-    final variance of 25, Beta is set to 4.08
+-   The SD of the scaled baseline score is 1, so to contribute two-thirds
+    of the final variance of 25, Beta is set to 4.08
     $\sqrt{\left( 25*\frac{2}{3} \right)}$
 
 -   Note that when simulating a baseline effect in this way, limiting
@@ -831,6 +843,16 @@ calculation. The options for dropouts are:
 The Design tab sets up prior distributions for the parameters,
 determines the participant allocation scheme, and establishes
 decision-making timing and criteria.
+
+At every update and at the final analysis, the model defined on the
+Control Response and Treatment Response tabs is fitted by MCMC to the
+final responses available at that time. Because there is no longitudinal
+model, participants who have not yet reached their final visit do not
+contribute. Dropouts are handled as described under
+[Treatment Response](#treatment-response). The MCMC is controlled by the
+[MCMC Settings](#mcmc-settings). The general approach is the same as in
+FACTS Core, see [Evaluation of Bayesian Posterior
+Estimates](./core/design/index.qmd#evaluation-of-bayesian-posterior-estimates).
 
 ## Control Response
 
