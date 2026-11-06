@@ -267,13 +267,89 @@ The dose combinations are explored in two phases:
     highest probability of having a toxicity rate in the target toxicity
     range using dose escalation, limited by dose escalation rules.
 
+### Dose-toxicity model {#sec-2dcrm-model}
+
+Each dose strength $d$ of a drug is first transformed to $\hat{x}$,
+using either the dose ratio $\hat{x} = d/d^*$ or the linear transform
+$\hat{x} = e^{d-d^*}$, where $d^*$ is that drug's reference dose (see
+[Response Model](#sec-response-model)).
+
+For each drug on its own, the toxicity rate follows the two-parameter
+logistic model used in N-CRM:
+
+$$\text{logit}\left(\pi_k\right) = \ln(\alpha_k) + \beta_k \ln(\hat{x}_k), \quad k = 1, 2$$
+
+With no interaction, the toxicity rate of a combination is the
+probability that at least one of the drugs causes a toxicity,
+$\pi_0 = \pi_1 + \pi_2 - \pi_1\pi_2$. The interaction parameter $\eta$
+multiplies the odds of this rate by $e^{\eta \hat{x}_1 \hat{x}_2}$:
+
+$$\text{logit}\left(\pi(\hat{x}_1, \hat{x}_2)\right) = \text{logit}\left(\pi_0\right) + \eta\, \hat{x}_1 \hat{x}_2$$
+
+So $\eta$ is the log odds ratio, relative to no interaction, at the
+reference doses of both drugs ($\hat{x}_1 = \hat{x}_2 = 1$). A positive
+$\eta$ means the combination is more toxic than no interaction would
+predict, and a negative $\eta$ means it is less toxic. The interaction
+vanishes when either drug is absent:
+
+- A transformed dose $\hat{x}$ below 0.001 is treated as 0 (the drug is
+  absent).
+- If one drug is absent, the toxicity rate is the other drug's
+  single-agent rate.
+- If both drugs are absent, the toxicity rate is 0, before the
+  rescaling below.
+
+Finally, the rate is rescaled to lie between the minimum and maximum
+asymptotes specified on the Response Model tab:
+
+$$p = p_{\min} + (p_{\max} - p_{\min})\,\pi$$
+
+The priors are:
+
+- For each drug, $(\ln \alpha_k, \ln \beta_k)$ has a bivariate normal
+  prior with the specified means, SDs and correlation $\rho$. So
+  $\beta_k > 0$ and toxicity increases with the dose of each drug on
+  its own.
+- If "Use lognormal prior for Eta" is selected (the default for new
+  designs), $\ln \eta \sim N(\mu_\eta, \sigma_\eta^2)$, so $\eta > 0$.
+  Otherwise $\eta \sim N(\mu_\eta, \sigma_\eta^2)$, which allows a
+  negative interaction and a toxicity surface that does not increase
+  with dose everywhere.
+
+### Terminology {#sec-2dcrm-terms}
+
+The run-in and escalation rules assume that toxicity increases with the
+dose of each drug, and compare combinations dose by dose:
+
+- A combination is **at or below** another if neither drug's dose is
+  higher than in the other. It is **above** another if it is at or
+  above it in both drugs and is not the same combination.
+
+- A combination **admits** every combination at or below it: if it is
+  acceptable to give a combination, it is acceptable to give any
+  combination with no more of either drug.
+
+- During the run-in, a combination where a toxicity has been observed
+  **excludes** itself and every combination above it.
+
+- The **highest combinations** of a set are those that are not below
+  another combination in the set (the design specification calls this
+  the "admitting set"). Between them they admit every combination in
+  the set.
+
 ### Run-in methods {#sec-runins}
 
 There are 4 run-in methods available:
 
-Contour 
+Contour
 : This explores the reverse diagonals, assuming that the expected
-toxicity at the dose increments of the two doses are roughly equal.
+toxicity at the dose increments of the two doses are roughly equal. A
+reverse diagonal is the set of combinations with the same sum of drug 1
+and drug 2 dose levels. At each step the run-in finds the lowest
+diagonal that still has an untested combination that is within the
+run-in range and not excluded by a toxicity, and allocates small
+cohorts to those combinations, as set by the dose allocation scheme.
+It ends when no such combination is left.
 
 Row by row 
 : This explores the doses of drug 1 at the first dose of drug
@@ -281,11 +357,21 @@ Row by row
 drug 1 and then increments through the doses of drug 1 again. This
 method favours escalation of drug 1 over escalation of drug 2.
 
-Tri-axial 
+Tri-axial
 : This explores the combinations on each axis and on the
 diagonal. For small numbers of dose increments it is similar to the
-Huang run-in. For larger numbers of dose increments it is more
+Contour run-in. For larger numbers of dose increments it is more
 parsimonious.
+
+    - The two axes are drug 1 at the lowest available dose of drug 2,
+      and drug 2 at the lowest available dose of drug 1. They are
+      explored in parallel, one dose level at a time.
+    - The diagonal is explored as a staircase: (2,2), (3,2), (3,3),
+      (4,3), and so on. A diagonal combination is tested only after the
+      axis combinations at its drug 1 dose and at its drug 2 dose have
+      been tested; for example (3,3) waits for (3,1) and (1,3).
+    - Combinations excluded by a toxicity are skipped. The run-in ends
+      when nothing is left to test within the run-in range.
 
 Custom
 : This explores a user-specified list of combinations. A combination
@@ -309,7 +395,11 @@ basic framework:
     lesser dose combinations are found.
 
 2.  The dose combinations that can be escalated to beyond these are
-    found.
+    found. From a combination with at least the minimum number of
+    subjects, the dose of one drug at a time can be raised by up to the
+    maximum dose increment. Both drugs cannot be raised in the same
+    step. If the combination reached is excluded on the Exclude tab,
+    the step is shortened.
 
 3.  The dose combinations where the overdose control limits are exceeded
     are removed.
@@ -319,23 +409,92 @@ basic framework:
 
 The 4 methods are:
 
-Contour 
+Contour
 : This explores every MTT on every row and every column
 (frequently these overlap, but not necessarily).
 
-Walk 
+    1. The candidates are the tested combinations, the combinations that
+       can be escalated to from them (step 2 above), and every
+       combination these admit.
+    2. Candidates excluded by overdose control are removed.
+    3. On each row (fixed drug 1 dose) and each column (fixed drug 2
+       dose), the candidate with the highest posterior probability of
+       a toxicity rate in the target band is that row's or column's
+       MTT. Candidates that are above both their row's MTT and their
+       column's MTT are removed.
+    4. A cohort is allocated to each of the highest remaining
+       combinations that has fewer than the maximum subjects on MTT.
+       The trial stops when all of them have the maximum.
+
+Walk
 : This explores the MTT that is at or adjacent to the last
 combination tested (excluding the dose that is an increment in both
 drugs from the last combination tested).
 
-Tri-axial 
+    - For the first allocation after the run-in, the drug 2 doses are
+      searched from the lowest upwards. On the first drug 2 dose that
+      has a combination admitted by a tested combination and not
+      excluded by overdose control, the cohort goes to the one of those
+      with the highest probability of target toxicity.
+    - After that, the candidates are the last combination allocated
+      and its neighbours one dose level away in either or both drugs,
+      except the combination one level higher in both. The cohort goes
+      to the candidate with the highest probability of target toxicity
+      among those not excluded by overdose control. If every candidate
+      is excluded, the search moves one level down (in both drugs where
+      possible) and repeats.
+    - The minimum number of subjects and the maximum dose increment
+      do not apply to Walk.
+    - The trial stops when the chosen combination already has the
+      maximum subjects on MTT.
+
+Tri-axial
 : This explores the MTT on each axis and on the diagonal. Once
 these have the required maximum subjects on MTT, any combinations off
 the axis and diagonal that are the MTT are explored.
 
-Allocate MTT 
+    - The two axes and the diagonal are the same lines as in the
+      Tri-axial run-in. Each line is treated separately and gets at
+      most one cohort per step.
+    - Escalation along a line is limited by the minimum number of
+      subjects and the maximum dose increment. On the diagonal, a step
+      up in both drugs counts as two increments unless the combination
+      one step up in drug 1 alone already has the minimum number of
+      subjects, so with an increment of 1 the diagonal is climbed as a
+      staircase.
+    - A line gets no more cohorts once its chosen combination has the
+      maximum subjects on MTT.
+    - When no line gets a cohort, the cohort is allocated by the
+      Contour rules instead. The lines are reconsidered at every step,
+      so allocation returns to a line if its choice changes.
+
+Allocate MTT
 : This allocates to the combination that is the overall MTT
 of all the combinations that it is permitted to allocate to.
+
+### Selected MTT {#sec-selected-mtt}
+
+The combinations reported as the selected MTT at the end of a
+simulation are the targets of the last allocation decision. They are
+the “Sel MTT” columns of the simulations file, and the basis of the
+Mean Pr(Selected MTT) graph and the related summary results.
+
+- Contour: the highest remaining combinations in the last decision
+  (step 4 above), including any that already have the maximum
+  subjects on MTT.
+- Tri-axial: the combinations allocated to on the lines, or the
+  Contour targets once the lines have finished.
+- Walk and Allocate to MTT: the single combination chosen.
+
+How up to date the selection is depends on why the trial ended:
+
+- If the trial stopped because a stopping rule was met, or because no
+  combination could be allocated, the last decision used all the data.
+- If the trial stopped because the maximum number of subjects was
+  reached, no decision is made after the final cohort's results. The
+  selected MTT is the target that the final cohort was allocated to,
+  and it is not re-evaluated with that cohort's results.
+- If the trial ended during the run-in, no MTT is selected.
 
 ## Outstanding Issues / Absent Features
 
@@ -616,6 +775,21 @@ the same time.
   - or at one dose increment below where toxicity has been observed.
 
 ::: {.callout-note}
+For the Contour and Tri-axial run-ins, if toxicities were observed the
+first full cohorts go to:
+
+- with “expand at toxicity”: for Contour, each combination where a
+  toxicity was observed; for Tri-axial, the highest of all the
+  combinations tested in the run-in, including those with a toxicity;
+- with “one dose increment below”: the highest of the combinations
+  tested in the run-in that did not have a toxicity (for Contour,
+  those not excluded by a toxicity).
+
+If this leaves no combination, because the toxicity was at the first
+combination tested, that combination is given a full cohort.
+:::
+
+::: {.callout-note}
 After a Custom run-in in which toxicities were observed, the first full
 cohorts go to the highest combinations tested in the run-in that are
 not excluded by a toxicity and, if expanding at the toxicity, also to
@@ -629,7 +803,13 @@ stops.
 If the run-in ends because it has reached the end of the combinations
 to be tested during run-in without seeing a toxicity, then dose
 escalation starts by expanding at the allocation of the maximum dose
-combination(s).
+combination(s), that is, the highest combinations of the run-in range.
+:::
+
+::: {.callout-note}
+With the “Allocate to MTT” escalation scheme no first full cohorts are
+added at the end of the run-in, whichever option is chosen here.
+Escalation starts straight away by allocating to the model's MTT.
 :::
 
 - If use of a Custom run-in has been specified, then the sequence of
