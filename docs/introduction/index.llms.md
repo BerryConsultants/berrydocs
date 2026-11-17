@@ -1,0 +1,10 @@
+Welcome to the Introduction section — your starting point for learning how to use FACTS. Here, you’ll find everything you need to understand the fundamentals of our software - from step-by-step tutorials and guided walkthroughs to relevant webinars and other community resources.
+
+## What You’ll Find Here
+
+- Getting Started: Begin with the fundamentals. Understand the initial setup steps, such as [downloading](../introduction/gettingStarted/downloadInstructions.llms.md) and [installing](../introduction/gettingStarted/installation.llms.md) FACTS.
+- [Webinars](../introduction/webinars.llms.md): Explore in-depth demonstrations led by our experts. Gain clarity on complex features, see best practices in action, and deepen your FACTS knowledge.
+- Tutorials: Learn how FACTS can create value for you at the design stage of a clinical trial or when conducting research. Navigate to the dropdown menu on the left to see tutorials for different types of clinical trials, from early to late stage.
+- [Academic Materials](../introduction/references.llms.md): See how other teams and users are leveraging FACTS to achieve their goals. A broad collection of papers using FACTS, slides from presentations and other materials.
+
+If you have any questions, don’t hesitate to [contact us](../contact/index.llms.md).

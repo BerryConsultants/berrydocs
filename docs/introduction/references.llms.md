@@ -1,0 +1,7 @@
+## Selected Papers
+
+## Selected Slides
+
+## All Papers citing FACTS
+
+For a comprehensive overview of all academic papers citing FACTS, click [here](https://scholar.google.com/scholar?start=0&q=%22Fixed+and+Adaptive+Clinical+Trial+Simulator%22+&hl=en&as_sdt=0,5) (you will be redirected to Google Scholar).

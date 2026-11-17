@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>FACTS Forward Simulation</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../media/FACTS_icon.png" rel="icon" type="image/png">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-f24641f9662b15e1479722971e972498.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<!-- Roboto Serif -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
+
+<!-- Roboto Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WLMVE7GR4S');
+</script>
+
+
+<link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../media/FACTSLogo.png" alt="" class="navbar-logo light-content">
+    <img src="../../../media/FACTSLogo.png" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../introduction/index.html"> 
+<span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../documentation/index.html"> 
+<span class="menu-text">Documentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../get/index.html"> 
+<span class="menu-text">Get FACTS</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../contact/index.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">FACTS Forward Simulation</h1>
+            <p class="subtitle lead">Execution Guide</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#forward-simulation-mode-usage-for-facts-core-engines" id="toc-forward-simulation-mode-usage-for-facts-core-engines" class="nav-link" data-scroll-target="#forward-simulation-mode-usage-for-facts-core-engines"><span class="header-section-number">2</span> Forward Simulation Mode Usage for FACTS Core Engines</a>
+  <ul>
+  <li><a href="#input" id="toc-input" class="nav-link" data-scroll-target="#input"><span class="header-section-number">2.1</span> Input</a></li>
+  <li><a href="#the-trial-specification-param-file" id="toc-the-trial-specification-param-file" class="nav-link" data-scroll-target="#the-trial-specification-param-file"><span class="header-section-number">2.2</span> The trial specification (‘param’) file</a></li>
+  <li><a href="#the-forward-simulation-fsim-parameter-file" id="toc-the-forward-simulation-fsim-parameter-file" class="nav-link" data-scroll-target="#the-forward-simulation-fsim-parameter-file"><span class="header-section-number">2.3</span> The Forward Simulation (‘fsim’) parameter file</a></li>
+  <li><a href="#patient-data-file" id="toc-patient-data-file" class="nav-link" data-scroll-target="#patient-data-file"><span class="header-section-number">2.4</span> Patient Data File</a></li>
+  <li><a href="#forward-simulation-mode" id="toc-forward-simulation-mode" class="nav-link" data-scroll-target="#forward-simulation-mode"><span class="header-section-number">2.5</span> Forward Simulation Mode</a></li>
+  <li><a href="#output-files" id="toc-output-files" class="nav-link" data-scroll-target="#output-files"><span class="header-section-number">2.6</span> Output Files</a></li>
+  <li><a href="#forward-simulation-implementation-note" id="toc-forward-simulation-implementation-note" class="nav-link" data-scroll-target="#forward-simulation-implementation-note"><span class="header-section-number">2.7</span> Forward Simulation Implementation note</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>This document describes the detailed functionality for running forward simulations using FACTS<sup>TM</sup> (Fixed and Adaptive Clinical Trial Simulator) via the command line execution of the FACTS engines (we refer to this as Forward Simulation Mode). It describes the functionality for all four of the FACTS Core engines that have forward simulation mode.</p>
+<p>The design engines are simple command line programs that require no complex installation. They are supplied in a ‘Zip’ archive from which they should be extracted to an easy to locate directory.</p>
+<p>For example:</p>
+<pre class="text"><code>C:\Program Files\BerryConsultants\FACTS 7.1.0\bin</code></pre>
+<p>This places them in a subdirectory (‘Bin’) in the standard FACTS install directory.</p>
+<p>The following files are available:</p>
+<ul>
+<li><p>aipf_contin.exe - the Enrichment Design engine for a continuous endpoint (not used here)</p></li>
+<li><p>aipf_dichot.exe the Enrichment Design engine for a dichotomous endpoint (not used here)</p></li>
+<li><p>aipf_tte.exe the Enrichment Design engine for a time-to-event endpoint (not used here)</p></li>
+<li><p>contin.exe the FACTS Core engine for a continuous endpoint</p></li>
+<li><p>bCRM.exe the Dose Escalation engine (not used here)</p></li>
+<li><p>dichot.exe the FACTS Core engine for a dichotomous endpoint</p></li>
+<li><p>multep.exe the FACTS Core engine for a multiple endpoints</p></li>
+<li><p>tte.exe the FACTS Core engine for a time-to-event endpoint</p></li>
+</ul>
+<p>To run the engines, open a command prompt window. Navigate to the directory where the various input files for the run are located and enter the command, for example:</p>
+<pre class="text"><code>C:\Program Files (x86)\BerryConsultants\FACTS 7.1.0\Bin\contin.exe p n 100 –-current-week 25 –-interim 2</code></pre>
+<p>For this example, three files are required:</p>
+<ol type="1">
+<li><p>a copy of the nuk1_e.param file from a simulation results directory of the FACTS design to be used; and</p></li>
+<li><p>a patients data file (the formats of the patients data files are given below).</p></li>
+<li><p>a ‘forward simulation parameter file’ so the simulation knows the ‘current time’ in the trial and which arms (if any) have been dropped and when</p></li>
+</ol>
+<p>The engine will output the requested number of Sim Forward patients files (100 in the example above)..</p>
+<p>The Enrichment Design and Dose Escalation engines do not include a forward simulation capability.</p>
+</section>
+<section id="forward-simulation-mode-usage-for-facts-core-engines" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Forward Simulation Mode Usage for FACTS Core Engines</h1>
+<section id="input" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="input"><span class="header-section-number">2.1</span> Input</h2>
+<p>The execution mode can be invoked from the command line by running the engine executable program with the appropriate option flags. The user will also have to provide a dataset with data on subjects enrolled in the trial at the time the analysis is required, and a parameter file describing the trial design, a short data file fsim.param describing the state of the trial and some additional inputs via command line options. The required input files and command-line options are as follows.</p>
+</section>
+<section id="the-trial-specification-param-file" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="the-trial-specification-param-file"><span class="header-section-number">2.2</span> The trial specification (‘param’) file</h2>
+<p>The trial specification parameters should be provided in a file named nuk1_e.param (C/ME), bin1_e.param (D) or tte1_e.param (TTE) in the directory in which the executable is run (or some other file name may be specified with the ‘f’ option). This is the file produced by the GUI in the design/simulation phase of the trial.</p>
+</section>
+<section id="the-forward-simulation-fsim-parameter-file" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="the-forward-simulation-fsim-parameter-file"><span class="header-section-number">2.3</span> The Forward Simulation (‘fsim’) parameter file</h2>
+<p>The forward simulation specification parameters should be provided in a file named contin_fsim.param, dichot_fsim.param, me_fsim.param or tte_fsim.param in the directory in which the executable is run (or some other file name may be specified with the --fsimparam option). The parameters to be provided are:</p>
+<ul>
+<li><p><strong>fsim_start_week</strong> : The time (in weeks) when the data were recorded and from when the forward simulation should begin</p></li>
+<li><p><strong>arm_dropped</strong> (Optional) : A comma separated list of 0/1 of length = number of dose arms, that provide an indicator of whether a particular arm has already been dropped at the present time.</p></li>
+<li><p><strong>arm_drop_week</strong> (Optional if <strong>arm_dropped</strong> is not specified) : The arm drop times in weeks corresponding to the 1’s in arm_dropped (the drop times for arms that have not been dropped should be set to -9999).</p></li>
+</ul>
+<p>Lines beginning with a ‘#’ and are skipped. The parameters <strong>arm_dropped/arm_drop_week</strong> may be omitted if there is no arm dropping in the study or if no arms have been dropped to date (the engine will issue a warning which may be ignored). A sample file might look like this:</p>
+<pre class="text"><code>#======================================
+fsim_start_week=17.43
+# 4arm study where arm #2 has been dropped
+arm_dropped=0,1,0,0
+arm_drop_week=-9999,12.14,-9999,-9999
+#======================================</code></pre>
+<p>Note that “fsim_start_week” and “–current-week” will usually have the same or similar values – the former is the time from which further recruitment occurs and the latter the time of the current data. It must be supplied in addition to fsim_start_week.</p>
+</section>
+<section id="patient-data-file" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="patient-data-file"><span class="header-section-number">2.4</span> Patient Data File</h2>
+<p>This format is identical to that of the patientsNNNNN.csv output files from simulation mode. Note that all columns should be present even if not used (e.g.&nbsp;baseline) in the particular design. It is recommended you supply the value -9999 in unused columns, this makes it clear to someone subsequently using the file that this is intended as an unused data column – the exception to this is the region id, here just supply the value “1”.</p>
+<ul>
+<li><p>The subject data in a file named patients.dat should be provided in the directory in which the executable is run (or some other file name may be specified with the --fsimdata option).</p></li>
+<li><p>It is a text file with comma separated fields. Empty lines and lines beginning with ‘#’ will be ignored.</p></li>
+<li><p>Each subject’s data appears on a single line with comma separated values. For continuous and dichotomous these are:</p>
+<ul>
+<li><p>Subject ID: An integer value that is not used other than to identify a subject’s data records.</p></li>
+<li><p>Region ID: The subject’s region ID (1…R).</p></li>
+<li><p>Enrollment Date: A non-negative number of days.</p></li>
+<li><p>Dose Index: Subject’s dose arm (1...D)</p></li>
+<li><p>Last Visit #: Last observed visit. Zero to number of visits.</p></li>
+<li><p>Dropout indicator: 1=dropped out, 0 otherwise</p></li>
+<li><p>Baseline: Not used if no baseline (supply -9999)</p></li>
+</ul></li>
+</ul>
+<blockquote class="blockquote">
+<p>For each scheduled visit:</p>
+</blockquote>
+<ul>
+<li>Response at visit. Ignored if after Last Visit # (supply -9999). For dichotomous endpoints these are 0 or 1 (or -1 if restricted Markov). Note that in C/ME if the analysis is to be conducted on change from baseline and baseline is present, the Response column is expected to contain the original response and not difference from baseline.</li>
+</ul>
+<!-- -->
+<ul>
+<li><p>The multiple endpoint format is identical except that columns are needed for each endpoint:</p>
+<ul>
+<li><p>Subject ID</p></li>
+<li><p>Region ID</p></li>
+<li><p>Enrollment Date</p></li>
+<li><p>Dose Index</p></li>
+<li><p>Last Visit #: Zero to number of overall visits.</p></li>
+<li><p>Dropout indicator</p></li>
+</ul></li>
+</ul>
+<blockquote class="blockquote">
+<p>Then for each endpoint:</p>
+</blockquote>
+<ul>
+<li><p>Last visit observed for the endpoint: 0 to the number of visits used for the endpoint.</p></li>
+<li><p>Baseline: Not used if no baseline (supply -9999)</p></li>
+</ul>
+<blockquote class="blockquote">
+<p>For each visit used by the endpoint:</p>
+</blockquote>
+<ul>
+<li>Response</li>
+</ul>
+<!-- -->
+<ul>
+<li><p>The time to event format is simpler in that there are no visits, but there are predictor columns:</p>
+<ul>
+<li><p>Subject ID</p></li>
+<li><p>Region ID</p></li>
+<li><p>Enrollment Date:</p></li>
+<li><p>Dose:</p></li>
+<li><p>Dropout indicator: 1=dropped out, 0 otherwise</p></li>
+<li><p>Duration: Duration until censoring (outcome=0) or time of event (outcome=1)</p></li>
+<li><p>Outcome: 0=censored, 1=event observed, -1=event not yet observed/not yet censored (this will cause forward simulation to simulate the remainder of the subject’s observation time).</p></li>
+<li><p>Predictor value: A continuous value for a continuous predictor. 0 or 1 for a dichotomous predictor. For either a continuous or dichotomous predictor, supply -9999 if not yet observed or censored by the primary endpoint. As per Duration for a time to event predictor. Unused if there is no predictor (supply -9999).</p></li>
+<li><p>Pred Outcome: 1 if the predictor value/event has been observed. 0 if censored (the subject dropped out before the predictor value was observed, or censored by the primary endpoint if either a continuous or dichotomous predictor). -1 if the predictor value/event not yet observed/not yet censored. Unused if there is no predictor (supply -9999).</p></li>
+</ul></li>
+</ul>
+<p>The subject data provided must be compatible with the trial setup specified in the ‘param’ file.</p>
+<p>Where fields are unused, a numeric value still needs to be supplied but the exact value supplied is immaterial (though It is recommended that the value supplied is an integer).</p>
+</section>
+<section id="forward-simulation-mode" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="forward-simulation-mode"><span class="header-section-number">2.5</span> Forward Simulation Mode</h2>
+<p>The engine executables can be run with the following command line parameters:</p>
+<ul>
+<li><p><strong>p</strong> : Required. Invokes forward simulation mode</p></li>
+<li><p><strong>n &lt;NNN&gt;</strong> : Specifies how many trials to simulate forward. NNN patients files will be produced at the end of the run giving dose and region allocation for the existing and simulated subjects. (Default is NNN=5)</p></li>
+<li><p><strong>f &lt;paramfilename&gt;</strong> : Specify the ‘param’ file. Default is nuk1_e.param (C/ME), bin1_e.param (D), or tte1_e.param (TTE).</p></li>
+<li><p><strong>--interim &lt;I&gt;</strong> : Where I is the interim number, an integer number should be supplied, there is no check that the value supplied is an integer, and the design engine behaviour is undefined if that is not the case.</p></li>
+<li><p><strong>--current-week &lt;W&gt;</strong> : Where &lt;W&gt; is the current time in weeks (this parameter is required and should be correct with respect to the data submitted; if the specified date and the data supplied are not in alignment, the design engine’s behaviour is undefined).</p></li>
+<li><p><strong>--fsimparam &lt;forwardsimspecsfilename&gt;</strong> : Default is contin_fsim.param (C), dichot_fsim.param (D), me_fsim.param (ME), or tte_fsim.param (TTE).</p></li>
+<li><p><strong>--fsimdata &lt;subjectdatafilename&gt;</strong> : Default is patients.dat</p></li>
+<li><p><strong>--noadapt :</strong> If this is specified, then adaptive features of the trial are turned off in the forward simulation.</p></li>
+</ul>
+</section>
+<section id="output-files" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="output-files"><span class="header-section-number">2.6</span> Output Files</h2>
+<ul>
+<li><strong>patientsNNNNN</strong>.csv, the complete subjects data for each of the forward simulations (i.e including the input subjects plus the simulated forward data. The format of the file is the same as the standard patientsNNNNN.csv FACTS outputs when simulating from scratch.</li>
+</ul>
+</section>
+<section id="forward-simulation-implementation-note" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="forward-simulation-implementation-note"><span class="header-section-number">2.7</span> Forward Simulation Implementation note</h2>
+<p>In order to create a complete internal history of the current trial, the forward sim engine always performs an interim analysis using the data supplied invoke it and the time of the analysis is taken from the “–current-week” parameter. FACTS then proceeds to do the forward simulation according to the interim schedule from fsim_start_week onwards. The engine does not have detailed history of the trial conduct until the current time so it needs to do an interim right away to internally generate things like blocks and randomization probs., etc. It would be almost impossible to recreate the exact history of the trial internally. Hence, the ideal usage pattern is to invoke the forward simulation engine right at the time of an interim analysis. There are several implications of this:</p>
+<ul>
+<li><p>Any of the decisions (trial stopping, arm dropping, etc.) that could be taken at an interim can be triggered at this initial interim. In particular there may be no simulation forward because the decision is to stop the trial straight away.</p></li>
+<li><p>Since detailed history of the blocking used in the randomization lists up to the current time is not known to the engine, a fresh set of blocks is always generated following the first interim.</p></li>
+</ul>
+<p>Forward simulation has been implemented to provide estimates of likely recruitment, not a prediction of the outcome of the trial. The forward simulation is based on the simulation profiles of the user specified dose response, longitudinal response, accrual rate and dropout rates in the parameter file, not on estimates based on what has been observed so far.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<!-- footer.html -->
+
+<!-- FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pF6W3...<truncated>...Q==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+<style>
+
+  /* Make all footer icons the same color */
+  footer .fab,
+  footer .fas,
+  footer svg {
+    color: #125740;           /* ← pick whatever color your share-icons are using */
+    fill: currentColor;    /* ensures the SVG Bluesky icon matches */
+  }
+
+  /* Prevent links from overriding that color */
+  footer a {
+    color: inherit;
+  }
+
+  /* Share menu positioning */
+  #share-wrapper { position: relative; }
+  #share-menu {
+    display: none;
+    position: absolute;
+    bottom: 3rem;               /* float above the footer */
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px #125740;
+    gap: 1rem;
+    z-index: 100;
+  }
+  body.menu-open #share-menu { display: flex; }
+  #share-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* Left column: text + social permalinks */
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+  }
+  .footer-left p { margin: 0; }
+  .footer-left a.social {
+    color: inherit;
+    text-decoration: none;
+  }
+  .footer-left a.social i { font-size: 1.2em; }
+  
+  
+    /* Text color left */
+  .footer-left p > a {
+    color: #125740;
+  }
+
+  /* Text color last item */
+  footer > p:last-child a {
+    color: #125740;
+  }
+  
+    /* Link hover colors */
+  .footer-left p > a:hover,
+  footer > p:last-child a:hover {
+    color: #11A473;
+    text-decoration: underline;
+  }
+  
+</style>
+
+<footer style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
+  
+  <!-- Left: Berry Consultants + social permalinks -->
+  <div class="footer-left">
+    <p>
+      © <a href="https://www.berryconsultants.com">Berry Consultants</a>
+    </p>
+    <a href="https://twitter.com/BerryConsultant" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on X">
+      <i class="fab fa-x"></i>
+    </a>
+    <a href="https://www.linkedin.com/company/berry-consultants-llc" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on LinkedIn">
+      <i class="fab fa-linkedin"></i>
+    </a>
+    <a href="https://www.youtube.com/c/berryconsultants" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on YouTube">
+      <i class="fab fa-youtube"></i>
+    </a>
+  </div>
+
+  <!-- Center: share toggle + popup -->
+  <div id="share-wrapper">
+    <button id="share-toggle" aria-label="Share this page">
+      <i class="fas fa-share-alt" style="font-size:1.6em;"></i>
+    </button>
+    <div id="share-menu">
+      <!-- share icons injected here -->
+    </div>
+  </div>
+
+  <!-- Right: How to Cite -->
+  <p style="margin: 0;">
+    <a href="../../../introduction/citation.html">Cite</a>
+  </p>
+</footer>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const url   = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+    const networks = [
+      { name: "X",        href: `https://twitter.com/intent/tweet?url=${url}&text=${title}`,          icon: `<i class="fab fa-x" style="font-size:1.4em;"></i>` },
+      { name: "LinkedIn", href: `https://www.linkedin.com/feed/?shareActive=true&text=${title}%20${url}`, icon: `<i class="fab fa-linkedin" style="font-size:1.4em;"></i>` },
+      { name: "Bluesky",  href: `https://bsky.app/intent/compose?text=${title}%20${url}`,              icon: `
+        <svg width="1.4em" height="1.4em" fill="currentColor" viewBox="0 0 600 530">
+          <path d="m135.72 44.03c66.496 49.921 138.02 151.14 164.28 205.46 26.262-54.316 97.782-155.54 164.28-205.46 47.98-36.021 125.72-63.892 125.72 24.795 0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.3797-3.6904-10.832-3.7077-7.8964-0.0174-2.9357-1.1937 0.51669-3.7077 7.8964-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.4491-163.25-81.433-5.9562-21.282-16.111-152.36-16.111-170.07 0-88.687 77.742-60.816 125.72-24.795z"/>
+        </svg>` },
+      { name: "Reddit",   href: `https://www.reddit.com/submit?url=${url}&title=${title}`,         icon: `<i class="fab fa-reddit" style="font-size:1.4em;"></i>` },
+      { name: "WhatsApp", href: `https://wa.me/?text=${title}%20${url}`,                             icon: `<i class="fab fa-whatsapp" style="font-size:1.4em;"></i>` },
+      { name: "Email",    href: `mailto:?subject=${title}&body=${title}%20${url}`,                    icon: `<i class="fas fa-envelope" style="font-size:1.4em;"></i>` }
+    ];
+
+    // inject share icons
+    const menu = document.getElementById("share-menu");
+    networks.forEach(net => {
+      const a = document.createElement("a");
+      a.href      = net.href;
+      a.target    = "_blank";
+      a.rel       = "noopener";
+      a.setAttribute("aria-label", `Share on ${net.name}`);
+      a.innerHTML = net.icon;
+      menu.appendChild(a);
+    });
+
+    // toggle menu
+    const toggle = document.getElementById("share-toggle");
+    toggle.addEventListener("click", e => {
+      e.stopPropagation();
+      document.body.classList.toggle("menu-open");
+    });
+
+    // close on outside click
+    document.addEventListener("click", () => {
+      document.body.classList.remove("menu-open");
+    });
+    menu.addEventListener("click", e => e.stopPropagation());
+  });
+</script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/docs\.berryconsultants\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

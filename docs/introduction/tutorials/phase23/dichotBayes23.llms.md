@@ -1,0 +1,1 @@
+# Bayesian Seamless Trial with a Dichotomous Endpoint

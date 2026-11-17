@@ -1,0 +1,3355 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Dose Escalation Design: CRM</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../media/FACTS_icon.png" rel="icon" type="image/png">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-f24641f9662b15e1479722971e972498.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<!-- Roboto Serif -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
+
+<!-- Roboto Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WLMVE7GR4S');
+</script>
+
+
+<link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../media/FACTSLogo.png" alt="" class="navbar-logo light-content">
+    <img src="../../../media/FACTSLogo.png" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../introduction/index.html"> 
+<span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../documentation/index.html"> 
+<span class="menu-text">Documentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../get/index.html"> 
+<span class="menu-text">Get FACTS</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../contact/index.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Dose Escalation Design: CRM</h1>
+            <p class="subtitle lead">FACTS File XML Specification</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a>
+  <ul>
+  <li><a href="#ids" id="toc-ids" class="nav-link" data-scroll-target="#ids"><span class="header-section-number">1.1</span> IDs</a></li>
+  <li><a href="#defaults" id="toc-defaults" class="nav-link" data-scroll-target="#defaults"><span class="header-section-number">1.2</span> Defaults</a></li>
+  <li><a href="#parameter-order" id="toc-parameter-order" class="nav-link" data-scroll-target="#parameter-order"><span class="header-section-number">1.3</span> Parameter Order</a></li>
+  </ul></li>
+  <li><a href="#the-values-in-a-.facts-file" id="toc-the-values-in-a-.facts-file" class="nav-link" data-scroll-target="#the-values-in-a-.facts-file"><span class="header-section-number">2</span> The values in a “.facts” file</a>
+  <ul>
+  <li><a href="#numbers-of-items" id="toc-numbers-of-items" class="nav-link" data-scroll-target="#numbers-of-items"><span class="header-section-number">2.1</span> Numbers of items</a></li>
+  <li><a href="#common-structures" id="toc-common-structures" class="nav-link" data-scroll-target="#common-structures"><span class="header-section-number">2.2</span> Common structures</a>
+  <ul class="collapse">
+  <li><a href="#gamma-prior" id="toc-gamma-prior" class="nav-link" data-scroll-target="#gamma-prior"><span class="header-section-number">2.2.1</span> Gamma prior</a></li>
+  <li><a href="#normal-prior" id="toc-normal-prior" class="nav-link" data-scroll-target="#normal-prior"><span class="header-section-number">2.2.2</span> Normal prior</a></li>
+  <li><a href="#piecewiseknot-values" id="toc-piecewiseknot-values" class="nav-link" data-scroll-target="#piecewiseknot-values"><span class="header-section-number">2.2.3</span> pieceWiseKnot values</a></li>
+  </ul></li>
+  <li><a href="#the-values" id="toc-the-values" class="nav-link" data-scroll-target="#the-values"><span class="header-section-number">2.3</span> The values</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>This document describes the FACTS XML file (“.facts”) file format FACTS Dose Escalation using the N-CRM model.</p>
+<p>It is intended for expert FACTS users who wish to create modified versions of “.facts” files using scripts. A full and deep understanding of FATCS Dose Escalation is assumed.</p>
+<section id="ids" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="ids"><span class="header-section-number">1.1</span> IDs</h2>
+<p>There are number of parameters that IDs, such as “guid”, “SetId”, “qoi_id” … these are Microsoft “unique” identifiers, there should be no need to change these. It does not matter if the same Ids are used in successive “.facts” files, for instance if creating a range of sub-versions of a single original file.</p>
+</section>
+<section id="defaults" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="defaults"><span class="header-section-number">1.2</span> Defaults</h2>
+<p>FACTS stores a super-set of the FACTS parameters in the “.facts” file - even storing parameters for an efficacy endpoint after it has been de-selected as an option. There are so many parameters in the FACTS file that we cannot check the behavior of FACTS if some of these are missing, so our advice is to include *all* the parameters even if not required. The only parameters that it is clear can be omitted are those in the optional parameter sets: BaselineParameterSet and LongitudinalParameterSet that are not required if the respective features are not enabled.</p>
+</section>
+<section id="parameter-order" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="parameter-order"><span class="header-section-number">1.3</span> Parameter Order</h2>
+<p>FACTS processes the parameters in the “.facts” file in the order in which the appear in the file. Some parameters depend on other parameters to have been already defined, so it is recommended that the order given here (the order FACTS itself uses when writing out the parameters) is retained. For many parameters changing their order should not be a problem, but we are not going to define, or guarantee, which those are.</p>
+</section>
+</section>
+<section id="the-values-in-a-.facts-file" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> The values in a “.facts” file</h1>
+<section id="numbers-of-items" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="numbers-of-items"><span class="header-section-number">2.1</span> Numbers of items</h2>
+<p>D: The number of doses (or treatment arms) in the design</p>
+<p>L: A list of variable length</p>
+<p>PL, PL2: The number of doses for which prior pseudo-subject data has been provided (PL2: the same but for group2 subjects)</p>
+<p>Var: The number of variants</p>
+</section>
+<section id="common-structures" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="common-structures"><span class="header-section-number">2.2</span> Common structures</h2>
+<section id="gamma-prior" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="gamma-prior"><span class="header-section-number">2.2.1</span> Gamma prior</h3>
+<p>The parameters are stored in a &lt;gamma&gt; value as &lt;mu&gt; – the central value of the prior, and &lt;n&gt; - the weight of the prior in equivalent number of observations. E.g.:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode xml code-with-copy"><code class="sourceCode xml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">gamma</span>&gt;</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">mu</span>&gt;10&lt;/<span class="kw">mu</span>&gt;</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">n</span>&gt;1&lt;/<span class="kw">n</span>&gt;</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">gamma</span>&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="normal-prior" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="normal-prior"><span class="header-section-number">2.2.2</span> Normal prior</h3>
+<p>The parameters are stored in a &lt;meansdpair&gt; value as &lt;mean&gt; - the mean of the prior and &lt;sd&gt; - the standard deviation. E.g.:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode xml code-with-copy"><code class="sourceCode xml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">meansdpair</span>&gt;</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">mean</span>&gt;0&lt;/<span class="kw">mean</span>&gt;</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">sd</span>&gt;10&lt;/<span class="kw">sd</span>&gt;</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">meansdpair</span>&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="piecewiseknot-values" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="piecewiseknot-values"><span class="header-section-number">2.2.3</span> pieceWiseKnot values</h3>
+<p>The FACTS Dose Escalation GUI writes out values in VSR profiles that are defined as piecewise linear, by “knots” in lists of values by dose strength using a &lt;pieceWiseKnot&gt; structure.</p>
+<p>The &lt;pieceWiseKnot&gt; structure has the following parameters stored in it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode xml code-with-copy"><code class="sourceCode xml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">pieceWiseKnot</span>&gt;</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">dose</span>&gt;3&lt;/<span class="kw">dose</span>&gt;</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">value</span>&gt;0.15&lt;/<span class="kw">value</span>&gt;</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">pieceWiseKnot</span>&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li></li>
+</ul>
+</section>
+</section>
+<section id="the-values" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="the-values"><span class="header-section-number">2.3</span> The values</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 3%">
+<col style="width: 46%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 0%">
+<col style="width: 41%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Tags</th>
+<th>Parameter</th>
+<th style="text-align: right;">Number of items</th>
+<th>Default Value</th>
+<th colspan="2">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>&lt; facts</td>
+<td>version</td>
+<td style="text-align: right;">1</td>
+<td>the FACTS GUI version number</td>
+<td colspan="2">FACTS will not open “.facts” files with a higher version number. This test has/will be relaxed to only check the first 2 numbers in the version number.</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>guid</td>
+<td style="text-align: right;">1</td>
+<td></td>
+<td colspan="2">see general comment on id’s in section 1</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>name</td>
+<td style="text-align: right;">1</td>
+<td>the name of the “.facts” file</td>
+<td colspan="2">Don’t make it different from the file name, bad things may happen.</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>host</td>
+<td style="text-align: right;">1</td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;project-notes</td>
+<td>CDATA</td>
+<td style="text-align: right;">1</td>
+<td>“”</td>
+<td colspan="2">All text from the “Notes” text box</td>
+</tr>
+<tr class="even">
+<td>&lt;/project-notes&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>&lt; parameterSets</td>
+<td>type</td>
+<td style="text-align: right;">1</td>
+<td>CRMDesignParameterSet</td>
+<td colspan="2">Used for all FACTS Dose Escalation Designs.</td>
+</tr>
+<tr class="odd">
+<td>&lt;parameterSet</td>
+<td>name</td>
+<td style="text-align: right;">1</td>
+<td>“nov_crm”</td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>SetID</td>
+<td style="text-align: right;">1</td>
+<td></td>
+<td colspan="2">see general comment on id’s in section 1</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>outcome-type</td>
+<td style="text-align: right;">1</td>
+<td>5</td>
+<td colspan="2">The CRM type: 5=N-CRM</td>
+</tr>
+<tr class="even">
+<td></td>
+<td colspan="5">Study Info parameters</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>use-open-enrolment</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This flag captures the cohorts/open enrolment selection: 0=Recruit in cohorts, 1=Open enrolment</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>save_cohort_size</td>
+<td style="text-align: right;">1</td>
+<td>3</td>
+<td colspan="2">Used if use-open-enrolment=0, this is the value of the “cohort size” parameter.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-max-size</td>
+<td style="text-align: right;">1</td>
+<td>10</td>
+<td colspan="2">Used if use-open-enrolment=0, this is value of the “Maximum study size (cohorts)” parameter.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>max-size-open</td>
+<td style="text-align: right;">1</td>
+<td>30</td>
+<td colspan="2">Used if use-open-enrolment=1, this is the value of “maximum study size (subjects)” parameter.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>two-sample</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This flag captures the single group/two group selection. 0=single group, 1=two groups.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>two-sample-merged</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if two-sample=1, this flag captures the Group Two Recruitment selection: 0=recruit group 1 then group 2, 1=recruit groups 1 and 2 together, 2=start group 2 once group 1 reaches dose, 3=start group 2 after group 1 reaches subject.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>two-sample-max-cohorts</td>
+<td style="text-align: right;">1</td>
+<td>10</td>
+<td colspan="2">Used if two-sample=1, if use-open-enrolment=0 this is the value of “maximum size (cohorts) for group 2”, if use-open-enrolment=1 this is the value of the “maximum subjects in Group 2” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>resp-delay</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if use-open-enrolment=0. This is the value of the “number of additional cohorts accrued before response from current cohort is available” parameter.</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td colspan="5">Treatment Arms parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>include-control</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This flag reflects the “Include Control” selection: 0=no control, 1=include control</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td colspan="5">Toxicity parameters</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>maximum-tox</td>
+<td style="text-align: right;">1</td>
+<td>0.25</td>
+<td colspan="2">Used if ncrm-target-a-dose=1, this is the value of the “Target probability of toxicity at MTD” parameter.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>ncrm-target-a-dose</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This flag reflects the “Type of target” selection: 0=target a toxicity interval, 1=target a single dose</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>find-nearest-tox</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if ncrm-target-a-dose=1, this is the value of the “Find dose … target” parameter, 0=Nearest, -1=Below, 1=Above</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>tox-target-rel</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if include-control=1, this reflects the “Target is relative to control” selection, 0=target is not relative, 1=target is relative.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>n-crm-has-eff</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This flag records the “Include efficacy” selection, 0=design does not include efficacy, 1=include efficacy.</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td colspan="5">Efficacy parameters</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>minimum-eff</td>
+<td style="text-align: right;">1</td>
+<td>0.5</td>
+<td colspan="2">Used if n-crm-has-eff=1, this value is the “Target probability of efficacy at MED”</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>find-nearest-eff</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if n-crm-has-eff=1, this is the value of the “Find dose … target” parameter, 0=Nearest, -1=Below, 1=Above</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>eff-target-rel</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if include-control=1 and n-crm-has-eff=1, this reflects the “Target is relative to control” selection, 0=target is not relative, 1=target is relative.</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td colspan="5">Toxicity parameters</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>ncrm-has-ord-vsr</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This flag records the “simulate ordinal toxicity” selection 0=dichotomous toxicity, 1=ordinal toxicity.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>num-categories</td>
+<td style="text-align: right;">1</td>
+<td>3</td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1, this is the value of the “Use a … category scale”, 3=three, 4=four</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>under-target-bound</td>
+<td style="text-align: right;">1</td>
+<td>0.16</td>
+<td colspan="2">This is the value of the boundary between the “Underdosing band” and “Target band” parameter.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>target-excess-bound</td>
+<td style="text-align: right;">1</td>
+<td>0.33</td>
+<td colspan="2">This is the value of the boundary between the “Target band” and “Excess toxicity band” parameter.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>excess-unacc-bound</td>
+<td style="text-align: right;">1</td>
+<td>0.6</td>
+<td colspan="2">This is the value of the boundary between the “Excess toxicity band” and “Unacceptable toxicity band” parameter.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>MaxExcessToxFlag</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">This flag records the overdose control based on Excess + Unacceptable toxicity selection 0=no overdose control, 1=Overdose enabled</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>MaxExcessToxGUI</td>
+<td style="text-align: right;">1</td>
+<td>0.25</td>
+<td colspan="2">Used if MaxExcessToxFlag=1, this is the value of the Excess + Unacceptable toxicity overdose limit parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>MaxExcessToxIncrementGUI</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if MaxExcessToxFlag=1, this is the value of the change in limit per cohort parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>MaxExcessToxUperBound</td>
+<td style="text-align: right;">1</td>
+<td>0.1</td>
+<td colspan="2">Used if MaxExcessToxFlag=1, this is the value of the limit of the change in the overdose control limit for Excess + Unacceptable toxicity</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>MaxUnAccToxFlag</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This flag records the overdose control based on Unacceptable toxicity selection 0=no overdose control, 1=Overdose enabled</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>MaxUnAccToxGUI</td>
+<td style="text-align: right;">1</td>
+<td>0.05</td>
+<td colspan="2">Used if MaxUnAccToxFlag=1, this is the value of the Unacceptable toxicity overdose limit parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>MaxUnAccToxIncrementGUI</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if MaxUnAccToxFlag=1, this is the value of the change in limit per cohort parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>MaxUnAcToxUpperBoundGUI</td>
+<td style="text-align: right;">1</td>
+<td>0.1</td>
+<td colspan="2">Used if MaxUnAccToxFlag=1, this is the value of the limit of the change in the overdose control limit for Unacceptable toxicity</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td colspan="5">MTPI parameters</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>mtpi-lower-bound</td>
+<td style="text-align: right;">1</td>
+<td>0.2</td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>mtpi-upper-bound</td>
+<td style="text-align: right;">1</td>
+<td>0.3</td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2">BOIN parameters</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>Boin-one-of-three-stay</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Whether or not to force stay with 1/3 tox</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>Boin-two-of-six-deescalate</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Whether or not to force deescalate with 2/6 tox</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>use-default-boin-bounds</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Whether to re-calculate the mtpi-lower and mtpi-upper bounds to the BOIN default of 0.6*target and 1.4*target</td>
+</tr>
+<tr class="even">
+<td></td>
+<td colspan="5">Study Info – open enrolment parameters</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>open-rec-rate</td>
+<td style="text-align: right;">1</td>
+<td>2</td>
+<td colspan="2">Used if use-open-enrolment=1, this is the value of the “Mean recruitment rate (1/week)” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>resp-delay-open</td>
+<td style="text-align: right;">1</td>
+<td>2</td>
+<td colspan="2">Used if use-open-enrolment=1, this is the value of the “Time until final result (week)” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>max-subj-without-final-results-if-dose-uncleared</td>
+<td style="text-align: right;">1</td>
+<td>5</td>
+<td colspan="2">Used if use-open-enrolment=1, this is the maximum number of subjects enrolled but without results, on doses &gt;= current allocation dose, if current allocation dose is not yet cleared</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>max-subj-without-final-results-if-dose-cleared</td>
+<td style="text-align: right;">1</td>
+<td>5</td>
+<td colspan="2">Used if use-open-enrolment=1, this is the maximum number of subjects enrolled but without results, on doses &gt;= current allocation dose, if current allocation dose has been cleared and the current allocation dose is below the MTD</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>max-subj-without-final-results-if-dose-cleared-and-at-mtd</td>
+<td style="text-align: right;">1</td>
+<td>5</td>
+<td colspan="2">Used if use-open-enrolment=1, this is the maximum number of subjects enrolled but without results, on doses &gt;= current allocation dose, if current allocation dose has been cleared and the current allocation dose is at the MTD</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>time-unit</td>
+<td style="text-align: right;">1</td>
+<td>week</td>
+<td colspan="2">Used if use-open-enrolment=1, this is the value of the “Time unit” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>n-crm-has-tox</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">No longer used</td>
+</tr>
+<tr class="even">
+<td></td>
+<td colspan="5">Design &gt; Toxicity parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>n-crm-has-ordinal</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1, this is the value of the “Fit ordinal toxicity” selection 0=don’t fit an ordinal model, 1=fit an ordinal model</td>
+</tr>
+<tr class="even">
+<td></td>
+<td colspan="5">Study &gt; Efficacy parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-tox-eff-forbidden</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if n-crm-has-eff=1, this flag records the “A subject that has toxicity cannot also count towards efficacy” selection 0=a subject can have both toxicity and efficacy, 1=a subject experiencing a toxicity cannot count as experiencing efficacy</td>
+</tr>
+<tr class="even">
+<td></td>
+<td colspan="5">Study Info – additional Group 2 parameters</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>two-sample-at-dose-strength</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if two-sample=1 and two-sample-merged=2, this is the value of “… reaches dose:” parameter – the strength of the dose to be reached with group 1 before group 2 is recruited.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>two-sample-at-subj</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if two-sample=1 and two-sample-merged=3, this is the value of “… reaches subject:” parameter – the number of group 1 subjects recruited before group 2 is recruited.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>two-sample-rand</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2"><p>Used if use-open-enrolment=1 and two-sample=1, this flag captures the “open enrolment for Group 2” selection, 0=Group is a property of the subject, 1=Subjects are randomized into a group.</p>
+<p>Note the randomization option is only available if open enrolment is used as well as two groups.</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>open-rac-rate2</td>
+<td style="text-align: right;">1</td>
+<td>2</td>
+<td colspan="2">Used if use-open-enrolment=1 and two-sample=1 and two-sample-rand=0, this is the mean recruitment rate for group 2.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>two-sample-block</td>
+<td style="text-align: right;">2</td>
+<td>1,2</td>
+<td colspan="2">No longer used</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>max-subj-without-final-results-if-dose-uncleared-2</td>
+<td style="text-align: right;">1</td>
+<td>5</td>
+<td colspan="2">Used if use-open-enrolment=1 and two-sample=1, this is maximum number of subjects enrolled but without results, on doses &gt;= current allocation dose, if current allocation dose is not yet cleared, for group 2</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>max-subj-without-final-results-if-dose-cleared-2</td>
+<td style="text-align: right;">1</td>
+<td>5</td>
+<td colspan="2">Used if use-open-enrolment=1 and two-sample=1, this is the maximum number of subjects enrolled but without results, on doses &gt;= current allocation dose, if current allocation dose has been cleared and the current allocation dose is below the MTD, for group 2</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>max-subj-without-final-results-if-dose-cleared-and-at-mtd-2</td>
+<td style="text-align: right;">1</td>
+<td>5</td>
+<td colspan="2">Used if use-open-enrolment=1 and two-sample=1, this is the maximum number of subjects enrolled but without results, on doses &gt;= current allocation dose, if current allocation dose has been cleared and the current allocation dose is at the MTD, for group 2</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td colspan="5">Variants</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>has_variants</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">A flag to indicate if there are variants.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>num_variants</td>
+<td style="text-align: right;">1</td>
+<td>5</td>
+<td colspan="2">if has_variants=1 this value is the number of variants</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>variant_names</td>
+<td style="text-align: right;">Var</td>
+<td>“Var 1”, “Var 2”, …</td>
+<td colspan="2">The names of the “variants” to be included in the scenario names to indicate which variant was being simulated.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>var_max_cohorts</td>
+<td style="text-align: right;">Var</td>
+<td>10, 10, …</td>
+<td colspan="2">The different values of win-max-size to be used in each variant.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>var_max_cohorts2</td>
+<td style="text-align: right;">Var</td>
+<td>10, 10, …</td>
+<td colspan="2">The different values of two-sample-max-cohorts to be used in each variant.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>allow-backfill</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if use-open-enrolment=1. A flag to indicate whether to allow backfill.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>dose-to-target-for-backfill</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if use-open-enrolment=1. Specifies the dose to target for backfill, 1=Target MED, 2=Highest safe dose above MED.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>max-num-dose-level-below-target-to-backfill</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if use-open-enrolment=1. Specifies the maximum number of dose level below target (specified in dose-to-target-for-backfill) to backfill.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>do-not-backfill-below-dose-level</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if use-open-enrolment=1. Specifies the dose level under which backfill will not be performed.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>allow-backfill-to-current-dose</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if use-open-enrolment=1. Specifies whether we are allowing backfilling to the current escalation dose (known as frontfilling).</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>count-frontfill-as-backfill</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if use-open-enrolment=1 and allow-backfill-to-current-dose=1. Specifies whether we count frontfill subjects as backfill subjects.</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td colspan="5">Treatment Arm Parameters</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>use-cont-doses</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This flag records the “Explicit Doses / Finely Spaced Doses” selection 0=explicit doses, 1=Finely spaced doses (used to be called “continuous doses” before we decided that was confusing, hence the name of the parameter)</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>fixed-dose-spacing</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if use-cont-doses=1, this flag records the “Fixed Spacing / Ration spacing” selection, 0=Ratio spacing, 1=Fixed spacing</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-min-cont-dose</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if use-cont-doses=1, this is the value of the “Minimum dose” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>min-max-cont-dose</td>
+<td style="text-align: right;">1</td>
+<td>20</td>
+<td colspan="2">Used if use-cont-doses=1, this is the value of the “Maximum dose” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-cont-dose-sep</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if use-cont-doses=1, this is the value of the “Spacing between doses” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>dose-names-expl</td>
+<td style="text-align: right;">D</td>
+<td></td>
+<td colspan="2">An item list of the names of the explicitly defined doses/arm. (use-cont-doses=0)</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>dose-names-cont</td>
+<td style="text-align: right;">D</td>
+<td></td>
+<td colspan="2">An item list of the names of the finely spaced (continuous) doses/arms. This lists <strong>all</strong> the doses, not just those being reported. (use-cont-doses=1)</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>doses-cont</td>
+<td style="text-align: right;">D</td>
+<td></td>
+<td colspan="2"><p>An item list of the effective dose strengths of the treatment arms for Finely Spaced Doses (continuous) only (use-cont-doses=1). The length of this list defines ‘D’ the total number of doses/arms in the trial. Control, if present, always has a strength of ‘0’. If Control is not present, there should not be a dose/arm with a strength of ‘0’.</p>
+<p>This lists <strong>all</strong> the doses, not just those being reported.</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>doses-explicit</td>
+<td style="text-align: right;">D</td>
+<td></td>
+<td colspan="2">An item list of the effective dose strengths of the treatment arms for Explicit Doses (continuous) only (use-cont-doses=0). The length of this list defines ‘D’ the total number of doses/arms in the trial. Control, if present, always has a strength of ‘0’. If Control is not present, there should not be a dose/arm with a strength of ‘0’.</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>num-doses</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This value is the number of dose-names and doses.</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>num-resp-doses</td>
+<td style="text-align: right;">1</td>
+<td>10</td>
+<td colspan="2">Used if use-cont-doses=1, this is the number of doses to report</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Design &gt; Allocation rule</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-start-dose</td>
+<td style="text-align: right;">1</td>
+<td></td>
+<td colspan="2">Used if use-cont-dose=0, this is the name of the starting dose – the value of the “Start Dose” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>cont-start-dose</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if use-cont-dose=1, this is the strength of the starting dose – the value of the “Starting dose strength” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td colspan="5">inc-3+3-valida-cohort</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>two-sample-start</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">If two-samples=1, this flag records the value of the “Initial Dose Second Population” selection 0=Initial dose for first population, 2=MTD from first population, 1=One dose below MTD for first population</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>use-only-odc</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This is the value of the “Rules” selection, 0=Use overdose control and additional rules, 1=Use only overdose control</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>custom-run-in-option</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This represents the type of run-in which will be performed, 0=Classical small cohort, 1=Custom run-in, 2=Small cohort pre-escalation</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>custom_runin_numbersubjects_gui</td>
+<td style="text-align: right;">D or D-1 if Control incl.</td>
+<td>1, 0,…</td>
+<td colspan="2">Used if custom-run-in-option=1. Each entry represents the number of subjects allocated to the associated (non-control) dose during run-in.</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Study &gt; Toxicity – small cohort run-in parameters</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>use-single-patient</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if use-open-enrolment=0 (i.e.&nbsp;only if recruiting in cohorts), this flag is the value of the “Enable small cohort run-in” selection, 0=not enabled, 1=enabled</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>single-expand-current</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td colspan="5">single-stop-cat2</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>count-small-in-tot</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if use-open-enrolment=0 and use-single-patient=1, this flag records the enablement of the “Include run-in subjects in overall maximum” parameter, 0=no enabled, 1=enabled</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>single-expand-to-full</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if use-open-enrolment=0 and use-single-patient=1, this flag records the enablement of the “When run-in ends, expand last cohort to full size” parameter, 0=no enabled, 1=enabled</td>
+</tr>
+<tr class="even">
+<td>&lt;property</td>
+<td>restrict-run-in</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if use-open-enrolment=0 and use-single-patient=1, this flag records the enablement of the “Run-in cannot go beyond” parameter, 0=no enabled, 1=enabled</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>run-in-max-dose-name</td>
+<td style="text-align: right;">1</td>
+<td></td>
+<td colspan="2">Used if use-open-enrolment=0 and use-single-patient=1 and restrict-run-in=1, this is the value of the “run-in cannot go beyond” parameter.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-use-control-rate</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>control-rate</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if “include-control=1”, this is the value of the “Num subjects per cohort allocated to control” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>min-cohort-on-dose</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if “use-only-odc=0”, this is the value of the “Minimum cohorts on/near dose before cleared” parameter (used for both cohorts or subjects – if open enrolment)</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Design &gt; Allocation Rules</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>nov-alloc-facts-5-6</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>nov-alloc-mod</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if “use-only-odc=0”, this is the value of the “How to specify the maximum increment” selection 0=single value, 1=by total number of toxicities, 2=by dose strength</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td colspan="5">split-dose-range</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-low-esc-end</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>max-dose-esc-high</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>max-dose-esc-low</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-max-dose-esc</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>max-inc-fraction</td>
+<td style="text-align: right;">1</td>
+<td>2</td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>max-inc-from-last</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if “use-only-odc=0”, this flag records the value of the “Maximum increment relative to” selection: 0=Highest cleared dose, 1=Most recently cleared dose</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>prob-min</td>
+<td style="text-align: right;">1</td>
+<td>0.2</td>
+<td colspan="2">Used if include-control=1 and use-open-enrolment=1, this is the value of the “Probability of allocating to control” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>prob-max</td>
+<td style="text-align: right;">1</td>
+<td>0.2</td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>prob-gamma</td>
+<td style="text-align: right;">1</td>
+<td>2</td>
+<td colspan="2">Used if include-control=1 and use-open-enrolment=1, this is the value of the “Probability gamma” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>ord-end-single</td>
+<td style="text-align: right;">1</td>
+<td>3</td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Study Info – cohort expansion</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>use-cohort-exp</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This flag records the value of the “Cohort Expansion” enablement. 0=not enabled, 1=enabled.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>exp-cohort-size</td>
+<td style="text-align: right;">1</td>
+<td>5</td>
+<td colspan="2">Used if use-cohort-exp=1, this is the value of the “Size of expansion cohort (subjects)” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td colspan="5">exp-cohort-size2</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>exp-coh-ctrl-alloc</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if use-cohort-exp=1 and include-control=1, this is the value of the “Number of subjects on control” parameter, (in the expansion cohort).</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>exp-coh-ctrl-alloc2</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if use-cohort-exp=1 and include-control=1 and two-sample=1, this is the value of the “Number of subjects on control” parameter, (in the expansion cohort for the second sample).</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>exp-cohort-target</td>
+<td style="text-align: right;">1</td>
+<td>2</td>
+<td colspan="2">Used if use-cohort-exp=1, this is the value of the “Target dose” selection: 0=MTD, 1=MED, 2=OSD (MED and OSD only available if efficacy is included: n-crm-has-eff=1)</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Design &gt; Stopping Criteria</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>futility-mode</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Not used in N-CRM, but the value should not be changed</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-min-hilow</td>
+<td style="text-align: right;">1</td>
+<td>6</td>
+<td colspan="2">Not used in N-CRM, but the value should not be changed</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td colspan="5">min-diff</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-stop-eff</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if n-crm-has-eff=1, this flag records the value of the “Rules for ending MED phase early” enablement, 0=not enabled, 1=enabled</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-stop-eff-cohorts-A</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if n-crm-has-eff=1 and win-stop-eff=1, this flag records the value for the “Maximum cohorts on MED” enablement, 0=not enabled, 1=enabled</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-stop-eff-prmed</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if n-crm-has-eff=1 and win-stop-eff=1, this flag records the value for the “Probability of dose being MEd greater than” enablement, 0=not enabled, 1=enabled</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-stop-eff-ci</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if n-crm-has-eff=1 and win-stop-eff=1, this flag records the value for the “Number of doses within the credible interval is less than or equal to” enablement, 0=not enabled, 1=enabled</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>stop-CI-eff-alpha</td>
+<td style="text-align: right;">1</td>
+<td>0.05</td>
+<td colspan="2">Used if n-crm-has-eff=1 and win-stop-eff=1 and win-stop-ci=1, this is the value of the “Alpha width of credible interval” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>stop-CI-eff-threshold</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if n-crm-has-eff=1 and win-stop-eff=1 and win-stop-ci=1, this is the value of the “number of doses within the credible interval is less than or equal to:” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>stop-MED-change</td>
+<td style="text-align: right;">1</td>
+<td>0.1</td>
+<td colspan="2">Used if n-crm-has-eff=1 and win-stop-eff=1 and win-stop-prmed=1, this is the value of the “Probability of dose being MEd greater than” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-stop-tox</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">This flag is the value of the “Rules for stopping trial early” enablement, 0=not enabled, 1=enabled</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-stop-tox-cohorts-A</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if win-stop-tox=1, this flag records the value of the “Required number of cohorts near MTD” enablement, 0=not enabled, 1=enabled</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-stop-tox-cohorts-B</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if win-stop-tox=1, this flag records the value of the “Maximum cohorts on MTD” enablement, 0=not enabled, 1=enabled</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-stop-tox-prmtd</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if win-stop-tox=1, this flag records the value of the “Probability of dose being MTD greater than” enablement, 0=not enabled, 1=enabled</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-stop-tox-ci</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if win-stop-tox=1, this flag records the value of the “Ratio of dose strengths within the credible interval is less than or equal to:” enablement, 0=not enabled, 1=enabled</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-stop-tox-test-cohort</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if win-stop-tox=1, this flag records the value of the “Stop if adding another DLT free cohort does not alter the MT” enablement, 0=not enabled, 1=enabled</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-stop-tox-min-ch</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if win-stop-tox=1, this flag records the value of the “Minimum cohorts accrued” enablement, 0=not enabled, 1=enabled</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>test-cohort-size</td>
+<td style="text-align: right;">1</td>
+<td>3</td>
+<td colspan="2">Used if win-stop-tox=1 and win-stop-tox-test-cohort=1, this is the value of the “Size of additional cohort” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>stop-CI-tox-alpha</td>
+<td style="text-align: right;">1</td>
+<td>0.05</td>
+<td colspan="2">Used if win-stop-tox=1 and win-stop-tox-ci=1, this is the value of the “Alpha width if credible interval” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>stop-CI-tox-threshold</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if win-stop-tox=1 and win-stop-tox-ci=1, this is the value of the “Ratio of dose strengths within the credible interval is less than or equal to” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>stop-MTD-change</td>
+<td style="text-align: right;">1</td>
+<td>0.1</td>
+<td colspan="2">Used if win-stop-tox=1 and win-stop-tox-prmtd=1, this is the value of “Probability of dose being MTD greater than” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-max-subj-at-MTD</td>
+<td style="text-align: right;">1</td>
+<td>2</td>
+<td colspan="2">Used if win-stop-tox=1 and win-stop-tox-cohorts-A=1, this is the value of “Require number of cohorts near MTD” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-max2-subj-at-MTD</td>
+<td style="text-align: right;">1</td>
+<td>2</td>
+<td colspan="2">Used if win-stop-tox=1 and win-stop-tox-cohorts-B=1, this is the value of the “Maximum cohorts on MTD” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-max-subj-at-MED</td>
+<td style="text-align: right;">1</td>
+<td>6</td>
+<td colspan="2">Used if n-crm-has-eff=1 and win-stop-eff=1 and ,</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-max-size-phase1</td>
+<td style="text-align: right;">1</td>
+<td>10</td>
+<td colspan="2">This is the value of the “Maximum cohorts/subjects used to determine MTD” parameter (Allocation rule tab)</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-min-size-phase1</td>
+<td style="text-align: right;">1</td>
+<td>6</td>
+<td colspan="2">Used if win-stop-tox=1 and win-stop-tox-cohorts-A=1, this is the value of the “minimum cohorts accrued” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-max-subj-at-MTD2</td>
+<td style="text-align: right;">1</td>
+<td>6</td>
+<td colspan="2">Used if n-crm-has-eff=1, this is the value of the “Continue until cohorts on MTD reaches” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>min-tox-all-tox</td>
+<td style="text-align: right;">1</td>
+<td>2</td>
+<td colspan="2">value of “Minimum toxicities required before stopping”</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>combine-and-max-cohorts-CI</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Not used in N-CRM</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>combine-and-groups-rules</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if win-stop-tox=1, this flag records the value of the “Join condition” selection: 0=OR, 1=AND</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Design &gt; XHats</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-nov-log-xhats</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">This flag records the value of the “X^s are:” selection 0=dose strength – reference dose, 1=log(dose strength / reference dose)</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-nov-ref-median</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">This flag record the value of the reference dose selection, 0=manually set reference dose, 1=median dose is reference</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td colspan="5">win-nov-ref-dose-A</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>order-prior-type</td>
+<td style="text-align: right;">1</td>
+<td>-1</td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>fix-a3</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>fixed-a3</td>
+<td style="text-align: right;">1</td>
+<td>3</td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>ord-alpha-mean</td>
+<td style="text-align: right;">2</td>
+<td>4, 3</td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>ord-alpha-sd</td>
+<td style="text-align: right;">2</td>
+<td>1, 1</td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-expl-tox-xhats</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-dose-tox-x-hat</td>
+<td style="text-align: right;">1</td>
+<td></td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Treatment Arms parameters</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>resp-dose-indices</td>
+<td style="text-align: right;">D</td>
+<td>0, 0, …, -1</td>
+<td colspan="2">This parameter is a list of items, each item is the index of a dose in the treatment arm list. The list is in ascending order. If use-cont-dose=0, this is a list of all treatment arms, if use-cont-dose=1, this is a list of the arms on which to report. (based on the “Num doses for which to report” parameter).</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Study &gt; Toxicity parameter</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td colspan="5">small-cohort-size</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Design &gt; Allocation Rule parameters</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td colspan="5">cont-esc-by-ratio</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-cont-max-inc-0</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if “use-only-odc=0” and , this is the value of the “Maximum increment” in dose level for the “Low doses” / “Zero toxicities” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td colspan="5">win-con-max-inc-1</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-cont-max-inc-N</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if “use-only-odc=0” and , this is the value of the “Maximum increment” in dose level for the “High doses” / “Two toxicities” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>cont-mtd-width</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">This is the value of the “Count as MTD doses differing from MTD by less than a factor of” parameter (On the Stopping Criteria tab) when finely spaced doses are used</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>mtd-width</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This is the value of the “Count as MTD doses differing from MTD by less than a factor of” parameter (On the Stopping Criteria tab) when explicit doses are used</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Study Info</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>recruit-time</td>
+<td style="text-align: right;">1</td>
+<td>2</td>
+<td colspan="2">Used if use-open-enrolment=0, this is the value of “Time taken to recruit and observe each cohort (weeks):” parameter</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Design &gt; Allocation rule parameter</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td colspan="5">has-esc-max-tox-rate</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>esc-max-tox-rate</td>
+<td style="text-align: right;">1</td>
+<td>0.35</td>
+<td colspan="2">Used if “use-only-odc=0” and has-esc-max-tox-rate=1, this is the value of the “Dose not cleared if ppn toxic on/near dose” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td colspan="5">cont-esc-width</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>cont-max-inc-by-dose</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if “use-only-odc=0” this flag records the selection of the “by dose levels” option in the specification of the maximum increment, 0=single value or number of toxicities, 1=by dose levels</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>cont-max-inc-thesh1</td>
+<td style="text-align: right;">1</td>
+<td>10</td>
+<td colspan="2">Used if “use-only-odc=0” and , this is the value of the lower bound of the middle band of dose strengths parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>cont-max-inc-thesh2</td>
+<td style="text-align: right;">1</td>
+<td>10</td>
+<td colspan="2">Used if “use-only-odc=0” and , this is the value of the upper bound of the middle band of dose strengths parameter</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>mpti-zeta</td>
+<td style="text-align: right;">1</td>
+<td>0.95</td>
+<td colspan="2">Not used in N-CRM, MPTI parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>mpti-use-max-subj</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Not used in N-CRM, MPTI parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td colspan="5">mpti-max-subj</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>fit-4PL</td>
+<td style="text-align: right;">1</td>
+<td>10</td>
+<td colspan="2">Not used in N-CRM, CRM parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>fit-4PL-conf</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Not used in N-CRM, CRM parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-expl-eff-xhats</td>
+<td style="text-align: right;">1</td>
+<td>0.95</td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-dose-eff-x-hat</td>
+<td style="text-align: right;">1</td>
+<td></td>
+<td colspan="2">Not used in N-CRM, but value should not be changed</td>
+</tr>
+<tr class="even">
+<td>&lt;/parameterSet&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;/parameterSets&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Design &gt; Toxicity Response &amp; Toxicity prior pseudo subjects</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td>&lt;parameterSets</td>
+<td>type</td>
+<td style="text-align: right;">1</td>
+<td>CRMEndpointParamSet</td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;parameterSet</td>
+<td colspan="4">name</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td colspan="5">SetID</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-sep-control</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if include-control=1, this value records the setting of the “Model Control Separately” enablement, 0=not enabled, 1=enabled</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>model-type-tox</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Not used in N-CRM</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>control-prior-tox</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if include-control=1 and win-sep-control=1, this is the value of the “Prior Num Toxic” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>control-prior-non-tox</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if include-control=1 and win-sep-control=1, this is the value of the “Prior Num Non-Toxic” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>min-toxicity</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This is the value of the “Asymptotes” – “Minimum” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>max-toxicity</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">This is the value of the “Asymptotes” – “Maximum” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>ncrm-fixed-alpha</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This flag records the setting of the “use fixed alpha” enablement 0=not fixed, 1=alpha is fixed</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>alpha-tox</td>
+<td style="text-align: right;">1</td>
+<td>3</td>
+<td colspan="2">Not used in N-CRM</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>prior-type</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Not used in N-CRM</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>beta-prior-limit</td>
+<td style="text-align: right;">1</td>
+<td>3</td>
+<td colspan="2">Not used in N-CRM</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>allow-non-explicit-prior</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Not used in N-CRM</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>nov-prior-type</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Computed property, not set by user</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>nov-alpha-mean</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This is the value of the “Alpha”, “Mean” parameter [and the fixed value of alpha if ncrm-fixed-alpha=1]</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>nov-alpha-sd</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">This is the value of the “Alpha”, “Sd” parameter [and ignored if using a fixed value of alpha, that is if ncrm-fixed-alpha=1]</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>ln-beta-mean</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This is the value of the “Ln(Beta)”, “Mean” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>ln-beta-sd</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">This is the value of the “Ln(Beta)”, “Sd” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>nov-prior-rho</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This is the value of the “Rho” parameter [and ignored if using a fixed value of alpha, that is if ncrm-fixed-alpha=1]</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>prior-pseudo-level</td>
+<td style="text-align: right;">PL</td>
+<td></td>
+<td colspan="2">This is a list of items – one per dose for which prior pseudo-subject data has been provided. This is the list of dose levels</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>prior-pseudo-counts</td>
+<td style="text-align: right;">PL</td>
+<td></td>
+<td colspan="2">This is a list of items – the number of prior pseudo-subjects at each of the dose strengths in prior-pseudo-level</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>prior-pseudo-tox</td>
+<td style="text-align: right;">PL</td>
+<td></td>
+<td colspan="2">This is a list of items – the number of prior toxicities at each of the dose strengths in prior-pseudo-level</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>prior-pseudo-level2</td>
+<td style="text-align: right;">PL2</td>
+<td></td>
+<td colspan="2">This is a list of items – one per dose for which prior pseudo-subject data for group 2 subjects has been provided. This is the list of dose levels</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>prior-pseudo-counts-grp2</td>
+<td style="text-align: right;">PL2</td>
+<td></td>
+<td colspan="2">This is a list of items – the number of prior pseudo-subjects for group 2 at each of the dose strengths in prior-pseudo-level2</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>prior-pseudo-tox-grp2</td>
+<td style="text-align: right;">PL2</td>
+<td></td>
+<td colspan="2">This is a list of items – the number of prior toxicities in group2 at each of the dose strengths in prior-pseudo-level2</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Design &gt; Toxicity Response &gt; Prior Derivation parameters. [Note these have no direct bearing on the design of the trial, changing them will not change the parameter file written out for the simulator. They are simply recorded here so that the GUI can display past values that the user may have entered in order to derive the parameters of the bi-variate Normal prior]</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>nov-median-low</td>
+<td style="text-align: right;">1</td>
+<td>0.2</td>
+<td colspan="2">Legacy property, not used any more</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>nov-median-high</td>
+<td style="text-align: right;">1</td>
+<td>0.8</td>
+<td colspan="2">Legacy property, not used any more</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td colspan="5">prior-lower-CI</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>prior-median</td>
+<td style="text-align: right;">D</td>
+<td></td>
+<td colspan="2">This list of items is the list of toxicity rates at the 50% quantile for each dose, in the “All quantiles” method</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>prior-upper-CI</td>
+<td style="text-align: right;">D</td>
+<td></td>
+<td colspan="2">This list of items is the list of toxicity rates at the 90% quantile for each dose, in the “All quantiles” method</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>nov-prior-source</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">This indicates the manner in which the prior for the Toxicity response. was derived:<br>
+1 = Using a prior derived from quantiles at lowest and highest dose<br>
+2 = Using a prior derived from scenarios<br>
+3 = Using a prior derived from specific quantiles<br>
+5 = Using a prior derived from all quantiles</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>sug-prior-median-low</td>
+<td style="text-align: right;">1</td>
+<td>0.1</td>
+<td colspan="2">This value is the “Probability of unacceptable toxicity at the lowest dose” parameter in the “Quantiles at the lowest and highest dose” method</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>sug-prior-median-mid</td>
+<td style="text-align: right;">1</td>
+<td>0.5</td>
+<td colspan="2">This value is the “Probability that Pr(Toxicity is &gt; mid point of the target band at the median dose” parameter in the “Quantiles at the lowest and highest dose” method</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>sug-prior-median-high</td>
+<td style="text-align: right;">1</td>
+<td>0.1</td>
+<td colspan="2">This value is the “Probability of underdosing at the highest dose” parameter in the “Quantiles at the lowest and highest dose” method</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>sug-prior-median-low2</td>
+<td style="text-align: right;">1</td>
+<td>0.2</td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1, this value is the “Probability of unacceptable toxicity at the lowest dose” for “Category 2+” toxicity parameter in the “Quantiles at the lowest and highest dose” method</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>sug-prior-median-mid2</td>
+<td style="text-align: right;">1</td>
+<td>0.6</td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1, this value is the “Probability that Pr(Toxicity is &gt; mid point of the target band at the median dose” for “Category 2+” toxicity, parameter in the “Quantiles at the lowest and highest dose” method</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>sug-prior-median-high2</td>
+<td style="text-align: right;">1</td>
+<td>0.05</td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1, this value is the “Probability of underdosing at the highest dose” for “Category 2+” toxicity, parameter in the “Quantiles at the lowest and highest dose” method</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>sug-prior-median-low4</td>
+<td style="text-align: right;">1</td>
+<td>0.05</td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1 and num-categories=4, this value is the “Probability of unacceptable toxicity at the lowest dose” for “Category 4” toxicity parameter in the “Quantiles at the lowest and highest dose” method</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>sug-prior-median-mid4</td>
+<td style="text-align: right;">1</td>
+<td>0.4</td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1 and num-categories=4, this value is the “Probability that Pr(Toxicity is &gt; mid point of the target band at the median dose” for “Category 4” toxicity, parameter in the “Quantiles at the lowest and highest dose” method</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>sug-prior-median-high4</td>
+<td style="text-align: right;">1</td>
+<td>0.2</td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1 and num-categories=4, this value is the “Probability of underdosing at the highest dose” for “Category 4” toxicity, parameter in the “Quantiles at the lowest and highest dose” method</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>sug-prior-q-level</td>
+<td style="text-align: right;">L</td>
+<td></td>
+<td colspan="2">This is a list of items, the values of the Dose Levels used in the “Specific Quantiles” method</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>sug-prior-q-rate</td>
+<td style="text-align: right;">L</td>
+<td></td>
+<td colspan="2">This is a list of items, the values of the Toxicity Rates used in the “Specific Quantiles” method, this list has to have the same number of entries as sug-prior-q-level</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>sug-prior-q-prob</td>
+<td style="text-align: right;">L</td>
+<td></td>
+<td colspan="2">This is a list of items, the values of the Probability P(Tox)&lt;Rate used in the “Specific Quantiles” method, this list has to have the same number of entries as sug-prior-q-level</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>sug-prior-q-prob2</td>
+<td style="text-align: right;">L</td>
+<td></td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1, this is a list of items, the values of the Probability P(Tox Category 2)&lt;Rate used in the “Specific Quantiles” method, even if ncrm-has-ord=0 this list has to have the same number of entries as sug-prior-q-level</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>sug-prior-q-prob4</td>
+<td style="text-align: right;">L</td>
+<td></td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1 and num-categories=4, this is a list of items, the values of the Probability P(Tox Category 4)&lt;Rate used in the “Specific Quantiles” method, even if ncrm-has-ord=0 this list has to have the same number of entries as sug-prior-q-level</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Design &gt; Toxicity</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>nov-prior-src-type</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>nov-alpha-mean2</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1 and n-crm-has-ordinal=1 this is the value of the “Alpha 2”, “Mean” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td colspan="5">nov-alpha-sd2</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>nov-alpha-mean4</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1 and n-crm-has-ordinal=1 and num-categories=4, this is the value of the “Alpha 4”, “Mean” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>nov-alpha-sd4</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1 and n-crm-has-ordinal=1 and num-categories=4, this is the value of the “Alpha 4”, “Sd” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>two-sample-zero-b</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if two-sample=1, this is the value of the “Common Slope” enablement, 0=not enabled, 1=enabled</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>two-sample-positive-a</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if two-sample=1, this is the value of the “Positive” enablement, 0=not enabled, 1=enabled</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>two-sample-negative-a</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if two-sample=1, this is the value of the “Negative a” enablement, 0=not enabled, 1=enabled</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>n-crm-prior-a-tox</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if two-sample=1, this is the value of the “a”, “Mean” parameter in the Group 2 priors</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>n-crm-prior-a-sd-tox</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if two-sample=1, this is the value of the “a”, “Sd” parameter in the Group 2 priors</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>n-crm-prior-lnb-tox</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if two-sample=1, this is the value of the “Ln(b)”, “Mean” parameter in the Group 2 priors</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>n-crm-prior-lnb-sd-tox</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if two-sample=1, this is the value of the “Ln(b)”, “Sd” parameter in the Group 2 priors</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>n-crm-prior-rho-grp2-tox</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if two-sample=1, this is the value of the “Rho” parameter in the Group 2 priors</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>prior-pseudo-tox2</td>
+<td style="text-align: right;">L</td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>prior-pseudo-tox4</td>
+<td style="text-align: right;">L</td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>prior-pseudo-tox22</td>
+<td style="text-align: right;">L</td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>prior-pseudo-tox-42</td>
+<td style="text-align: right;">L</td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>use-mid-prob</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">A flag indicating whether to use the Prob that Pr(Toxicity) &gt; target at median dose when selecting the Quantiles at lowest and highest dose in the in Prior Derivation</td>
+</tr>
+<tr class="even">
+<td>&lt;/parameterSets&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Design &gt; Efficacy Response</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td>&lt;parameterSet</td>
+<td>name</td>
+<td style="text-align: right;"></td>
+<td>eff-resp-params</td>
+<td colspan="2">The name of the Response parameter set</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>These parameters as the same as for tox-resp-params except they have a trailing “-eff” either add or (if present) replacing the “-tox” in the corresponding parameter name in the tox-resp-params. The only difference is that the efficacy parameters do not have any of the ordinal response parameters (“Used if ncrm-has-ord-vsr=1”).</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td>&lt;/parameterSets&gt;</td>
+<td colspan="5"></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>The following parameter sets are the various VSR parameter sets, the order of the sets is immaterial</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td></td>
+<td colspan="5">Virtual Subject Response &gt; Explicitly Defined &gt; Toxicity</td>
+</tr>
+<tr class="odd">
+<td>&lt;parameterSets</td>
+<td>type</td>
+<td style="text-align: right;">1</td>
+<td>CRMToxicityParamSet</td>
+<td colspan="2">This parameter set is used for explicitly defined, toxicity profiles with 1 or 2 groups and ordinal toxicity rates defined by offsets</td>
+</tr>
+<tr class="even">
+<td>&lt;parameterSet</td>
+<td colspan="5">name</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td colspan="5">SetID</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>true-tox</td>
+<td style="text-align: right;">D</td>
+<td></td>
+<td colspan="2">This is an item list of the values of the category 3 toxicity rates per dose</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>true-tox2</td>
+<td style="text-align: right;">D</td>
+<td></td>
+<td colspan="2">Used if two-sample=1 This is an item list of the values of the category 3 toxicity rates per dose for the second group</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-alpha</td>
+<td style="text-align: right;">1</td>
+<td>0.7</td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>ss-cat2-vsr-offset</td>
+<td style="text-align: right;">1</td>
+<td></td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1, this is the value of the “Toxicity Offsets” “Category 2” “Lowest Dose” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>ss-cat2-vsr-offset-high</td>
+<td style="text-align: right;">1</td>
+<td></td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1, this is the value of the “Toxicity Offsets” “Category 2” “Highest Dose” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>ss-cat4-vsr-offset</td>
+<td style="text-align: right;">1</td>
+<td></td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1 and num-categories=4, this is the value of the “Toxicity Offsets” “Category 4” “Lowest Dose” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>ss-cat4-vsr-offset-high</td>
+<td style="text-align: right;">1</td>
+<td></td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1 and num-categories=4, this is the value of the “Toxicity Offsets” “Category 4” “Highest Dose” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;/parameterSets&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Virtual Subject Response &gt; Explicitly Defined &gt; Ordinal Toxicity</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;parameterSets</td>
+<td>type</td>
+<td style="text-align: right;">1</td>
+<td>CRMOrdinalParamSet</td>
+<td colspan="2">This parameter set is used for explicitly defined, toxicity profiles with 1 or 2 groups and ordinal toxicity explicitly defined for each category</td>
+</tr>
+<tr class="even">
+<td>&lt;parameterSet</td>
+<td>name</td>
+<td style="text-align: right;"></td>
+<td>&lt;Profile name&gt;</td>
+<td colspan="2">The name of the VSR profile</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td colspan="5">SetID</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>true-tox</td>
+<td style="text-align: right;">D</td>
+<td></td>
+<td colspan="2">This is an item list of the values of the category 3 toxicity rates per dose for group 1</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>true-ord-tox2</td>
+<td style="text-align: right;">D</td>
+<td></td>
+<td colspan="2">Used if ncrm-has-ord=1, this is an item list of the values of the category 2 rates per dose for group 1</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>true-ord-tox4</td>
+<td style="text-align: right;">D</td>
+<td></td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1 and num-categories=4, this is an item list of the values of the category 4 rates per dose for group 1</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>true-tox-2</td>
+<td style="text-align: right;">D</td>
+<td></td>
+<td colspan="2">Used if two-sample=1 This is an item list of the values of the category 3 toxicity rates per dose for group 2</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>true-ord-tox2-2</td>
+<td style="text-align: right;">D</td>
+<td></td>
+<td colspan="2">Used if ncrm-has-ord=1, this is an item list of the values of the category 2 rates per dose for group 2</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>true-ord-tox4-2</td>
+<td style="text-align: right;">D</td>
+<td></td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1 and num-categories=4, this is an item list of the values of the category 4 rates per dose for group 2</td>
+</tr>
+<tr class="even">
+<td>&lt;/parameterSets&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Virtual Subject Response &gt; Explicitly Defined &gt; Efficacy</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td>&lt;parameterSets</td>
+<td>type</td>
+<td style="text-align: right;">1</td>
+<td>CRMToxicityParamSet</td>
+<td colspan="2">This parameter set is used for explicitly defined, toxicity profiles with 1 or 2 groups and ordinal toxicity rates defined by offsets</td>
+</tr>
+<tr class="odd">
+<td>&lt;parameterSet</td>
+<td>name</td>
+<td style="text-align: right;"></td>
+<td>&lt;Profile name&gt;</td>
+<td colspan="2">The name of the VSR profile</td>
+</tr>
+<tr class="even">
+<td></td>
+<td colspan="5">SetID</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>true-eff</td>
+<td style="text-align: right;">D</td>
+<td></td>
+<td colspan="2">This is an item list of the values of the efficacy rates per dose</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>true-eff-2</td>
+<td style="text-align: right;">D</td>
+<td></td>
+<td colspan="2">Used if two-sample=1 This is an item list of the values of the efficacy rates per dose for the second group</td>
+</tr>
+<tr class="odd">
+<td>&lt;/parameterSets&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Virtual Subject Response &gt; Parametric &gt; Toxicity or Efficacy</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;parameterSets</td>
+<td>type</td>
+<td style="text-align: right;">1</td>
+<td>ToxParamVSRParamSet</td>
+<td colspan="2">The collection of parameterized toxicity VSR profiles.</td>
+</tr>
+<tr class="even">
+<td>&lt;parameterSet</td>
+<td>name</td>
+<td style="text-align: right;"></td>
+<td>&lt;Profile name&gt;</td>
+<td colspan="2">The name of the predictor VSR profile</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td colspan="5">SetID</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>param-vsr-is-tox</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">A flag indicating whether the parameter set is for toxicity or efficacy, 0=efficacy, 1=toxicity</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-single-curve-type</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">A flag recording the selection of the parametric curve type, 0=Logistic, 1=Emax, 2=Log Logistic, 3=Piecewise linear</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-par-curve-max</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">This is the value of the “Maximum Toxicity” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-par-curve-min</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">This is the value of the “Minimum Toxicity” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>win-par-curve-ed50</td>
+<td style="text-align: right;">1</td>
+<td>5</td>
+<td colspan="2">Used if win-single-curve-type=0,1 or 2, this is the value of the “ED50 Dose” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>win-par-curve-slope</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if win-single-curve-type=0 or 2, this is the value of the “Slope” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>piece-wise-knots</td>
+<td style="text-align: right;">L</td>
+<td></td>
+<td colspan="2">Used if win-single-curve-type=3, this a list of items, where each item is a &lt;pieceWiseKnot&gt;, the items should be in increasing order of the &lt;dose&gt; parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>cat2-vsr-offset</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1, this is the value of the “Toxicity Offsets” “Category 2” “Lowest Dose” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>cat2-vsr-offset-high</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1, this is the value of the “Toxicity Offsets” “Category 2” “Highest Dose” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>cat4-vsr-offset</td>
+<td style="text-align: right;">1</td>
+<td>-1</td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1 and num-categories=4, this is the value of the “Toxicity Offsets” “Category 4” “Lowest Dose” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>cat4-vsr-offset-high</td>
+<td style="text-align: right;">1</td>
+<td>-1</td>
+<td colspan="2">Used if ncrm-has-ord-vsr=1 and num-categories=4, this is the value of the “Toxicity Offsets” “Category 4” “Highest Dose” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>group2-vsr-offset</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if two-sample=1, this is the value of the “Toxicity Offsets” “Group 2” “Lowest Dose” parameter</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>group2-vsr-offset-high</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">Used if two-sample=1, this is the value of the “Toxicity Offsets” “Group 2” “Highest Dose” parameter</td>
+</tr>
+<tr class="odd">
+<td>&lt;/parameterSets&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td>Simulation Settings</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;simulation-settings</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>num_sims</td>
+<td style="text-align: right;">1</td>
+<td>5</td>
+<td colspan="2">The number of simulations to run</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td colspan="4">burn</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>length</td>
+<td style="text-align: right;">1</td>
+<td>2500</td>
+<td colspan="2">The number of iterations of the MCMC loop used to estimate the parameters</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>rv_seed_1</td>
+<td style="text-align: right;">1</td>
+<td>3500</td>
+<td colspan="2">The first part (32 bits) of the random number seed for all simulations.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>rv_seed_2</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">The second part (32 bits) of the random number seed for all simulations.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>num_weeks_out</td>
+<td style="text-align: right;">1</td>
+<td>100</td>
+<td colspan="2">The number of simulations which will have their interim analysis results written out to file.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>num_freq_weeks_out</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">The number of simulations which will have their interim frequentist analysis results written out to file.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>num_subj_out</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">The number of simulations which will have their subject data written out to file.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>num_mcmc_files</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td colspan="2">The number of simulations which will have their MCMC samples written out to file.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>mcmc_thin</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">This is the factor by which the MCMC samples are thinned *when writing out the MCMC file*, it does not thin the samples used within FACTS. There is no option to thin the sampling within FACTS.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>mcmc_per_imputation</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">The number of MCMC samples between each imputation of missing data using the longitudinal model</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>is_local</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td colspan="2">Flag specifying where FACTS simulations are performed. 0=grid, 1=locally</td>
+</tr>
+<tr class="even">
+<td>&lt;/simulation-settings&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td>&lt;/facts&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td colspan="2"></td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<!-- footer.html -->
+
+<!-- FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pF6W3...<truncated>...Q==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+<style>
+
+  /* Make all footer icons the same color */
+  footer .fab,
+  footer .fas,
+  footer svg {
+    color: #125740;           /* ← pick whatever color your share-icons are using */
+    fill: currentColor;    /* ensures the SVG Bluesky icon matches */
+  }
+
+  /* Prevent links from overriding that color */
+  footer a {
+    color: inherit;
+  }
+
+  /* Share menu positioning */
+  #share-wrapper { position: relative; }
+  #share-menu {
+    display: none;
+    position: absolute;
+    bottom: 3rem;               /* float above the footer */
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px #125740;
+    gap: 1rem;
+    z-index: 100;
+  }
+  body.menu-open #share-menu { display: flex; }
+  #share-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* Left column: text + social permalinks */
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+  }
+  .footer-left p { margin: 0; }
+  .footer-left a.social {
+    color: inherit;
+    text-decoration: none;
+  }
+  .footer-left a.social i { font-size: 1.2em; }
+  
+  
+    /* Text color left */
+  .footer-left p > a {
+    color: #125740;
+  }
+
+  /* Text color last item */
+  footer > p:last-child a {
+    color: #125740;
+  }
+  
+    /* Link hover colors */
+  .footer-left p > a:hover,
+  footer > p:last-child a:hover {
+    color: #11A473;
+    text-decoration: underline;
+  }
+  
+</style>
+
+<footer style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
+  
+  <!-- Left: Berry Consultants + social permalinks -->
+  <div class="footer-left">
+    <p>
+      © <a href="https://www.berryconsultants.com">Berry Consultants</a>
+    </p>
+    <a href="https://twitter.com/BerryConsultant" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on X">
+      <i class="fab fa-x"></i>
+    </a>
+    <a href="https://www.linkedin.com/company/berry-consultants-llc" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on LinkedIn">
+      <i class="fab fa-linkedin"></i>
+    </a>
+    <a href="https://www.youtube.com/c/berryconsultants" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on YouTube">
+      <i class="fab fa-youtube"></i>
+    </a>
+  </div>
+
+  <!-- Center: share toggle + popup -->
+  <div id="share-wrapper">
+    <button id="share-toggle" aria-label="Share this page">
+      <i class="fas fa-share-alt" style="font-size:1.6em;"></i>
+    </button>
+    <div id="share-menu">
+      <!-- share icons injected here -->
+    </div>
+  </div>
+
+  <!-- Right: How to Cite -->
+  <p style="margin: 0;">
+    <a href="../../../introduction/citation.html">Cite</a>
+  </p>
+</footer>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const url   = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+    const networks = [
+      { name: "X",        href: `https://twitter.com/intent/tweet?url=${url}&text=${title}`,          icon: `<i class="fab fa-x" style="font-size:1.4em;"></i>` },
+      { name: "LinkedIn", href: `https://www.linkedin.com/feed/?shareActive=true&text=${title}%20${url}`, icon: `<i class="fab fa-linkedin" style="font-size:1.4em;"></i>` },
+      { name: "Bluesky",  href: `https://bsky.app/intent/compose?text=${title}%20${url}`,              icon: `
+        <svg width="1.4em" height="1.4em" fill="currentColor" viewBox="0 0 600 530">
+          <path d="m135.72 44.03c66.496 49.921 138.02 151.14 164.28 205.46 26.262-54.316 97.782-155.54 164.28-205.46 47.98-36.021 125.72-63.892 125.72 24.795 0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.3797-3.6904-10.832-3.7077-7.8964-0.0174-2.9357-1.1937 0.51669-3.7077 7.8964-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.4491-163.25-81.433-5.9562-21.282-16.111-152.36-16.111-170.07 0-88.687 77.742-60.816 125.72-24.795z"/>
+        </svg>` },
+      { name: "Reddit",   href: `https://www.reddit.com/submit?url=${url}&title=${title}`,         icon: `<i class="fab fa-reddit" style="font-size:1.4em;"></i>` },
+      { name: "WhatsApp", href: `https://wa.me/?text=${title}%20${url}`,                             icon: `<i class="fab fa-whatsapp" style="font-size:1.4em;"></i>` },
+      { name: "Email",    href: `mailto:?subject=${title}&body=${title}%20${url}`,                    icon: `<i class="fas fa-envelope" style="font-size:1.4em;"></i>` }
+    ];
+
+    // inject share icons
+    const menu = document.getElementById("share-menu");
+    networks.forEach(net => {
+      const a = document.createElement("a");
+      a.href      = net.href;
+      a.target    = "_blank";
+      a.rel       = "noopener";
+      a.setAttribute("aria-label", `Share on ${net.name}`);
+      a.innerHTML = net.icon;
+      menu.appendChild(a);
+    });
+
+    // toggle menu
+    const toggle = document.getElementById("share-toggle");
+    toggle.addEventListener("click", e => {
+      e.stopPropagation();
+      document.body.classList.toggle("menu-open");
+    });
+
+    // close on outside click
+    document.addEventListener("click", () => {
+      document.body.classList.remove("menu-open");
+    });
+    menu.addEventListener("click", e => e.stopPropagation());
+  });
+</script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/docs\.berryconsultants\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

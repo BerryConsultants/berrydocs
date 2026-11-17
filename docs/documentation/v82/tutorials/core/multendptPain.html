@@ -1,0 +1,2383 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Multiple Endpoint (Pain + Drug Tolerability)</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../">
+<link href="../../../../media/FACTS_icon.png" rel="icon" type="image/png">
+<script src="../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../site_libs/bootstrap/bootstrap-f24641f9662b15e1479722971e972498.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<!-- Roboto Serif -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
+
+<!-- Roboto Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WLMVE7GR4S');
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../../media/FACTSLogo.png" alt="" class="navbar-logo light-content">
+    <img src="../../../../media/FACTSLogo.png" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../introduction/index.html"> 
+<span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../documentation/index.html"> 
+<span class="menu-text">Documentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../get/index.html"> 
+<span class="menu-text">Get FACTS</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../contact/index.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Multiple Endpoint (Pain + Drug Tolerability)</h1>
+            <p class="subtitle lead">Phase 2 and 3 Design Tutorial</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#designs-featured" id="toc-designs-featured" class="nav-link" data-scroll-target="#designs-featured"><span class="header-section-number">2</span> Designs Featured</a></li>
+  <li><a href="#case-study-chronic-pain" id="toc-case-study-chronic-pain" class="nav-link" data-scroll-target="#case-study-chronic-pain"><span class="header-section-number">3</span> Case Study: Chronic Pain</a>
+  <ul>
+  <li><a href="#study" id="toc-study" class="nav-link" data-scroll-target="#study"><span class="header-section-number">3.1</span> Study</a>
+  <ul class="collapse">
+  <li><a href="#study-info" id="toc-study-info" class="nav-link" data-scroll-target="#study-info"><span class="header-section-number">3.1.1</span> Study Info</a></li>
+  <li><a href="#treatment-arms" id="toc-treatment-arms" class="nav-link" data-scroll-target="#treatment-arms"><span class="header-section-number">3.1.2</span> Treatment Arms</a></li>
+  <li><a href="#endpoints" id="toc-endpoints" class="nav-link" data-scroll-target="#endpoints"><span class="header-section-number">3.1.3</span> Endpoints</a>
+  <ul class="collapse">
+  <li><a href="#utility" id="toc-utility" class="nav-link" data-scroll-target="#utility"><span class="header-section-number">3.1.3.1</span> Utility</a></li>
+  <li><a href="#primary-endpoint" id="toc-primary-endpoint" class="nav-link" data-scroll-target="#primary-endpoint"><span class="header-section-number">3.1.3.2</span> Primary Endpoint</a></li>
+  <li><a href="#endpoint-2" id="toc-endpoint-2" class="nav-link" data-scroll-target="#endpoint-2"><span class="header-section-number">3.1.3.3</span> Endpoint 2</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#virtual-subject-response-explicitly-defined" id="toc-virtual-subject-response-explicitly-defined" class="nav-link" data-scroll-target="#virtual-subject-response-explicitly-defined"><span class="header-section-number">3.2</span> Virtual Subject Response – Explicitly Defined</a>
+  <ul class="collapse">
+  <li><a href="#pain" id="toc-pain" class="nav-link" data-scroll-target="#pain"><span class="header-section-number">3.2.1</span> Pain</a></li>
+  <li><a href="#tolerability" id="toc-tolerability" class="nav-link" data-scroll-target="#tolerability"><span class="header-section-number">3.2.2</span> Tolerability</a></li>
+  <li><a href="#composite-response" id="toc-composite-response" class="nav-link" data-scroll-target="#composite-response"><span class="header-section-number">3.2.3</span> Composite Response</a></li>
+  </ul></li>
+  <li><a href="#execution" id="toc-execution" class="nav-link" data-scroll-target="#execution"><span class="header-section-number">3.3</span> Execution</a>
+  <ul class="collapse">
+  <li><a href="#accrual" id="toc-accrual" class="nav-link" data-scroll-target="#accrual"><span class="header-section-number">3.3.1</span> Accrual</a></li>
+  <li><a href="#dropout-rate" id="toc-dropout-rate" class="nav-link" data-scroll-target="#dropout-rate"><span class="header-section-number">3.3.2</span> Dropout Rate</a></li>
+  </ul></li>
+  <li><a href="#quantities-of-interest" id="toc-quantities-of-interest" class="nav-link" data-scroll-target="#quantities-of-interest"><span class="header-section-number">3.4</span> Quantities of Interest</a>
+  <ul class="collapse">
+  <li><a href="#pain-tolerability-and-utility-tabs" id="toc-pain-tolerability-and-utility-tabs" class="nav-link" data-scroll-target="#pain-tolerability-and-utility-tabs"><span class="header-section-number">3.4.1</span> Pain, Tolerability, and Utility tabs</a></li>
+  <li><a href="#the-pain-endpoint-qoi-tab" id="toc-the-pain-endpoint-qoi-tab" class="nav-link" data-scroll-target="#the-pain-endpoint-qoi-tab"><span class="header-section-number">3.4.2</span> The Pain Endpoint QOI tab</a></li>
+  <li><a href="#the-tolerability-endpoint-qoi-tab" id="toc-the-tolerability-endpoint-qoi-tab" class="nav-link" data-scroll-target="#the-tolerability-endpoint-qoi-tab"><span class="header-section-number">3.4.3</span> The Tolerability Endpoint QOI tab</a></li>
+  <li><a href="#the-utility-endpoint-qoi-tab" id="toc-the-utility-endpoint-qoi-tab" class="nav-link" data-scroll-target="#the-utility-endpoint-qoi-tab"><span class="header-section-number">3.4.4</span> The Utility Endpoint QOI tab</a></li>
+  </ul></li>
+  <li><a href="#design" id="toc-design" class="nav-link" data-scroll-target="#design"><span class="header-section-number">3.5</span> Design</a>
+  <ul class="collapse">
+  <li><a href="#on-setting-priors" id="toc-on-setting-priors" class="nav-link" data-scroll-target="#on-setting-priors"><span class="header-section-number">3.5.1</span> On Setting Priors</a></li>
+  <li><a href="#pain-1" id="toc-pain-1" class="nav-link" data-scroll-target="#pain-1"><span class="header-section-number">3.5.2</span> Pain</a>
+  <ul class="collapse">
+  <li><a href="#dose-response" id="toc-dose-response" class="nav-link" data-scroll-target="#dose-response"><span class="header-section-number">3.5.2.1</span> Dose Response</a></li>
+  <li><a href="#frequentist-analysis" id="toc-frequentist-analysis" class="nav-link" data-scroll-target="#frequentist-analysis"><span class="header-section-number">3.5.2.2</span> Frequentist Analysis</a></li>
+  </ul></li>
+  <li><a href="#tolerability-1" id="toc-tolerability-1" class="nav-link" data-scroll-target="#tolerability-1"><span class="header-section-number">3.5.3</span> Tolerability</a>
+  <ul class="collapse">
+  <li><a href="#dose-response-1" id="toc-dose-response-1" class="nav-link" data-scroll-target="#dose-response-1"><span class="header-section-number">3.5.3.1</span> Dose Response</a></li>
+  <li><a href="#frequentist-analysis-1" id="toc-frequentist-analysis-1" class="nav-link" data-scroll-target="#frequentist-analysis-1"><span class="header-section-number">3.5.3.2</span> Frequentist Analysis</a></li>
+  </ul></li>
+  <li><a href="#allocation" id="toc-allocation" class="nav-link" data-scroll-target="#allocation"><span class="header-section-number">3.5.4</span> Allocation</a></li>
+  <li><a href="#successfutility-criteria" id="toc-successfutility-criteria" class="nav-link" data-scroll-target="#successfutility-criteria"><span class="header-section-number">3.5.5</span> Success/Futility Criteria</a></li>
+  </ul></li>
+  <li><a href="#simulation" id="toc-simulation" class="nav-link" data-scroll-target="#simulation"><span class="header-section-number">3.6</span> Simulation</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">3.7</span> Results</a></li>
+  </ul></li>
+  <li><a href="#adaptive-allocation-version" id="toc-adaptive-allocation-version" class="nav-link" data-scroll-target="#adaptive-allocation-version"><span class="header-section-number">4</span> Adaptive Allocation Version</a>
+  <ul>
+  <li><a href="#study-1" id="toc-study-1" class="nav-link" data-scroll-target="#study-1"><span class="header-section-number">4.1</span> Study</a>
+  <ul class="collapse">
+  <li><a href="#study-info-1" id="toc-study-info-1" class="nav-link" data-scroll-target="#study-info-1"><span class="header-section-number">4.1.1</span> Study Info</a></li>
+  </ul></li>
+  <li><a href="#design-1" id="toc-design-1" class="nav-link" data-scroll-target="#design-1"><span class="header-section-number">4.2</span> Design</a>
+  <ul class="collapse">
+  <li><a href="#allocation-1" id="toc-allocation-1" class="nav-link" data-scroll-target="#allocation-1"><span class="header-section-number">4.2.1</span> Allocation</a></li>
+  <li><a href="#interims" id="toc-interims" class="nav-link" data-scroll-target="#interims"><span class="header-section-number">4.2.2</span> Interims</a></li>
+  <li><a href="#quantities-of-interest-1" id="toc-quantities-of-interest-1" class="nav-link" data-scroll-target="#quantities-of-interest-1"><span class="header-section-number">4.2.3</span> Quantities of Interest</a></li>
+  <li><a href="#successfutility-criteria-1" id="toc-successfutility-criteria-1" class="nav-link" data-scroll-target="#successfutility-criteria-1"><span class="header-section-number">4.2.4</span> Success/Futility Criteria</a>
+  <ul class="collapse">
+  <li><a href="#interim-1" id="toc-interim-1" class="nav-link" data-scroll-target="#interim-1"><span class="header-section-number">4.2.4.1</span> Interim 1</a></li>
+  <li><a href="#final-evaluation" id="toc-final-evaluation" class="nav-link" data-scroll-target="#final-evaluation"><span class="header-section-number">4.2.4.2</span> Final Evaluation</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#simulation-1" id="toc-simulation-1" class="nav-link" data-scroll-target="#simulation-1"><span class="header-section-number">4.3</span> Simulation</a></li>
+  <li><a href="#results-1" id="toc-results-1" class="nav-link" data-scroll-target="#results-1"><span class="header-section-number">4.4</span> Results</a></li>
+  </ul></li>
+  <li><a href="#adaptive-allocation-with-early-stopping" id="toc-adaptive-allocation-with-early-stopping" class="nav-link" data-scroll-target="#adaptive-allocation-with-early-stopping"><span class="header-section-number">5</span> Adaptive Allocation with Early Stopping</a>
+  <ul>
+  <li><a href="#evaluation-criteria" id="toc-evaluation-criteria" class="nav-link" data-scroll-target="#evaluation-criteria"><span class="header-section-number">5.1</span> Evaluation Criteria</a></li>
+  <li><a href="#successfutility-criteria-2" id="toc-successfutility-criteria-2" class="nav-link" data-scroll-target="#successfutility-criteria-2"><span class="header-section-number">5.2</span> Success/Futility Criteria</a>
+  <ul class="collapse">
+  <li><a href="#interim-1-1" id="toc-interim-1-1" class="nav-link" data-scroll-target="#interim-1-1"><span class="header-section-number">5.2.1</span> Interim 1</a></li>
+  </ul></li>
+  <li><a href="#simulation-results" id="toc-simulation-results" class="nav-link" data-scroll-target="#simulation-results"><span class="header-section-number">5.3</span> Simulation Results</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<!-- example-files:begin -->
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Example files
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Download the FACTS files used in this tutorial and open them in FACTS with <em>File &gt; Open</em>.</p>
+<ul>
+<li><a href="multendptPainattachments/examples/Core-ME-Chronic-Pain-Ex1.facts" download="Core-ME-Chronic-Pain-Ex1.facts">Core-ME-Chronic-Pain-Ex1.facts</a> (Non-adaptive design)</li>
+<li><a href="multendptPainattachments/examples/Core-ME-Chronic-Pain-Ex2-Adaptive.facts" download="Core-ME-Chronic-Pain-Ex2-Adaptive.facts">Core-ME-Chronic-Pain-Ex2-Adaptive.facts</a> (Adaptive allocation version)</li>
+<li><a href="multendptPainattachments/examples/Core-ME-Chronic-Pain-Ex2-Adaptive_2.facts" download="Core-ME-Chronic-Pain-Ex2-Adaptive_2.facts">Core-ME-Chronic-Pain-Ex2-Adaptive_2.facts</a> (Adaptive allocation with early stopping)</li>
+</ul>
+</div>
+</div>
+<!-- example-files:end -->
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>This tutorial describes the Chronic Pain example trial design using the FACTS Core Design Engine for Multiple Endpoints. For this version of the document, the screenshots are from the 5.5 release of FACTS.</p>
+<p>The screenshots provided are approximate and may not reflect the exact layout of the information. The contents of each tab, however, will be consistent with the software.</p>
+<p>The designs presented are examples and may not be optimally calibrated.</p>
+</section>
+<section id="designs-featured" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Designs Featured</h1>
+<p>In this tutorial we begin create the following designs:</p>
+<ul>
+<li><p>Design 1</p>
+<ul>
+<li><p>Utility Index for the multiple endpoints</p></li>
+<li><p>Dose response modelling with a Second Order Normal Dynamic Linear Model (NDLM) for the primary endpoint and a Sigmoidal model for the second endpoint</p></li>
+<li><p>No adaptations, i.e.&nbsp;fixed allocation and no early stopping</p></li>
+</ul></li>
+<li><p>Design 2</p>
+<ul>
+<li><p>Add adaptations to Design 1</p>
+<ul>
+<li><p>Response adaptive randomization</p></li>
+<li><p>Early stopping for success and futility</p></li>
+</ul></li>
+</ul></li>
+<li><p>Design 3</p>
+<ul>
+<li>Add longitudinal modelling to Design 2</li>
+</ul></li>
+</ul>
+</section>
+<section id="case-study-chronic-pain" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Case Study: Chronic Pain</h1>
+<p>This case study is based on the paper “Innovative Approaches for Designing and Analyzing Adaptive Dose-Ranging Trials” Bornkamp et al (2007) Journal of Biopharmaceutical Statistics, 17, 965–995. Extended to include a second tolerability endpoint as in a second paper [ref required].</p>
+<p>The primary endpoint is change from baseline in the average weekly pain score on the 10pt Visual Analogue Scale (VAS) after 6-weeks, observed weekly. The target is to find a dose that is 1.17 points better than control in the mean change from baseline after 6 weeks.</p>
+<p>In addition there is a second, binary ‘tolerability’ endpoint, the background tolerability failure rate is 10%, a failure rate of worse than 20% is predicted to make the drug commercially unviable.</p>
+<p>The treatment arms are: Control, and control plus 8 active doses to study (assume dose units are 1, 2, 3, …, 8).</p>
+<p>Given utility indexes for the two endpoints, the goal is to find the dose with the maximum utility, and determine if it has sufficient utility for the drug to be developed further. A range of minimum efficacy targets, i.e.&nbsp;improvements from baseline compared to the control arm, will be examined. The desired maximum level for the lack of tolerability is not more than 10% worse than the control.</p>
+<section id="study" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="study"><span class="header-section-number">3.1</span> Study</h2>
+<p>Start FACTS, double click on: Core Design – Multiple Endpoint.</p>
+<p><img src="multendptPainattachments/media/image2.png" class="img-fluid"></p>
+<p>Using the menu option “File &gt; Save”, save this design as “Core-ME-Chronic-Pain-Ex1” in a convenient location (e.g.&nbsp;in a folder called FACTS\ Core-ME-Chronic-Pain-Ex1 in your ‘My Documents’ folder).</p>
+<section id="study-info" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="study-info"><span class="header-section-number">3.1.1</span> Study Info</h3>
+<p>Set the following parameters:</p>
+<ul>
+<li><p>This is a non-adaptive design</p></li>
+<li><p>With a maximum of 250 subjects</p></li>
+<li><p>Add a single visit at 6 weeks.</p></li>
+</ul>
+<p><img src="multendptPainattachments/media/image3.png" class="img-fluid"></p>
+</section>
+<section id="treatment-arms" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="treatment-arms"><span class="header-section-number">3.1.2</span> Treatment Arms</h3>
+<p>Set the following parameters:</p>
+<ul>
+<li><p>Include a control arm</p></li>
+<li><p>Auto generate 8 doses, starting at dose 1 with a spacing of 1.</p></li>
+</ul>
+<p><img src="multendptPainattachments/media/image4.png" class="img-fluid"></p>
+</section>
+<section id="endpoints" class="level3" data-number="3.1.3">
+<h3 data-number="3.1.3" class="anchored" data-anchor-id="endpoints"><span class="header-section-number">3.1.3</span> Endpoints</h3>
+<p>We would like to select a dose that maximizes our chance of achieving a target minimum efficacy while minimizing our risk of lack of tolerability due to side-effects. In order to ensure a sufficient degree of efficacy we will not just test for superiority against the control arm, but against the control arm plus a clinically significant difference (CSD). Setting the CSD in the comparison used to show sufficient efficacy to the desired margin of 1.3 will make it hard to show efficacy except where the improvement in response is substantially better than 1.3.</p>
+<p>In a similar manner to a ‘delta’ used in a non-inferiority test we need to pick as CSD somewhat less than1.3 in order to not exclude a dose with a true response of 1.3 but with randomly low data during the trial. To help us do this we will examine a range of CSDs, from 0.5 to 1.</p>
+<p>To help us select a dose that has sufficient efficacy and acceptable tolerability, we construct a utility function. The utility function comprises a utility function for each endpoint that will map the estimate of the response on that endpoint to a common “utility” scale of our choosing and then a means of combining the utility of each of the two endpoints into an overall utility score.</p>
+<p>Because we want a lack of tolerability rate of 20% or worse to equate to no-utility we choose to define the utility for this level of response on this endpoint as 0 and combine the utilities of the two endpoints by multiplying them. Keeping things simple we set the utility of a tolerability rate of less than 20% to be 1, (i.e.&nbsp;the belief is that a in-tolerable side-effect rate of over 20% would cause other drugs to be prescribed in preference, but as long as the rate was below that, the use of our drug would depend on its efficacy).</p>
+<p>On the pain scale endpoint we specify that a response (compared to control) of 1.17 points or more, (a difference 10% below our target of 1.3), has a utility of 1, and that any dose with an expected efficacy of 0 or less has a utility of 0. Between 1.17 and 0 we will make the utility decrease quadratically from 1 to 0.</p>
+<p>As the utility of each dose will be estimated by integrating over a large number of MCMC iterations the estimated utility in these ‘flat regions’ where the true utility is either 1 or 0 will be below 1 or above 0. Consider a dose where the mean estimate of the response on the intolerable side-effect scale is exactly 0.2, in roughly half the MCMC iterations it will have been less than 0.2 (and thus had a utility of 1) and in the other half it will have been above 0.2 (and thus have a utility of 0). Thus a dose with a mean estimate of response at “the step” between 1 and 0 will have a utility of 0.5 and doses with responses close to 0.2 will have utilities &lt;0.5 and &gt;0.5 and only gradually approach a utility of 0 or 1, only reaching them when the response rate so certainly below 0.2 or above 0.2 that in none of the MCMC samples was it the other side of the 0.2 threshold.</p>
+<p>Thus when we include such a step in the utility of an endpoint we do not expect to see a step in the estimate of the utility, but rather a utility that is proportional to the probability that the tolerability of the dose will be above or below the acceptable threshold. This is acceptable because the utility is not an externally accepted measure that we are tying to estimate as part of the claim, the utility is for internal decision making purposes – namely to help us select a dose that combines a good certainty of being both sufficiently efficacious and sufficiently tolerable.</p>
+<p>It would be interesting to explore the impact of changing the tolerability utility to use a linear decline from 1 to 0 over the range 0.1 to 0.2, this might also be more realistic.</p>
+<section id="utility" class="level4" data-number="3.1.3.1">
+<h4 data-number="3.1.3.1" class="anchored" data-anchor-id="utility"><span class="header-section-number">3.1.3.1</span> Utility</h4>
+<p>We will use multiplied utilities.</p>
+<p>Set the following parameters:</p>
+<ul>
+<li>In the dropdown menu for Component utility combination method, select U1 * U2</li>
+</ul>
+</section>
+<section id="primary-endpoint" class="level4" data-number="3.1.3.2">
+<h4 data-number="3.1.3.2" class="anchored" data-anchor-id="primary-endpoint"><span class="header-section-number">3.1.3.2</span> Primary Endpoint</h4>
+<p>The primary endpoint, U1, is change from baseline in the average weekly pain score.</p>
+<p>We set the following parameters:</p>
+<ul>
+<li><p>Rename Primary Endpoint: Pain by clicking on the name.</p></li>
+<li><p>Set Type: Continuous</p></li>
+<li><p>Set Response: Lower response is subject improvement</p></li>
+<li><p>We will not include baseline</p></li>
+<li><p>We will not use longitudinal modelling in this design</p></li>
+<li><p>Leave the Final visit: Visit 1 (wk 6)</p></li>
+<li><p>We now must fill in the Component Utility Function for Pain:</p>
+<ul>
+<li><p>Add “Knots” at –1.17 and 0.</p></li>
+<li><p>In the interval from –infinity to –1.17, the utility is 1, so set Gamma to 1.</p></li>
+<li><p>In the interval from –1.17 to 0 the utility falls off quadratically, set Alpha to 0.7305</p></li>
+</ul></li>
+</ul>
+<blockquote class="blockquote">
+<p>(because 0.7305*(-1.17)<sup>2</sup>=1). And Set Gamma to 0</p>
+</blockquote>
+<ul>
+<li><p>In the interval from 0 to infinity the utility is 0, set Gamma to 0.</p></li>
+<li><p>Check Parameterize response relative to control</p></li>
+</ul>
+<p><img src="multendptPainattachments/media/image5.png" class="img-fluid"></p>
+</section>
+<section id="endpoint-2" class="level4" data-number="3.1.3.3">
+<h4 data-number="3.1.3.3" class="anchored" data-anchor-id="endpoint-2"><span class="header-section-number">3.1.3.3</span> Endpoint 2</h4>
+<p>The second endpoint, U2, is a binary ‘tolerability’ endpoint, the toxic side effect endpoint.</p>
+<p>Set the following parameters:</p>
+<ul>
+<li><p>Rename Endpoint 2: Tolerability</p></li>
+<li><p>Set Type: Dichotomous</p></li>
+<li><p>Set: Response indicates negative outcome</p></li>
+</ul>
+<!-- -->
+<ul>
+<li><p>We will not use longitudinal modelling in this design</p></li>
+<li><p>Leave the Final visit: Visit 1 (wk 6)</p></li>
+<li><p>We now must fill in the Component Utility Function for Tolerability:</p>
+<ul>
+<li>This is for absolute response. Do NOT select Parameterize response relative to control.</li>
+</ul>
+<!-- -->
+<ul>
+<li><p>Add a “Knot” at 0.2</p></li>
+<li><p>In the interval from 0 to 0.2, the utility is 1, set Gamma to 1.</p></li>
+<li><p>In the interval from 0.2 to 1 the utility is 0, set Gamma to 0.</p></li>
+</ul></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image6.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<p>We have 2 endpoints here but the design allows for up to four endpoints.</p>
+</section>
+</section>
+</section>
+<section id="virtual-subject-response-explicitly-defined" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="virtual-subject-response-explicitly-defined"><span class="header-section-number">3.2</span> Virtual Subject Response – Explicitly Defined</h2>
+<section id="pain" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="pain"><span class="header-section-number">3.2.1</span> Pain</h3>
+<p>Five different possible dose response scenarios will be simulated. For each scenario, the mean change from baseline for each dose is:</p>
+<ul>
+<li><p><strong>For each one</strong> set the SD response (SD of ‘error’ in the endpoint) to 2.12 – this is easily overlooked, as the default value is 10, failing to set this will make it very hard for the design estimate the dose response. If your simulation results show large uncertainty and poor estimation of the dose response then you have incorrectly set this value on all your scenarios.</p></li>
+<li><p>Set the response for each dose from the corresponding row in the following table:</p></li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 13%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td rowspan="2" style="text-align: center;"><strong>Scenario</strong></td>
+<td colspan="9" style="text-align: center;"><strong>Dose</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>Control</strong></td>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: center;"><strong>3</strong></td>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: center;"><strong>5</strong></td>
+<td style="text-align: center;"><strong>6</strong></td>
+<td style="text-align: center;"><strong>7</strong></td>
+<td style="text-align: center;"><strong>8</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Flat</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Linear</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">-0.21</td>
+<td style="text-align: center;">-0.41</td>
+<td style="text-align: center;">-0.62</td>
+<td style="text-align: center;">-0.83</td>
+<td style="text-align: center;">-1.03</td>
+<td style="text-align: center;">-1.24</td>
+<td style="text-align: center;">-1.44</td>
+<td style="text-align: center;">-1.65</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Logistic</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">-0.03</td>
+<td style="text-align: center;">-0.13</td>
+<td style="text-align: center;">-0.39</td>
+<td style="text-align: center;">-0.85</td>
+<td style="text-align: center;">-1.31</td>
+<td style="text-align: center;">-1.57</td>
+<td style="text-align: center;">-1.67</td>
+<td style="text-align: center;">-1.70</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Emax</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">-1.01</td>
+<td style="text-align: center;">-1.3</td>
+<td style="text-align: center;">-1.43</td>
+<td style="text-align: center;">-1.51</td>
+<td style="text-align: center;">-1.56</td>
+<td style="text-align: center;">-1.60</td>
+<td style="text-align: center;">-1.63</td>
+<td style="text-align: center;">-1.65</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Umbrella</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">-0.5</td>
+<td style="text-align: center;">-0.92</td>
+<td style="text-align: center;">-1.25</td>
+<td style="text-align: center;">-1.47</td>
+<td style="text-align: center;">-1.6</td>
+<td style="text-align: center;">-1.65</td>
+<td style="text-align: center;">-1.6</td>
+<td style="text-align: center;">-1.47</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>Rename the Profiles to corresponds the scenario names in the table</p></li>
+<li><p>Note the CSD Target is displayed here. The CSD is set on the Quantities of Interest tab and will be discussed later in this tutorial.</p></li>
+</ul>
+<p><img src="multendptPainattachments/media/image7.png" class="img-fluid"></p>
+</section>
+<section id="tolerability" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="tolerability"><span class="header-section-number">3.2.2</span> Tolerability</h3>
+<p>For each efficacy scenario there is a corresponding tolerability scenario as the two are expected to be closely correlated. These scenarios were simply derived by assuming the probability of the lack of tolerability rises linearly from 0.1 for the control arm to 0.12 for the arm that is the lowest dose that gives an improvement of 1.3 or more and from that dose rising linearly to a probability of 0.24 at the highest dose.</p>
+<p>For the second endpoint, Tolerability, add five response scenarios:</p>
+<ul>
+<li><p>As the endpoint is dichotomous there is no final true sigma to set.</p></li>
+<li><p>Set the response for each dose from the corresponding row in the following table and rename the scenarios:</p></li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 13%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 7%">
+<col style="width: 7%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td rowspan="2" style="text-align: center;"><strong>Scenario</strong></td>
+<td colspan="9" style="text-align: center;"><strong>Dose</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>Control</strong></td>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: center;"><strong>3</strong></td>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: center;"><strong>5</strong></td>
+<td style="text-align: center;"><strong>6</strong></td>
+<td style="text-align: center;"><strong>7</strong></td>
+<td style="text-align: center;"><strong>8</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Flat</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Linear</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.1028</td>
+<td style="text-align: center;">0.1058</td>
+<td style="text-align: center;">0.1086</td>
+<td style="text-align: center;">0.1114</td>
+<td style="text-align: center;">0.1142</td>
+<td style="text-align: center;">0.1172</td>
+<td style="text-align: center;">0.12</td>
+<td style="text-align: center;">0.24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Logistic</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.104</td>
+<td style="text-align: center;">0.108</td>
+<td style="text-align: center;">0.112</td>
+<td style="text-align: center;">0.116</td>
+<td style="text-align: center;">0.12</td>
+<td style="text-align: center;">0.16</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.24</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Emax</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.1066</td>
+<td style="text-align: center;">0.133</td>
+<td style="text-align: center;">0.12</td>
+<td style="text-align: center;">0.144</td>
+<td style="text-align: center;">0.168</td>
+<td style="text-align: center;">0.192</td>
+<td style="text-align: center;">0.216</td>
+<td style="text-align: center;">0.24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Umbrella</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.105</td>
+<td style="text-align: center;">0.11</td>
+<td style="text-align: center;">0.115</td>
+<td style="text-align: center;">0.12</td>
+<td style="text-align: center;">0.15</td>
+<td style="text-align: center;">0.18</td>
+<td style="text-align: center;">0.21</td>
+<td style="text-align: center;">0.24</td>
+</tr>
+</tbody>
+</table>
+<p><img src="multendptPainattachments/media/image8.png" class="img-fluid"></p>
+</section>
+<section id="composite-response" class="level3" data-number="3.2.3">
+<h3 data-number="3.2.3" class="anchored" data-anchor-id="composite-response"><span class="header-section-number">3.2.3</span> Composite Response</h3>
+<p>Add five scenarios, rename them, and select the matching Pain and Tolerability scenarios:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 36%">
+<col style="width: 38%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td rowspan="2" style="text-align: center;"><strong>Scenario</strong></td>
+<td colspan="2" style="text-align: center;"><strong>Components</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>VAS Pain Scale</strong></td>
+<td style="text-align: center;"><strong>Toxic Side Effect</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Flat</td>
+<td style="text-align: center;">Flat</td>
+<td style="text-align: center;">Flat</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Linear</td>
+<td style="text-align: center;">Linear</td>
+<td style="text-align: center;">Linear</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Logistic</td>
+<td style="text-align: center;">Logistic</td>
+<td style="text-align: center;">Logistic</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Emax</td>
+<td style="text-align: center;">Emax</td>
+<td style="text-align: center;">Emax</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Umbrella</td>
+<td style="text-align: center;">Umbrella</td>
+<td style="text-align: center;">Umbrella</td>
+</tr>
+</tbody>
+</table>
+<p>If we have perfect knowledge of the dose-response on both endpoints, for each scenario, we would have an overall utility of:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 13%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td rowspan="2" style="text-align: center;"><strong>Scenario</strong></td>
+<td colspan="9" style="text-align: center;"><strong>Dose</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>Control</strong></td>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: center;"><strong>3</strong></td>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: center;"><strong>5</strong></td>
+<td style="text-align: center;"><strong>6</strong></td>
+<td style="text-align: center;"><strong>7</strong></td>
+<td style="text-align: center;"><strong>8</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Flat</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Linear</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.03</td>
+<td style="text-align: center;">0.12</td>
+<td style="text-align: center;">0.28</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0.77</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Logistic</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.11</td>
+<td style="text-align: center;">0.53</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Emax</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.75</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Umbrella</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.18</td>
+<td style="text-align: center;">0.62</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+</tbody>
+</table>
+<p>The FACTS User Interface allows us to mark those arms in each scenario that “should succeed” – in our case these are the arms with a utility of 1.</p>
+<p>Marking an arm as “should succeed” has no effect on the simulation of the trial, this flag is no passed to the simulator, the flag is used to compute some operating characteristics after the simulation is complete –</p>
+<ul>
+<li><p>“Ppn Correct Arm” which is the proportion of the simulations that were successful AND selected one of the arms marked “should succeed”</p></li>
+<li><p>and “Ppn Incorrect Arm” which is the proportion of the simulations that were successful AND selected one of the arms NOT marked “should succeed”</p></li>
+</ul>
+<p>The arm selection is done using one of the “Target QOI”s (see section 3.4 below) – the selection of which QOI is used is made on the “Variants” tab (whether variants are being used or not). In this case we use the selection criteria “the arm with the greatest probability of having the maximum utility”Pr(UMax)“.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image9.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image10.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<p>The 5 composite scenarios:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><strong>Flat</strong></th>
+<th style="text-align: center;"><strong>Linear</strong></th>
+<th style="text-align: center;"><strong>Logistic</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><p><img src="multendptPainattachments/media/image11.png" class="img-fluid"></p>
+<p>No doses “Should Succeed”</p></td>
+<td style="text-align: center;"><p><img src="multendptPainattachments/media/image12.png" class="img-fluid"></p>
+<p>Doses 6 &amp; 7 “Should Succeed”</p></td>
+<td style="text-align: center;"><p><img src="multendptPainattachments/media/image13.png" class="img-fluid"></p>
+<p>Doses 5, 6 &amp; 7 “Should Succeed”</p></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>Emax</strong></td>
+<td style="text-align: center;"><strong>Umbrella</strong></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><p><img src="multendptPainattachments/media/image14.png" class="img-fluid"></p>
+<p>Doses 2, 3, 4, 5, &amp; 6 “Should Succeed”</p></td>
+<td style="text-align: center;"><p><img src="multendptPainattachments/media/image15.png" class="img-fluid"></p>
+<p>Doses 3, 4, 5, &amp; 6 “Should Succeed”</p></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="execution" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="execution"><span class="header-section-number">3.3</span> Execution</h2>
+<section id="accrual" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="accrual"><span class="header-section-number">3.3.1</span> Accrual</h3>
+<p>Add an accrual scenario, and add 1 region with a peak accrual rate of 5 subjects per week.</p>
+<p><img src="multendptPainattachments/media/image16.png" class="img-fluid"></p>
+</section>
+<section id="dropout-rate" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="dropout-rate"><span class="header-section-number">3.3.2</span> Dropout Rate</h3>
+<p>We are assuming no dropouts, so Select No Dropouts as the only profile.</p>
+</section>
+</section>
+<section id="quantities-of-interest" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="quantities-of-interest"><span class="header-section-number">3.4</span> Quantities of Interest</h2>
+<p>We want to determine the probability of the mean pain response at the dose with the greatest utility compared to the Control dose, with the goal of this maximum utility dose being better on the pain score compared to the control by more than the Clinically Significant Difference. We examine a range of CSDs, from 0.5 to 1. Note that we are using the utility function to select the ‘best dose’, but not directly to judge success of the trial (and whether to run a subsequent trial). Success of the trial is based on best dose’s performance on the primary efficacy endpoint relative to placebo.</p>
+<p>To do this we have 3 tabs where information can be selected – one for each endpoint and one for the overall utility.</p>
+<p>We will need to specify</p>
+<ul>
+<li><p>Quantities of Interest (QOI) on the pain scale – one for each of the CSD’s we wish to explore.</p></li>
+<li><p>A QOI on the utility scale – specifying that we wish to identify as a ‘target’ dose the dose with the maximum utility.</p></li>
+<li><p>Decision QOIs on the pain scale – the evaluation of each of the probabilities of being better than control by each of the CSD’s at the Dose with the maximum utility (UMax).</p></li>
+<li><p>The tolerability endpoint is used as part of the calculation of utility and we do not need any QOI’s solely on this endpoint.</p></li>
+</ul>
+<section id="pain-tolerability-and-utility-tabs" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="pain-tolerability-and-utility-tabs"><span class="header-section-number">3.4.1</span> Pain, Tolerability, and Utility tabs</h3>
+<p>We want to determine the posterior probability of the difference of the maximum utility dose compared to control being greater less than -CSD, i.e.&nbsp;the maximum utility dose is better.</p>
+<p>Set the following parameters:</p>
+<ul>
+<li><p>We start by specifying our Target. Here our target will be the maximum Utility dose.</p>
+<ul>
+<li>So first, we go the <em>Utility tab</em>, select the Probability of being Target: Pr(UMax). Our decisions will be made on the dose most likely to be the maximum utility dose. The other utility QOIs that FACTS created by default can be deleted (note at the bottom of the tab is button for restoring the default QOIs should we later decide we need them, or we can re-create them by manually specifying equivalents).</li>
+</ul></li>
+<li><p>We go back to the <em>Pain tab.</em> and at the bottom of the page, ensure the trial type is set to Superiority then set the CSD to 0.8. Note, the CSD is NOT -0.8. We already specified that lower is subject improvement, thus FACTS understands that when comparing the difference between a dose and control we desire the result to be less than -0.8. However, we will examine multiple CSDs; specifying a single CSD here does not limit us to one CSD.</p></li>
+<li><p>On the <em>Pain tab</em>, for Posterior Probabilities we are interested comparing the max utility dose to the control arm and seeing if it is better than a clinically significant difference (CSD). We select:</p>
+<ul>
+<li><p>Pr(θ_d-θ_(Control)&lt;-0.8). The &lt; and Relative to Control and Delta were already filled in because we specified the CSD and comparison. Here lower scores are better so we are interested in evaluating whether the maximum dose has a difference from control less than -0.8.</p></li>
+<li><p>We want to add additional CSDs for comparison. We select:</p>
+<ul>
+<li><p>Add…</p></li>
+<li><p>Condition: &lt;</p></li>
+<li><p>Response Relation: Relative to: Control</p></li>
+<li><p>Delta: -0.6</p></li>
+</ul></li>
+<li><p>We repeat this process for additional CSDs of -0.5, -0.7, -0.9, -1, -1.13 and ?????</p></li>
+</ul></li>
+<li><p>On the <em>Pain tab</em>, we do not select a Probability of being Target because our target is the maximum Utility dose and that is entered on the Utility tab. The other targets could still be included, but here we delete the other targets to reduce output, and also the other default QOIs that we are not interested in.</p></li>
+<li><p>On the <em>Pain tab</em>, we enter a Decision Quantity. Note, decision quantities cannot be entered until a Target is specified, hence the need to jump to the Utility tab in step 1. Select:</p>
+<ul>
+<li><p>QOI (Vector Quantity): Pr(θ_d-θ_(Control)&lt;-0.8)</p></li>
+<li><p>Evaluation Dose: Utility: Greatest Pr(UMax)</p></li>
+<li><p>Repeat this step for the additional decision quantities related to our range of CSDs.</p></li>
+</ul></li>
+<li><p>On the <em>Tolerability tab</em> we delete all the default QOIs.</p></li>
+<li><p>On the <em>Utility tab</em>, at the bottom we specify the Clinically significant minimum utility (CSMU) as 1. This quantity is not used in our decisions, but it is a reference line on the graphs on the Virtual Subject Responses tab. We retain the Pr(UMax) QOI (which provided by default).</p></li>
+</ul>
+<p><img src="multendptPainattachments/media/image17.png" class="img-fluid"></p>
+</section>
+<section id="the-pain-endpoint-qoi-tab" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="the-pain-endpoint-qoi-tab"><span class="header-section-number">3.4.2</span> The Pain Endpoint QOI tab</h3>
+<p>The completed Quantities of Interest for Pain are shown here:</p>
+<p><img src="multendptPainattachments/media/image18.png" class="img-fluid"></p>
+</section>
+<section id="the-tolerability-endpoint-qoi-tab" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="the-tolerability-endpoint-qoi-tab"><span class="header-section-number">3.4.3</span> The Tolerability Endpoint QOI tab</h3>
+<p>The completed Quantities of Interest for Tolerability are shown here:</p>
+<p><img src="multendptPainattachments/media/image19.png" class="img-fluid"></p>
+</section>
+<section id="the-utility-endpoint-qoi-tab" class="level3" data-number="3.4.4">
+<h3 data-number="3.4.4" class="anchored" data-anchor-id="the-utility-endpoint-qoi-tab"><span class="header-section-number">3.4.4</span> The Utility Endpoint QOI tab</h3>
+<p>The completed Quantities of Interest for Utility are shown here:</p>
+<p><img src="multendptPainattachments/media/image20.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="design" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="design"><span class="header-section-number">3.5</span> Design</h2>
+<section id="on-setting-priors" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="on-setting-priors"><span class="header-section-number">3.5.1</span> On Setting Priors</h3>
+<p>On setting priors – as a rule it is recommended that the user specifies weakly informative priors rather than non-informative ones. There are a number of reasons for this:</p>
+<ol type="1">
+<li><p>In a few circumstances non-informative priors can end up being informative.</p></li>
+<li><p>What values make a prior non-informative vary depending on the range of the value being estimated, a measure with a SD of 1000 requires quite a different value for a prior to be non-informative than one with an SD of 1.</p></li>
+<li><p>Measures that are log-odds or log hazard ratios can have parameters that are then exponentiated and used as parameters to other distributions as a maximum these values should have range of (-10,10) and (-5,5). Greater than this and numeric overflows can occur.</p></li>
+<li><p>Using a “non-informative” prior can sometimes be used as an excuse for not thinking about the prior. Not thinking about a prior is never a good idea.</p></li>
+<li><p>There are some priors, particularly for the variance parameters of hierarchical models where (as we use inverse Gamma distributions for the priors, weakly informative priors are preferred to uninformative ones [Gelman 2006, “Prior distributions for variance parameters in hierarchical models” <em>Bayesian Analysis Vol 1 Number 3</em>]</p></li>
+<li><p>When simulating clinical trial designs there is a balance to be struck between the MCMC sample length used in the within-trial analyses and the number of simulations run. Weakly informative priors can help the MCMC to converge and allow us to use shorter sample lengths.</p></li>
+</ol>
+<p>For many priors the weakly informative is easily judged where the priors directly correspond to values that we are simulating. Others are not so easily judged, for these we used “non-informative” priors, ran some simulations and looked at the means and SDs of the posterior estimates of the parameters over all the scenarios and then based a weakly informative prior on these. You will see these priors below being described as having an “initial un-informative” prior and then a weakly informative one. Care must be taken with this approach to not over specify a prior based on the selection of scenarios, and it must be borne in mind that the scenarios may not capture the full potential variability in what the “truth value in nature” might actually be.</p>
+</section>
+<section id="pain-1" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="pain-1"><span class="header-section-number">3.5.2</span> Pain</h3>
+<section id="dose-response" class="level4" data-number="3.5.2.1">
+<h4 data-number="3.5.2.1" class="anchored" data-anchor-id="dose-response"><span class="header-section-number">3.5.2.1</span> Dose Response</h4>
+<p>We wish the design to be able to cope with non-monotonic dose response data for the primary endpoint, so we model the primary continuous endpoint using the Second Order NDLM.</p>
+<p>We assume the dose strengths give a linear range of doses in terms of the expected change in dose effect, so they are given dose levels of 0, 1, 2, ..., 8 and control is included in the model as the first dose</p>
+<p>If the response for the <em>i<sup>th</sup></em> subject given dose <em>d</em> at week 6 is <em>Y<sub>6i</sub></em>:</p>
+<p><span class="math display">\[Y_{6i} \sim N\left(\theta_d, \sigma^2\right) \text{ for } d = 0,1,\ldots,8\]</span></p>
+<p>We set the prior for the initial dose:</p>
+<p><span class="math display">\[\theta_0 \sim N\left(0, 0.5^2\right)\]</span></p>
+<p>The scenarios all use a control rate of 0, so a mean of 0 for the prior seems reasonable. An SD of 0.5 means that the +/- 2SD prior interval is (-1,+1) so any actual rate within that range should see little effect from this prior in the posterior estimate, whereas an observed rate outside that range will see some bias towards 0 in the posterior estimate. The SD of the endpoint is 2.12 (variance 4.5) so this prior (variance 0.25) is roughly equivalent to 18 observations with a sample mean of 0. As we will be simulating typically 50 subjects in control this will contribute some additional shrinkage to the final estimate of the response on control. It will contribute a considerably greater proportionate effect at early interims with a lot less actual data. Exploring how useful this is in this example is left the reader, it is very easily done by making a slight change to this example and re-running the simulations.</p>
+<p>Prior for the First dose difference:</p>
+<p><span class="math display">\[\theta_1 - \theta_0 \sim N\left(0, 2^2\right)\]</span></p>
+<p>Here we use a weakly informative, conservative prior, the mean of the prior is that there is no change in response from the Control to the first dose. An SD of 2 means that the +/- 2SD prior interval is (-4,4). All our expected changes are well inside this range – the maximum difference of any dose from control is ~1.7 and the SD of the endpoint is 2.12.</p>
+<p>The next two prior distributions use the Inverse Gamma distribution, these can be specified in FACTS using one of two parameterizations – either the “Alpha, Beta” parameterization which is the more normal parameterization for statisticians, or the “Central value and Weight” parameterization. It is easier with the latter form to discuss the likely impact of the prior so this is the form that will be used here. The FACTS “Settings” menu command can be used to select the form you use. See “Settings &gt; Options &gt; Gamma Distribution Parameters”.</p>
+<p>The 2<sup>nd</sup> Order NDLM smoothing parameter <span class="math inline">\(\tau^{2}\)</span> is similar to one of those variance parameters of a hierarchical distribution, and as the data being modeled is the change in dose response between doses the number of actual observations in this case to 7 and the prior can play an important role. If we have strong prior that this is a small value, the 2<sup>nd</sup> order NDLM will tend to a straight line (extreme smoothing) and if we have a strong prior that this is a large value, the 2<sup>nd</sup> order NDLM will tend to simple pairwise comparison (no smoothing). Thus if we weight the prior to a small value we can reduce type 1 error – as the Null case is a flat straight line, but at the expense of underestimating the dose response at doses where there are large changes in response from one dose to the next.</p>
+<p>Initial simulations were run with prior mean and weight of 1 and 0.1. For this parameter this gave an average for the posterior mean of 0.43 with and SD over the simulations of 0.1 and an average SD of the posterior estimate over the simulations of 0.26. However on the Emax scenario we saw the smoothing cause a biased under estimate of the response on the first dose of -0.22. (~22%) so we strengthened the prior for tau at a slightly higher value choosing a mean of 0.6 and a weight of 5.</p>
+<p><span class="math display">\[\tau^2 \sim IG\left(0.6, 5\right)\]</span></p>
+<p>This marginally reduced the bias at the first dose in the Emax scenario to -0.19. This prior could be further refined by exploring the error and bias of the response estimates across the scenarios at different prior means and weights – particularly at the key doses.</p>
+<p>For the nuisance parameter <span class="math inline">\(\sigma\)</span> we specified a prior with a mean of 2 close to the scenario mean and weight of 5 – equivalent to 5 observed subjects - so in the posterior estimate, the prior will be quickly dominated by the observed data. With a well research endpoint it would be not usual to have a strong prior expectation for the value of this parameter.</p>
+<p><span class="math display">\[\sigma^{2}\sim IG(2,5)\]</span></p>
+<p>Set the following parameters:</p>
+<ul>
+<li><p>Select Model: Second Order NDLM</p></li>
+<li><p>For the initial dose set the prior mean to be 0 and standard deviation to be 0.5</p></li>
+<li><p>For the first dose difference, set the prior mean to be 0 and standard deviation to be 2</p></li>
+<li><p>For the “smoothing factor”, tau<em><sup>2</sup></em> (<em>τ<sup>2</sup></em>) set the prior mean to be 0.6 with weight of 5.</p></li>
+<li><p>Set Error Parameters: Sigma prior mean to be 2, and with weight of 5</p></li>
+<li><p>Control is not modeled separately</p></li>
+</ul>
+<p><img src="multendptPainattachments/media/image25.png" class="img-fluid"></p>
+</section>
+<section id="frequentist-analysis" class="level4" data-number="3.5.2.2">
+<h4 data-number="3.5.2.2" class="anchored" data-anchor-id="frequentist-analysis"><span class="header-section-number">3.5.2.2</span> Frequentist Analysis</h4>
+<p>Since we have no dropouts, we leave just LOCF checked</p>
+<p>The required alpha and the contrast coefficients can be set for the frequentist analysis. We leave them unchanged.</p>
+</section>
+</section>
+<section id="tolerability-1" class="level3" data-number="3.5.3">
+<h3 data-number="3.5.3" class="anchored" data-anchor-id="tolerability-1"><span class="header-section-number">3.5.3</span> Tolerability</h3>
+<section id="dose-response-1" class="level4" data-number="3.5.3.1">
+<h4 data-number="3.5.3.1" class="anchored" data-anchor-id="dose-response-1"><span class="header-section-number">3.5.3.1</span> Dose Response</h4>
+<p>The second endpoint is strongly expected to be monotonic, so a 4-pararmeter sigmoid is used to model the log-odds of the probability of a lack of tolerability.</p>
+<p>If the rate of intolerability response for the subjects on dose <em>d</em> is P<em><sub>d</sub></em>:</p>
+<p><span class="math display">\[P_{d} = \frac{e^{\theta_{d}}}{1 + e^{\theta_{d}}}\]</span></p>
+<p>We will model the mean response:</p>
+<p><span class="math display">\[\theta_d \sim a_1 + \frac{\left(a_2 - a_1\right) v_d^{a_4}}{v_d^{a_4} + a_3^{a_4}} \text{ for } d = 0,\ldots,8\]</span></p>
+<p>Where a<sub>1</sub> is the response at the lowest modeled dose, a<sub>2</sub> some maximal response that is approached asymptotically, a<sub>3</sub> is the dose level at which half the increase from a<sub>1</sub> to a<sub>2</sub> is observed, and a<sub>4</sub> is a “hill” parameter defining the slope.</p>
+<p>Bearing this in mind initially the priors for the model parameters of are set to:</p>
+<p><span class="math inline">\(a_1 \sim N\left(-2, 1^2\right)\)</span>, <span class="math inline">\(a_2 \sim N\left(0, 1^2\right)\)</span></p>
+<p><span class="math inline">\(a_3 \sim N^{+}\left(4, 3^2\right)\)</span>, <span class="math inline">\(a_4 \sim N^{+}\left(12, 100^2\right)\)</span></p>
+<p>The mean of the prior for a<sub>1</sub> corresponds to a probability of 0.12 and +/- 2 standard deviations gives a probability range from 0.02 to 0.5. As the mean tolerability rate on Control is 0.1 in all scenarios this is close to being correctly centered and is clearly only weakly informative.</p>
+<p>The mean of the prior for a<sub>2</sub> corresponds to a probability of 0.5 and +/- 2 standard deviations gives a probability range from 0.12 to 0.88. In the tolerability scenarios the lack of tolerability never reaches the plateau value that this parameter estimates. The scenarios only go as far as a rising lack of tolerability reaching a rate of 0.24.</p>
+<p>The mean for the prior for a<sub>3</sub> corresponds to the middle of the dose range and +/- 2 standard deviations gives a dose range from 0 to 10 – covering but not drastically exceeding the dose range being studied.</p>
+<p>The mean for the prior for a<sub>4</sub> corresponds to a reasonable slope (change in rate of 0.13 from d<sub>3</sub> to d<sub>4</sub>) at the mean values for the other parameters, and the SD of 100 allows for a great deal of variation in the final value.</p>
+<p>However after looking at the posterior estimates for these parameters from the initial run we saw that a<sub>3</sub> and a<sub>4</sub> were 6 and 77 respectively. As there are relatively few toxic event on each dose this endpoint was in some simulations being estimated poorly and so the priors for a3 and a4 were revised to</p>
+<p><span class="math inline">\(a_{3}\sim N^{+}\left( 6,2^{2} \right)\)</span>, <span class="math inline">\(a_{4}\sim N^{+}\left( 80,100^{2} \right)\)</span></p>
+<p>Set the following parameters:</p>
+<ul>
+<li><p>Select Model: Sigmoidal</p></li>
+<li><p>For the prior distributions for the 4 alpha parameters set</p>
+<ul>
+<li><p>Λ<sub>1</sub> = -2, λ<sub>1</sub> = 1 (log odds of: –4, -2, 0 correspond to probabilities of: 0.02, 0.12, 0.5 respectively)</p></li>
+<li><p>Λ<sub>2</sub> = 0, λ<sub>2</sub> = 1 (log odds of: –2, 0, 2 correspond to probabilities of: 0.05, 0.5, 0.88 respectively)</p></li>
+<li><p>Λ<sub>3</sub> = 6, λ<sub>3</sub> = 2 (spans the upper half of the dose range)</p></li>
+<li><p>Λ<sub>4</sub> = 80, λ<sub>4</sub> = 100</p></li>
+</ul></li>
+<li><p>Control is not modeled separately</p></li>
+</ul>
+<p><img src="multendptPainattachments/media/image31.png" class="img-fluid"></p>
+</section>
+<section id="frequentist-analysis-1" class="level4" data-number="3.5.3.2">
+<h4 data-number="3.5.3.2" class="anchored" data-anchor-id="frequentist-analysis-1"><span class="header-section-number">3.5.3.2</span> Frequentist Analysis</h4>
+<p>Since we have no dropouts, we leave just LOCF checked.</p>
+<p>The required alpha and the contrast coefficients can be set for the frequentist analysis. We leave them unchanged.</p>
+</section>
+</section>
+<section id="allocation" class="level3" data-number="3.5.4">
+<h3 data-number="3.5.4" class="anchored" data-anchor-id="allocation"><span class="header-section-number">3.5.4</span> Allocation</h3>
+<p>Because we selected Non-Adaptive on the Study Info screen, only fixed allocation is available, specify a ratio of 2 on control and 1 on each study dose.</p>
+<p>Set the following parameters:</p>
+<ul>
+<li>Set the allocation ratio as 2 for Control, and 1 for every other arm.</li>
+</ul>
+<p><img src="multendptPainattachments/media/image32.png" class="img-fluid"></p>
+</section>
+<section id="successfutility-criteria" class="level3" data-number="3.5.5">
+<h3 data-number="3.5.5" class="anchored" data-anchor-id="successfutility-criteria"><span class="header-section-number">3.5.5</span> Success/Futility Criteria</h3>
+<p>Here we only have a Final Evaluation tab; this initial design will not use any early stopping.</p>
+<p>The trial will be judged a success if at the end of the trial:</p>
+<ul>
+<li>the dose most likely to have the maximum utility dose has a posterior probability that its mean improvement minus the Control arm is better than 0.8, is greater than 75%.</li>
+</ul>
+<p>The trial will be judged to be futile if at the end of the trial:</p>
+<ul>
+<li>the dose most likely to have the maximum utility has a posterior probability that its mean improvement minus the Control arm is better than 0.8, is less than 25%.</li>
+</ul>
+<p>Otherwise the trial will be judged to be inconclusive.</p>
+<p>Note that we are using the utility function to select the ‘best dose’, but not directly to judge success of the trial (and whether to run a subsequent trial). Success is based on best dose’s performance on the primary efficacy endpoint relative to control.</p>
+<p>Set the following parameters:</p>
+<ul>
+<li><p>Futility Criteria:</p>
+<ul>
+<li><p>QOI: Add “Pain: Pr(θ_d-θ_(Control)&lt;-0.8); d=Utility; Greatest Pr(UMax)</p></li>
+<li><p>Condition: &lt;</p></li>
+<li><p>Threshold: 0.25</p></li>
+<li><p>Combine criteria using: Leave as default since we have specified only one QOI</p></li>
+</ul></li>
+<li><p>Success Criteria:</p>
+<ul>
+<li><p>QOI: Add “Pain: Pr(θ_d-θ_(Control)&lt;-0.8); d=Utility; Greatest Pr(UMax)</p></li>
+<li><p>Condition: &gt;</p></li>
+<li><p>Threshold: 0.75</p></li>
+<li><p>Combine criteria using: Leave as default since we have specified only one QOI</p></li>
+</ul></li>
+</ul>
+<p>Thus, if the probability of the mean response at the dose with the greatest utility being better than Control by more than the 0.8 is 75% or better the compound will be successful. If the probability that the mean response at dose with the greatest utility is better than Control by more than 0.8, is less than 25% the trial is a failure. For anything not meeting either of these criteria, the trial results are inconclusive. The thresholds for success and futility were determined by examining the results of simulations. The rationale for selection 0.8 as the desired amount of improvement over control was also determined by examining simulation results and the range of clinically meaning differences that were supplied. Additional details will be discussed in the Simulations section.</p>
+<p><img src="multendptPainattachments/media/image33.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="simulation" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="simulation"><span class="header-section-number">3.6</span> Simulation</h2>
+<p>Set the number of simulations to run to 10, Select all Scenarios, then press Simulate. This allows us to make a quick assessment of whether the design is behaving as expected: that the flat scenario’s end up mainly futile and the others mainly successful. With a fixed allocation in this design, the other scenarios will have lower probabilities of late success.</p>
+<p>If the results look reasonable, increase the number of simulations to run to 100, (re-check the 5 scenario combinations we wish to run) and then press Simulate again. If the results still look promising run 1,000.</p>
+<p><img src="multendptPainattachments/media/image34.png" class="img-fluid"></p>
+</section>
+<section id="results" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="results"><span class="header-section-number">3.7</span> Results</h2>
+<p>Review the following to see if the design is successful</p>
+<ol type="1">
+<li><p>Determine if, on the Flat, ineffective, scenario there are not too many type 1 errors (trials that end up successful). Here we see a proportion of 0.008 of the trials declared as late successes.</p></li>
+<li><p>Determine if, on the effective scenarios that there are sufficient successful (sufficient power) trials. We see power ranging from 0.8 to 0.89.</p></li>
+<li><p>Determine that the Umax are correctly identified given the data observed. We click on Show Other Columns – Probabilities. For the Emax scenario, Dose 2 was found to have the greatest probability of UMax in 67% of the trials simulated.</p></li>
+</ol>
+<p><img src="multendptPainattachments/media/image35.png" class="img-fluid"></p>
+<p>We can also graph the distribution of the selection of doses as Umax from the FACTS graph viewer:</p>
+<ul>
+<li>Click “View Graph” on the Simulation tab:</li>
+</ul>
+<blockquote class="blockquote">
+<p><img src="multendptPainattachments/media/image36.png" class="img-fluid"></p>
+</blockquote>
+<p>We can see a simple summary of how often by selecting the dose with the highest Pr(UMax) we correctly select one of the doses that we marked as “Should Succeed” by looking at the “Ppn Correct Arm” column in the simulation summary results:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image37.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<p>We can see that in the Emax case we select correctly a reasonable 0.9 of the simulations, but we fare less well in the other scenarios, with probabilities of 0.69, 0.64 and 0.45 in the Logistic, Umbrella and Linear scenarios respectively.</p>
+<p>From the graphs available there is a particularly useful one for examining model fit of the utility for each of the given scenarios. The graph displays the true utility, the fitted utility, and the allocation for each arm. To view this graph, click on View Graph and select graph Utility and Subject Allocation.</p>
+<p><img src="multendptPainattachments/media/image38.png" class="img-fluid"></p>
+<p>See how the estimated analysis is below the true utility when its one and above it when its zero. This is because when the utility function has a plateau that is approached from below or above the averaged estimate of the utility can only be below / above the value of the plateau.</p>
+<p>We also examine useful graphs that assist in selecting the thresholds and the desired improvement from Control. On the QOI tab, we had five Posterior Probabilities and Decision Quantities computed for clinically significant differences ranging from 0.5 to 0.9. We evaluate all of these CSDs in one run of simulations to understand how different thresholds (success and futility) and CSDs will perform in the different virtual subject response scenarios.</p>
+<p>To do this, we highlight a scenario, go to View Graph, and examine the graph: Explore: Final Success Criteria. This plot displays the proportion of simulations satisfying the final success criteria for each threshold ranging from 0.5 to 0.9 for each of the CSDs in the selected scenario. Examining the Success criteria plot, we determine which cut-offs in the null case, i.e.&nbsp;Flat scenario, will limit false successes to 0.025. A threshold of approximately 0.75 will work for a CSD of 0.6 for example. We balance this with examining the weakest of the other scenarios, i.e.&nbsp;Linear scenario. For each CSD the threshold that controls the type-1 error at a given level in the Null scenario gives the same power in an alternate scenario as the other QOIs using different CSDs and thresholds.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 50%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>CSD</th>
+<th>Threshold to give 0.025 success in Null case.</th>
+<th>Power in Linear scenario</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0.5</td>
+<td>0.825</td>
+<td>0.95</td>
+</tr>
+<tr class="even">
+<td>0.6</td>
+<td>0.75</td>
+<td>0.95</td>
+</tr>
+<tr class="odd">
+<td>0.7</td>
+<td>0.675</td>
+<td>0.95</td>
+</tr>
+<tr class="even">
+<td>0.8</td>
+<td>0.575</td>
+<td>0.95</td>
+</tr>
+<tr class="odd">
+<td>0.9</td>
+<td>0.5</td>
+<td>0.95</td>
+</tr>
+</tbody>
+</table>
+<p>Thus when only considering type-1 error and power, choosing CSD is more a matter of taste – after success do we wish to claim a high probability of having beaten a relatively low CSD or a relatively low probability of having beaten a high CSD?</p>
+<p>For the rest of this example we use the CSD of 0.6.</p>
+<p>Investigating type-1 error: the proportion of simulations that would be successful in the 'Flat' (Null) scenario at different thresholds, for all decision QOIs</p>
+<p>Investigating power: the proportion of simulations that would be successful in the ‘Linear’ scenario at different thresholds, for all decision QOIs</p>
+<blockquote class="blockquote">
+<p>Modifying the decision criteria to use “Pain: Pr(θ_d-θ_(Control)&lt;-0.6); d=Utility; Greatest Pr(UMax) &gt; 0.75” we get the following results:</p>
+</blockquote>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 36%">
+<col style="width: 36%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Scenario</th>
+<th style="text-align: right;">Ppn Late Success</th>
+<th style="text-align: right;">Ppn Correct Arm</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Flat</td>
+<td style="text-align: right;">0.025</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td>Linear</td>
+<td style="text-align: right;">0.96</td>
+<td style="text-align: right;">0.448</td>
+</tr>
+<tr class="odd">
+<td>Logistic</td>
+<td style="text-align: right;">0.957</td>
+<td style="text-align: right;">0.688</td>
+</tr>
+<tr class="even">
+<td>Emax</td>
+<td style="text-align: right;">0.981</td>
+<td style="text-align: right;">0.907</td>
+</tr>
+<tr class="odd">
+<td>Umbrella</td>
+<td style="text-align: right;">0.983</td>
+<td style="text-align: right;">0.639</td>
+</tr>
+</tbody>
+</table>
+<p>We can also see the arm selection by scenario in detail in the “Across Scenario Graphs” – “Selcted Arms”:</p>
+<p><img src="multendptPainattachments/media/image41.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="adaptive-allocation-version" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Adaptive Allocation Version</h1>
+<p>To create the adaptive version of this design, open the fixed design and use the menu option File &gt; SaveAs and save a version of the design with a new name, for example Chronic Pain Case Study (DF Multiple Endpt) -Adaptive. We will now, in two separate steps, add response adaptive randomization and early stopping for futility and success to the design.</p>
+<p>The steps below will go through the portions of the design to be changed. If a feature is not discussed it is unchanged with respect to the fixed design.</p>
+<p>Note, the adaptive design below is an example, the design is not necessarily optimized and additional iterations might furtherimprove the operating characteristics.</p>
+<section id="study-1" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="study-1"><span class="header-section-number">4.1</span> Study</h2>
+<section id="study-info-1" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="study-info-1"><span class="header-section-number">4.1.1</span> Study Info</h3>
+<p>We select the following options:</p>
+<ul>
+<li>Design Options: Adaptive</li>
+</ul>
+<p><img src="multendptPainattachments/media/image42.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="design-1" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="design-1"><span class="header-section-number">4.2</span> Design</h2>
+<section id="allocation-1" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="allocation-1"><span class="header-section-number">4.2.1</span> Allocation</h3>
+<p>Set the following parameters:</p>
+<ul>
+<li><p>Select Adaptive Allocation</p></li>
+<li><p>Set the Allocation ratio to 2:1:1 … as in the fixed design. (The optimal allocation ratio with D multiple arms compared to one control is <span class="math inline">\(\sqrt{D}:1:1:1\ \)</span>at least with pair-wise comparisons and using a Dunnett’s test – but we already have good power, we’re using a dose response model and we need subjects allocated to the dose arms to help select the Pr(Umax)).</p></li>
+<li><p>For the Control arm:</p>
+<ul>
+<li><p>Select Fix Alloc.</p></li>
+<li><p>Set: Post Interim Alloc. Per Block to 2</p></li>
+</ul></li>
+<li><p>Set Post first interim block size to 8. Thus, randomization to control will be fixed at 25%, 2 out of every 8.</p></li>
+<li><p>Add Adaptive Allocation Target</p>
+<ul>
+<li><p>QOI: Utility: Pr(Umax). We will adjust randomization based on the probability that a dose is the maximum utility dose. The Pr(Umax) dose is the dose that we are looking to select for the next phase of development and using for decision making in this stage.</p></li>
+<li><p>Weight For: Probability</p>
+<ul>
+<li>We could choose to weight for information because it is less aggressive, however we have a lot of doses, a fairly small sample size, frequent adaptations (as you will see on the next tab, we set the interims to be every 2 weeks), so the allocation can change if the emerging data changes where the UMax is and a dose-response model that smoothes between doses. Here we have opted to be more aggressive so we get a significant allocation imbalance in favor of the UMax dose. Feel free to experiment with alternatives.</li>
+</ul></li>
+<li><p>Relative Weight: 1. This parameter is relevant if you have more than one QOI on which randomization probabilities are computed.</p></li>
+</ul></li>
+<li><p>Set Allocation probability set to zero for values less than: 0.05.</p></li>
+<li><p>Set the allocation power to 2.</p>
+<ul>
+<li>The smaller the value the less aggressive the adaptation, 2 is fairly aggressive and used for the same reasons as we used weighting for probability rather than information.</li>
+</ul></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image43.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+</section>
+<section id="interims" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="interims"><span class="header-section-number">4.2.2</span> Interims</h3>
+<p>Set the following parameters:</p>
+<ul>
+<li><p>Subject Information Defined By: Subjects Enrolled</p></li>
+<li><p>Specify Interims By:</p>
+<ul>
+<li><p>Time – every: 2 weeks</p></li>
+<li><p>First interim at 60 subjects enrolled. (With an average accrual rate of 5 subjects per week and 6 week endpoint, this should be approximately after 12 weeks and the first 30 subjects complete).</p></li>
+</ul></li>
+<li><p>The randomization will be in a 14:5:5:…5 ratio until 60 subjects are enrolled, 16-17 subjects on control and 5-6 per dose, and interim analyses begin.</p></li>
+<li><p>Select: Continue follow-up if study stopped for success.</p></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image44.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+</section>
+<section id="quantities-of-interest-1" class="level3" data-number="4.2.3">
+<h3 data-number="4.2.3" class="anchored" data-anchor-id="quantities-of-interest-1"><span class="header-section-number">4.2.3</span> Quantities of Interest</h3>
+<p>We chose to examine posterior probabilities for CSDs of 0.5, 0.6, 0.7, 0.8 and 0.9 in the fixed design. Having chosen to use the 0.6 CSD, we eliminate the other QOIs we used in the fixed design to speed up simulations and reduce output.</p>
+<p><img src="multendptPainattachments/media/image45.png" class="img-fluid"></p>
+</section>
+<section id="successfutility-criteria-1" class="level3" data-number="4.2.4">
+<h3 data-number="4.2.4" class="anchored" data-anchor-id="successfutility-criteria-1"><span class="header-section-number">4.2.4</span> Success/Futility Criteria</h3>
+<section id="interim-1" class="level4" data-number="4.2.4.1">
+<h4 data-number="4.2.4.1" class="anchored" data-anchor-id="interim-1"><span class="header-section-number">4.2.4.1</span> Interim 1</h4>
+<p>Now that we have interim analyses, we have an Interim 1 tab. This is where we will set the details for the early stopping for futility and success criteria in the second version of the adaptive design. For now we leave the check boxes by Futility Criteria and Success Criteria unchecked – we want to check and tune the adaptive allocation before looking at early stopping.</p>
+<p><img src="multendptPainattachments/media/image46.png" class="img-fluid"></p>
+</section>
+<section id="final-evaluation" class="level4" data-number="4.2.4.2">
+<h4 data-number="4.2.4.2" class="anchored" data-anchor-id="final-evaluation"><span class="header-section-number">4.2.4.2</span> Final Evaluation</h4>
+<p>We need to make sure the Final Evaluation criteria use the CSD of 0.6.</p>
+<p><img src="multendptPainattachments/media/image47.png" class="img-fluid"></p>
+</section>
+</section>
+</section>
+<section id="simulation-1" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="simulation-1"><span class="header-section-number">4.3</span> Simulation</h2>
+<p>Running the simulation is the same as for the fixed design – we run 1,000 simulations, but opt to also output 1000 “weeks” files. This is so that we can analyze the interim results to help us select a early stopping criteria, and the more results we have the more robust this process will be.</p>
+</section>
+<section id="results-1" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="results-1"><span class="header-section-number">4.4</span> Results</h2>
+<p>Review the following to see if the design is successful</p>
+<ol type="1">
+<li><p>Determine if, on the Flat, ineffective, scenario there are not too many type 1 errors (trials that end up successful). Here we see 0.011 of the trials declared late successes, fewer than in the fixed design.</p></li>
+<li><p>Determine if, on the effective scenarios that there are sufficient successful (sufficient power) trials. Here we similar power to the fixed design, with power of 0.939-0.988. Similar to the fixed deisgn.</p></li>
+<li><p>Determine that the Umax are correctly identified given the data observed. We click on Show Other Columns – Probabilities. For the Emax scenario, Dose 2 was found to have the greatest probability of UMax in 60% of the trials simulated. This is similar to the 62% from the fixed design.</p></li>
+<li><p>Examine subject allocation per arm. The mean allocations per arm may be seen clicking on Show Other Columns – Allocation. In this adaptive design, a higher proportion of the subjects are randomized to the better performing arm as a result of the adaptive randomization algorithm.</p></li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image48.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image49.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a computer screen Description automatically generated</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image50.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a cell phone Description automatically generated</figcaption>
+</figure>
+</div>
+<p>It is easiest to review adaptive subject allocation and pr(Umax) selection graphically. We include the Per Scenario graphs of Pr(Umax) selection from the fixed design for comparison.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 30%">
+<col style="width: 30%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th rowspan="2">Scenario</th>
+<th colspan="2">Adaptive</th>
+<th>Fixed</th>
+</tr>
+<tr class="even">
+<th>Subject Allocation</th>
+<th>Ppn Umax</th>
+<th>Ppn Umax</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Linear</td>
+<td><img src="multendptPainattachments/media/image51.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image52.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image53.png" class="img-fluid"></td>
+</tr>
+<tr class="even">
+<td>Logistic</td>
+<td><img src="multendptPainattachments/media/image54.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image55.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image56.png" class="img-fluid"></td>
+</tr>
+<tr class="odd">
+<td>Emax</td>
+<td><img src="multendptPainattachments/media/image57.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image58.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image59.png" class="img-fluid"></td>
+</tr>
+<tr class="even">
+<td>Umbrella</td>
+<td><img src="multendptPainattachments/media/image60.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image61.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image62.png" class="img-fluid"></td>
+</tr>
+</tbody>
+</table>
+<p>We can see that the adaptive allocation clearly allocates more subjects (on average) on the doses we are more interested in, and that there is a small improvement in the selection of the Pr(Umax) – particularly in the Umbrella scenario.</p>
+<p>Looking at the Per Interim: Utility Alloc and Endpoint Response graphs for the first simulation of the linear scenario the adaptive allocation looks to be doing what we would hope. Here are the graphs from 5 interims from that simulation</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 30%">
+<col style="width: 30%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Interim</th>
+<th>Utility &amp; Pr(Umax)</th>
+<th>Endpoint 1 Response Alloc</th>
+<th>Endpoint 2 Response Alloc</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td><img src="multendptPainattachments/media/image63.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image64.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image65.png" class="img-fluid"></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td><img src="multendptPainattachments/media/image66.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image67.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image68.png" class="img-fluid"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">8</td>
+<td><img src="multendptPainattachments/media/image69.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image70.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image71.png" class="img-fluid"></td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">12</td>
+<td><img src="multendptPainattachments/media/image72.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image73.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image74.png" class="img-fluid"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">16</td>
+<td><img src="multendptPainattachments/media/image75.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image76.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image77.png" class="img-fluid"></td>
+</tr>
+</tbody>
+</table>
+<p>Alternatively we can get a quick overview by selecting Show Across Scenario Graph from the little menu that appears when View Graphs is selected:</p>
+<p>The Selected Arms graph shows the proportion of arms selected in each scenario. Because we set Should Succeed that way, arms with a utility of 1 are in dark blue and others are in red. Arms selected in trials that did not succeed are light blue:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image78.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<p>We can view the distribution of QOIs:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image79.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<p>The fitted responses/utility:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image80.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a cell phone Description automatically generated</figcaption>
+</figure>
+</div>
+<p>And the allocation:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image81.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<p>All of which look reasonable.</p>
+</section>
+</section>
+<section id="adaptive-allocation-with-early-stopping" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Adaptive Allocation with Early Stopping</h1>
+<section id="evaluation-criteria" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="evaluation-criteria"><span class="header-section-number">5.1</span> Evaluation Criteria</h2>
+<p>We note that in the results for the adaptive design with no early stopping, the type-1 error had been reduced relative to the fixed design and was well below the target 0.025. Looking at the Explore Success Criteria for the “Flat” scenario from the results of the adaptive trial with no early stopping, there are fewer curves than the fixed design because we remove the QOIs with the CSDs that we had discarded, leaving us just with the results for the probability of success relative to Control with a CSD of 0.6: <em>Pr((θ<sub>d</sub> – θ<sub>control</sub>) &lt; -0.6)</em></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image82.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a cell phone Description automatically generated</figcaption>
+</figure>
+</div>
+<p>This shows there would have been 0.025% of the simulations successful if the final success criteria had been about 0.63. To be comparable with the fixed design and build in a degree of safety to allow for the variability of the simulations we select a threshold of 0.65 that would have yielded just 0.021% of the simulations successful.</p>
+<p>To select the thresholds for early stopping we use Explore: Futility Contours and Explore: Success Contours graphs. To use these graphs it is worth having output weeks files for every simulation (as we did with the adaptive design without early stopping). These graphs take a significant amount of data analysis to draw, and re-draw every time a graph option is changed. Patience is required to use them as this time is nothing compared to repeatedly re-running simulations with different stopping criteria.</p>
+<p>To determine the early success criteria we again look at the lowest threshold we can use that would have given a success rate of around 0.02% in the “Flat” scenario.</p>
+<p>On the Explore: Success Contours graph for the “Flat” scenario, we select</p>
+<ul>
+<li><p>the VAS Pain Scale endpoint</p></li>
+<li><p>The Utility Pr(Umax) taget dose</p></li>
+<li><p>The <em>Pr((θ<sub>d</sub> – θ<sub>control</sub>) &lt; -0.6)</em> probability</p></li>
+<li><p>The 8<sup>th</sup> interim to start allowing early stopping for futility. There is a trade-off to made here, the earlier the trial can stop the greater the potential savings, but also the more variable response we expect to see and hence the more conservative the threshold is likely to be. Our first interim is early (60 subjects enrolled and hence with an average accrual rate of 5 per week and a 6 week endpoint, ~30 subjects complete) to give the adaptive allocation plenty of time to adapt. Allowing stopping this early however would require a very high threshold for stopping for success to avoid inflating the type-1 error rate. At the 8<sup>th</sup> interim – 14 weeks later – we would expect to have roughly 130 subjects enrolled of which ~100 would be complete.</p></li>
+<li><p>We also set the threshold limit to 0.6 – So we can see contours around the 0.65 limit for final success that we would use if not allowing early stopping.</p></li>
+</ul>
+<p>The graph plots the contours of equal success rate (combining both early success and late success) using equal early and final thresholds. Each contour tracks left and upwards from the points along the diagonal where the same threshold is used for the final success criteria and the early stopping for success criteria. The contour tracks the threshold combinations as the final threshold is reduced and the early threshold increased, until the early threshold reaches 1 and there is no early stopping.</p>
+<p>Here we have contours of 0.019 and 0.028. The 0.019 contour starts just below the (0.64, 1) point and runs to the (0.9, 0.9) point. Any combination of final success threshold and early success threshold along that contour should give us approximately the same type-1 error rate of ~0.019.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image84.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a cell phone Description automatically generated</figcaption>
+</figure>
+</div>
+<p>If we imagine this contour transposed to the same graph but for the “linear scenario” we can see that it starts close to the 0.965 contour at (0.63, 1) and ends on the 0.938 contour at (0.9, 0.9). This is a trade-off that we typically see: that the more aggressive we want to be about stopping early for success (lower early stopping threshold) whilst adjusting the final success threshold to control the type-1 error rate, the more power we have to give up. Here though the overall power is high and the drop is less than 3 percentage points.</p>
+<p>Here we will be conservative and choose (0.64, 0.98) which seems to offer some chance to stop early with barely any loss in power. We could compare to the other alternate scenarios too, but this scenario has the lowest power and so is likely to be the most sensitive to losing power if we have too low a threshold for early stopping for success.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image86.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<p>Similarly, we can select an early stopping for futility threshold based on the failure rate in the “success” scenario with the lowest success rate. In this example that is the “Linear” scenario. As we are computing the type-2 error rate as any simulation that is not a success, the final threshold is effectively the same we are using to judge success, namely 0.64. We set up the graph to plot contours (this time of futility rate) for the VAS Pain Scale endpoint, evaluated at the Pr(Umax) target dose, computing the <em>Pr((θ<sub>d</sub> – θ<sub>control</sub>) &lt; -0.6)</em> probability from the 8<sup>th</sup> interim onwards, with a maximum threshold of 0.7.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image87.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<p>We can see that with no early stopping for futility (early threshold of 0) if the final success/futility threshold is 0.6, we are close to the 3<sup>rd</sup> contour 0.04, hence we can expect the type-2 error in this scenario to be about 0.04. If we move vertically up from (0.64, 0) we reach the 5<sup>th</sup> contour (0.047) at (0.64, 0.035). Thus for a possible single percentage point drop in power we can use 0.035 as the early stopping for futility threshold.</p>
+</section>
+<section id="successfutility-criteria-2" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="successfutility-criteria-2"><span class="header-section-number">5.2</span> Success/Futility Criteria</h2>
+<section id="interim-1-1" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="interim-1-1"><span class="header-section-number">5.2.1</span> Interim 1</h3>
+<p>The details for the early stopping for futility and success criteria are set on the interim 8 tab, we are going to delay the application of early stopping by requiring “minimum information”, but this is “belt and braces” just to demonstrate the feature. We leave the “interim 1” unchanged. (we could instead have added the stopping conditions to interim 1, and relied on the “minimum information requirements” to prevent stopping effectively until interim 8 tab. Although we are not allowing early stopping at interims 1 through 7, the response adaptive update of the randomization probabilities will still be occurring.</p>
+<p>Notice that we have used more relaxed criteria for the final evaluation (0.64) as well as allowing early stopping. This is because the introduction of adaptive allocation has reduced our type-1 error. For those seeing simulation results for a trail using response adaptive randomization (RAR) for the first time this may be surprising, there is a widely held assumption that “early looks at data” result in inflation of type-1 error. But if the looks are used for RAR then usually the reverse is true. In the “Null” setting the preferential allocation of subjects to arms with good response results in those arms experiencing a “random high” having a greater chance to regress to the mean, and thus type-1 errors are reduced.</p>
+<p>and require that for stopping for futility 150 subjects have been enrolled and stopping early for success that there are at least 30 subjects on the dose most likely to have the greatest utility – Pr(Umax). For futility we require 150 subjects to ensure that a reasonable minimum information has been gathered to justify stopping for futility, but this limit could be tuned further. For success we require 30 subjects on the Pr(Umax) dose as an often voiced criticism of stopping for success in a dose finding trial is that there is a need to have a certain minimum number of subjects exposed in order to gather safety data. Here we guarantee more data (30 subjects worth) on the dose that will be selected for phase 3 than the fixed design would have delivered (25 subjects).</p>
+<p>The trial will stop early for success if at an interim analysis:</p>
+<ul>
+<li>the dose most likely to have the maximum utility, Pr(Umax), has a posterior probability that its mean improvement is better than Control plus the clinically significant difference of 0.6, is greater than 0.98 and there at least 30 subjects enrolled on the Pr(Umax) dose.</li>
+</ul>
+<p>The trial will stop early for futility if at an interim analysis:</p>
+<ul>
+<li>the dose most likely to have the maximum utility has a posterior probability that its mean improvement is better than Control plus the clinically significant difference of 0.6, is less than 0.035 and there at least 150 subjects enrolled overall.</li>
+</ul>
+<p>Otherwise the trial will continue.</p>
+<p>We will create a new file for the changes, so choose File-&gt; Save As, and enter Core-ME-Chronic-Pain-Ex2-Adaptive-2.facts for the new file name, click Save. This new file will automatically load into FACTS.</p>
+<p>On the Design-&gt;Success/Futility Criteria, add and “Interim 8 tab” and enable stopping for both futility and success and set the criteria as follows:</p>
+<p>Futility Criteria:</p>
+<ul>
+<li><p>QOI:</p>
+<ul>
+<li><p>“Pain: Pr(θ_d-θ_(Control)&lt;-0.6); d=Utility; Greatest Pr(UMax)</p></li>
+<li><p>Condition: &lt;</p></li>
+<li><p>Threshold: 0.035</p></li>
+</ul></li>
+<li><p>Set Minimum number of Subjects enrolled before trial can stop for futility:150</p></li>
+</ul>
+<!-- -->
+<ul>
+<li><p>Success Criteria:</p>
+<ul>
+<li><p>QOI:</p>
+<ul>
+<li><p>Add “Pain: Pr(θ_d-θ_(Control)&lt;-0.6); d=Utility; Greatest Pr(UMax)</p></li>
+<li><p>Condition: &gt;</p></li>
+<li><p>Threshold: 0.98</p></li>
+</ul></li>
+<li><p>Add an evaluation dose “The Greatest Pr(UMax) and set the Minimum Number of Subjects enrolled on this dose before the trail can stop for success: 30.</p></li>
+</ul></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image88.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<p>For the Final Evaluation Criteria, we use the same criteria as before for futility and modify the criteria for success by changing the required threshold to 0.64.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image89.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="simulation-results" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="simulation-results"><span class="header-section-number">5.3</span> Simulation Results</h2>
+<p>From a 1,000 simulations of each scenario we see</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 9%">
+<col style="width: 8%">
+<col style="width: 10%">
+<col style="width: 14%">
+<col style="width: 49%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Scenario</th>
+<th style="text-align: right;">Ppn Early Success</th>
+<th style="text-align: right;">Ppn Late Success</th>
+<th style="text-align: right;">Overall Success Rate</th>
+<th>Fixed design overall success</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Flat</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.017</td>
+<td style="text-align: right;">0.017</td>
+<td>0.025</td>
+<td><mark>Type-1 error rate is below fixed design and well below target</mark></td>
+</tr>
+<tr class="even">
+<td>Linear</td>
+<td style="text-align: right;">0.572</td>
+<td style="text-align: right;">0.379</td>
+<td style="text-align: right;">0.951</td>
+<td>0.96</td>
+<td rowspan="4"><mark>Power is the same as (within simulation error) the fixed design for all “success” scenarios.</mark></td>
+</tr>
+<tr class="odd">
+<td>Logistic</td>
+<td style="text-align: right;">0.749</td>
+<td style="text-align: right;">0.209</td>
+<td style="text-align: right;">0.958</td>
+<td>0.957</td>
+</tr>
+<tr class="even">
+<td>Emax</td>
+<td style="text-align: right;">0.761</td>
+<td style="text-align: right;">0.236</td>
+<td style="text-align: right;">0.997</td>
+<td>0.981</td>
+</tr>
+<tr class="odd">
+<td>Umbrella</td>
+<td style="text-align: right;">0.750</td>
+<td style="text-align: right;">0.241</td>
+<td style="text-align: right;">0.991</td>
+<td>0.983</td>
+</tr>
+</tbody>
+</table>
+<p>The mean sample size is 210 for the Flat scenario and 102-219 for the success scenarios. So a 10-25% smaller expected sample size and trial duration than the fixed design (250 subjects).</p>
+<p>Not only that but we have increased the probability of selecting a good dose to take to Phase III relative to the fixed design – even after adding early stopping (but the early stopping is not as good as the adaptive without any early stopping) :</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 18%">
+<col style="width: 37%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Scenario</th>
+<th style="text-align: right;">Ppn Correct Arm (fixed)</th>
+<th style="text-align: right;">Ppn Correct Arm (adaptive but no early stopping)</th>
+<th style="text-align: right;">Ppn Correct Arm (adaptive &amp; early stopping</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Flat</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td>Linear</td>
+<td style="text-align: right;">0.448</td>
+<td style="text-align: right;">0.516</td>
+<td style="text-align: right;">0.513</td>
+</tr>
+<tr class="odd">
+<td>Logistic</td>
+<td style="text-align: right;">0.688</td>
+<td style="text-align: right;">0.805</td>
+<td style="text-align: right;">0.750</td>
+</tr>
+<tr class="even">
+<td>Emax</td>
+<td style="text-align: right;">0.907</td>
+<td style="text-align: right;">0.924</td>
+<td style="text-align: right;">0.92</td>
+</tr>
+<tr class="odd">
+<td>Umbrella</td>
+<td style="text-align: right;">0.639</td>
+<td style="text-align: right;">0.780</td>
+<td style="text-align: right;">0.750</td>
+</tr>
+</tbody>
+</table>
+<p>We can check that the early stopping rules are reasonable by looking at the scatter plots. Checking that the early stopping isn’t all at the first opportunity. For example for Flat and Linear:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><img src="multendptPainattachments/media/image90.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image91.png" class="img-fluid"></td>
+</tr>
+<tr class="even">
+<td><img src="multendptPainattachments/media/image92.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image93.png" class="img-fluid"></td>
+</tr>
+</tbody>
+</table>
+<p>We can also check that the selection of Pr(Umax) had not deteriorated due to early stopping (if it had we could increase the number of subjects required on Pr(UMax) for stopping, or perhaps ad a stopping criteria that the posterior probability of Pr(Umax) at the dose with the greatest Pr(Umax) was above some threshold.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 44%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th rowspan="2">Scenario</th>
+<th>Adaptive but No early Stopping</th>
+<th>With Early Stopping</th>
+</tr>
+<tr class="even">
+<th>Ppn Umax</th>
+<th>Ppn Umax</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Linear</td>
+<td><img src="multendptPainattachments/media/image52.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image94.png" class="img-fluid"></td>
+</tr>
+<tr class="even">
+<td>Logistic</td>
+<td><img src="multendptPainattachments/media/image55.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image95.png" class="img-fluid"></td>
+</tr>
+<tr class="odd">
+<td>Emax</td>
+<td><img src="multendptPainattachments/media/image58.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image96.png" class="img-fluid"></td>
+</tr>
+<tr class="even">
+<td>Umbrella</td>
+<td><img src="multendptPainattachments/media/image61.png" class="img-fluid"></td>
+<td><img src="multendptPainattachments/media/image97.png" class="img-fluid"></td>
+</tr>
+</tbody>
+</table>
+<p>Lastly we can review the “Across Scenario” graphs:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="multendptPainattachments/media/image98.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a computer Description automatically generated</figcaption>
+</figure>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<!-- footer.html -->
+
+<!-- FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pF6W3...<truncated>...Q==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+<style>
+
+  /* Make all footer icons the same color */
+  footer .fab,
+  footer .fas,
+  footer svg {
+    color: #125740;           /* ← pick whatever color your share-icons are using */
+    fill: currentColor;    /* ensures the SVG Bluesky icon matches */
+  }
+
+  /* Prevent links from overriding that color */
+  footer a {
+    color: inherit;
+  }
+
+  /* Share menu positioning */
+  #share-wrapper { position: relative; }
+  #share-menu {
+    display: none;
+    position: absolute;
+    bottom: 3rem;               /* float above the footer */
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px #125740;
+    gap: 1rem;
+    z-index: 100;
+  }
+  body.menu-open #share-menu { display: flex; }
+  #share-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* Left column: text + social permalinks */
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+  }
+  .footer-left p { margin: 0; }
+  .footer-left a.social {
+    color: inherit;
+    text-decoration: none;
+  }
+  .footer-left a.social i { font-size: 1.2em; }
+  
+  
+    /* Text color left */
+  .footer-left p > a {
+    color: #125740;
+  }
+
+  /* Text color last item */
+  footer > p:last-child a {
+    color: #125740;
+  }
+  
+    /* Link hover colors */
+  .footer-left p > a:hover,
+  footer > p:last-child a:hover {
+    color: #11A473;
+    text-decoration: underline;
+  }
+  
+</style>
+
+<footer style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
+  
+  <!-- Left: Berry Consultants + social permalinks -->
+  <div class="footer-left">
+    <p>
+      © <a href="https://www.berryconsultants.com">Berry Consultants</a>
+    </p>
+    <a href="https://twitter.com/BerryConsultant" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on X">
+      <i class="fab fa-x"></i>
+    </a>
+    <a href="https://www.linkedin.com/company/berry-consultants-llc" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on LinkedIn">
+      <i class="fab fa-linkedin"></i>
+    </a>
+    <a href="https://www.youtube.com/c/berryconsultants" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on YouTube">
+      <i class="fab fa-youtube"></i>
+    </a>
+  </div>
+
+  <!-- Center: share toggle + popup -->
+  <div id="share-wrapper">
+    <button id="share-toggle" aria-label="Share this page">
+      <i class="fas fa-share-alt" style="font-size:1.6em;"></i>
+    </button>
+    <div id="share-menu">
+      <!-- share icons injected here -->
+    </div>
+  </div>
+
+  <!-- Right: How to Cite -->
+  <p style="margin: 0;">
+    <a href="../../../../introduction/citation.html">Cite</a>
+  </p>
+</footer>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const url   = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+    const networks = [
+      { name: "X",        href: `https://twitter.com/intent/tweet?url=${url}&text=${title}`,          icon: `<i class="fab fa-x" style="font-size:1.4em;"></i>` },
+      { name: "LinkedIn", href: `https://www.linkedin.com/feed/?shareActive=true&text=${title}%20${url}`, icon: `<i class="fab fa-linkedin" style="font-size:1.4em;"></i>` },
+      { name: "Bluesky",  href: `https://bsky.app/intent/compose?text=${title}%20${url}`,              icon: `
+        <svg width="1.4em" height="1.4em" fill="currentColor" viewBox="0 0 600 530">
+          <path d="m135.72 44.03c66.496 49.921 138.02 151.14 164.28 205.46 26.262-54.316 97.782-155.54 164.28-205.46 47.98-36.021 125.72-63.892 125.72 24.795 0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.3797-3.6904-10.832-3.7077-7.8964-0.0174-2.9357-1.1937 0.51669-3.7077 7.8964-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.4491-163.25-81.433-5.9562-21.282-16.111-152.36-16.111-170.07 0-88.687 77.742-60.816 125.72-24.795z"/>
+        </svg>` },
+      { name: "Reddit",   href: `https://www.reddit.com/submit?url=${url}&title=${title}`,         icon: `<i class="fab fa-reddit" style="font-size:1.4em;"></i>` },
+      { name: "WhatsApp", href: `https://wa.me/?text=${title}%20${url}`,                             icon: `<i class="fab fa-whatsapp" style="font-size:1.4em;"></i>` },
+      { name: "Email",    href: `mailto:?subject=${title}&body=${title}%20${url}`,                    icon: `<i class="fas fa-envelope" style="font-size:1.4em;"></i>` }
+    ];
+
+    // inject share icons
+    const menu = document.getElementById("share-menu");
+    networks.forEach(net => {
+      const a = document.createElement("a");
+      a.href      = net.href;
+      a.target    = "_blank";
+      a.rel       = "noopener";
+      a.setAttribute("aria-label", `Share on ${net.name}`);
+      a.innerHTML = net.icon;
+      menu.appendChild(a);
+    });
+
+    // toggle menu
+    const toggle = document.getElementById("share-toggle");
+    toggle.addEventListener("click", e => {
+      e.stopPropagation();
+      document.body.classList.toggle("menu-open");
+    });
+
+    // close on outside click
+    document.addEventListener("click", () => {
+      document.body.classList.remove("menu-open");
+    });
+    menu.addEventListener("click", e => e.stopPropagation());
+  });
+</script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/docs\.berryconsultants\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

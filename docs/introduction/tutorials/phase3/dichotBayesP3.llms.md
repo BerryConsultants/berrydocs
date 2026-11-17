@@ -1,0 +1,1 @@
+# Bayesian Trial with a Dichotomous Endpoint

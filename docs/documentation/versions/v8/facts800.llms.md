@@ -1,0 +1,57 @@
+# FACTS 8.0.0 Release Notes
+
+October 13, 2025
+
+# Introduction
+
+FACTS 8.0.0 is now available for download via [FACTS Cloud](https://factscloud-live.azurewebsites.net/). Its main new features are:
+
+- Ordinal endpoint support for phase 2 and phase 3 Trial Types.
+- Fixed Trial and Group Sequential “Quick Starts” for continuous, dichotomous and time-to-event endpoints to speed up and simplify the process of creating common trial design types.
+- Flexible AND/OR Decision Rules for Core, Staged and Platform Trial designs.
+- New Operational QOIs tracking the dropout rate, as well as predictor information for time-to-event endpoints.
+
+# FACTS Core and Staged Improvements
+
+- In Core designs, users can now design and simulate trials whose endpoint is on an ordinal scale. In particular, FACTS makes it particularly easy to compare a design using an ordinal endpoint with one which dichotomizes the endpoint. FACTS provides both a cumulative logistic model for ordinal outcome modelling as well as a Dirichlet model.
+- Two new “Quick Starts” have been created to speed up and simplify the process of creating common trial design types, available for continuous, dichotomous or time-to-event endpoints. The “Fixed Trial” Quick Start generates a FACTS design with the appropriate maximum sample size given the user specified treatment effect and power for the trial. The “Group Sequential” Quick Start generates a FACTS design with the appropriate group sequential success and futility boundaries derived from the relevant alpha and beta spending functions (Hwang-Shih-DeCani, O’Brian-Fleming, Pocock).
+- In Core and Staged designs, users can now specify complex decision rules for early success, early futility, early graduation to Stage 2 and the final analysis; where a subset of criteria can be combined by AND-ing them together whilst others can by OR-ed together. One major use case of this feature is that, in combination with the addition of Operational QOIs, users can now easily design and simulate Bayesian Goldilocks designs.
+- In Core and Staged designs, users can now create “Dropout rate” Operational Quantities of Interest (QOIs) and use these in decision rules.
+- In Core and Staged designs, the minimum information required to evaluate the decision rules at an interim has been removed. Instead, Operational QOIs can be used in decision rules to ensure that we only make decisions if there is enough information. \[BREAKING CHANGE\]
+- In Core and Staged designs, decision rules will now display the correct comparison against its threshold for upper bounds by displaying “\<=” instead of “\<”. This is of particular importance for decision rules making use of non-probabilistic QOIs (e.g. Subjects Enrolled).
+- In Core and Staged designs, the Design \> Frequentist tab, which was responsible for outputting the frequentist analysis of the final data for each simulation in separate output files, has been removed. Instead, frequentist calculations are performed by creating “p-values” on the Quantities of Interest tab.
+- In Core and Staged designs, the default posterior probability QOI “Pr(PBO)” will now correctly compare against an absolute rate of 0 when the Standard Evaluation option “Default QOIs compare to:” is set to “Absolute response”.
+- In Core and Staged designs, if the allocation proportion given to adaptively allocated arms is equal to the threshold specified to zero out randomization probabilities, FACTS now correctly zeroes out allocation to all adaptively allocated arms except for the single best arm.
+- In Time-to-Event Core and Staged designs, users can now create a number of Operational QOIs based of the design’s predictor. For Continuous/Dichotomous predictors, users can now create “Predictor Completer” and “Predictor Opportunity to Complete” Operational QOIs; for time-to-event predictors, user can now create “Predictor Exposure” and “Predictor Event” Operational QOIs.
+- In Time-to-Event Staged designs, the max event cap in stage 2 will be respected when the Study Info tab option: “Subjects included in Stage 2 followed-up using Stage 2 rules” is set.
+
+# FACTS Enrichment Design Improvements
+
+# FACTS Platform Trial Improvements
+
+- In Platform Trial designs, users can now specify complex decision rules for defining a treatment’s early success, early futility and its final analysis; where a subset of criteria can be combined by AND-ing them together whilst others can by OR-ed together.
+- In Platform Trial designs, opening existing designs will now handle the adding of the Pr(Max) Target Dose QOI correctly.
+- In Platform Trial designs, decision rules will now display the correct comparison against its threshold for upper bounds by displaying “\<=” instead of “\<”, and handle this comparison consistently with its display in the GUI.
+
+# FACTS Dose Escalation Improvements
+
+- In Rule-based DE designs using BOIN, the escalation and de-escalation bounds will now be displayed on the Design tab.
+- In Rule-based DE designs using BOIN, the overdose control rules eliminating a dose from further allocation is now correctly applied when at least three subjects have been assigned to this dose.
+- In Rule-based DE designs using 3+3, the reported simulation and cohort results in the GUI will be displayed correctly.
+- In Rule-based DE designs using 3+3, the selected MTD will now be displayed in the Allocation History plot.
+- In Rule-based DE designs, the colouring of the toxicity ranges on the Design tab has been changed to be more easily comparable to CRM DE designs.
+- In Rule-based DE designs, the Across Scenario “Selected MTD” graph will now colour each dose’s selected MTD proportion correctly.
+- In CRM DE designs, the Across Scenario “Selected MTD” graph will now colour each dose’s selected MTD proportion correctly when the dose’s true toxicity falls on the boundary of a toxicity band.
+- In CRM DE designs, the results graphs displaying the MTD will be correctly displayed when none of the underlying simulations have found an MTD (typically in a simulated scenario where all doses are toxic).
+- In CRM DE designs, OSD is now defined as MED, when MED \<= MTD, and non-existent otherwise. Previously, this was MED when MED \< MTD and MTD otherwise.
+- In CRM DE designs, backfill is now restricted to the max cleared dose, unless frontfill was enabled, in which case the current escalation dose is available for backfill.
+- In CRM DE designs with run-in, the next dose will be the highest escalation dose possible.
+- In CRM DE designs with run-in, FACTS will now prevent the user from specifiying a max run-in dose which is striclty smaller than the specified starting dose.
+- In CRM DE designs with small cohort run-in, backfill will no longer happen during the run-in.
+- In DE designs with cohort expansion, the mean number of subjects and the Ppn Tox now include the subjects in the expansion cohort.
+
+# General Improvements
+
+- The runtime memory usage of FACTS has been reduced significantly, with the initial loading of FACTS requiring 75% less memory.
+
+Please [contact us](../../../contact/index.llms.md) regarding any questions.

@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Two-Dimensional Dosing (Dichotomous)</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../">
+<link href="../../../../media/FACTS_icon.png" rel="icon" type="image/png">
+<script src="../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../site_libs/bootstrap/bootstrap-f24641f9662b15e1479722971e972498.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<!-- Roboto Serif -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
+
+<!-- Roboto Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WLMVE7GR4S');
+</script>
+
+
+<link rel="stylesheet" href="../../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../../media/FACTSLogo.png" alt="" class="navbar-logo light-content">
+    <img src="../../../../media/FACTSLogo.png" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../introduction/index.html"> 
+<span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../documentation/index.html"> 
+<span class="menu-text">Documentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../get/index.html"> 
+<span class="menu-text">Get FACTS</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../contact/index.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Two-Dimensional Dosing (Dichotomous)</h1>
+            <p class="subtitle lead">Phase 2 and 3 Design Tutorial</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#design-features" id="toc-design-features" class="nav-link" data-scroll-target="#design-features"><span class="header-section-number">2</span> Design Features</a></li>
+  <li><a href="#case-study-traumatic-brain-injury-tbi" id="toc-case-study-traumatic-brain-injury-tbi" class="nav-link" data-scroll-target="#case-study-traumatic-brain-injury-tbi"><span class="header-section-number">3</span> Case Study: Traumatic Brain Injury (TBI)</a></li>
+  <li><a href="#base-design" id="toc-base-design" class="nav-link" data-scroll-target="#base-design"><span class="header-section-number">4</span> Base Design</a>
+  <ul>
+  <li><a href="#study" id="toc-study" class="nav-link" data-scroll-target="#study"><span class="header-section-number">4.1</span> Study</a>
+  <ul class="collapse">
+  <li><a href="#study-info" id="toc-study-info" class="nav-link" data-scroll-target="#study-info"><span class="header-section-number">4.1.1</span> Study Info</a></li>
+  <li><a href="#treatment-arms" id="toc-treatment-arms" class="nav-link" data-scroll-target="#treatment-arms"><span class="header-section-number">4.1.2</span> Treatment Arms</a></li>
+  </ul></li>
+  <li><a href="#virtual-subject-response-explicitly-defined" id="toc-virtual-subject-response-explicitly-defined" class="nav-link" data-scroll-target="#virtual-subject-response-explicitly-defined"><span class="header-section-number">4.2</span> Virtual Subject Response – Explicitly Defined</a>
+  <ul class="collapse">
+  <li><a href="#dose-response" id="toc-dose-response" class="nav-link" data-scroll-target="#dose-response"><span class="header-section-number">4.2.1</span> Dose Response</a></li>
+  </ul></li>
+  <li><a href="#external-files" id="toc-external-files" class="nav-link" data-scroll-target="#external-files"><span class="header-section-number">4.3</span> External Files</a></li>
+  <li><a href="#execution" id="toc-execution" class="nav-link" data-scroll-target="#execution"><span class="header-section-number">4.4</span> Execution</a>
+  <ul class="collapse">
+  <li><a href="#accrual" id="toc-accrual" class="nav-link" data-scroll-target="#accrual"><span class="header-section-number">4.4.1</span> Accrual</a></li>
+  <li><a href="#dropout-rate" id="toc-dropout-rate" class="nav-link" data-scroll-target="#dropout-rate"><span class="header-section-number">4.4.2</span> Dropout Rate</a></li>
+  </ul></li>
+  <li><a href="#quantities-of-interest" id="toc-quantities-of-interest" class="nav-link" data-scroll-target="#quantities-of-interest"><span class="header-section-number">4.5</span> Quantities of Interest</a></li>
+  <li><a href="#design" id="toc-design" class="nav-link" data-scroll-target="#design"><span class="header-section-number">4.6</span> Design</a>
+  <ul class="collapse">
+  <li><a href="#dose-response-1" id="toc-dose-response-1" class="nav-link" data-scroll-target="#dose-response-1"><span class="header-section-number">4.6.1</span> Dose Response</a></li>
+  <li><a href="#frequentist-analysis" id="toc-frequentist-analysis" class="nav-link" data-scroll-target="#frequentist-analysis"><span class="header-section-number">4.6.2</span> Frequentist Analysis</a></li>
+  <li><a href="#allocation" id="toc-allocation" class="nav-link" data-scroll-target="#allocation"><span class="header-section-number">4.6.3</span> Allocation</a></li>
+  <li><a href="#successfutility-criteria" id="toc-successfutility-criteria" class="nav-link" data-scroll-target="#successfutility-criteria"><span class="header-section-number">4.6.4</span> Success/Futility Criteria</a></li>
+  </ul></li>
+  <li><a href="#setting-the-dose-selection-criteria" id="toc-setting-the-dose-selection-criteria" class="nav-link" data-scroll-target="#setting-the-dose-selection-criteria"><span class="header-section-number">4.7</span> Setting the dose selection criteria</a></li>
+  <li><a href="#simulation" id="toc-simulation" class="nav-link" data-scroll-target="#simulation"><span class="header-section-number">4.8</span> Simulation</a>
+  <ul class="collapse">
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">4.8.1</span> Results</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#d-discrete-factorial-model" id="toc-d-discrete-factorial-model" class="nav-link" data-scroll-target="#d-discrete-factorial-model"><span class="header-section-number">5</span> 2D Discrete Factorial Model</a></li>
+  <li><a href="#d-ndlm-model" id="toc-d-ndlm-model" class="nav-link" data-scroll-target="#d-ndlm-model"><span class="header-section-number">6</span> 2D NDLM Model</a></li>
+  <li><a href="#using-a-1d-model-hierarchical-logistic" id="toc-using-a-1d-model-hierarchical-logistic" class="nav-link" data-scroll-target="#using-a-1d-model-hierarchical-logistic"><span class="header-section-number">7</span> Using a 1D model – Hierarchical Logistic</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<!-- example-files:begin -->
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Example files
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Download the FACTS files used in this tutorial and open them in FACTS with <em>File &gt; Open</em>.</p>
+<ul>
+<li><a href="twoDimensionalDosingattachments/examples/Two Dimensional Dosing TBI ContFactorial.facts" download="Two Dimensional Dosing TBI ContFactorial.facts">Two Dimensional Dosing TBI ContFactorial.facts</a> (Design 1: continuous factorial model)</li>
+<li><a href="twoDimensionalDosingattachments/examples/Two Dimensional Dosing TBI DiscFactorial.facts" download="Two Dimensional Dosing TBI DiscFactorial.facts">Two Dimensional Dosing TBI DiscFactorial.facts</a> (Design 2: discrete factorial model)</li>
+<li><a href="twoDimensionalDosingattachments/examples/Two Dimensional Dosing TBI 2DNDLM.facts" download="Two Dimensional Dosing TBI 2DNDLM.facts">Two Dimensional Dosing TBI 2DNDLM.facts</a> (Design 3: 2-D NDLM model)</li>
+<li><a href="twoDimensionalDosingattachments/examples/Two Dimensional Dosing TBI HierLogistic.facts" download="Two Dimensional Dosing TBI HierLogistic.facts">Two Dimensional Dosing TBI HierLogistic.facts</a> (Design 4: hierarchical logistic model)</li>
+</ul>
+</div>
+</div>
+<!-- example-files:end -->
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>This tutorial describes an example trial design for treatment of traumatic brain injury (TBI) using the FACTS Core Design Engine for a Dichotomous Endpoint, using a 2-dimensional NDLM model for a Phase II dose-finding trial.</p>
+<p>For this version of the document, the screenshots are from the 6.3 release of FACTS.</p>
+<p>The screenshots provided are approximate and may not reflect the exact layout of the information. The contents of each tab, however, will be consistent with the software.</p>
+<p>The design is based on Gajewski et al.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a><sup>1</sup>, modified to incorporate the 2-D aspect of the dose space. The designs presented are intended purely as examples, should not be considered as critique of the original design, and are not intended to be optimally calibrated.</p>
+</section>
+<section id="design-features" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Design Features</h1>
+<p>The primary goal of this tutorial is to introduce the use of 2-D dose specification and examine the models available for 2-D dose response.</p>
+<p>In this tutorial we create the following designs:</p>
+<ul>
+<li><p>Design 1: Example file “Two Dimensional Dosing TBI ContFactorial.facts”</p>
+<ul>
+<li>Uses the Continuous Factorial model.</li>
+</ul></li>
+<li><p>Design 2: Example file “Two Dimensional Dosing TBI DiscFactorial.facts”</p>
+<ul>
+<li>Uses the Dichotomous Factorial model.</li>
+</ul></li>
+<li><p>Design 3: Example file “Two Dimensional Dosing TBI 2DNDLM.facts”</p>
+<ul>
+<li>Uses the 2-D NDLM model.</li>
+</ul></li>
+<li><p>Design 4: Example file “Two Dimensional Dosing TBI HierLogistic.facts”</p>
+<ul>
+<li>Uses the one-dimensional Hierarchical Logistic model.</li>
+</ul></li>
+</ul>
+<p>All four files have the same broad design. The only differences between the files are the dose response models selected on the Design -&gt; Dose Response tab, with the success/futility criteria adjusted to calibrate Type I error.</p>
+</section>
+<section id="case-study-traumatic-brain-injury-tbi" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Case Study: Traumatic Brain Injury (TBI)</h1>
+<p>The endpoint is a dichotomized assessment of improvement, based on severity-adjusted GOS-E score at 26 weeks.</p>
+<p>The study treatment has two factors that can be adjusted: hyperbaric oxygen at one of four atmospheric pressures (1.0, 1.5, 2.0, and 2.5 atmospheres absolute [ATA]), with or without the addition of 100% normobaric oxygen (NBH). The ATA=1.0 arm with no addition of NBH is the control arm for the study.</p>
+<p>The aim of the Phase II study is to find the optimal treatment arm in preparation for a Phase III study with larger sample size. The Phase III study will only be run if there is sufficient evidence of potential success, defined for the best arm (the arm that has greatest posterior probability of being the best dose Pr(Max)) by:</p>
+<ul>
+<li><p>At least P% posterior probability the best treatment arm is more effective than the control arm;</p></li>
+<li><p>and at least 50% predictive probability that a 1:1 randomized Phase III trial with n=500 per arm will be successful.</p></li>
+</ul>
+<p>The value of P will change according to the modeling choices in order to achieve approximately 10% type I error. The choice of dose response model will affect these posterior probabilities, as well as the selection of the best arm.</p>
+</section>
+<section id="base-design" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Base Design</h1>
+<p>Start FACTS. Double Click: Core Design: Dichotomous on the opening screen:</p>
+<p><img src="twoDimensionalDosingattachments/media/image2.png" class="img-fluid"></p>
+<p>Using the menu option File &gt; Save As, save this design as TBI-ContFactorial in a convenient location (e.g.&nbsp;in a folder called FACTS\TBI-example in your ‘My Documents’ folder).</p>
+<p>We will set up the overall design in this version, then save different versions with various dose response modeling options.</p>
+<section id="study" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="study"><span class="header-section-number">4.1</span> Study</h2>
+<section id="study-info" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="study-info"><span class="header-section-number">4.1.1</span> Study Info</h3>
+<p>The Study tab captures basic information about the trial. Set the following parameters:</p>
+<ul>
+<li><p>Select the Non-adaptive option: since this tutorial is focused on the modeling options, adaptive features will not be used.</p></li>
+<li><p>Clear the “Use longitudinal model” check box. No intermediate outcomes are observed for patients.</p></li>
+<li><p>Set the time to final endpoint to 26 weeks.</p></li>
+<li><p>Set the accrual to “Continuously.”</p></li>
+<li><p>Set the maximum number of subjects to 200.</p></li>
+<li><p>Select “Response indicates positive outcome.”</p></li>
+</ul>
+<p><img src="twoDimensionalDosingattachments/media/image3.png" class="img-fluid"></p>
+</section>
+<section id="treatment-arms" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="treatment-arms"><span class="header-section-number">4.1.2</span> Treatment Arms</h3>
+<p>Set the following parameters:</p>
+<ul>
+<li><p>Select the box “Include a control treatment arm.”</p></li>
+<li><p>Select the box “Use 2D treatment arm model.” This selection adds two panels to the screen to allow the set up of dosing according to two factors. Only when this selection is chosen will the 2D dose response model options be available.</p></li>
+<li><p>Add 3 column factor levels with effective column strengths of 0.5, 1, and 1.5 to represent the atmospheric pressure options. Note that the Control is already chosen with an effective strength of 0, though it corresponds to an ATA of 1.0. Thus, we are selecting effective column strengths based on the ATA difference from control.</p>
+<ul>
+<li>Change the column names to “Ctrl (ATA 1.0),” “ATA 1.5,” “ATA 2.0,” and “ATA 2.5.”</li>
+</ul></li>
+<li><p>Add 2 row factor levels with effective row strengths of 0 and 1, to represent the without and with NBH options</p>
+<ul>
+<li>Change the row names to “No NBH” and “With NBH.”</li>
+</ul></li>
+</ul>
+<p>At this point, the screen should look like the following. Look at the right panel of the screen, labeled “Dose Combinations.” All combinations of column and row factors are listed in the left column of that panel.</p>
+<p><img src="twoDimensionalDosingattachments/media/image4.png" class="img-fluid"></p>
+<ul>
+<li><p>One by one, click the “Use” box next to each dose combination in the left column of the Dose Combinations panel. After use click on Use for the dose combination, the Effective Dose Strength column becomes visible. Edit the effective dose strengths so that: <strong>Ctl (ATA 1.0); No NBH</strong> = 0, <strong>ATA 1.5; No NBH</strong> = 2.6, <strong>ATA 2.0; No NBH</strong> = 4.17, <strong>ATA 2.5; No NBH</strong> = 5.92, <strong>Ctl (ATA 1.0); With NBH</strong> = 5.4, <strong>ATA 1.5; With NBH</strong> = 6.4, <strong>ATA 2.0; With NBH</strong> =7.76, and <strong>ATA 2.5; With NBH</strong> = 9.52.</p></li>
+<li><p>Note: since the “Include a control arm” is selected at the top of this tab, the treatment arm with an effective column strength of 0 and the lowest allowed value for the column strength is considered the control arm. In this case, that is the <strong>Ctl (ATA 1.0); No NBH</strong> arm.</p></li>
+<li><p>Note: after the effective dose strengths are entered. The right column of the Dose Combinations panel shows the ordering of the doses that are used in the trial (not all column and row factor combinations need be selected), ordered according to the effective dose strength. Graphs will be plotted with this ordering for the doses, and quantities of interest that depend on order (i.e., MED and EDq) utilize this ordering.</p></li>
+<li><p>Note: when a dose combination is selected for use, its default effective dose strength is the sum of the effective column strength for the column factor and effective row strength for the row factor. These are intended only as starting values and should be edited to match the expected combination strength. Ties in effective dose strength are not allowed, so each combination must be given a unique strength value.</p></li>
+</ul>
+<p>The Study &gt; Treatment Arms tab should now look like the following:</p>
+<p><img src="twoDimensionalDosingattachments/media/image5.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="virtual-subject-response-explicitly-defined" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="virtual-subject-response-explicitly-defined"><span class="header-section-number">4.2</span> Virtual Subject Response – Explicitly Defined</h2>
+<section id="dose-response" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="dose-response"><span class="header-section-number">4.2.1</span> Dose Response</h3>
+<p>The Virtual Subject Response (VSR) tab describes how subject-level data will be generated for the simulations. Add six response scenarios by clicking the Add button. For each scenario, set the underlying response rate for each treatment from the corresponding row in the following table. <em>Note that the columns are listed in the order that they will appear on the FACTS VSR screen – according to effective dose strength (rather than column-row order)</em>.</p>
+<ul>
+<li>Add the following 6 profiles:</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 13%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 14%">
+<col style="width: 9%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 10%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"></td>
+<td colspan="8" style="text-align: center;">Treatment Arm</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"></td>
+<td style="text-align: center;">Ctrl (ATA 1.0); No NBH</td>
+<td style="text-align: center;">ATA 1.5; No NBH</td>
+<td style="text-align: center;">ATA 2.0; No NBH</td>
+<td style="text-align: center;">Ctrl (ATA 1.0); With NBH</td>
+<td style="text-align: center;">ATA 2.5; No NBH</td>
+<td style="text-align: center;">ATA 1.5; With NBH</td>
+<td style="text-align: center;">ATA 2.0; With NBH</td>
+<td style="text-align: center;">ATA 2.5; With NBH</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Null</td>
+<td style="text-align: center;">0.41</td>
+<td style="text-align: center;">0.41</td>
+<td style="text-align: center;">0.41</td>
+<td style="text-align: center;">0.41</td>
+<td style="text-align: center;">0.41</td>
+<td style="text-align: center;">0.41</td>
+<td style="text-align: center;">0.41</td>
+<td style="text-align: center;">0.41</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Large<br>
+Monotone</td>
+<td style="text-align: center;">0.41</td>
+<td style="text-align: center;">0.348</td>
+<td style="text-align: center;">0.435</td>
+<td style="text-align: center;">0.478</td>
+<td style="text-align: center;">0.522</td>
+<td style="text-align: center;"><mark>0.609</mark></td>
+<td style="text-align: center;"><mark>0.696</mark></td>
+<td style="text-align: center;"><mark>0.783</mark></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">NBH Only</td>
+<td style="text-align: center;">0.41</td>
+<td style="text-align: center;">0.348</td>
+<td style="text-align: center;">0.348</td>
+<td style="text-align: center;"><mark>0.783</mark></td>
+<td style="text-align: center;">0.348</td>
+<td style="text-align: center;"><mark>0.783</mark></td>
+<td style="text-align: center;"><mark>0.783</mark></td>
+<td style="text-align: center;"><mark>0.783</mark></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Overdose</td>
+<td style="text-align: center;">0.41</td>
+<td style="text-align: center;">0.348</td>
+<td style="text-align: center;">0.435</td>
+<td style="text-align: center;">0.522</td>
+<td style="text-align: center;"><mark>0.783</mark></td>
+<td style="text-align: center;">0.522</td>
+<td style="text-align: center;">0.174</td>
+<td style="text-align: center;">0.087</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Cont.<br>
+Factorial</td>
+<td style="text-align: center;">0.41</td>
+<td style="text-align: center;">0.484</td>
+<td style="text-align: center;"><mark>0.559</mark></td>
+<td style="text-align: center;">0.534</td>
+<td style="text-align: center;"><mark>0.631</mark></td>
+<td style="text-align: center;"><mark>0.607</mark></td>
+<td style="text-align: center;"><mark>0.676</mark></td>
+<td style="text-align: center;"><mark>0.738</mark></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Disc.<br>
+Factorial</td>
+<td style="text-align: center;">0.41</td>
+<td style="text-align: center;">0.363</td>
+<td style="text-align: center;"><mark>0.642</mark></td>
+<td style="text-align: center;">0.459</td>
+<td style="text-align: center;">0.534</td>
+<td style="text-align: center;">0.534</td>
+<td style="text-align: center;"><mark>0.783</mark></td>
+<td style="text-align: center;"><mark>0.698</mark></td>
+</tr>
+</tbody>
+</table>
+<p>The Profiles can be named by double clicking on the default name, e.g.&nbsp;“Response 1” and renaming. A wide range of profiles should be chosen so that you can examine the strengths and weakness of a design.</p>
+<p>For the purposes of this tutorial, we checked “Should succeed” for any treatment arm where the response rate was greater than 0.5 (highlighted in yellow), to reflect a dose with &gt;99% power in a subsequent 1:1 Phase III trial with n=500/arm. This selection tells FACTS how to report statistics on how often the desired doses are selected at the end of simulations. We need to define the target Quantity of Interest (QoI) to use to select the target dose on the Study &gt; Variants tab, but in general, we need to set up the QoIs first. In this tutorial, the default QoI of Pr(Max) is the appropriate dose selection.</p>
+<p><img src="twoDimensionalDosingattachments/media/image6.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="external-files" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="external-files"><span class="header-section-number">4.3</span> External Files</h2>
+<p>There are no externally generated data for this example.</p>
+</section>
+<section id="execution" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="execution"><span class="header-section-number">4.4</span> Execution</h2>
+<section id="accrual" class="level3" data-number="4.4.1">
+<h3 data-number="4.4.1" class="anchored" data-anchor-id="accrual"><span class="header-section-number">4.4.1</span> Accrual</h3>
+<p>Since no adaptive features are being used, accrual rate only contributes to trial duration for the purposes of this tutorial. Add one profile with an average accrual of 10/week.</p>
+<p><img src="twoDimensionalDosingattachments/media/image7.png" class="img-fluid"></p>
+</section>
+<section id="dropout-rate" class="level3" data-number="4.4.2">
+<h3 data-number="4.4.2" class="anchored" data-anchor-id="dropout-rate"><span class="header-section-number">4.4.2</span> Dropout Rate</h3>
+<p>Select “No Dropouts”.</p>
+<p><img src="twoDimensionalDosingattachments/media/image8.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="quantities-of-interest" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="quantities-of-interest"><span class="header-section-number">4.5</span> Quantities of Interest</h2>
+<p>The Quantities of Interest (QOIs) are the criteria on which decisions, interim or final analyses, will be made. Numerous QOIs are available and you may select multiple quantities for evaluation. A basic set of QOIs is provided by default. Additional QOIs may be added by clicking the Add row in the table. A QOI can be removed by clicking the X on the right side of the cell. Each QOI may be edited by clicking on it, which opens a pop-up box.</p>
+<p>The primary goal of this trial is to find the most effective treatment arm to carry to Phase III, and to trigger the initiation of the Phase III trial only with sufficient evidence to potential success.</p>
+<p>The treatment arm that has the highest probability of being the maximally effective treatment arm, Pr(Max), is the arm at which potential Phase III success will be judged. Two decision QoIs based on that dose will be used to determine trial success:</p>
+<ol type="1">
+<li><p>Pr(P_d &gt; P_(Ctrl (ATA 1.0); No NBH))</p></li>
+<li><p>Pr(Succ. Future Trial; N=500; Sup. α=0.025; δ=0)</p></li>
+</ol>
+<p>The former of these, the posterior probability of beating control, is available by default. There is a Pr(Succ. Future Trial) QoI set up by default as well, though it must be edited to match the Phase III sample size desired. Click on the Pr(Succ. Future Trial) predictive probability QoI. Set Phase to Future Trial, Test Type to Superiority, Subjects per Arm to 500, One-sided Alpha to 0.025, and Superiority Margin to 0.</p>
+<p><img src="twoDimensionalDosingattachments/media/image9.png" class="img-fluid"></p>
+<p>In this trial, there is no need to establish the notions of a minimally effective dose (MED) nor a treatment arm that’s at least q% as good as the maximally effective dose (EDq). However, they will be explored briefly in this tutorial in order to demonstrate the effect of the 2D dosing structure on such quantities. Both of these quantities require an ordering to the dose strengths in order to be well-defined. The ordering used is the <em>effective dose strength</em> that is established in the Dose Combinations panel of the Study &gt; Treatment Arms tab. This trial also has no meaningful definition for a clinically significant difference, but for the sake of constructing an example, a value of 0.14 is used to match the “should succeed” criterion established with the VSR. Setting the CSD to 0.14 on the bottom of the QoI tab will automatically update the default MED QoI. Click on the Pr(EDq relative to Ctrl (ATA 1.0) QoI, and change the quantile to 0.8.</p>
+<p>Two decision QoIs are needed. Click on “Add…” under the Decision Quantities (Scalars) panel to add one. First select the posterior probability of beating control QoI and evaluate it at the Greatest Pr(Max) dose. Then add a second decision QoI by selecting the predictive probability for a future trial and evaluating it at the Greatest Pr(Max) dose.</p>
+<p><img src="twoDimensionalDosingattachments/media/image10.png" class="img-fluid"> <img src="twoDimensionalDosingattachments/media/image11.png" class="img-fluid"></p>
+<p>The finished QoI tab looks like this:</p>
+<p><img src="twoDimensionalDosingattachments/media/image12.png" class="img-fluid"></p>
+</section>
+<section id="design" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="design"><span class="header-section-number">4.6</span> Design</h2>
+<section id="dose-response-1" class="level3" data-number="4.6.1">
+<h3 data-number="4.6.1" class="anchored" data-anchor-id="dose-response-1"><span class="header-section-number">4.6.1</span> Dose Response</h3>
+<p>For the first version of the design, we will use one of 2D dose response models – the 2D Continuous Factorial model. This approach models the log-odds of response as an additive linear model, treating the column effective strength values as a continuous covariate and the row effective strength values as a continuous covariate. There is an option for an interaction term as well, but we will not use that option in this example.</p>
+<p>We will need to assign prior distributions to the parameters of the dose response model. In practice, the construction of the priors should be assisted by subject matter experts. For purposes of this tutorial, relatively non-informative priors were used, with an attempt to match the spirit of the priors in the Gajewski paper. Since analysis will only be performed for a complete data set, the non-informative priors should have relatively minor effect on the final analysis, though expert-informed priors would likely perform better.</p>
+<p>Select the ‘2D Continuous Factorial Model’ option.</p>
+<ul>
+<li><p>Under Model Parameters, uncheck the box for “Include Interaction Term.”</p></li>
+<li><p>For α<sub>0</sub>, enter a mean of -0.41 (which is the logit of a nominal response rate of 40%) and a SD of 1. This parameter corresponds to the dose response for an effective column strength of 0 and an effective row strength of 0, which for this example corresponds to the control treatment arm. However, in this trial, the control arm represents a natural environment with variability in natural conditions, so it will be modeled separately [see below].</p></li>
+<li><p>For α<sub>1</sub> and α<sub>2</sub>, enter a mean of 0.0 with a standard deviation of 1. This represents an a priori assumption of no treatment effect, but with a moderate amount of uncertainty. A positive value of α<sub>1</sub> corresponds to an increase in the response rate as the effective column strength increases. A positive value of α<sub>2</sub> corresponds to an increase in the response rate as the effective row strength increases.</p></li>
+<li><p>Check the box “Model Control Separately.” Select Fixed Prior and enter a mean of -0.41 and an SD of 0.75. This represents the a priori knowledge of the response rate for the control arm.</p></li>
+<li><p>The Handling of Missing Data Due to Dropouts selection will not matter, since no dropouts are being simulated.</p></li>
+</ul>
+<p><img src="twoDimensionalDosingattachments/media/image13.png" class="img-fluid"></p>
+</section>
+<section id="frequentist-analysis" class="level3" data-number="4.6.2">
+<h3 data-number="4.6.2" class="anchored" data-anchor-id="frequentist-analysis"><span class="header-section-number">4.6.2</span> Frequentist Analysis</h3>
+<p>We do not require a frequentist analysis, to save run-time we ensure that all the options for handling missingness are de-selected. In particular we ensure that the option to calculate Dunnetts adjusted p-values is de-selected (this has a particularly high runtime overhead and should only be selected if required).</p>
+<p><img src="twoDimensionalDosingattachments/media/image14.png" class="img-fluid"></p>
+</section>
+<section id="allocation" class="level3" data-number="4.6.3">
+<h3 data-number="4.6.3" class="anchored" data-anchor-id="allocation"><span class="header-section-number">4.6.3</span> Allocation</h3>
+<p>Set all the allocation ratio to 39 for the control arm (<strong>Ctrl (ATA 1.0); No NBH</strong>) and to 23 for the remaining treatment arms. The control arm thus has more information than any single treatment arm, though the treatment arms will share information through the dose response model.</p>
+<p><img src="twoDimensionalDosingattachments/media/image15.png" class="img-fluid"></p>
+</section>
+<section id="successfutility-criteria" class="level3" data-number="4.6.4">
+<h3 data-number="4.6.4" class="anchored" data-anchor-id="successfutility-criteria"><span class="header-section-number">4.6.4</span> Success/Futility Criteria</h3>
+<p>The success criteria will be defined by two criteria:</p>
+<ol type="1">
+<li><p>the dose most likely to be max response has a greater than P posterior probability that its response is better than Control. The value of P will be adjusted separately for each dose response model considered, to give 10% type I error under the null hypothesis. For the 2D Continuous Factorial model P=0.955.</p></li>
+<li><p>and the dose most likely to be max response has a greater than 0.5 predictive probability of winning a future Phase III trial with N=500.</p></li>
+</ol>
+<p>Set the following parameters for Success Criteria:</p>
+<p>1<sup>st</sup> Criterion</p>
+<ul>
+<li><p>Select the QOI: Pr(θ_d - θ_(Ctrl (Ata 1.0); No NBH)); d=Greatest Pr(Max)</p></li>
+<li><p>Select a Condition of &gt;</p></li>
+<li><p>Enter a threshold of 0.955</p></li>
+</ul>
+<p>2<sup>nd</sup> Criterion</p>
+<ul>
+<li><p>Select the QOI: Pr(Succ. Future Trial): N=500; Sup. α=0.025; δ=0; d=Greatest Pr(Max)</p></li>
+<li><p>Select a Condition of &gt;</p></li>
+<li><p>Enter a threshold of 0.5</p></li>
+</ul>
+<p>Select: Combine criteria using: AND</p>
+<p>We will define the futility criteria as the exact complement of these. Set the following parameters for Failure Criteria:</p>
+<p>1<sup>st</sup> Criterion</p>
+<ul>
+<li><p>Select the QOI: Pr(θ_d - θ_(Ctrl (Ata 1.0); No NBH)); d=Greatest Pr(Max)</p></li>
+<li><p>Select a Condition of &lt;</p></li>
+<li><p>Enter a threshold of 0.955</p></li>
+</ul>
+<p>2<sup>nd</sup> Criterion</p>
+<ul>
+<li><p>Select the QOI: Pr(Succ. Future Trial): N=500; Sup. α=0.025; δ=0; d=Greatest Pr(Max)</p></li>
+<li><p>Select a Condition of &lt;</p></li>
+<li><p>Enter a threshold of 0.5</p></li>
+</ul>
+<p>Select: Combine criteria using: OR</p>
+<p><img src="twoDimensionalDosingattachments/media/image16.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="setting-the-dose-selection-criteria" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="setting-the-dose-selection-criteria"><span class="header-section-number">4.7</span> Setting the dose selection criteria</h2>
+<p>As we have indicated on the Virtual Subject Response profiles which doses “should succeed”, FACTs will summarize for us how often one of these doses is actually selected. In order to do this correctly, we need to indicate to FACTS which Target QoI we will be using to select the dose to go forward. Here it is the Pr(Max) [which is FACTS default]. This is specified on the Study &gt; Variants tab (even though we are not defining any variants).</p>
+<p><img src="twoDimensionalDosingattachments/media/image17.png" class="img-fluid"></p>
+</section>
+<section id="simulation" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="simulation"><span class="header-section-number">4.8</span> Simulation</h2>
+<p>To get an initial check on the design set up, set the number of simulations to run to 100, Select All, the press Simulate.</p>
+<p>If the results look reasonable, increase the number of simulations to run to 1000. Select All and then press Simulate again.</p>
+<p>To achieve more precise estimates of the operating characteristics, we may need to run 10,000 or more simulations of a scenario. By default, FACTS simulations run locally on your computer, which for this simple fixed design is likely to take a few seconds to run 1000 simulations. If you have access to a computer grid and your FACTS installation has been correctly configured to use it, you may use the grid’s parallel computing capabilities to improve computation speed. To do so, select “on Grid.”</p>
+<p><img src="twoDimensionalDosingattachments/media/image18.png" class="img-fluid"></p>
+<section id="results" class="level3" data-number="4.8.1">
+<h3 data-number="4.8.1" class="anchored" data-anchor-id="results"><span class="header-section-number">4.8.1</span> Results</h3>
+<p>The success/futility thresholds were adjusted to provide a type-1 error of approximately 10%, which can be seen from the Ppn Late Success column for the Null scenario. The power is high (&gt;90%) for all scenarios except one, the overdose scenario. However, declaration of success in a trial is only good if the selected dose was a good selection. To explore this, we will look at some graphs of model fits and dose selection. On the Simulations tab, click on View Graph and select the Show Across Scenario Graphs Option.</p>
+<p>The first across scenario graph shows the dose selection for each scenario. Note that a lot of information is being displayed in this graph, and you may need to adjust to a full screen view to be able to see details. There may be insufficient room for all of the treatment arm labels to show across the x-axis. The treatment arms are ordered in the same order as presented on the Virtual Subject Response tab. The scenarios will have been re-ordered alphabetically by scenario name.</p>
+<p><img src="twoDimensionalDosingattachments/media/image19.png" class="img-fluid"></p>
+<p>The blue bars in these plots indicate a successful trial that selected of a good treatment arm – one that was listed as “Should Succeed” on the Virtual Subject Response tab. The red bars indicate a successful trial that selected a treatment arm that should not have succeeded. The light blue bars indicate the dose selection in unsuccessful trials.</p>
+<p>For four of the scenarios, this design generally selected a good treatment arm. However, it is not always selecting the <em>best</em> treatment arm. Below is the same graph if we had defined “should succeed” as only the best arm rather than any arm with response rate &gt; 0.55.</p>
+<p><img src="twoDimensionalDosingattachments/media/image20.png" class="img-fluid"></p>
+<p>In particular, note that it never selects the correct arm for the Disc. Factorial setting. A careful examination shows that in fact the model only ever picks one of 4 treatment arms. This is due to the linearity assumption of the model. Since there is no interaction term in the model, the only doses that can be selected are doses that are on the corners of the 2D grid – either the highest or lowest on column strength and row strength.</p>
+<p>To see how well the model does on average for the various scenarios, select the Response graph.</p>
+<p><img src="twoDimensionalDosingattachments/media/image21.png" class="img-fluid"></p>
+<p>This graph overlays the mean fitted response from the model along with the true values for the scenarios. For the Cont. Factorial scenario and the Null scenario, the fits line up very well with the response, since the true values correspond to scenarios where the VSR truth corresponds exactly to the 2D continuous factorial model, for appropriately chosen parameters. There are two scenarios where no model parameters are good at approximating the true VSR – the Disc. Factorial where the column strength (ATA) is not linear (nor monotonic) and the Overdose scenario which deviates greatly from the linearity/monotonicity assumption. For the Overdose scenario, the model tends to fit a negative value for both α<sub>1</sub> and α<sub>2</sub>, due to the extremely poor response rate for the highest combination doses. As such, it tends to select the lowest dose: <strong>ATA 1.5; No NBH</strong> as the Pr(Max), when in truth that treatment arm has lower response than control. Over 30% of the time, the trial is being declared successful and selecting this arm. If this scenario is a realistic scenario, this may indicate a substantive problem with using this model for this design.</p>
+<p>We can take a closer look at the Disc. Factorial scenario by selecting its row on the Simulations tab, then selecting View Graph &gt; Show Per Scenario Graphs. Click on the Response and Target Selection Graph. For the target of Pr(Max), we see a more detailed view of what was shown above in the across scenarios graph.</p>
+<p><img src="twoDimensionalDosingattachments/media/image22.png" class="img-fluid"></p>
+<p>An option to help see the two-dimensional structure of the fits is to click on the checkbox “Show row factors as separate series.” With this option, each level of the row factor is plotted with connected lines across the column factors. In the plot below, the linear structure of the continuous factorial model is much easier to see when separated out by row.</p>
+<p><img src="twoDimensionalDosingattachments/media/image23.png" class="img-fluid"></p>
+<p>It does not make sense in the context of this example to use an EDq target rather than the Pr(Max), as toxicity from overdosing is not a concern – the dichotomous response already accounts for overdosing response. But for the sake of demonstrating the quantity in the context of 2D dosing, we will examine the ED80 selection for this scenario.</p>
+<p><img src="twoDimensionalDosingattachments/media/image24.png" class="img-fluid"></p>
+<p>The ED80 dose is the <em>lowest</em> dose that achieves at least 80% of the response of the best treatment arm. Here, <em>lowest</em> refers to the effective dose strength defined for the dose combinations. The graph shows the treatment arms in increasing order of the effective combination dose. Had we used the ED80 as the dose selection option, we then have a chance to choose arms other than the 4 that the Pr(Max) chooses. In this example, while the continuous factorial model tends to make the <strong>ATA 2.5; With NBH</strong> arm the best dose, but occasionally, the fitted α<sub>1</sub> term is small enough to indicate that the <strong>ATA 2.0; With NBH</strong> arm is nearly as good, and since it is lower in combination dose strength, it is chosen as the ED80. And sometimes, when <strong>ATA 2.5; No NBH</strong> is selected as the Pr(Max) arm, the <strong>Ctrl (ATA 1.0); With NBH</strong> arm is selected as the ED80, since in terms of combination effective dose strength, it is a lower effective dose than <strong>ATA 2.5; No NBH</strong>.</p>
+</section>
+</section>
+</section>
+<section id="d-discrete-factorial-model" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> 2D Discrete Factorial Model</h1>
+<p>We will now examine the same design using a different dose response model – the 2D Discrete Factorial Model. This model is similar to the continuous factorial, except that it treats the levels of the columns and rows as factors rather than continuous variables, and as such, it should be more flexible for capturing non-linearity/non-monotonicity along the columns or rows, but at the cost of less precise fit when the response is linear.</p>
+<p>With the design created above, use the File &gt; Save As menu command to create a copy of the design. Here we have called the copy TBI_DiscFactorial.</p>
+<p>We will use all of the features of the previous design, except for updating the design model. Go to the Design &gt; Dose Response tab.</p>
+<ul>
+<li><p>For Model, select 2D Discrete Factorial Model.</p></li>
+<li><p>For α, enter a mean of -0.41 and SD of 1. This term has the same meaning as α<sub>0</sub> in the 2D continuous factorial model.</p></li>
+<li><p>For the β’s, enter a mean of 0 and SD of 0.75. These represent potential deviations from low dose on the columns, and there is one β for each level of the columns above the lowest.</p></li>
+<li><p>For the γ’s, enter a mean of 0 and SD of 0.75. These represent potential deviations from low dose on the rows, and there is one γ for each level of the rows above the lowest.</p></li>
+</ul>
+<p><img src="twoDimensionalDosingattachments/media/image25.png" class="img-fluid"></p>
+<p>Should we go to the Simulation tab and simulate the Null scenario with no other adjustments, we will see a higher Type I error rate: ~12.5%. The two extra parameters in this model may lead to some over-fitting relative to the continuous factorial model and thus requires a more stringent success criterion. In order to make operating characteristics comparable to the continuous factorial model, we need to adjust the threshold for declaring success to reduce the Type I error rate to ~10%.</p>
+<p>Go to the Design &gt; Success/Futility Criteria tab. Click on the success criteria for P(P_d &gt; P_Ctrl (ATA 1.0); No NBH)) and adjust the threshold to be 0.965 [instead of 0.955 as in the previous model]. Do the same for the futility criteria.</p>
+<p><img src="twoDimensionalDosingattachments/media/image26.png" class="img-fluid"></p>
+<p>Now switch to the Simulation tab and simulate all scenarios.</p>
+<p><img src="twoDimensionalDosingattachments/media/image27.png" class="img-fluid"></p>
+<p>The Type I error has been calibrated to be roughly 10%. The power in across the other scenarios has dropped a few percentage points in all of the non-null scenarios, compared to the continuous factorial model. However, the discrete factorial model may have a benefit in dose selection, since the model fit is more flexible.</p>
+<p>Click on View Graph &gt; Show Across Scenario Graphs.</p>
+<p><img src="twoDimensionalDosingattachments/media/image28.png" class="img-fluid"></p>
+<p>The discrete factorial model is not as good at selecting the best arm in scenarios where the true best arm lies on a corner of the 2D grid, like the Cont. Factorial scenario and the Large Monotone scenario. However, it is able to select the best dose over 70% of the time in the Disc. Factorial scenario, and it generally selects a good dose, even if not the best. The Overdose scenario is still problematic, as the model cannot account for a lack of additivity for the factors in the true response rate. Note, however, that the selection of the low dose (<strong>ATA 1.5; No NBH</strong>) has dropped to under 20% in successful trials, and the correct arm (<strong>ATA 2.5; No NBH</strong>) is selected nearly 15%.</p>
+<p>Click on the Response graph.<img src="twoDimensionalDosingattachments/media/image29.png" class="img-fluid"></p>
+<p>The fitted responses are generally close to the truth for most of the scenarios, but does over-smooth in the Large Monotone scenario, and like the Continuous Factorial mode is unable to match the Overdose scenario that deviates strongly from factor additivity.</p>
+</section>
+<section id="d-ndlm-model" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> 2D NDLM Model</h1>
+<p>We will now examine the same design using the third 2D dose response model, the 2D Normal Dynamic Linear Model (2D NDLM). This model is effectively a smoothing model and assumes that neighbors in the 2D space have similar response, though we must define our notion of “similarity” through our priors. This model is similar in nature to the Simple NDLM model in FACTS but takes advantage of the 2D neighbor structure.</p>
+<p>From your previous FACTS file, select File &gt; Save As to generate a copy of the design. We named this design file TBI_2DNDLM.</p>
+<p>We are once again utilizing the same design, but changing the dose response model and calibrating the success threshold for type I error.</p>
+<p>On the Design &gt; Dose Response tab:</p>
+<ul>
+<li><p>Select the model: 2D NDLM</p></li>
+<li><p>Select the “Initial Dose” as <strong>ATA 1.5; No NBH</strong>. Set the prior mean to -0.41 and prior SD to 1.0. The model requires prior information to be included about the response rate for one arm. Typically, the chosen arm would be the control arm, since the most historical information is generally available about the control arm. However, since we are modeling the control arm separately, we must select a different initial dose about which to input a prior distribution for the response rate. We chose the <strong>ATA 1.5; No NBH</strong> arm since it is the arm closest to the control in combination dose strength and thus choosing a prior distribution similar to the intercept term for the previous models is a reasonable choice.</p></li>
+<li><p>For τ, set the prior central value to 1.0 and prior weight to 2.0. Setting this prior can take some practice to understand its behavior. τ represents the response deviation that one might expect from a neighboring dose at a distance of 1 unit. Small values of τ indicate that neighboring doses should have similar response rates and thus high borrowing of response from neighbors, while high values of τ indicate that neighboring doses can have highly different response rates and thus little borrowing in response. This notion can help guide the selection of the prior central value. In this case, we chose 1.0 to represent an expected standard deviation in response of the difference between column doses one unit apart (e.g.&nbsp;ATA 1.5 to ATA 2.5).</p></li>
+<li><p>Check the box: Fixed smoothing ratio. Set smoothing ratio k to 0.7071. The fixed smoothing ratio indicates that we do not wish to model the smoothing parameters in the column and row directions separately but rather just set them to a fixed ratio. In this design, the effective column strengths increase linearly by an increment of 0.5, while the effective row strength increases by an increment of 1.0. If we wish the same degree of smoothing in the column direction and the row direction (e.g., we believe that the change in response rate moving from <strong>ATA 1.5; No NBH</strong> to <strong>ATA 2.0; No NBH</strong> should be about the same as moving from <strong>ATA 1.5; No NBH</strong> to <strong>ATA 1.5; With NBH</strong>), then we want to adjust the smoothing parameter φ (the smoothing parameter in the row direction) so that φ is smaller than τ. Since the variance component is determined by the change in dose strength times the square of the smoothing parameter, we wish to make Δς<sub>c</sub> τ<sup>2</sup> = Δη<sub>r</sub>φ<sup>2</sup>. Thus we use k = √0.5, since 0.5 is the ratio of [average] differences in effective column strength to the difference in effective row strengths.</p></li>
+</ul>
+<blockquote class="blockquote">
+<p>The Design &gt; Dose Response tab should look like the following:</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><img src="twoDimensionalDosingattachments/media/image30.png" class="img-fluid"></p>
+</blockquote>
+<blockquote class="blockquote">
+<p>The success criteria need to be calibrated for type I error for this model. Setting a threshold on the posterior probability of beating control to 0.95 results in approximately 10% type I error for this design.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><img src="twoDimensionalDosingattachments/media/image31.png" class="img-fluid"></p>
+</blockquote>
+<blockquote class="blockquote">
+<p>Now switch to the Simulations tab and simulate all scenarios.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><img src="twoDimensionalDosingattachments/media/image32.png" class="img-fluid"></p>
+</blockquote>
+<blockquote class="blockquote">
+<p>We see that with this model, the power for most scenarios is close but slightly lower than the continuous factorial or discrete factorial model. However, the power is greatly increased in the Overdose scenario.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>To see how this model does with dose selection, click the View Graph &gt; Show Across Scenarios Graph.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><img src="twoDimensionalDosingattachments/media/image33.png" class="img-fluid"></p>
+</blockquote>
+<blockquote class="blockquote">
+<p>We can see that the smoothing across the arms leads to less frequent selection of the best dose, when neighboring doses are nearly as good, and a small but noticeable increase in the selection of inferior arms across the first 3 scenarios. However, the model is quite good at selecting the one good arm in the Overdose scenario.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p>The model responses show good overall fit, with some smoothing out of peaks and valleys.</p>
+</blockquote>
+<blockquote class="blockquote">
+<p><img src="twoDimensionalDosingattachments/media/image34.png" class="img-fluid"></p>
+</blockquote>
+</section>
+<section id="using-a-1d-model-hierarchical-logistic" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Using a 1D model – Hierarchical Logistic</h1>
+<p>Because we chose to enter our treatment arms on the Study &gt; Treatment Arms tab as “Use 2D treatment arm model,” we are not required to use a 2D dose response model. There is little reason to enter treatment arms in that fashion if we are not using a 2D dose response model, since it requires a bit more effort to set up. However, if we are unsure whether or not we want to use a 2D structure, it keeps the 2D model options available on the Design &gt; Dose Response tab. All of the usual dose response models are also available, and they operate as 1D models with dose strengths as specified by the combination effective dose strength.</p>
+<p>Select File &gt; Save As to save a copy of the design. We named this file TBI_HierLogistic.</p>
+<p>On the Design &gt; Dose Response tab:</p>
+<ul>
+<li><p>Select the Model as: Hierarchical Logistic.</p></li>
+<li><p>For a<sub>1</sub>, set the prior mean to -0.41 and prior SD to 1.</p></li>
+<li><p>For a<sub>2</sub>, set the prior mean to 0 and prior SD to 5.</p></li>
+<li><p>For a<sub>3</sub>, set the prior mean to 3 and prior SD to 10.</p></li>
+<li><p>For λ, set the central value to 0.1 and weight to 0.2.</p></li>
+</ul>
+<p>(These are the parameter values used in the Gajewski paper.)</p>
+<p><img src="twoDimensionalDosingattachments/media/image35.png" class="img-fluid"></p>
+<p>On the Design &gt; Success/Futility Criteria tab, set the threshold for the posterior probability QoI to be 0.922 for both success and futility.</p>
+<p><img src="twoDimensionalDosingattachments/media/image36.png" class="img-fluid"></p>
+<p>Go to the Simulate tab and simulate all scenarios. <img src="twoDimensionalDosingattachments/media/image37.png" class="img-fluid"></p>
+<p>The power is quite good for all scenarios, so how does it compare in terms of arm selection?</p>
+<p>The hierarchical logistic model was selected amongst the 1D dose response models because it incorporates a monotonic growth curve across the effective dose strength, but the hierarchical piece adds a random effect to each dose, allowing some deviations from monotonicity, and is thus less prone to be fooled by a non-monotonic scenario like the Overdose scenario.</p>
+<p><img src="twoDimensionalDosingattachments/media/image38.png" class="img-fluid"></p>
+<p>The arm selection does well for most scenarios, though in the Disc. Factorial scenario, it tends to pick the <strong>ATA 2.5; With NBH</strong> arm when the <strong>ATA 2.0; With NBH</strong> arm is actually superior. In that scenario, the deviation from monotonicity is not large, and thus the random effects component is often outweighed by the monotonic model. In the Overdose scenario, however, the deviation from monotonicity is so strong that the model effectively weights the random effects portion more heavily and is nearly fitting an independent arms model.</p>
+<p><img src="twoDimensionalDosingattachments/media/image39.png" class="img-fluid"></p>
+<p>In terms of the model fits, one can see that the model is missing out on 2D structure of the doses, where it actually exists, as we can see from the overly smooth fits for the Cont. Factorial and Disc. Factorial settings.</p>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Gajewski, B.J., Meinzer, C., Berry, S.M., Rockswold, G.L., Barsan, W.G., Korley, F.K., and Martin, R.H. “Bayesian hierarchical EMAX model for dose-response in early phase efficacy clinical trials.” <em>Statistics in Medicine</em> 2019; <strong>38</strong>: 3123-3138.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<!-- footer.html -->
+
+<!-- FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pF6W3...<truncated>...Q==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+<style>
+
+  /* Make all footer icons the same color */
+  footer .fab,
+  footer .fas,
+  footer svg {
+    color: #125740;           /* ← pick whatever color your share-icons are using */
+    fill: currentColor;    /* ensures the SVG Bluesky icon matches */
+  }
+
+  /* Prevent links from overriding that color */
+  footer a {
+    color: inherit;
+  }
+
+  /* Share menu positioning */
+  #share-wrapper { position: relative; }
+  #share-menu {
+    display: none;
+    position: absolute;
+    bottom: 3rem;               /* float above the footer */
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px #125740;
+    gap: 1rem;
+    z-index: 100;
+  }
+  body.menu-open #share-menu { display: flex; }
+  #share-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* Left column: text + social permalinks */
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+  }
+  .footer-left p { margin: 0; }
+  .footer-left a.social {
+    color: inherit;
+    text-decoration: none;
+  }
+  .footer-left a.social i { font-size: 1.2em; }
+  
+  
+    /* Text color left */
+  .footer-left p > a {
+    color: #125740;
+  }
+
+  /* Text color last item */
+  footer > p:last-child a {
+    color: #125740;
+  }
+  
+    /* Link hover colors */
+  .footer-left p > a:hover,
+  footer > p:last-child a:hover {
+    color: #11A473;
+    text-decoration: underline;
+  }
+  
+</style>
+
+<footer style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
+  
+  <!-- Left: Berry Consultants + social permalinks -->
+  <div class="footer-left">
+    <p>
+      © <a href="https://www.berryconsultants.com">Berry Consultants</a>
+    </p>
+    <a href="https://twitter.com/BerryConsultant" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on X">
+      <i class="fab fa-x"></i>
+    </a>
+    <a href="https://www.linkedin.com/company/berry-consultants-llc" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on LinkedIn">
+      <i class="fab fa-linkedin"></i>
+    </a>
+    <a href="https://www.youtube.com/c/berryconsultants" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on YouTube">
+      <i class="fab fa-youtube"></i>
+    </a>
+  </div>
+
+  <!-- Center: share toggle + popup -->
+  <div id="share-wrapper">
+    <button id="share-toggle" aria-label="Share this page">
+      <i class="fas fa-share-alt" style="font-size:1.6em;"></i>
+    </button>
+    <div id="share-menu">
+      <!-- share icons injected here -->
+    </div>
+  </div>
+
+  <!-- Right: How to Cite -->
+  <p style="margin: 0;">
+    <a href="../../../../introduction/citation.html">Cite</a>
+  </p>
+</footer>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const url   = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+    const networks = [
+      { name: "X",        href: `https://twitter.com/intent/tweet?url=${url}&text=${title}`,          icon: `<i class="fab fa-x" style="font-size:1.4em;"></i>` },
+      { name: "LinkedIn", href: `https://www.linkedin.com/feed/?shareActive=true&text=${title}%20${url}`, icon: `<i class="fab fa-linkedin" style="font-size:1.4em;"></i>` },
+      { name: "Bluesky",  href: `https://bsky.app/intent/compose?text=${title}%20${url}`,              icon: `
+        <svg width="1.4em" height="1.4em" fill="currentColor" viewBox="0 0 600 530">
+          <path d="m135.72 44.03c66.496 49.921 138.02 151.14 164.28 205.46 26.262-54.316 97.782-155.54 164.28-205.46 47.98-36.021 125.72-63.892 125.72 24.795 0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.3797-3.6904-10.832-3.7077-7.8964-0.0174-2.9357-1.1937 0.51669-3.7077 7.8964-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.4491-163.25-81.433-5.9562-21.282-16.111-152.36-16.111-170.07 0-88.687 77.742-60.816 125.72-24.795z"/>
+        </svg>` },
+      { name: "Reddit",   href: `https://www.reddit.com/submit?url=${url}&title=${title}`,         icon: `<i class="fab fa-reddit" style="font-size:1.4em;"></i>` },
+      { name: "WhatsApp", href: `https://wa.me/?text=${title}%20${url}`,                             icon: `<i class="fab fa-whatsapp" style="font-size:1.4em;"></i>` },
+      { name: "Email",    href: `mailto:?subject=${title}&body=${title}%20${url}`,                    icon: `<i class="fas fa-envelope" style="font-size:1.4em;"></i>` }
+    ];
+
+    // inject share icons
+    const menu = document.getElementById("share-menu");
+    networks.forEach(net => {
+      const a = document.createElement("a");
+      a.href      = net.href;
+      a.target    = "_blank";
+      a.rel       = "noopener";
+      a.setAttribute("aria-label", `Share on ${net.name}`);
+      a.innerHTML = net.icon;
+      menu.appendChild(a);
+    });
+
+    // toggle menu
+    const toggle = document.getElementById("share-toggle");
+    toggle.addEventListener("click", e => {
+      e.stopPropagation();
+      document.body.classList.toggle("menu-open");
+    });
+
+    // close on outside click
+    document.addEventListener("click", () => {
+      document.body.classList.remove("menu-open");
+    });
+    menu.addEventListener("click", e => e.stopPropagation());
+  });
+</script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/docs\.berryconsultants\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

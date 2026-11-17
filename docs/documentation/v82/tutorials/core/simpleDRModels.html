@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Simple Dose Response Models (Dichotomous and Time-to-Event)</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../">
+<link href="../../../../media/FACTS_icon.png" rel="icon" type="image/png">
+<script src="../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../site_libs/bootstrap/bootstrap-f24641f9662b15e1479722971e972498.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<!-- Roboto Serif -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
+
+<!-- Roboto Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WLMVE7GR4S');
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../../media/FACTSLogo.png" alt="" class="navbar-logo light-content">
+    <img src="../../../../media/FACTSLogo.png" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../introduction/index.html"> 
+<span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../documentation/index.html"> 
+<span class="menu-text">Documentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../get/index.html"> 
+<span class="menu-text">Get FACTS</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../contact/index.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Simple Dose Response Models (Dichotomous and Time-to-Event)</h1>
+            <p class="subtitle lead">Phase 2 and 3 Design Tutorial</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#designs-featured" id="toc-designs-featured" class="nav-link" data-scroll-target="#designs-featured"><span class="header-section-number">2</span> Designs Featured</a></li>
+  <li><a href="#design-1a-dichotomous-data-linear-model" id="toc-design-1a-dichotomous-data-linear-model" class="nav-link" data-scroll-target="#design-1a-dichotomous-data-linear-model"><span class="header-section-number">3</span> Design 1A: dichotomous data, linear model</a>
+  <ul>
+  <li><a href="#study" id="toc-study" class="nav-link" data-scroll-target="#study"><span class="header-section-number">3.1</span> Study</a>
+  <ul class="collapse">
+  <li><a href="#study-info" id="toc-study-info" class="nav-link" data-scroll-target="#study-info"><span class="header-section-number">3.1.1</span> Study Info</a></li>
+  <li><a href="#study-treatment-arms" id="toc-study-treatment-arms" class="nav-link" data-scroll-target="#study-treatment-arms"><span class="header-section-number">3.1.2</span> Study &gt; Treatment Arms</a></li>
+  </ul></li>
+  <li><a href="#virtual-subject-response-explicitly-defined" id="toc-virtual-subject-response-explicitly-defined" class="nav-link" data-scroll-target="#virtual-subject-response-explicitly-defined"><span class="header-section-number">3.2</span> Virtual Subject Response – Explicitly Defined</a></li>
+  <li><a href="#execution" id="toc-execution" class="nav-link" data-scroll-target="#execution"><span class="header-section-number">3.3</span> Execution</a>
+  <ul class="collapse">
+  <li><a href="#accrual" id="toc-accrual" class="nav-link" data-scroll-target="#accrual"><span class="header-section-number">3.3.1</span> Accrual</a></li>
+  <li><a href="#dropout-rate" id="toc-dropout-rate" class="nav-link" data-scroll-target="#dropout-rate"><span class="header-section-number">3.3.2</span> Dropout Rate</a></li>
+  </ul></li>
+  <li><a href="#quantities-of-interest" id="toc-quantities-of-interest" class="nav-link" data-scroll-target="#quantities-of-interest"><span class="header-section-number">3.4</span> Quantities of Interest</a></li>
+  <li><a href="#design" id="toc-design" class="nav-link" data-scroll-target="#design"><span class="header-section-number">3.5</span> Design</a>
+  <ul class="collapse">
+  <li><a href="#dose-response" id="toc-dose-response" class="nav-link" data-scroll-target="#dose-response"><span class="header-section-number">3.5.1</span> Dose Response</a></li>
+  <li><a href="#frequentist-analysis" id="toc-frequentist-analysis" class="nav-link" data-scroll-target="#frequentist-analysis"><span class="header-section-number">3.5.2</span> Frequentist Analysis</a></li>
+  <li><a href="#allocation" id="toc-allocation" class="nav-link" data-scroll-target="#allocation"><span class="header-section-number">3.5.3</span> Allocation</a></li>
+  <li><a href="#interims" id="toc-interims" class="nav-link" data-scroll-target="#interims"><span class="header-section-number">3.5.4</span> Interims</a></li>
+  <li><a href="#successfutility-criteria" id="toc-successfutility-criteria" class="nav-link" data-scroll-target="#successfutility-criteria"><span class="header-section-number">3.5.5</span> Success/Futility Criteria</a></li>
+  </ul></li>
+  <li><a href="#simulation" id="toc-simulation" class="nav-link" data-scroll-target="#simulation"><span class="header-section-number">3.6</span> Simulation</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">3.7</span> Results</a></li>
+  </ul></li>
+  <li><a href="#design-1b-hierarchical-linear-model" id="toc-design-1b-hierarchical-linear-model" class="nav-link" data-scroll-target="#design-1b-hierarchical-linear-model"><span class="header-section-number">4</span> Design 1B: hierarchical linear model</a>
+  <ul>
+  <li><a href="#design-1" id="toc-design-1" class="nav-link" data-scroll-target="#design-1"><span class="header-section-number">4.1</span> Design</a></li>
+  <li><a href="#quantities-of-interest-1" id="toc-quantities-of-interest-1" class="nav-link" data-scroll-target="#quantities-of-interest-1"><span class="header-section-number">4.2</span> Quantities of Interest</a></li>
+  <li><a href="#allocation-1" id="toc-allocation-1" class="nav-link" data-scroll-target="#allocation-1"><span class="header-section-number">4.3</span> Allocation</a></li>
+  <li><a href="#successfutility-criteria-1" id="toc-successfutility-criteria-1" class="nav-link" data-scroll-target="#successfutility-criteria-1"><span class="header-section-number">4.4</span> Success/Futility Criteria</a></li>
+  <li><a href="#results-1" id="toc-results-1" class="nav-link" data-scroll-target="#results-1"><span class="header-section-number">4.5</span> Results</a></li>
+  </ul></li>
+  <li><a href="#design-2-time-to-event-data-hierarchical-model" id="toc-design-2-time-to-event-data-hierarchical-model" class="nav-link" data-scroll-target="#design-2-time-to-event-data-hierarchical-model"><span class="header-section-number">5</span> Design 2: time-to-event data, hierarchical model</a>
+  <ul>
+  <li><a href="#study-1" id="toc-study-1" class="nav-link" data-scroll-target="#study-1"><span class="header-section-number">5.1</span> Study</a>
+  <ul class="collapse">
+  <li><a href="#study-info-1" id="toc-study-info-1" class="nav-link" data-scroll-target="#study-info-1"><span class="header-section-number">5.1.1</span> Study Info</a></li>
+  <li><a href="#visits" id="toc-visits" class="nav-link" data-scroll-target="#visits"><span class="header-section-number">5.1.2</span> Visits</a></li>
+  <li><a href="#treatment-arms" id="toc-treatment-arms" class="nav-link" data-scroll-target="#treatment-arms"><span class="header-section-number">5.1.3</span> Treatment Arms</a></li>
+  </ul></li>
+  <li><a href="#virtual-subject-response" id="toc-virtual-subject-response" class="nav-link" data-scroll-target="#virtual-subject-response"><span class="header-section-number">5.2</span> Virtual Subject Response</a>
+  <ul class="collapse">
+  <li><a href="#control-hazard-rates" id="toc-control-hazard-rates" class="nav-link" data-scroll-target="#control-hazard-rates"><span class="header-section-number">5.2.1</span> Control Hazard Rates</a></li>
+  <li><a href="#control-hazard-rates-1" id="toc-control-hazard-rates-1" class="nav-link" data-scroll-target="#control-hazard-rates-1"><span class="header-section-number">5.2.2</span> Control Hazard Rates</a></li>
+  </ul></li>
+  <li><a href="#execution-1" id="toc-execution-1" class="nav-link" data-scroll-target="#execution-1"><span class="header-section-number">5.3</span> Execution</a></li>
+  <li><a href="#quantities-of-interest-2" id="toc-quantities-of-interest-2" class="nav-link" data-scroll-target="#quantities-of-interest-2"><span class="header-section-number">5.4</span> Quantities of Interest</a></li>
+  <li><a href="#design-2" id="toc-design-2" class="nav-link" data-scroll-target="#design-2"><span class="header-section-number">5.5</span> Design</a>
+  <ul class="collapse">
+  <li><a href="#hazard-model" id="toc-hazard-model" class="nav-link" data-scroll-target="#hazard-model"><span class="header-section-number">5.5.1</span> Hazard Model</a></li>
+  <li><a href="#hazard-model-1" id="toc-hazard-model-1" class="nav-link" data-scroll-target="#hazard-model-1"><span class="header-section-number">5.5.2</span> Hazard Model</a></li>
+  <li><a href="#allocation-2" id="toc-allocation-2" class="nav-link" data-scroll-target="#allocation-2"><span class="header-section-number">5.5.3</span> Allocation</a></li>
+  <li><a href="#interims-1" id="toc-interims-1" class="nav-link" data-scroll-target="#interims-1"><span class="header-section-number">5.5.4</span> Interims</a></li>
+  <li><a href="#successfutility-criteria-2" id="toc-successfutility-criteria-2" class="nav-link" data-scroll-target="#successfutility-criteria-2"><span class="header-section-number">5.5.5</span> Success/Futility Criteria</a></li>
+  </ul></li>
+  <li><a href="#simulation-1" id="toc-simulation-1" class="nav-link" data-scroll-target="#simulation-1"><span class="header-section-number">5.6</span> Simulation</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>This tutorial introduces three new dose-response models available beginning in FACTS 6.4. These models are the Simple Linear Model, the Hierarchical Model, and the Linear Hierarchical Model. First we illustrate the Linear and Linear Hierarchical models with dichotomous data. Then we create a design based on the Hierarchical model for time-to-event data.</p>
+<p>Screenshots are from the 6.4 release of FACTS. The screenshots provided are approximate and may not reflect the exact layout of the information in later versions of FACTS. The contents of each tab, however, will be consistent with the software.</p>
+<p>The designs presented are examples and may not be optimally calibrated.</p>
+</section>
+<section id="designs-featured" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Designs Featured</h1>
+<p>In this tutorial we create the following designs:</p>
+<ul>
+<li><p>Design 1A</p>
+<ul>
+<li><p>Dichotomous data</p></li>
+<li><p>No predictor</p></li>
+<li><p>Five experimental arms plus a control arm</p></li>
+<li><p>Adaptive design with three interims</p></li>
+<li><p>Linear dose-response model</p></li>
+</ul></li>
+<li><p>Design 1B</p>
+<ul>
+<li>Like Design 1A, but uses the Hierarchical Linear dose-response model</li>
+</ul></li>
+<li><p>Design 2:</p>
+<ul>
+<li><p>Time-to-event data</p></li>
+<li><p>No predictor</p></li>
+<li><p>Four experimental arms plus a control arm</p></li>
+<li><p>Adaptive design with four interims</p></li>
+<li><p>Hierarchical dose-response model</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="design-1a-dichotomous-data-linear-model" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Design 1A: dichotomous data, linear model</h1>
+<p>The primary endpoint is presence or absence of a negative outcome one week after treatment. There is no predictor available.</p>
+<p>The design will randomize to a control arm and five doses of an experimental drug. The study will include three relatively small doses (0.5, 0.75, and 1 units), and two larger doses (2.5 and 5 units). There is compelling in vitro data suggesting an approximate log-linear relationship between dose and outcome probability.</p>
+<p>We expect an event probability of approximately 40% for patients randomized to control. A treatment that reduces event probability by 10% or more would be promising for marketing.</p>
+<p>We intend to randomize 600 patients, with no stopping for futility or early success. This is a Phase II trial. We are particularly interested in the largest dose. But we are also interested in outcomes (and, although they will not simulated in FACTS, secondary endpoints) for all five arms.</p>
+<p>If the linear model estimates that the drug is beneficial relative to control as a whole, it will always estimate that the largest dose is the most effective of the doses, due to the strong assumption about the shape of the dose-response relationship. Other dose-response models are more suitable for most dose selection tasks, but in this study we are primarly focused on the largest dose.</p>
+<p>We particularly wish to gather more data on arms that may be 10% better than control, so we will conduct interims for response-adaptive randomization probability updates. The randomization probability for control will be fixed at 1/3 throughout the trial.</p>
+<section id="study" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="study"><span class="header-section-number">3.1</span> Study</h2>
+<p>Start FACTS 6.4 or later, double click on: Core Design – Dichotomous.</p>
+<p><img src="simpleDRModelsattachments/media/image2.png" class="img-fluid"></p>
+<p>Using the menu option “File &gt; Save As”, save this design as “LinearExample” in a convenient location (e.g.&nbsp;in a folder called FACTS\Tutorials--example in your ‘My Documents’ folder).</p>
+<section id="study-info" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="study-info"><span class="header-section-number">3.1.1</span> Study Info</h3>
+<p>On the Study -&gt; Study Info tab, select the following options:</p>
+<ul>
+<li><p>Under Design Options, select Adaptive, not Fixed</p></li>
+<li><p>Uncheck Use longitudinal modeling</p></li>
+<li><p>Under Study information, Recruit subjects Continuously</p></li>
+<li><p>Set the Maximum number of subjects to be 600</p></li>
+<li><p>Check “Response indicates negative outcome”</p></li>
+<li><p>Under Schedule of Post-Baseline Visits, Time to Final Endpoint should be 1 week</p></li>
+</ul>
+<p><img src="simpleDRModelsattachments/media/image3.png" class="img-fluid"></p>
+</section>
+<section id="study-treatment-arms" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="study-treatment-arms"><span class="header-section-number">3.1.2</span> Study &gt; Treatment Arms</h3>
+<ul>
+<li><p>Include a control treatment arm</p></li>
+<li><p>Enter “0.5” in the Dose level box and then click Add. Repeat to add dose levels of 0.75, 1, 2.5, and 5.</p></li>
+</ul>
+<blockquote class="blockquote">
+<p>You do not need to enter anything on the Study -&gt; Variants tab.</p>
+</blockquote>
+<p><img src="simpleDRModelsattachments/media/image4.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="virtual-subject-response-explicitly-defined" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="virtual-subject-response-explicitly-defined"><span class="header-section-number">3.2</span> Virtual Subject Response – Explicitly Defined</h2>
+<p>We will define five treatment effect scenarios:</p>
+<ul>
+<li><p>a null scenario</p></li>
+<li><p>two scenarios where the expected log-linear relationship is exactly correct, one with modest treatment effects and one with stronger effects;</p></li>
+<li><p>two scenarios for testing the robustness of the linear model when the log-linear relationship is not exactly correct. The linear model makes a strong assumption about the relationship between dose and outcome, so it has the potential to perform poorly when this assumption is violated. We recommend that such scenarios</p></li>
+</ul>
+<p>To add the null scenario, click the “+ Add” button. Rename the Profile from “Resp 1” to “Null” by clicking and then typing “Null” in the Profiles dialog. Then set all the response rates to be 0.4 by entering 0.4’s in the Response rate colun in the Endpoint Values table. None of the “Should succeed” boxes should be checked in the null scenario.</p>
+<p><img src="simpleDRModelsattachments/media/image5.png" class="img-fluid"></p>
+<p>Then create more scenarios, using the values in this table. Check the “Should succeed” box for arms with response rates in bold in the table.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 9%">
+<col style="width: 14%">
+<col style="width: 16%">
+<col style="width: 21%">
+<col style="width: 10%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th></th>
+<th colspan="5">Response rate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dose Level</td>
+<td>Null</td>
+<td>Weak Logistic</td>
+<td>Strong Logistic</td>
+<td>Very Strong Logistic</td>
+<td>Plateau</td>
+<td>Threshold</td>
+</tr>
+<tr class="even">
+<td>0</td>
+<td>0.4</td>
+<td>0.4</td>
+<td>0.4</td>
+<td>0.4</td>
+<td>0.4</td>
+<td>0.4</td>
+</tr>
+<tr class="odd">
+<td>0.5</td>
+<td>0.4</td>
+<td>0.389</td>
+<td>0.383</td>
+<td>0.377</td>
+<td>0.387</td>
+<td>0.4</td>
+</tr>
+<tr class="even">
+<td>0.75</td>
+<td>0.4</td>
+<td>0.384</td>
+<td>0.375</td>
+<td>0.365</td>
+<td>0.38</td>
+<td>0.4</td>
+</tr>
+<tr class="odd">
+<td>1</td>
+<td>0.4</td>
+<td>0.379</td>
+<td>0.367</td>
+<td>0.354</td>
+<td>0.374</td>
+<td>0.4</td>
+</tr>
+<tr class="even">
+<td>2.5</td>
+<td>0.4</td>
+<td>0.348</td>
+<td>0.320</td>
+<td><strong>0.29</strong></td>
+<td>0.348</td>
+<td><strong>0.3</strong></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>0.4</td>
+<td><strong>0.3</strong></td>
+<td><strong>0.250</strong></td>
+<td><strong>0.2</strong></td>
+<td>0.348</td>
+<td><strong>0.3</strong></td>
+</tr>
+</tbody>
+</table>
+<p><img src="simpleDRModelsattachments/media/image6.png" class="img-fluid"></p>
+<p>The Plateau profile has been defined to explore whether the linear model tends to extrapolate beyond the four smaller doses to be too enthusiastic about the largest dose. The Threshold profile will explore to what extent the linear model acts as if the two largest doses are equally worthy, and to what it extent it favors the largest dose.</p>
+<p>A more thorough example would also explore scenarios where the control response rate is not 0.4.</p>
+</section>
+<section id="execution" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="execution"><span class="header-section-number">3.3</span> Execution</h2>
+<section id="accrual" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="accrual"><span class="header-section-number">3.3.1</span> Accrual</h3>
+<p>Add an accrual scenario by clicking the Add button on the far left, then add 1 region by clicking the Add button above the table. Set the peak accrual rate to 12 subjects per week, to give an overall recruitment period of approximately 50 weeks.</p>
+<p>The names of the accrual profile and the region may be renamed by double-clicking on them.</p>
+<p><img src="simpleDRModelsattachments/media/image7.png" class="img-fluid"></p>
+</section>
+<section id="dropout-rate" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="dropout-rate"><span class="header-section-number">3.3.2</span> Dropout Rate</h3>
+<p>Select “No Dropouts”.</p>
+<p><img src="simpleDRModelsattachments/media/image8.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="quantities-of-interest" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="quantities-of-interest"><span class="header-section-number">3.4</span> Quantities of Interest</h2>
+<p>FACTS has considerable flexibility in allowing the user to define Quantities of Interest (QOIs) to drive adaptations in the trial and decisions at the end of the trial. A basic set of QOIs is provided by default. Additional QOIs may be added by clicking the Add row in the table. A QOI can be removed by clicking the X on the right side of the cell. Each QOI may be edited by clicking on it, which opens a pop-up box.</p>
+<p>Recall that a 10% benefit relative to control is considered to be a large enough benefit. We will define a QOI based on the probability of a better than a 5% benefit, so that a null arm will eventually have small probability of a 5% benefit and a good arm with at least a 10% benefit will eventually have a large such probability. The trial will be judged a success if at the end of the trial:</p>
+<ul>
+<li>The arm with the largest dose has a posterior probability of at least 90% that it is 5% better than control.</li>
+</ul>
+<p>Otherwise the trial will be judged to be futile.</p>
+<p>Set the following parameters:</p>
+<ul>
+<li><p>At the bottom of the page, set the Clinically significant difference (CSD) to be 0.05. Default QOIs compare to control, and the Trial type is Superiority.</p></li>
+<li><p>For Posterior Probabilities:</p>
+<ul>
+<li>Verify that Pr(P_d – P_(Control) &lt;-0.05) is already added. It should have been automatically filled in because we already specified the CSHRD.</li>
+</ul></li>
+<li><p>We are not interested in any Predictive Probabilities, p-values, or Probabilities of being Target. The Pr(Max) probability in FACTS calculates the probability that each dose is the best dose. This probability in particular is not useful with the Linear model, because no dose between two other doses can possibly be the best dose.</p></li>
+<li><p>For Decision Quantities (Scalars):</p>
+<ul>
+<li><p>QOI: Pr(P_d – P_(Control) &lt;-0.05)</p></li>
+<li><p>Evaluation Dose: Dose 5</p></li>
+</ul></li>
+</ul>
+<p><img src="simpleDRModelsattachments/media/image9.png" class="img-fluid"></p>
+</section>
+<section id="design" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="design"><span class="header-section-number">3.5</span> Design</h2>
+<section id="dose-response" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="dose-response"><span class="header-section-number">3.5.1</span> Dose Response</h3>
+<p>The linear model assumes that the probability of outcome <span class="math inline">\(P_{d}\)</span> for arm number <span class="math inline">\(d\)</span>, which has dose level <span class="math inline">\(\nu_{d}\)</span>, is</p>
+<p><span class="math display">\[P_{d} = \frac{e^{\theta_{d}}}{1 + e^{\theta_{d}}}\]</span></p>
+<p>Here the <span class="math inline">\(\theta_{d}\)</span> are the dose parameters and they satisfy the linear model:</p>
+<p><span class="math display">\[\theta_{d} = \alpha + \beta\nu_{d}\]</span></p>
+<p>FACTS gives the option of not including the control arm in the linear model. But here we include it (we leave “Model Control Separately” unchecked), so the parameter <span class="math inline">\(\alpha\)</span> is the logit of the outcome rate corresponding to dose level zero, i.e.&nbsp;the control outcome rate is equal to</p>
+<p><span class="math display">\[P_{0} = \frac{e^{\alpha}}{1 + e^{\alpha}}\]</span></p>
+<p>First select “Simple Linear” from the Model list. In FACTS we must specify prior distributions for the unknown parameters. We set the prior mean for <span class="math inline">\(\alpha\)</span> to be -0.405, the logit of the expected control probability 0.4, and other prior parameters as in the screenshot. In the graph, select Graph Type: Dose-Response Samples to view samples from the prior distribution for the Dose-Response model. In Dichotomous and Time-to-event models in particular, it can be easy to inadvertently choose prior distributions that are so non-informative that most prior samples look absurd.</p>
+<p><img src="simpleDRModelsattachments/media/image10.png" class="img-fluid"></p>
+</section>
+<section id="frequentist-analysis" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="frequentist-analysis"><span class="header-section-number">3.5.2</span> Frequentist Analysis</h3>
+<p>We will not use the Frequentist Analysis tab.</p>
+</section>
+<section id="allocation" class="level3" data-number="3.5.3">
+<h3 data-number="3.5.3" class="anchored" data-anchor-id="allocation"><span class="header-section-number">3.5.3</span> Allocation</h3>
+<p>To institute response-adaptive randomization, check the “Adaptive Allocation” box. Set the “Pre First Interim Allocation Ratios” to be 5 for control and 2 for each of the experimental arms. Check “Fix Alloc.” for the control arm, and enter 5 for the Post First Interim Alloc. per Block. Below the table, enter 15 in the Post first interim block size.</p>
+<p>In the “Adaptive Allocation Targets” dialog, click “Add”. Select Pr(P_d - P_(Control) &lt; – 0.05) in the QOI pull-down. Check (Weight For) Probability, and give it relative weight 1.</p>
+<p><img src="simpleDRModelsattachments/media/image11.png" class="img-fluid"></p>
+</section>
+<section id="interims" class="level3" data-number="3.5.4">
+<h3 data-number="3.5.4" class="anchored" data-anchor-id="interims"><span class="header-section-number">3.5.4</span> Interims</h3>
+<p>We will update randomization probabilities at each of three interims. Check “Opportunity to Complete at Specified Visit”. This means that an interim analysis scheduled for 150 patients will happen 1 week after the 150<sup>th</sup> patient is randomized and treated, and the randomization probability update will usually not take effect until more than 150 patients have been randomized. If we selected “Subjects Enrolled” instead, the interim would necessarily occur before 150 patients have complete data, but randomization probabilities would be updated in time for the 151<sup>st</sup> patient. Either choice can be good.</p>
+<p>In our simulated study, there are no dropouts and no unexpected delays in data availability, so it is equivalent to define information based on complete data or on opportunity to complete. In practice, basing interim timing on opportunity to complete can make interims more predictable and meetings to discuss the results easier to schedule.</p>
+<p>Check (Specify Interims By) Information. Click the Add button three times and enter 150, 300, and 450 in the Subjects (opportunity) column.</p>
+<p><img src="simpleDRModelsattachments/media/image12.png" class="img-fluid"></p>
+</section>
+<section id="successfutility-criteria" class="level3" data-number="3.5.5">
+<h3 data-number="3.5.5" class="anchored" data-anchor-id="successfutility-criteria"><span class="header-section-number">3.5.5</span> Success/Futility Criteria</h3>
+<p>The trial will be judged a success if at the end of the trial:</p>
+<ul>
+<li>the arm with the largest dose has a posterior probability of at least 90% that it is 5% better than control.</li>
+</ul>
+<p>Otherwise the trial will be judged to be futile.</p>
+<p>Go to the “Final Evaluation” tab. (Since this design does not allow early stopping, we will not select anything on the “Interim 1” tab, nor will we create tabs for the other interims.) Set the following parameters:</p>
+<ul>
+<li><p>Futility criteria: Add QOI</p>
+<ul>
+<li><p>QOI: Pr(P_d – P_(Control) &lt; - 0.05), d = Dose 5</p></li>
+<li><p>Condition: &lt;</p></li>
+<li><p>Threshold: 0.9</p></li>
+</ul></li>
+<li><p>Success criteria: Add QOI</p>
+<ul>
+<li><p>QOI: Pr(P_d – P_(Control) &lt; - 0.05), d = Dose 5</p></li>
+<li><p>Condition: &gt;</p></li>
+<li><p>Threshold: 0.9</p></li>
+</ul></li>
+</ul>
+<p>We have left no room between futility and success, so the trial can not be declared inconclusive.</p>
+<p><img src="simpleDRModelsattachments/media/image13.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="simulation" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="simulation"><span class="header-section-number">3.6</span> Simulation</h2>
+<p>In order to get an initial check on the design set up, set the number of simulations to run to 10, then press Simulate. This allows us to make a quick assessment of whether the design is behaving as expected: that the Null scenario ends up mainly futile and the Strong Logistic scenario mainly successful.</p>
+<p>If the results look reasonable, increase the number of simulations to run to 1000, re-check all the scenario combinations and then press Simulate again. This is a design that is very fast to simulate, even running 10,000 simulations for each scenario takes less than an hour on a laptop. If you have access to a computer grid, and your FACTS installation has been correctly configured to use it, you may use the grid’s parallel computing capabilities to improve computation speed. To do so, select “on Grid.”</p>
+</section>
+<section id="results" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="results"><span class="header-section-number">3.7</span> Results</h2>
+<p>Looking at the operating characteristics for each scenario:</p>
+<p><img src="simpleDRModelsattachments/media/image14.png" class="img-fluid"></p>
+<p>The design as very high probability of success for the Very Strong Logistic scenario, and high probability of success in the Strong Logistic scenario. The Weak Logistic and Threshold scenarios are more borderline with success probabilities between 0.4 and 0.5. Type I error (probability of success in the Null scenario) is quite low, at 0.9% in this set of simulations. More than 1000 simulations should be run if it is desired to have a more accurate estimate of this small probability.</p>
+<p>Next we investigate the sample size properties of the design. Click on “Show Other Columns” in the Results Options area, and then select Allocation. An additional window opens, and after adjusting the widths of the columns, we can inspect average sample sizes.</p>
+<p><img src="simpleDRModelsattachments/media/image15.png" class="img-fluid"></p>
+<p>The average sample sizes for Dose 1 are just above 20. Since the design randomizes 20 patients to each experimental arm out of the first 150, the design is aggressive at reducing allocation to this arm using response adaptive randomization. The user should consider whether these sample sizes are adequate for their purposes, and perhaps consider less aggressive randomization or a later first interim.</p>
+<p>In all scenarios, the design randomizes a large number of patients to the largest dose. This happens even in the null scenario, in part due to the linear model. Even though the data from all five experimental arms should be suggesting that no arm is 5% better than control, the linear model infers that if any arm is, it must be the largest dose, tilting the randomization probabilities accordingly. In the plateau scenario, in which the two largest doses are in fact equally effective, the design prefers to allocate to the largest dose.</p>
+<p>We can also look at the graphs supplied by FACTS to help understand the design. Close the Allocation table window and return to the main FACTS window. Click in the Threshold scenario row to highlight it, and click on “View Graph” in the Results Options area. Then choose “Show Per Scenario Graphs”. In the new window, select “Response and Subject Allocation”.</p>
+<p><img src="simpleDRModelsattachments/media/image16.png" class="img-fluid"></p>
+<p>This graph compares the true dose-response relationship in black to the mean fitted response. This scenario is not a linear model, so the model cannot fix it exactly, and this leads to downward bias in favor of Dose 5 (and the small doses) and an upward (i.e.&nbsp;in the direction of less efficacy) bias for Dose 4. This does not necessarily make the linear model a poor choice; it may still make reasonable allocation decisions, and the threshold scenario may be thought to be highly unlikely.</p>
+<p>We can also look at FACTS graphs associated with individual simulated trials. Still in the graphs window, select “Per Interim: Response and Subj. Alloc” to display summaries of data and model fits for each interim analysis and each simulated trial. In this example, we show the data after 150 patients have opportunity to complete (160 subjects enrolled in this simulation). The linear model fit is quite reasonable.</p>
+<p><img src="simpleDRModelsattachments/media/image17.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="design-1b-hierarchical-linear-model" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Design 1B: hierarchical linear model</h1>
+<p>The hierarchical linear model is based on the linear model, but adds flexibility so that the design considers the possibiltiy that there could be deviations from exact linearity, and is capable of fitting data that deviate from linearity. As before the probability of outcome <span class="math inline">\(P_{d}\)</span> for arm number <span class="math inline">\(d\)</span>, which has dose level <span class="math inline">\(\nu_{d}\)</span>, is</p>
+<p><span class="math display">\[P_{d} = \frac{e^{\theta_{d}}}{1 + e^{\theta_{d}}}\]</span></p>
+<p>The hierarchical linear model is defined by the equations</p>
+<p><span class="math display">\[\theta_{d} = \alpha + \beta\nu_{d} + \zeta_{d}\]</span></p>
+<p>where the <span class="math inline">\(\zeta_{d}\)</span> parameters are deviations from linearity. They have prior distribution</p>
+<p><span class="math display">\[\zeta_{d}\sim N\left( 0,\tau^{2} \right)\]</span></p>
+<p>subject to the constraint that the sum of the <span class="math inline">\(\zeta_{d}\)</span>’s is zero. The parameter <span class="math inline">\(\tau^{2}\)</span> is assigned an inverse-Gamma prior distribution and estimated from the data. As in the linear model, the parameters <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> have normal prior distributions.</p>
+<p>The additional flexibility of the hierarchical linear model opens up some additional design options that don’t make sense in the linear model, such as inference about which experimental arm is the most effective one. The linear model structure is still present to guide the model fitting.</p>
+<section id="design-1" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="design-1"><span class="header-section-number">4.1</span> Design</h2>
+<p>We will create this example from the Linear example already created in this tutorial. With the linear example open in FACTS, go to the File menu, select Save As, and save to a different .facts file, such as HierarchicalLinearExample.facts.</p>
+<p>Now go to the Design tab and the Dose Reponse sub-tab. Select “Simple Hierarchical Linear” from the Model list. The prior parameters for <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> from the linear example are still available, and now we need to select a prior distribution for <span class="math inline">\(\tau^{2}\)</span>. We choose parameters 0.1 and 2. We encourage users to experiment with different prior parameters and inspect the operating characteristics and graphs.</p>
+<p><img src="simpleDRModelsattachments/media/image18.png" class="img-fluid"></p>
+</section>
+<section id="quantities-of-interest-1" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="quantities-of-interest-1"><span class="header-section-number">4.2</span> Quantities of Interest</h2>
+<p>To take advantage of the more flexible model, we will define and use and additional quantity of interest: the probability that each experimental arm is the best one. On the Quantities of Interest tab, click “Add…” in the Decision Quantities dialog.</p>
+<ul>
+<li><p>Under QOI, select Pr(P_d – P_(Control) &lt; -0.05)</p></li>
+<li><p>Under Evaluation Dose, select Greatest Pr(Max)</p></li>
+</ul>
+<p><img src="simpleDRModelsattachments/media/image19.png" class="img-fluid"></p>
+</section>
+<section id="allocation-1" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="allocation-1"><span class="header-section-number">4.3</span> Allocation</h2>
+<p>We will change the response-adaptive randomization to be based on the probability that each dose is the best. In the Design -&gt; Allocation tab, click the X next to the old adaptive allocation target to delete it. Then click Add…</p>
+<ul>
+<li><p>Select Pr(Max) as the QOI</p></li>
+<li><p>Select Weight For: Information. This choice encourages the design to gather more data on arms with relatively smaller sample sizes when they have similar efficacy estimates.</p></li>
+<li><p>Set the Relative Weight to be 1</p></li>
+</ul>
+<p><img src="simpleDRModelsattachments/media/image20.png" class="img-fluid"></p>
+</section>
+<section id="successfutility-criteria-1" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="successfutility-criteria-1"><span class="header-section-number">4.4</span> Success/Futility Criteria</h2>
+<p>In the linear model, we based trial success and futility on the inference about the largest dose. Since we are now making inference about the best arm, we will change the trial success definition accordingly.</p>
+<p>On the Design -&gt; Success/Futility Criteria tab, select the “Final Evaluation” tab.</p>
+<p>Delete the existing futility and success criteria by clicking the X’s. Then for a Futility Criterion, click Add…</p>
+<ul>
+<li><p>For QOI, select Pr(P_d – P_(Control) &lt; -0.05); d=Greatest Pr(Max)</p></li>
+<li><p>Select Condition to be &lt;</p></li>
+<li><p>Select Threshold to be 0.9</p></li>
+</ul>
+<p>Then for a Success Criterion, click Add…</p>
+<ul>
+<li><p>For QOI, select Pr(P_d – P_(Control) &lt; -0.05); d=Greatest Pr(Max)</p></li>
+<li><p>Select Condition to be &gt;</p></li>
+<li><p>Select Threshold to be 0.9</p></li>
+</ul>
+<p>The trial will now be identified as a success if the dose most likely to be the best dose has at least a 90% probability of being 5% better than control.</p>
+<p>We will leave the other design choices as in the linear example. <img src="simpleDRModelsattachments/media/image21.png" class="img-fluid"></p>
+</section>
+<section id="results-1" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="results-1"><span class="header-section-number">4.5</span> Results</h2>
+<p>The operating characteristics for each scenario are, at first glance, similar to the results for the linear model. The design here has been set an additional task: that of identifying the best dose. When we used the linear model, we just told the design that Dose 5 was the best dose, and we didn’t simulate any scenarios where any other dose was better. <img src="simpleDRModelsattachments/media/image22.png" class="img-fluid"></p>
+<p>Looking at the sample size numbers (click on Show Other Columns under Results Options, then select Allocation) shows that the allocation patterns are quite different from the Linear model. In the Very Strong Logistic scenario, the design identifies Dose 5 as the top candidate very early and seldom goes back to the other arms. In the null scenario, however, the design is much more skeptical of the largest dose, and assigns many more patients to other arms as compared to the linear model design. Dose 5 is still favored relative to Dose 4 by the approximate linear structure of the model in the Plateau and Threshold scenarios where those two arms are actually equivalent.</p>
+<p><img src="simpleDRModelsattachments/media/image23.png" class="img-fluid"></p>
+<p>We will look at two graphs to illustrate how the model reacts to data. Select “View Graph”, then “Show Per Scenario Graphs”, and then “Per Interim: Response and Subj. Alloc.” from the list of available graphs. The first interim (160 subjects randomized) for Simulation 1 is shown below. The model fit is not exactly linear, but it is guided by the linear structure while recognizing the good performance of Doses 1 and 2.</p>
+<p><img src="simpleDRModelsattachments/media/image24.png" class="img-fluid"></p>
+<p>It is useful to look through several sets of these graphs to develop intuition for and comfort with how the design performs. For example, here is the graph from the final analysis of a different simulated trial. Here, the data suggest that the model should allow substantial deviations from linearity, and the model is capable of doing so.</p>
+<p><img src="simpleDRModelsattachments/media/image25.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="design-2-time-to-event-data-hierarchical-model" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Design 2: time-to-event data, hierarchical model</h1>
+<p>In this example, we use the hierarchical model in FACTS 6.4 in a time-to-event problem. The primary endpoint is the time to a negative outcome. This example does not use a predictor.</p>
+<p>The design will randomize to a control arm and four different experimental agents. The hierarchical model does not utilize dose level information for the experimental arms; there is no ordering of the doses and no mechanism for informing the model that one pair of arms is more similar than another pair. However, the model starts from the expectation that all arms are likely to be similar.</p>
+<p>We expect roughly one event per patient per 25 weeks, but are concerned that events may be less frequent. We are hoping to identify a treatment that reduces the hazard rate relative to control by better than 25%.</p>
+<p>We intend to randomize 400 patients, but we will conduct futility analyses. We will not consider the option of stopping early for efficacy. This is a Phase II trial; we will not endeavor to control Type I error at a particular value.</p>
+<p>Open FACTS 6.4 or later and double click “Time to Event” under “Core Design.” From the File menu, save the design as “HierarchicalTTE-Example.facts” or somewhere similar.</p>
+<section id="study-1" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="study-1"><span class="header-section-number">5.1</span> Study</h2>
+<section id="study-info-1" class="level3" data-number="5.1.1">
+<h3 data-number="5.1.1" class="anchored" data-anchor-id="study-info-1"><span class="header-section-number">5.1.1</span> Study Info</h3>
+<p>On the Study -&gt; Study Info tab:</p>
+<ul>
+<li><p>Choose “Adaptive” under Design Options</p></li>
+<li><p>Enter 400 as the Maximum number of subjects</p></li>
+<li><p>Enter 400 as the Maximum number of events</p></li>
+<li><p>Enter 52 (weeks) as the Follow-up after full enrollment.</p></li>
+<li><p>Events should indicate Failure.</p></li>
+</ul>
+<p><img src="simpleDRModelsattachments/media/image26.png" class="img-fluid"></p>
+</section>
+<section id="visits" class="level3" data-number="5.1.2">
+<h3 data-number="5.1.2" class="anchored" data-anchor-id="visits"><span class="header-section-number">5.1.2</span> Visits</h3>
+<p>The Visits tab should already have “Restrict Event Times to Visits” unchecked. We will assume that events can be observed at any time.</p>
+</section>
+<section id="treatment-arms" class="level3" data-number="5.1.3">
+<h3 data-number="5.1.3" class="anchored" data-anchor-id="treatment-arms"><span class="header-section-number">5.1.3</span> Treatment Arms</h3>
+<p>On the Study -&gt; Treatment Arms tab, under “Dose”, click “+ Add” four times to add four experimental arms. FACTS will set the dose levels to be 1, 2, 3, and 4, and these are not relevant to the hierarchical model.</p>
+<p><img src="simpleDRModelsattachments/media/image27.png" class="img-fluid"></p>
+<p>We don’t need to do anything with the Variants tab.</p>
+</section>
+</section>
+<section id="virtual-subject-response" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="virtual-subject-response"><span class="header-section-number">5.2</span> Virtual Subject Response</h2>
+<section id="control-hazard-rates" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="control-hazard-rates"><span class="header-section-number">5.2.1</span> Control Hazard Rates</h3>
+<p>We will define two scenarios for the hazard rate for the control arm: one event per 25 weeks and one event per 50 weeks. Click Add. Rename the profile as “Base” by clicking on its name in the Profiles list. Then enter 0.04 as the Events per week.</p>
+<p>Then Add another profile called “Rare” with 0.02 events per week.</p>
+<p><img src="simpleDRModelsattachments/media/image28.png" class="img-fluid"></p>
+</section>
+<section id="control-hazard-rates-1" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="control-hazard-rates-1"><span class="header-section-number">5.2.2</span> Control Hazard Rates</h3>
+<p>We will define six efficacy scenarios as shown in the table below.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 14%">
+<col style="width: 16%">
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Arm</th>
+<th>Null</th>
+<th>Linear</th>
+<th>Weak Linear</th>
+<th>All Doses</th>
+<th>One Dose</th>
+<th>Overdose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dose 1</td>
+<td>1</td>
+<td>0.875</td>
+<td>0.925</td>
+<td><strong>0.6</strong></td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>Dose 2</td>
+<td>1</td>
+<td>0.75</td>
+<td>0.85</td>
+<td><strong>0.6</strong></td>
+<td>1</td>
+<td><strong>0.5</strong></td>
+</tr>
+<tr class="odd">
+<td>Dose 3</td>
+<td>1</td>
+<td><strong>0.625</strong></td>
+<td>0.775</td>
+<td><strong>0.6</strong></td>
+<td>1</td>
+<td><strong>0.5</strong></td>
+</tr>
+<tr class="even">
+<td>Dose 4</td>
+<td>1</td>
+<td><strong>0.5</strong></td>
+<td><strong>0.7</strong></td>
+<td><strong>0.6</strong></td>
+<td><strong>0.5</strong></td>
+<td>1.25</td>
+</tr>
+</tbody>
+</table>
+<p>These are defined on the Virtual Subject Response -&gt; Dose Response tab. New profiles are added with the “Add” button, they can be renamed by clicking in the Profiles table, and the hazard ratios are entered in the Endpoint Values tables. The boldface arms in the table have effects of better than 25% and “Should Succeed.”</p>
+<p>We have a null scenario, and two “Linear” scenarios where the arms with larger labels have greater efficacy. We have a scenario where all experimental arms are effective; the hierarchical model should do well at inferring that all experimental arms are similar and that they are different from control. We have a scenario where three arms are identical to control but one has a large effect; this scenario could be challenging for the hierarchical model. Finally we have an “Overdose” scenario which might be challenging for many parametric dose-response models, in which “Doses” 2 and 3 have good effects, but “Dose” 4 is too much drug and leads to side effects and worse outcomes than control. The hierarchical model doesn’t care about the order of the doses, so it has no concept of overdose, but it does need to learn that there are widely varying treatment effects on both sides of control.</p>
+</section>
+</section>
+<section id="execution-1" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="execution-1"><span class="header-section-number">5.3</span> Execution</h2>
+<p>Create an accrual profile in which 5 patients per week are accrued.</p>
+<p><img src="simpleDRModelsattachments/media/image29.png" class="img-fluid"></p>
+</section>
+<section id="quantities-of-interest-2" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="quantities-of-interest-2"><span class="header-section-number">5.4</span> Quantities of Interest</h2>
+<p>We will use two decision quantities in the trial. First, at the bottom of the Quantities of Interest tab, set the Clinically significant hazard ratio delta to be 0.25. Then add a decision quantities by clicking Add… under Decision Quantities (Scalars).</p>
+<ul>
+<li><p>For the first QOI, choose Pr(HR_d – 1 &lt; -0.25), and select Evaluation Dose to be Greatest Pr(Max)</p></li>
+<li><p>For the second QOI, choose Pr(Max) and select Evaluation Dose to be Max probability over all doses. We will not use this QOI to make decisions during the trial, but we want the output to tell us the probability of selecting each arm as the most likely best arm.</p></li>
+</ul>
+<p><img src="simpleDRModelsattachments/media/image30.png" class="img-fluid"></p>
+</section>
+<section id="design-2" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="design-2"><span class="header-section-number">5.5</span> Design</h2>
+<section id="hazard-model" class="level3" data-number="5.5.1">
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="hazard-model"><span class="header-section-number">5.5.1</span> Hazard Model</h3>
+<p>On the Design -&gt; Hazard Model tab, set the prior mean hazard rate for control to be 0.04. We will use an exponential model with a single piece.</p>
+<p><img src="simpleDRModelsattachments/media/image31.png" class="img-fluid"></p>
+</section>
+<section id="hazard-model-1" class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="hazard-model-1"><span class="header-section-number">5.5.2</span> Hazard Model</h3>
+<p>Choose the Simple Hierarchical model from the drop-down Model menu on the Dose Response tab. We are going to use a statistical model that estimates a hazard rate <span class="math inline">\(\lambda_{s}\)</span> for the control arm, and also estimates log hazard ratio parameters <span class="math inline">\(\theta_{d}\)</span> for the experimental arms relative to control. The <span class="math inline">\(\theta_{d}\)</span>’s are drawn from a normal hierarchical model:</p>
+<p><span class="math display">\[\theta_{d}\sim N(\mu,\tau^{2})\]</span></p>
+<p>with prior distributions for <span class="math inline">\(\mu\)</span> (normal) and <span class="math inline">\(\tau^{2}\)</span> (Inverse Gamma). We will use the default values of the prior parameters. Using <span class="math inline">\(\mu = 0\)</span> means that the treatment effects are centered around zero (i.e.&nbsp;the experimental arms are expected to be about the same as the control arm). It is also possible to choose a different value for the prior mean for <span class="math inline">\(\mu\)</span> if, for example, one expects all the experimental arms to be 25% better than control, but this is likely to be an unusual situation.</p>
+<p>In most FACTS models, the user has the option of choosing whether or not the control is included in the dose-response model or modeled separately. For technical reasons, this option is not available for time-to-event data with a hierarchical model. By estimating the parameter <span class="math inline">\(\mu\)</span>, the FACTS hierarchical model, in effect, always uses the data to determine whether the control should be modeled separately or not: if <span class="math inline">\(\mu\)</span> is close to zero, then the control is, in effect, in the model.</p>
+<p><img src="simpleDRModelsattachments/media/image32.png" class="img-fluid"></p>
+<p>We won’t use the Frequentist Analysis tab.</p>
+</section>
+<section id="allocation-2" class="level3" data-number="5.5.3">
+<h3 data-number="5.5.3" class="anchored" data-anchor-id="allocation-2"><span class="header-section-number">5.5.3</span> Allocation</h3>
+<p>We will use response-adaptive randomization to encourage collecting more data on experimental arms, while fixing the control allocation at 1/3.</p>
+<p>On the Allocation tab, select “Adaptive Allocation.” Click “Fix Alloc.” for the control arm, then set the Pre First Interim Allocation Ratios to be 2 for control and 1 for each of the four experimental arms. Then set the Post first interim block size to be 6 and the control allocation post first interim to be 2.</p>
+<p>Then define an adaptive allocation target by clicking Add…,</p>
+<ul>
+<li><p>set the QOI to be Pr(HR_d – 1 &lt; -0.25)</p></li>
+<li><p>select Information weighting</p></li>
+<li><p>set the relative weight to be 1.</p></li>
+</ul>
+<p><img src="simpleDRModelsattachments/media/image33.png" class="img-fluid"></p>
+</section>
+<section id="interims-1" class="level3" data-number="5.5.4">
+<h3 data-number="5.5.4" class="anchored" data-anchor-id="interims-1"><span class="header-section-number">5.5.4</span> Interims</h3>
+<p>We will define four interims, after 200, 250, 300, and 350 patients enrolled.</p>
+<p><img src="simpleDRModelsattachments/media/image34.png" class="img-fluid"></p>
+</section>
+<section id="successfutility-criteria-2" class="level3" data-number="5.5.5">
+<h3 data-number="5.5.5" class="anchored" data-anchor-id="successfutility-criteria-2"><span class="header-section-number">5.5.5</span> Success/Futility Criteria</h3>
+<p>We will define a futility stopping rule that applies at each interim analysis. On the Design -&gt; Success/Futility Criteria tab, and on the “Interim 1” sub-tab, check the “Futility Criteria” box Then Add a criterion that stops the study for futility if the experimental arm most likely to be the best arm has less than a 25% probability of having better than a 25% effect relative to control.</p>
+<p><img src="simpleDRModelsattachments/media/image35.png" class="img-fluid"></p>
+<p>We will not stop the study for expected success. However, if we wanted to change the futility stopping criteria at each interim, we could Create new interim criteria and enter new values on the resulting tab.</p>
+<p>For the Final Evaluation, we will define the study to be a success if the most likely best arm has at least a 90% probability of being at least 25% better than control. We will define the study to be futile at the final analysis if the most likely best arm has less than a 50% probability of being 25% better than control. The study is inconclusive if the probability is between 50% and 90%.</p>
+</section>
+</section>
+<section id="simulation-1" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="simulation-1"><span class="header-section-number">5.6</span> Simulation</h2>
+<p>After simulating all twelve scenario (6 efficacy x 2 control hazard rates) we can inspect operating characteristics:</p>
+<p><img src="simpleDRModelsattachments/media/image36.png" class="img-fluid"></p>
+<p>The Linear, All Doses, One Dose, and Overdose scenarios all have high probabilities of Late Success. In all these efficacy scenarios, the design loses some power when the event rate is cut in half (“Rare”), but the drop is not catastrophic. Type I error as measured by “Late Success” in the Null scenario is very small; there is room to experiment with different success rules if desired. Futility probabilities are 64% and 52% in the null scenarios; it may be desired to experiment with the futility rule to increase the probability of futility. The Weak Linear scenario is borderline, and the most common outcome is inconclusive, which is appropriate because the best arm has exactly the effect (25%) that we are hoping to exceed.</p>
+<p>We now click on Show Other Columns from Results Options, and select Probabilities. This gives us information about dose selection, as shown below. In the All Doses scenario (and also in the Null scenario), all experimental arms are roughly equally likely to be identified as the best arm. When the experimental arms differ, the design is likely to make a correct identification, with the task being most difficult in the Weak Linear scenario. When events are Rare, the power to choose the best arm is reduced, but the design appears to still be adequate in the Rare event rate scenarios.</p>
+<p><img src="simpleDRModelsattachments/media/image37.png" class="img-fluid"></p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<!-- footer.html -->
+
+<!-- FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pF6W3...<truncated>...Q==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+<style>
+
+  /* Make all footer icons the same color */
+  footer .fab,
+  footer .fas,
+  footer svg {
+    color: #125740;           /* ← pick whatever color your share-icons are using */
+    fill: currentColor;    /* ensures the SVG Bluesky icon matches */
+  }
+
+  /* Prevent links from overriding that color */
+  footer a {
+    color: inherit;
+  }
+
+  /* Share menu positioning */
+  #share-wrapper { position: relative; }
+  #share-menu {
+    display: none;
+    position: absolute;
+    bottom: 3rem;               /* float above the footer */
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px #125740;
+    gap: 1rem;
+    z-index: 100;
+  }
+  body.menu-open #share-menu { display: flex; }
+  #share-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* Left column: text + social permalinks */
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+  }
+  .footer-left p { margin: 0; }
+  .footer-left a.social {
+    color: inherit;
+    text-decoration: none;
+  }
+  .footer-left a.social i { font-size: 1.2em; }
+  
+  
+    /* Text color left */
+  .footer-left p > a {
+    color: #125740;
+  }
+
+  /* Text color last item */
+  footer > p:last-child a {
+    color: #125740;
+  }
+  
+    /* Link hover colors */
+  .footer-left p > a:hover,
+  footer > p:last-child a:hover {
+    color: #11A473;
+    text-decoration: underline;
+  }
+  
+</style>
+
+<footer style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
+  
+  <!-- Left: Berry Consultants + social permalinks -->
+  <div class="footer-left">
+    <p>
+      © <a href="https://www.berryconsultants.com">Berry Consultants</a>
+    </p>
+    <a href="https://twitter.com/BerryConsultant" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on X">
+      <i class="fab fa-x"></i>
+    </a>
+    <a href="https://www.linkedin.com/company/berry-consultants-llc" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on LinkedIn">
+      <i class="fab fa-linkedin"></i>
+    </a>
+    <a href="https://www.youtube.com/c/berryconsultants" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on YouTube">
+      <i class="fab fa-youtube"></i>
+    </a>
+  </div>
+
+  <!-- Center: share toggle + popup -->
+  <div id="share-wrapper">
+    <button id="share-toggle" aria-label="Share this page">
+      <i class="fas fa-share-alt" style="font-size:1.6em;"></i>
+    </button>
+    <div id="share-menu">
+      <!-- share icons injected here -->
+    </div>
+  </div>
+
+  <!-- Right: How to Cite -->
+  <p style="margin: 0;">
+    <a href="../../../../introduction/citation.html">Cite</a>
+  </p>
+</footer>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const url   = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+    const networks = [
+      { name: "X",        href: `https://twitter.com/intent/tweet?url=${url}&text=${title}`,          icon: `<i class="fab fa-x" style="font-size:1.4em;"></i>` },
+      { name: "LinkedIn", href: `https://www.linkedin.com/feed/?shareActive=true&text=${title}%20${url}`, icon: `<i class="fab fa-linkedin" style="font-size:1.4em;"></i>` },
+      { name: "Bluesky",  href: `https://bsky.app/intent/compose?text=${title}%20${url}`,              icon: `
+        <svg width="1.4em" height="1.4em" fill="currentColor" viewBox="0 0 600 530">
+          <path d="m135.72 44.03c66.496 49.921 138.02 151.14 164.28 205.46 26.262-54.316 97.782-155.54 164.28-205.46 47.98-36.021 125.72-63.892 125.72 24.795 0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.3797-3.6904-10.832-3.7077-7.8964-0.0174-2.9357-1.1937 0.51669-3.7077 7.8964-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.4491-163.25-81.433-5.9562-21.282-16.111-152.36-16.111-170.07 0-88.687 77.742-60.816 125.72-24.795z"/>
+        </svg>` },
+      { name: "Reddit",   href: `https://www.reddit.com/submit?url=${url}&title=${title}`,         icon: `<i class="fab fa-reddit" style="font-size:1.4em;"></i>` },
+      { name: "WhatsApp", href: `https://wa.me/?text=${title}%20${url}`,                             icon: `<i class="fab fa-whatsapp" style="font-size:1.4em;"></i>` },
+      { name: "Email",    href: `mailto:?subject=${title}&body=${title}%20${url}`,                    icon: `<i class="fas fa-envelope" style="font-size:1.4em;"></i>` }
+    ];
+
+    // inject share icons
+    const menu = document.getElementById("share-menu");
+    networks.forEach(net => {
+      const a = document.createElement("a");
+      a.href      = net.href;
+      a.target    = "_blank";
+      a.rel       = "noopener";
+      a.setAttribute("aria-label", `Share on ${net.name}`);
+      a.innerHTML = net.icon;
+      menu.appendChild(a);
+    });
+
+    // toggle menu
+    const toggle = document.getElementById("share-toggle");
+    toggle.addEventListener("click", e => {
+      e.stopPropagation();
+      document.body.classList.toggle("menu-open");
+    });
+
+    // close on outside click
+    document.addEventListener("click", () => {
+      document.body.classList.remove("menu-open");
+    });
+    menu.addEventListener("click", e => e.stopPropagation());
+  });
+</script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/docs\.berryconsultants\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

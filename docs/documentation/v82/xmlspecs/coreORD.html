@@ -1,0 +1,3316 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Phase 2 and 3 Design: Ordinal</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../media/FACTS_icon.png" rel="icon" type="image/png">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-f24641f9662b15e1479722971e972498.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<!-- Roboto Serif -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
+
+<!-- Roboto Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WLMVE7GR4S');
+</script>
+
+
+<link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../media/FACTSLogo.png" alt="" class="navbar-logo light-content">
+    <img src="../../../media/FACTSLogo.png" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../introduction/index.html"> 
+<span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../documentation/index.html"> 
+<span class="menu-text">Documentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../get/index.html"> 
+<span class="menu-text">Get FACTS</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../contact/index.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Phase 2 and 3 Design: Ordinal</h1>
+            <p class="subtitle lead">FACTS File XML Specification</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a>
+  <ul>
+  <li><a href="#ids" id="toc-ids" class="nav-link" data-scroll-target="#ids"><span class="header-section-number">1.1</span> IDs</a></li>
+  <li><a href="#defaults" id="toc-defaults" class="nav-link" data-scroll-target="#defaults"><span class="header-section-number">1.2</span> Defaults</a></li>
+  <li><a href="#parameter-order" id="toc-parameter-order" class="nav-link" data-scroll-target="#parameter-order"><span class="header-section-number">1.3</span> Parameter Order</a></li>
+  </ul></li>
+  <li><a href="#the-values-in-a-.facts-file" id="toc-the-values-in-a-.facts-file" class="nav-link" data-scroll-target="#the-values-in-a-.facts-file"><span class="header-section-number">2</span> The values in a “.facts” file</a>
+  <ul>
+  <li><a href="#numbers-of-items" id="toc-numbers-of-items" class="nav-link" data-scroll-target="#numbers-of-items"><span class="header-section-number">2.1</span> Numbers of items</a></li>
+  <li><a href="#common-structures" id="toc-common-structures" class="nav-link" data-scroll-target="#common-structures"><span class="header-section-number">2.2</span> Common structures</a>
+  <ul class="collapse">
+  <li><a href="#gamma-prior" id="toc-gamma-prior" class="nav-link" data-scroll-target="#gamma-prior"><span class="header-section-number">2.2.1</span> Gamma prior</a></li>
+  <li><a href="#normal-prior" id="toc-normal-prior" class="nav-link" data-scroll-target="#normal-prior"><span class="header-section-number">2.2.2</span> Normal prior</a></li>
+  <li><a href="#beta-prior" id="toc-beta-prior" class="nav-link" data-scroll-target="#beta-prior"><span class="header-section-number">2.2.3</span> Beta prior</a></li>
+  <li><a href="#posterior-probability-qoi" id="toc-posterior-probability-qoi" class="nav-link" data-scroll-target="#posterior-probability-qoi"><span class="header-section-number">2.2.4</span> Posterior probability QOI</a></li>
+  <li><a href="#predictive-probability-qoi" id="toc-predictive-probability-qoi" class="nav-link" data-scroll-target="#predictive-probability-qoi"><span class="header-section-number">2.2.5</span> Predictive probability QOI</a></li>
+  <li><a href="#p-value-qoi" id="toc-p-value-qoi" class="nav-link" data-scroll-target="#p-value-qoi"><span class="header-section-number">2.2.6</span> P-value QOI</a></li>
+  <li><a href="#target-dose-qoi" id="toc-target-dose-qoi" class="nav-link" data-scroll-target="#target-dose-qoi"><span class="header-section-number">2.2.7</span> Target Dose QOI</a></li>
+  <li><a href="#decision-qoi" id="toc-decision-qoi" class="nav-link" data-scroll-target="#decision-qoi"><span class="header-section-number">2.2.8</span> Decision QOI</a></li>
+  <li><a href="#interim-criteria" id="toc-interim-criteria" class="nav-link" data-scroll-target="#interim-criteria"><span class="header-section-number">2.2.9</span> Interim Criteria</a></li>
+  <li><a href="#success-futility-graduation-criteria" id="toc-success-futility-graduation-criteria" class="nav-link" data-scroll-target="#success-futility-graduation-criteria"><span class="header-section-number">2.2.10</span> Success / Futility / Graduation Criteria</a></li>
+  <li><a href="#stopping-criterion" id="toc-stopping-criterion" class="nav-link" data-scroll-target="#stopping-criterion"><span class="header-section-number">2.2.11</span> Stopping Criterion</a></li>
+  <li><a href="#individual-dose-decision-criterion" id="toc-individual-dose-decision-criterion" class="nav-link" data-scroll-target="#individual-dose-decision-criterion"><span class="header-section-number">2.2.12</span> Individual Dose Decision Criterion</a></li>
+  <li><a href="#simple-criterion" id="toc-simple-criterion" class="nav-link" data-scroll-target="#simple-criterion"><span class="header-section-number">2.2.13</span> Simple Criterion</a></li>
+  <li><a href="#arm-decision-method-type" id="toc-arm-decision-method-type" class="nav-link" data-scroll-target="#arm-decision-method-type"><span class="header-section-number">2.2.14</span> Arm Decision Method Type</a></li>
+  <li><a href="#group-representative-ui" id="toc-group-representative-ui" class="nav-link" data-scroll-target="#group-representative-ui"><span class="header-section-number">2.2.15</span> Group Representative UI</a></li>
+  <li><a href="#keep-one-group-decision" id="toc-keep-one-group-decision" class="nav-link" data-scroll-target="#keep-one-group-decision"><span class="header-section-number">2.2.16</span> Keep One Group Decision</a></li>
+  <li><a href="#dose-combo" id="toc-dose-combo" class="nav-link" data-scroll-target="#dose-combo"><span class="header-section-number">2.2.17</span> Dose Combo</a></li>
+  </ul></li>
+  <li><a href="#the-values" id="toc-the-values" class="nav-link" data-scroll-target="#the-values"><span class="header-section-number">2.3</span> The values</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>This document describes the FACTS XML file (“.facts”) file format FACTS Core for Ordinal endpoints.</p>
+<p>It is intended for expert FACTS users who wish to create modified versions of “.facts” files using scripts. A full and deep understanding of FACTS Core and Staged designs is assumed.</p>
+<section id="ids" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="ids"><span class="header-section-number">1.1</span> IDs</h2>
+<p>There are number of parameters that IDs, such as “guid”, “SetId”, “qoi_id” … these are Microsoft “unique” identifiers, there should be no need to change these. It does not matter if the same Ids are used in successive “.facts” files, for instance if creating a range of sub-versions of a single original file.</p>
+</section>
+<section id="defaults" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="defaults"><span class="header-section-number">1.2</span> Defaults</h2>
+<p>FACTS stores a super-set of the FACTS parameters in the “.facts” file - even storing parameters for the Dichotomous endpoint in a file for a Continuous design. There are so many parameters in the FACTS file that we cannot check the behavior of FACTS if some of these are missing, so are advice is to include *all* the parameters even if not required. The only parameters that it is clear can be omitted are those in the optional parameter sets: BaselineParameterSet and LongitudinalParameterSet that are not required if the respective features are not enabled.</p>
+</section>
+<section id="parameter-order" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="parameter-order"><span class="header-section-number">1.3</span> Parameter Order</h2>
+<p>FACTS processes the parameters in the “.facts” file in the order in which the appear in the file. Some parameters depend on other parameters to have been already defined, so it is recommended that the order given here (the order FACTS itself uses when writing out the parameters) is retained. For many parameters changing their order should not be a problem, but we are not going to define, or guarantee, which those are.</p>
+</section>
+</section>
+<section id="the-values-in-a-.facts-file" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> The values in a “.facts” file</h1>
+<section id="numbers-of-items" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="numbers-of-items"><span class="header-section-number">2.1</span> Numbers of items</h2>
+<p>ACS: The number of studies used for the hierarchical prior for the active comparator</p>
+<p>ADC: The dose in a 2D dose model design which have been included in the study</p>
+<p>CF: The number of column factors in a 2D dose model design</p>
+<p>CS: The number of studies used for the hierarchical prior for the control</p>
+<p>D: The number of doses (or treatment arms) in the design</p>
+<p>DC: The number of possible dose combinations in a 2D dose model design</p>
+<p>DQ: The number of Decision QOIs</p>
+<p>I: The number of interims (when defined by information</p>
+<p>LM: The number of longitudinal models</p>
+<p>OEV: The number of ordinal endpoint values</p>
+<p>PostQ: The number of Posterior Probability QOIs</p>
+<p>PredQ: The number of Predictive Probability QOIs</p>
+<p>PvQ: The number of p-value QOIs</p>
+<p>R: The number of regions in an accrual profile</p>
+<p>RF: The number of row factors in a 2D dose model design</p>
+<p>TQ: The number of target QOIs</p>
+<p>V: The number of patient visits</p>
+<p>Var: The number of variants</p>
+<p>LM*V: This is the value used when a different prior is used at different visits. The values are stored as lists of lists (nested &lt;item&gt;s). The outer dimension is the number of LM and the inner dimension the number of visits. If the priors are common across all models, just the first lists of values for visits is used, the others are present but ignored.</p>
+</section>
+<section id="common-structures" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="common-structures"><span class="header-section-number">2.2</span> Common structures</h2>
+<section id="gamma-prior" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="gamma-prior"><span class="header-section-number">2.2.1</span> Gamma prior</h3>
+<p>The parameters are stored in a &lt;gamma&gt; value as &lt;mu&gt; – the central value of the prior, and &lt;n&gt; - the weight of the prior in equivalent number of observations. E.g.:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode xml code-with-copy"><code class="sourceCode xml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">gamma</span>&gt;</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">mu</span>&gt;10&lt;/<span class="kw">mu</span>&gt;</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">n</span>&gt;1&lt;/<span class="kw">n</span>&gt;</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">gamma</span>&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="normal-prior" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="normal-prior"><span class="header-section-number">2.2.2</span> Normal prior</h3>
+<p>The parameters are stored in a &lt;menasdpair&gt; value as &lt;mean&gt; - the mean of the prior and &lt;sd&gt; - the standard deviation. E.g.:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode xml code-with-copy"><code class="sourceCode xml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">meansdpair</span>&gt;</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">mean</span>&gt;0&lt;/<span class="kw">mean</span>&gt;</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">sd</span>&gt;10&lt;/<span class="kw">sd</span>&gt;</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">meansdpair</span>&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="beta-prior" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="beta-prior"><span class="header-section-number">2.2.3</span> Beta prior</h3>
+<p>The parameters are stored in a &lt;betadist&gt; value as &lt;alpha&gt; - the alpha parameter of the beta distribution prior and &lt;beta&gt; - the beta parameter of the beta distribution prior. E.g.:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode xml code-with-copy"><code class="sourceCode xml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">betadist</span>&gt;</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">alpha</span>&gt;2&lt;/<span class="kw">alpha</span>&gt;</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">beta</span>&gt;2&lt;/<span class="kw">beta</span>&gt;</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">betadist</span>&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="posterior-probability-qoi" class="level3" data-number="2.2.4">
+<h3 data-number="2.2.4" class="anchored" data-anchor-id="posterior-probability-qoi"><span class="header-section-number">2.2.4</span> Posterior probability QOI</h3>
+<p>The parameters stored in a &lt;post_prob_qoi&gt; structure are:</p>
+<ul>
+<li><p>condition: 3=greater than, 4=less than</p></li>
+<li><p>tte_qoi_type: leave at 1 for non-tte endpoints</p></li>
+<li><p>relation</p>
+<ul>
+<li><p>is_absolute: “True” or “False”</p></li>
+<li><p>comparison arm: id is_absolute=False, this is the name of the comparison arm, the name must appear as a name in the &lt;dose_names&gt; property.</p></li>
+<li><p>delta: the value of the delta in the comparison</p></li>
+</ul></li>
+<li><p>qoi_parametrization_type: 0=standard parametrization (odds-ratio if using cumulative logistic ordinal endpoint modelling; expected utility if using Dirichlet ordinal endpoint modelling), 3=response rate (only for Dirichlet ordinal endpoint modelling)</p></li>
+<li><p>alt_name: the short name for the QOI, the default QOIs have specific names, the user added QOIs have names of the form QOI_1_N for the n<sup>th</sup> posterior probability QOI</p></li>
+<li><p>is_default_qoi: “True” or “False”, if the QOI is a default QOI its values should not be changed.</p></li>
+<li><p>qoi_id: this is a Microsoft unique id, so that the QOI can be referenced from other parameters where the QOI is used.</p></li>
+</ul>
+<p>Example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode xml code-with-copy"><code class="sourceCode xml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">post_prob_qoi</span>&gt;</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">condition</span>&gt;3<span class="er">&lt;</span>\condition&gt;</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">tte_qoi_type</span>&gt;1&lt;<span class="kw">tte_qoi_type</span>&gt;</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">relation</span>&gt;</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">is_absolute</span>&gt;False&lt;/<span class="kw">is_absolute</span>&gt;</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">comparison_arm</span>&gt;Control&lt;/<span class="kw">comparison_arm</span>&gt;</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">delta</span>&gt;1&lt;/<span class="kw">delta</span>&gt;</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">relation</span>&gt;</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">qoi_parametrization_type</span>&gt;0&lt;/<span class="kw">qoi_parametrization_type</span>&gt;</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">alt_name</span>&gt;Pr(CSD)&lt;/<span class="kw">alt_name</span>&gt;</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">is_default_qoi</span>&gt;True&lt;/<span class="kw">is_default_qoi</span>&gt;</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">qoi_id</span>&gt;ac13283c-dffc-47d6-9ba1-a371a633e626&lt;/<span class="kw">qoi_id</span>&gt;</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="er">&lt;</span>\post_prob_qoi&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="predictive-probability-qoi" class="level3" data-number="2.2.5">
+<h3 data-number="2.2.5" class="anchored" data-anchor-id="predictive-probability-qoi"><span class="header-section-number">2.2.5</span> Predictive probability QOI</h3>
+<p>The parameters stored in a &lt;pred_prob_qoi&gt; structure are:</p>
+<ul>
+<li><p>pred_prob_type: 1=Bayesian</p></li>
+<li><p>phase: 1=Current trial, 2=Future trial</p></li>
+<li><p>test_type: 11=Utility t-test, 6=Wilcoxon, 13=Prop. Odds Likelihood Ratio Test, 15=Dichotomized Ordinal Test (Future Trial only)</p></li>
+<li><p>subjects_per_arm: number of subjects arm (Future Trial only)</p></li>
+<li><p>margin: Superiority/Non-inferiority margin (Future Trial only)</p></li>
+<li><p>dropout_type: 2=Ignore, 4=Worst Outcome (Current Trial only)</p></li>
+<li><p>freq_test_type: 11=Utility t-test, 12=Bonferroni adj. Utility t-test, 6=Wilcoxon, 9=Bonferroni adj. Wilcoxon, 13=Prop. Odds Likelihood Ratio Test, 14=Bonferroni adj. Prop. Odds Likelihood Ratio Test, 15=Dichotomized Ordinal Test, 16=Bonferroni adj. Dichotomized Ordinal Test (Current Trial only)</p></li>
+<li><p>sample_size: 1=Current Enrollment, 2=Trial Maximum Enrollment (Current Trial only) (note: Trial Maximm cannot be used with adaptive allocation)</p></li>
+<li><p>alpha: one-sided alpha</p></li>
+<li><p>alt_name: the short name for the QOI, the default QOIs have specific names, the user added QOIs have names of the form QOI_2_N for the n<sup>th</sup> predictive probability QOI</p></li>
+<li><p>is_default_qoi: “True” or “False”, if the QOI is a default QOI its values should not be changed.</p></li>
+<li><p>qoi_id: this is a Microsoft unique id, so that the QOI can be referenced from other parameters where the QOI is used.</p></li>
+</ul>
+<p>Example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode xml code-with-copy"><code class="sourceCode xml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">pred_prob_qoi</span>&gt;</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">pred_prob_type</span>&gt;1&lt;/<span class="kw">pred_prob_type</span>&gt;</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">phase</span>&gt;2&lt;/<span class="kw">phase</span>&gt;</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">test_type</span>&gt;11&lt;/<span class="kw">test_type</span>&gt;</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">subjects_per_arm</span>&gt;250&lt;/<span class="kw">subjects_per_arm</span>&gt;</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">margin</span>&gt;0&lt;/<span class="kw">margin</span>&gt;</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">alpha</span>&gt;0.025&lt;/<span class="kw">alpha</span>&gt;</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">alt_name</span>&gt;Pr(SS)&lt;/<span class="kw">alt_name</span>&gt;</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">is_default_qoi</span>&gt;True&lt;/<span class="kw">is_default_qoi</span>&gt;</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">qoi_id</span>&gt;2556a9c6-7277-4437-865c-5e5b7d451634&lt;/<span class="kw">qoi_id</span>&gt;</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">pred_prob_qoi</span>&gt;</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">pred_prob_qoi</span>&gt;</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">pred_prob_type</span>&gt;1&lt;/<span class="kw">pred_prob_type</span>&gt;</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">phase</span>&gt;1&lt;/<span class="kw">phase</span>&gt;</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">dropouts_type</span>&gt;0&lt;/<span class="kw">dropouts_type</span>&gt;</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">freq_test_type</span>&gt;11&lt;/<span class="kw">freq_test_type</span>&gt;</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">sample_size</span>&gt;2&lt;/<span class="kw">sample_size</span>&gt;</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">alpha</span>&gt;0.027&lt;/<span class="kw">alpha</span>&gt;</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">alt_name</span>&gt;QOI_2_3&lt;/<span class="kw">alt_name</span>&gt;</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">is_default_qoi</span>&gt;False&lt;/<span class="kw">is_default_qoi</span>&gt;</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">qoi_id</span>&gt;39c533a1-0cfd-476f-9561-aea191730f91&lt;/<span class="kw">qoi_id</span>&gt;</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">pred_prob_qoi</span>&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="p-value-qoi" class="level3" data-number="2.2.6">
+<h3 data-number="2.2.6" class="anchored" data-anchor-id="p-value-qoi"><span class="header-section-number">2.2.6</span> P-value QOI</h3>
+<p>The parameters stored in a &lt;pvalue_ qoi&gt; structure are:</p>
+<ul>
+<li><p>pvalue_dropout_type: 0=LOCF, 1=BOCF, 2=Ignore, 3=Ignore (Current Trial only)</p></li>
+<li><p>test_type: 11=Utility t-test, 12=Bonferroni adj. Utility t-test, 6=Wilcoxon, 9=Bonferroni adj. Wilcoxon, 13=Prop. Odds Likelihood Ratio Test, 14=Bonferroni adj. Prop. Odds Likelihood Ratio Test, 15=Dichotomized Ordinal Test, 16=Bonferroni adj. Dichotomized Ordinal Test</p></li>
+<li><p>alt_name: the short name for the QOI, the default QOIs have specific names, the user added QOIs have names of the form QOI_3_N for the n<sup>th</sup> pvalue QOI</p></li>
+<li><p>is_default_qoi: “True” or “False”, if the QOI is a default QOI its values should not be changed.</p></li>
+<li><p>qoi_id: this is a Microsoft unique id, so that the QOI can be referenced from other parameters where the QOI is used.</p></li>
+</ul>
+<p>Example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode xml code-with-copy"><code class="sourceCode xml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">pvalue_qoi</span>&gt;</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">pvalue_dropouts_type</span>&gt;0&lt;/<span class="kw">pvalue_dropouts_type</span>&gt;</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">test_type</span>&gt;11&lt;/<span class="kw">test_type</span>&gt;</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">alt_name</span>&gt;QOI_3_2&lt;/<span class="kw">alt_name</span>&gt;</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">is_default_qoi</span>&gt;False&lt;/<span class="kw">is_default_qoi</span>&gt;</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">qoi_id</span>&gt;44ba7e29-da1f-4de8-913b-24aa0ed6b3c9&lt;/<span class="kw">qoi_id</span>&gt;</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">pvalue_qoi</span>&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="target-dose-qoi" class="level3" data-number="2.2.7">
+<h3 data-number="2.2.7" class="anchored" data-anchor-id="target-dose-qoi"><span class="header-section-number">2.2.7</span> Target Dose QOI</h3>
+<p>The parameters stored in a &lt;target_dose_qoi&gt; structure are:</p>
+<ul>
+<li><p>target_type: 1=Max</p></li>
+<li><p>tte_qoi_type: leave at 1 for non-tte endpoints</p></li>
+<li><p>dose_combo_range_type: when using the 2D dose model, this represents the chosen 2D dose grid range type for which to evaluate the target dose QOIs. 0=Full Range, 1=Only columns, 2=Only rows.</p></li>
+<li><p>dose_combo_range_arm: when using the 2D dose model, this represents the specific column or row (dependent on whether dose_combo_range_type is equal to 1 or 2, respectively) of the 2D dose grid for which to evaluate the target dose QOIs.</p></li>
+<li><p>relation (MED &amp; EDq target types only, present but empty for Max target type)</p>
+<ul>
+<li><p>is_absolute: “True” or “False”</p></li>
+<li><p>comparison arm: id is_absolute=False, this is the name of the comparison arm, the name must appear as a name in the &lt;dose_names&gt; property.</p></li>
+<li><p>delta: the value of the delta in the comparison for MED, or the quantile for the EDq</p></li>
+</ul></li>
+<li><p>alt_name: the short name for the QOI, the default QOIs have specific names, the user added QOIs have names of the form QOI_4_N for the n<sup>th</sup> target dose QOI</p></li>
+<li><p>is_default_qoi: “True” or “False”, if the QOI is a default QOI its values should not be changed.</p></li>
+<li><p>qoi_id: this is a Microsoft unique id, so that the QOI can be referenced from other parameters where the QOI is used.</p></li>
+</ul>
+<p>Example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode xml code-with-copy"><code class="sourceCode xml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">target_dose_qoi</span>&gt;</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">target_type</span>&gt;2&lt;/<span class="kw">target_type</span>&gt;</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">tte_qoi_type</span>&gt;1&lt;/<span class="kw">tte_qoi_type</span>&gt;</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">dose_combo_range_type</span>&gt;1&lt;/<span class="kw">dose_combo_range_type</span>&gt;</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">dose_combo_range_arm</span>&gt;Dose 2&lt;/<span class="kw">dose_combo_range_arm</span>&gt;</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">relation</span>&gt;</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">is_absolute</span>&gt;True&lt;/<span class="kw">is_absolute</span>&gt;</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">comparison_arm</span> /&gt;</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">delta</span>&gt;2&lt;/<span class="kw">delta</span>&gt;</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">relation</span>&gt;</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">alt_name</span>&gt;QOI_4_1&lt;/<span class="kw">alt_name</span>&gt;</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">is_default_qoi</span>&gt;False&lt;/<span class="kw">is_default_qoi</span>&gt;</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">qoi_id</span>&gt;276464ff-0bfd-4509-b010-564a06e16d85&lt;/<span class="kw">qoi_id</span>&gt;</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">target_dose_qoi</span>&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="decision-qoi" class="level3" data-number="2.2.8">
+<h3 data-number="2.2.8" class="anchored" data-anchor-id="decision-qoi"><span class="header-section-number">2.2.8</span> Decision QOI</h3>
+<p>Note the decision qoi XML tags use a perhap confusing naming scheme the list tag is &lt;decisions_qoi&gt; and each individual entry is &lt;decision_qois&gt;.</p>
+<p>The parameters stored in a &lt;decision_qois&gt; structure are:</p>
+<ul>
+<li><p>ref_qoi_id: the id of the post_prob, pred_prob or pvalue QOI to be used</p></li>
+<li><p>target_dose_qoi: the id of the target dose QOI to use to pick a specific value out of the ref_qoi. Instead of a QOI id, it is also possible to use an “ActualDose”. This has the form “ActualDose- - -” followed by the Dose Name or “Max/Min probability over all doses” or “Max/Min pvalue over all doses”.</p></li>
+<li><p>alt_name: the short name for the QOI, the default QOIs have specific names, the user added QOIs have names of the form &lt;ref QOI’s short name&gt;_at_&lt;target dose QOI short name or Dose Name&gt;</p></li>
+<li><p>is_default_qoi: “True” or “False”, if the QOI is a default QOI its values should not be changed.</p></li>
+<li><p>qoi_id: this is a Microsoft unique id, so that the QOI can be referenced from other parameters where the QOI is used.</p></li>
+</ul>
+<p>Example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode xml code-with-copy"><code class="sourceCode xml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">decision_qois</span>&gt;</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">ref_qoi_id</span>&gt;83e1a1cc-dc7b-4ab0-a4f0-f16d1fd20d02&lt;/<span class="kw">ref_qoi_id</span>&gt;</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">target_dose_qoi</span>&gt;975e51d6-8399-4dca-b76c-4bef85fa7b5b&lt;/<span class="kw">target_dose_qoi</span>&gt;</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">alt_name</span>&gt;QOI_1_2_at_Pr(Max)&lt;/<span class="kw">alt_name</span>&gt;</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">is_default_qoi</span>&gt;False&lt;/<span class="kw">is_default_qoi</span>&gt;</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">qoi_id</span>&gt;f8831384-dfc1-4b68-800f-005cf1c1fea2&lt;/<span class="kw">qoi_id</span>&gt;</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">decision_qois</span>&gt;</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">decision_qois</span>&gt;</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">ref_qoi_id</span>&gt;06288ef6-3979-4eeb-a1b2-2a8e9fc58891&lt;/<span class="kw">ref_qoi_id</span>&gt;</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">target_dose_qoi</span>&gt;ActualDose---Max probability over all doses&lt;/<span class="kw">target_dose_qoi</span>&gt;</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">alt_name</span>&gt;QOI_1_3_at_Max_probability_over_all_doses&lt;/<span class="kw">alt_name</span>&gt;</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">is_default_qoi</span>&gt;False&lt;/<span class="kw">is_default_qoi</span>&gt;</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">qoi_id</span>&gt;ac597934-f638-41df-b770-86b42f8f4bb8&lt;/<span class="kw">qoi_id</span>&gt;</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">decision_qois</span>&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="interim-criteria" class="level3" data-number="2.2.9">
+<h3 data-number="2.2.9" class="anchored" data-anchor-id="interim-criteria"><span class="header-section-number">2.2.9</span> Interim Criteria</h3>
+<p>The parameters stored in an &lt;interim_criteria&gt; are</p>
+<ul>
+<li><p>interim_number: the number of the interim the criteria apply to, the number 32767 indicates the final success/futility criteria</p></li>
+<li><p>&lt;success_criteria&gt; see below for details</p></li>
+<li><p>&lt;futility_criteria&gt; see below for details</p></li>
+<li><p>&lt;graduation_criteria&gt; see below for details</p></li>
+</ul>
+</section>
+<section id="success-futility-graduation-criteria" class="level3" data-number="2.2.10">
+<h3 data-number="2.2.10" class="anchored" data-anchor-id="success-futility-graduation-criteria"><span class="header-section-number">2.2.10</span> Success / Futility / Graduation Criteria</h3>
+<p>The parameters stored in a &lt;success_criteria&gt;, &lt;futility_criteria&gt; or &lt;graduation_criteria&gt; are:</p>
+<ul>
+<li><p>is_enabled: True or False</p></li>
+<li><p>list of one or more &lt;stopping_criterion&gt;, see below for details</p></li>
+<li><p>is_and_condition: True if conditions are AND-ed together, False if conditions are OR-ed together</p></li>
+<li><p>min_info_reqd: N – the minimum total amount of information (as defined for interims) required</p></li>
+<li><p>min_dose_info_reqd:</p>
+<ul>
+<li><p>target dose: The id of a target QOI or “Actual Dose- - -” followed by the Dose name</p></li>
+<li><p>min_info: N – the minimum information (as defined for interims) on that dose required</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="stopping-criterion" class="level3" data-number="2.2.11">
+<h3 data-number="2.2.11" class="anchored" data-anchor-id="stopping-criterion"><span class="header-section-number">2.2.11</span> Stopping Criterion</h3>
+<p>The parameters stored in a &lt;stopping_criterion&gt; structure are:</p>
+<ul>
+<li><p>qoi_id: the id of the decision QOI being tested</p></li>
+<li><p>condition: 3=greater than, 4=less than</p></li>
+<li><p>threshold: the threshold the QOI is to be compared to</p></li>
+</ul>
+</section>
+<section id="individual-dose-decision-criterion" class="level3" data-number="2.2.12">
+<h3 data-number="2.2.12" class="anchored" data-anchor-id="individual-dose-decision-criterion"><span class="header-section-number">2.2.12</span> Individual Dose Decision Criterion</h3>
+<p>The parameters stored in a &lt;individual_dose_decision_ui&gt; structure are:</p>
+<ul>
+<li><p>&lt;dose_name&gt;: The name of the dose for this decision criteria.</p></li>
+<li><p>&lt;is_keep&gt;: True or False: is the flag a decision type of Keep</p></li>
+<li><p>&lt;is_and&gt;: True or False: True if is “and” combination with another dose decision</p></li>
+<li><p>&lt;simple_criterion&gt;: see below for details</p></li>
+</ul>
+</section>
+<section id="simple-criterion" class="level3" data-number="2.2.13">
+<h3 data-number="2.2.13" class="anchored" data-anchor-id="simple-criterion"><span class="header-section-number">2.2.13</span> Simple Criterion</h3>
+<p>The parameters stored in a &lt;simple_criterion&gt; structure are:</p>
+<ul>
+<li><p>&lt;qoi_id&gt;: the id of the decision QOI being tested</p></li>
+<li><p>&lt;condition&gt;: 3=greater than, 4=less than</p></li>
+<li><p>&lt;threshold&gt;: the threshold the QOI is compared to</p></li>
+</ul>
+</section>
+<section id="arm-decision-method-type" class="level3" data-number="2.2.14">
+<h3 data-number="2.2.14" class="anchored" data-anchor-id="arm-decision-method-type"><span class="header-section-number">2.2.14</span> Arm Decision Method Type</h3>
+<p>The parameters stored in a &lt;arm_decision_method&gt; structure are:</p>
+<ul>
+<li><p>&lt;id&gt;: the id of the arm decision method</p></li>
+<li><p>&lt;name&gt;: the name of the arm decision method</p></li>
+</ul>
+</section>
+<section id="group-representative-ui" class="level3" data-number="2.2.15">
+<h3 data-number="2.2.15" class="anchored" data-anchor-id="group-representative-ui"><span class="header-section-number">2.2.15</span> Group Representative UI</h3>
+<p>The parameters stored in a &lt;group_repesentative_ui structure are:</p>
+<ul>
+<li><p>&lt;is_top&gt;: True or False: true if the group representative is the pre-selected top dose</p></li>
+<li><p>&lt;is_sum&gt;: True or False: true if the group representative summed across groups</p></li>
+</ul>
+</section>
+<section id="keep-one-group-decision" class="level3" data-number="2.2.16">
+<h3 data-number="2.2.16" class="anchored" data-anchor-id="keep-one-group-decision"><span class="header-section-number">2.2.16</span> Keep One Group Decision</h3>
+<p>The parameters stored in a &lt;keep_one_group_decision&gt; structure are:</p>
+<ul>
+<li><p>&lt;qoi_id&gt;: the id of the qoi used.</p></li>
+<li><p>&lt;condition&gt;: the condition type, 1=Greatest, 2=Least</p></li>
+</ul>
+</section>
+<section id="dose-combo" class="level3" data-number="2.2.17">
+<h3 data-number="2.2.17" class="anchored" data-anchor-id="dose-combo"><span class="header-section-number">2.2.17</span> Dose Combo</h3>
+<p>The parameters stored in a &lt;doseCombo&gt; structure are:</p>
+<ul>
+<li><p>iddoseY: the row factor strength of the dose combo</p></li>
+<li><p>iddoseX: the column factor strength of the dose combo</p></li>
+<li><p>isAllowed: flag indicating whether the dose combo is used in the study</p></li>
+<li><p>name: the name of the dose combo</p></li>
+<li><p>level: the effective strength of the dose combo</p></li>
+</ul>
+<p>Example:</p>
+<p>&lt;doseCombo&gt;</p>
+<p>&lt;iddoseY&gt;0&lt;/iddoseY&gt;</p>
+<p>&lt;iddoseX&gt;1&lt;/iddoseX&gt;</p>
+<p>&lt;isAllowed&gt;1&lt;/isAllowed&gt;</p>
+<p>&lt;name&gt;Dose 1, Default&lt;/name&gt;</p>
+<p>&lt;level&gt;1&lt;/level&gt;</p>
+<p>&lt;/doseCombo&gt;</p>
+<ul>
+<li></li>
+</ul>
+</section>
+</section>
+<section id="the-values" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="the-values"><span class="header-section-number">2.3</span> The values</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 4%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Tags</th>
+<th>Parameter</th>
+<th style="text-align: right;">Number of items</th>
+<th>Default Value</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>&lt; facts</td>
+<td>version</td>
+<td style="text-align: right;">1</td>
+<td>the FACTS GUI version number</td>
+<td>FACTS will not open “.facts” files with a higher version number. This test has/will be relaxed to only check the first 2 numbers in the version number.</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>guid</td>
+<td style="text-align: right;">1</td>
+<td></td>
+<td>see general comment on id’s in section 1</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>name</td>
+<td style="text-align: right;">1</td>
+<td>the name of the “.facts” file</td>
+<td>Don’t make it different from the file name, bad things may happen.</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>host</td>
+<td style="text-align: right;">1</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>&lt;project-notes</td>
+<td>CDATA</td>
+<td style="text-align: right;">1</td>
+<td>“”</td>
+<td>All text from the “Notes” text box</td>
+</tr>
+<tr class="even">
+<td>&lt;/project-notes&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>&lt; parameterSets</td>
+<td>type</td>
+<td style="text-align: right;">1</td>
+<td>OrdinalParameterSet</td>
+<td>used for all FACTS Staged Design parameters</td>
+</tr>
+<tr class="odd">
+<td>&lt;parameterSet</td>
+<td>name</td>
+<td style="text-align: right;">1</td>
+<td>“ordinal”</td>
+<td>The ordinal design parameter set</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>SetID</td>
+<td style="text-align: right;">1</td>
+<td></td>
+<td>see general comment on id’s in section 1</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>type</td>
+<td style="text-align: right;">1</td>
+<td>5</td>
+<td>The Endpoint type: 5 = Ordinal</td>
+</tr>
+<tr class="even">
+<td colspan="5">QOI Parameters</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>qoi_parameter_set</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>&lt;qoi_types&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>&lt;post_prob_qois&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>&lt;post_prob_qoi&gt;</td>
+<td></td>
+<td style="text-align: right;">PostQ</td>
+<td>2</td>
+<td>This is a list of the Posterior Probability QOIs, see above for details. There are two default Posterior Probability QOIs Pr(PBO) and Pr(CSD)</td>
+</tr>
+<tr class="odd">
+<td>&lt;/post_prob_qois&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>&lt;pred_prob_qois&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td style="text-align: right;">PredQ</td>
+<td>1</td>
+<td>This is the list of the Predictive Probability QOIs, see above for details. There is one default Predictive Probability QOI Pr(SS)</td>
+</tr>
+<tr class="even">
+<td>&lt;\pred_prob_qois&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>&lt;pvalue_qois&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td style="text-align: right;">PvQ</td>
+<td>0</td>
+<td>This is the list of the p-value QOIs, see above for details. There are no default p-value QOIs.</td>
+</tr>
+<tr class="odd">
+<td>&lt;\pvalue_qois&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>&lt;target_doses_qoi&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td style="text-align: right;">TQ</td>
+<td>3</td>
+<td>This is the list of the Target Dose QOIs, see above for details. There are three default Target Dose QOIs Pr(Max), Pr(MED), Pr(EDq)</td>
+</tr>
+<tr class="even">
+<td>&lt;\target_doses_qoi&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>&lt;decision_qoi&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td style="text-align: right;">DQ</td>
+<td>0</td>
+<td>This is the list of the Decision QOIs, see above for details. There are no default Decision QOIs</td>
+</tr>
+<tr class="odd">
+<td>&lt;\decision_qoi&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>&lt;/qoi_types&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>is_longitudinal_enabled</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>This flag indicates if longitudinal modeling is enabled (not supported in FACTS 8.1 and should always be set to 0)</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>continuous_endpoint</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>This flag indicates if this is a continuous endpoint (should always be set to 0 for ordinal endpoints)</td>
+</tr>
+<tr class="odd">
+<td colspan="5">Treatment Arms Parameters</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>use_placebo</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>This flag corresponds to the “Include a control treatment arm” option on the Treatment Arms tab. 0=Don’t include, 1=Do include a control treatment arm. Always set to 1 for ordinal endpoints.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>use_ac</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>This flag corresponds to the “Include an additional comparator arm” option on the Treatment Arms tab. 0=Don’t include, 1=Do include an additional comparator arm.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>doses_save</td>
+<td style="text-align: right;"><p>D if 2d_model=0;</p>
+<p>CF if 2d_model=1</p></td>
+<td>0, 1</td>
+<td><p>An item list of the effective dose strengths of the treatment arms. The length of this list defines ‘D’ the total number of doses/arms in the trial. Control, if present, always has a strength of ‘0’. If Control is not present, there should not be a dose/arm with a strength of ‘0’.</p>
+<p>If the 2D dose model is used, the list has length ‘CF’ and represents the effective dose strengths of the column factors in the trial.</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>dose_names</td>
+<td style="text-align: right;"><p>D if 2d_model=0;</p>
+<p>CF if 2d_model=1</p></td>
+<td>Control, Dose 1</td>
+<td><p>An item list of the names of the doses/arms.</p>
+<p>If the 2D dose model is used, the represents the list of the names of the column factors.</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>2d_model</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>doses_y</td>
+<td style="text-align: right;">RF</td>
+<td>0, 1</td>
+<td>Only used when the 2D dose model is enabled. This is an item list of the effective row factor strengths. The length of this list defines ‘RF’ the total number of row factors in the trial.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>dose_y_names</td>
+<td style="text-align: right;">RF</td>
+<td>Control, Factor 1</td>
+<td>Only used when the 2D dose model is enabled. This is an item list of the names of the row factors.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>control_dose_combo_y_level</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Only used when the 2D dose model is enabled. This represent the row factor strength of the selected control dose. This uniquely identifies the selected control dose and its column factor strength will always be zero.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>2d_dose_combos</td>
+<td style="text-align: right;">DC * &lt;doseCombo&gt;</td>
+<td></td>
+<td>Only used when the 2D dose model is enabled. This represent the full list of dose combinations that can be included in the study.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>doses_xy_save</td>
+<td style="text-align: right;">ADC</td>
+<td>0, 1</td>
+<td>Only used when the 2D dose model is enabled. An item list of the effective dose strengths of the dose combinations included in the study.</td>
+</tr>
+<tr class="even">
+<td colspan="5">Visit Info Parameters</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>study_weeks</td>
+<td style="text-align: right;">V</td>
+<td></td>
+<td>If is_longitudinal_modeled=0 this is an empty &lt;item /&gt; list, if is_longitudinal_modeled=1, this is a list of items, one per visit, the value of each is the week of the visit. (As listed in the “Schedule of Post-Baseline Visits)</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>final_visit</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>This is the week of the last visit, if is_longitudinal_modeled=1 this value should be the same as the last entry in the study_weeks list.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>visit_names</td>
+<td style="text-align: right;">V</td>
+<td></td>
+<td>If is_longitudinal_modeled=0 this is an empty &lt;item /&gt; list, if is_longitudinal_modeled=1, this is a list of items, one per visit, the value of each is the visit name. (As listed in the “Schedule of Post-Baseline Visits” on the Study Info tab)</td>
+</tr>
+<tr class="even">
+<td colspan="5">Study Info Parameters</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>max_subjects_ui</td>
+<td style="text-align: right;">1</td>
+<td>300</td>
+<td>Maximum number of subjects in the trial. See max_subjects_fulltrial.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>Is_noninferiority</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>use_cohorts</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used in Staged Design</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>has_variants</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>A flag to indicate if there are variants.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>num_variants</td>
+<td style="text-align: right;">1</td>
+<td>5</td>
+<td>if has_variants=1 this value is the number of variants</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>variant_names</td>
+<td style="text-align: right;">Var</td>
+<td>“Var 1”, “Var 2”, …</td>
+<td>The names of the “variants” to be included in the scenario names to indicate which variant was being simulated.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>var_max_overall_subjects</td>
+<td style="text-align: right;">Var</td>
+<td>300, 300, …</td>
+<td>The different values of max_subjects_fulltrial to be used in each variant.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>var_max_stage1_subjects</td>
+<td style="text-align: right;">Var</td>
+<td>“” ““, …</td>
+<td>Not used in Core Ordinal.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>var_max_stage2_subjects</td>
+<td style="text-align: right;">Var</td>
+<td>“” ““, …</td>
+<td>Not used in Core Ordinal.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>var_selection_qoi</td>
+<td style="text-align: right;">1</td>
+<td></td>
+<td>The Target Dose QOI to select the dose. See Target Dose QOI for details.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>old_cohorts_bool</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>include_baseline</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>is_change_from_baseline</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>use_special_long</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>special_long_feature</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>dichot_threshold_greater</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>dichot_threshold_value</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>first_cohort_size</td>
+<td style="text-align: right;">1</td>
+<td>20</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>cohort_size</td>
+<td style="text-align: right;">1</td>
+<td>5</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>num_cohorts</td>
+<td style="text-align: right;">1</td>
+<td>50</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>cohort_time</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>csd</td>
+<td style="text-align: right;">1</td>
+<td>0.5</td>
+<td>This the CSD value for the default QOIs on the Quantities of Interest tab. The default value is 0.5 for a Ordinal endpoint</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>target_is_rel</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>high_is_good</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>This flag corresponds to the “Higher/Lower value index indicates subject improvement” selection on the Study Info tab. 0=Lower, 1=Higher.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>final_stable_success</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>ordinal_utility_dichotomization_index</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>The 0-based ordinal endpoint value index used as a threshold for dichotomized ordinal calculation.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>ordinal_modelling_type</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>The type of ordinal modelling being performed. 0=Cumulative logistic, 1=Dirichlet</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>endpoint_utility_values</td>
+<td style="text-align: right;">OEV</td>
+<td>1,2,3, …</td>
+<td>The ordinal endpoint value utilities</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>endpoint_utility_names</td>
+<td style="text-align: right;">OEV</td>
+<td>Value 1, Value 2, …</td>
+<td>The ordinal endpoint value names</td>
+</tr>
+<tr class="even">
+<td colspan="5">Frequentists Parameters</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>one_sided_alpha</td>
+<td style="text-align: right;">1</td>
+<td>0.025</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>output_freq_locf</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>output_freq_bocf</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>output_freq_ignore</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>output_freq_fail</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>do_dunnetts</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>contrast_coeff_save</td>
+<td style="text-align: right;">D</td>
+<td>0, 1, 2, …</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>freq_noninferiority_delta</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>freq_noninferiority_qoi_only</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>use_fisher_exact</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="odd">
+<td colspan="5">Dose Response Parameters</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>model_placebo_separately</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Flag indicating if the estimate of the treatment effect of the control arm is modelled separately from the rest of the dose response. 0=included in the overall dose response model, 1=modelled separately</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>efficacy_model</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td><p>A flag indicating the type of the dose response model:</p>
+<p>1=Simple NDLM</p>
+<p>4=3-Parameter Logistic</p>
+<p>5=Hierarchical Logistic</p>
+<p>6=Sigmoidal</p>
+<p>7=Monotonic NDLM</p>
+<p>10=Independent Dose Model</p>
+<p>12=U-shaped model</p>
+<p>13=Plateau Model</p>
+<p>14=Second Order NDLM</p>
+<p>15=Simple Hierarchical</p>
+<p>16=Simple Linear</p>
+<p>17=Simple Hierarchical Linear</p>
+<p>All values above are available if using Cumulative Logistic ordinal endpoint modelling. If using Dirichlet ordinal endpoint modelling, efficacy_model should be set to 10=Independent Dose Model.</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>hier_lambda</td>
+<td style="text-align: right;">&lt;gamma&gt;</td>
+<td>1,1</td>
+<td>Contains the values for the inverse-gamma prior for the hierarchical part of the Hierarchical Logistic dose response model (α<sub>4</sub><sup>2</sup>)</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>ndlm_tau</td>
+<td style="text-align: right;">&lt;gamma&gt;</td>
+<td>10, 1</td>
+<td>Contains the values for the inverse-gamma prior for the smoothing parameter (tau) of any NDLM dose response model and simple hierarchical dose response model (τ<sup>2</sup>).</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>logit_max</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>0, 10</td>
+<td>Contains the values for the Normal prior for the maximum response of any logistic dose response model - (α<sub>2</sub>).</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>logit_min</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>0, 10</td>
+<td>Contains the values for the Normal prior for the minimum response (at control) of any logistic dose response model - (α<sub>1</sub>) in the 3-parameter logistic, hierarchical logistic and sigmoidal dose response models.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>logit_ed50</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>5, 5</td>
+<td>Contains the values for the Normal prior for the ED50 dose strength of any logistic dose response model - (α<sub>3</sub>).</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>logit_slope</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>1, 5</td>
+<td>Contains the values for the Normal prior for the slope parameter of the 4-parameter logistic dose response model - (α<sub>4</sub>) in the sigmoidal dose response model</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>linear_min</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>0, 10</td>
+<td>Contains the values for the Normal prior for the minimum response of the simple linear dose response model and the simple hierarchical linear dose response model - (α<sub>1</sub>).</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>linear_max</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>0, 10</td>
+<td>Contains the values for the Normal prior for the maximum response of the simple linear dose response model and the simple hierarchical linear dose response model - (α<sub>2</sub>).</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>ushaped_theta</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>0, 1</td>
+<td>Contains the values for the Normal prior for the response at control in the plateau or u-shaped dose response model - (θ<sub>0</sub>)</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>ushaped_delta</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>1, 1</td>
+<td>Contains the values for the Normal-positive prior for delta, the maximum response (relative to control) in the plateau or u-shaped dose response model - (δ)</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>ushaped_pmin</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>2, 3</td>
+<td>Contains the values for the Normal-positive prior for the estimate of the dose strength at the start of the maximum response in the plateau or u-shaped dose response model - (p<sub>min</sub>)</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>ushaped_pwidth</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>3, 3</td>
+<td>Contains the values for the Normal-positive prior for the width of the dose range where the maximum response is observed in the u-shaped dose response model – (p<sub>width</sub>)</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>ushaped_alpha</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>1, 0.5</td>
+<td>Contains the values for the Log-Normal prior for the slope in the initial rising section of the model (0&lt;υ<sub>d</sub>&lt;p<sub>min</sub>) in the plateau or u-shaped dose response model - (δ)</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>ushaped_wwidth</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>3, 3</td>
+<td>Contains the values for the Normal-positive prior for the width of the dose range where the maximum response returns to the control respose in the u-shaped dose response model – (w<sub>width</sub>)</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>ushaped_beta</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>1, 0.5</td>
+<td>Contains the values for the Log-Normal prior for the response at control in the u-shaped dose response model – (β)</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>ndlm2_first_diff</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>0, 10</td>
+<td>If the dose response model is the second order NDLM then this parameter contains the values for the Normal prior of the “first dose difference” (θ<sub>1</sub>-θ<sub>0</sub>) of that model</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>no_model_single_prior</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td><p>Flag indicating whether (if using the independent dose model) the same prior applies to all study doses 1=Same prior, 0=Prior per dose (and model control separately)</p>
+<p>If flag=1 then the values for the prior for all doses are stored in Init_dose_prior</p>
+<p>If flag=0 then the prior values per study arm are stored in no_model_mean and no_model_sd</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>historical_data_save</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>historical_data_ac</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>control_prior</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>0, 10</td>
+<td>If (model_placebo_separately=1 OR no_model_single_prior=0) AND historical_data_bac=0, then these values are the Normal prior for the estimate for the treatment effect of the Control arm.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>comparator_prior</td>
+<td style="text-align: right;">&lt;meansdpaoir&gt;</td>
+<td>0, 10</td>
+<td>If an active comparator arm has been included and historical_data_ac=0, then these values are the Normal prior for the estimate for the treatment effect of the Active Comparator arm.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>init_dose_prior</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>0, 10</td>
+<td>????? TODO</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>no_model_mean</td>
+<td style="text-align: right;">D</td>
+<td>0, 0, ...</td>
+<td>If no_model_single_prior=0, then these values are the mean of the Normal prior for the treatment effect for each study arm.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>no_model_sd</td>
+<td style="text-align: right;">D</td>
+<td>10, 10, …</td>
+<td>If no_model_single_prior=0, then these values are the SD of the Normal prior for the treatment effect for each study arm.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>monotonic_increasing</td>
+<td style="text-align: right;">1</td>
+<td>2</td>
+<td>Flag for monotonic models indicating whether the response is 2=increasing or 1=decreasing with dose strength. (Applies to monotonic NDLM, U-shaped and plateau models) [The logistic models can be either increasing or decreasing – depending on the estimate of α<sub>2</sub>]</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>historical_data_bac</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Not used for the Ordinal endpoint</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>prior_sigma</td>
+<td style="text-align: right;">&lt;gamma&gt;</td>
+<td>10, 1</td>
+<td>A parameter for the Continuous endpoint. Contains the values for the inverse-gamma prior for ’sigma” the estimate of the SD of the endpoint.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>dropout_imputation</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Flag indicating how missing data due to dropout will be handled, 0=Bayesian multiple imputation post baseline, 1=Baseline carried forward, 2=Last observation carried forward</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>baseline_in_model</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Flag indicating (if baseline is being simulated) if the treatment effect includes a baseline adjustment. 0=No baseline adjustment, 1=Use baseline adjusted model</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>baseline_beta</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>0, 1</td>
+<td>The vales for the Normal prior for the estimate of the baseline coefficient</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>contin_2d_interaction</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>Flag indicating whether the 2D continuous factorial dose response model includes an interaction term</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>contin_2d_alpha</td>
+<td style="text-align: right;">4*&lt;meansdpair&gt;</td>
+<td>0, 10</td>
+<td>The values for the Normal prior of the α_0, α_1, α_3 and α_3 parameters of the 2D continuous factorial dose response model</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>discrete_2d_interaction</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>Not available in FACTS 6.3.0. Flag indicating whether the 2D discrete factorial dose response model includes an interaction term</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>discrete_2d_a</td>
+<td style="text-align: right;">&lt;meansdpair&gt;</td>
+<td>0, 10</td>
+<td>The values for the Normal prior of the α parameter of the 2D discrete factorial dose response model</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>discrete_2d_b</td>
+<td style="text-align: right;">(CF -1)*&lt;meansdpair&gt;</td>
+<td>0, 10</td>
+<td>The values for the Normal prior of the β_2,…, β_CF parameters of the 2D discrete factorial dose response model</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>discrete_2d_c</td>
+<td style="text-align: right;">(RF -1)*&lt;meansdpair&gt;</td>
+<td>0, 10</td>
+<td>The values for the Normal prior of the γ_2,…, γ_RF parameters of the 2D discrete factorial dose response model</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>discrete_2d_delta_mu</td>
+<td style="text-align: right;">2*&lt;meansdpair&gt;</td>
+<td>0, 10</td>
+<td>Not available in FACTS 6.3.0. The values for the Normal hyperprior of the interaction terms means µ_δ^h_k (k = β, γ) parameters of the 2D discrete factorial dose response model</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>discrete_2d_delta_sigmasq</td>
+<td style="text-align: right;">2*&lt;gamma&gt;</td>
+<td>1, 2</td>
+<td>Not available in FACTS 6.3.0. The values for the inverse gamma hyperprior of the interaction terms variances σ_δ^h_k (k = β, γ) parameters of the 2D discrete factorial dose response model</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>ndlm_2d_usefixedratio</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>Flag indicating whether a fixed smoothing ratio should be used to compute φ (from τ) in the 2D NDLM model</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>ndlm_2d_ratiok</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>Only used when ndlm_2d_usefixedratio=1. This represents the value of the fixed smoothing ratio used to compute φ (from τ) in the 2D NDLM model</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>ndlm_2d_phi</td>
+<td style="text-align: right;">&lt;gamma&gt;</td>
+<td>10, 1</td>
+<td>Only used when ndlm_2d_usefixedratio=0. This represents the values of the inverse gamma prior of φ in the 2D NDLM model</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>ndlm_2d_priordose_strength</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>This represents the dose strength of the initial dose specified in the 2D NDLM model. Note that its Normal prior values are specified in init_dose_prior</td>
+</tr>
+<tr class="even">
+<td colspan="5">Hierarchical Prior Parameters (NOT USED IN FACTS 8.1.0)</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>bac_study_names</td>
+<td style="text-align: right;">CS</td>
+<td>“”</td>
+<td>If historical_data_bac=1, this is the list of study names for the hierarchical prior for control</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>hyperprior_mean</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>If historical_data_bac=1, this value is the mean of the prior of the mean of the hierarchical model of the response on the control arm (μ<sub>0</sub>)</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>hyperprior_sd</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>If historical_data_bac=1, this value is the SD of the prior of the mean of the hyperprior of the hierarchical model for the response on the control arm (μ<sub>0</sub>)</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>hyperprior_tau</td>
+<td style="text-align: right;">&lt;gamma&gt;</td>
+<td>1,1</td>
+<td>Contains the values for the inverse-gamma prior for the variance of the hyperprior of a hierarchical prior on Control (τ<sub>0</sub><sup>2</sup>).</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>ss_bac_study</td>
+<td style="text-align: right;">CS</td>
+<td>“”</td>
+<td>If historical_data_bac=1, this is the list of sample sizes for each study for the prior for control</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>cont_resp_bac_study</td>
+<td style="text-align: right;">CS</td>
+<td>“”</td>
+<td>If historical_data_bac=1, this is the list of mean responses for each study for the prior for control</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>dich_resp_bac_study</td>
+<td style="text-align: right;">CS</td>
+<td>“”</td>
+<td>If historical_data_bac=1, this is the list of response rates for each study for the prior for control</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>sd_baac_study</td>
+<td style="text-align: right;">CS</td>
+<td>“”</td>
+<td>If historical_data_bac=1, this is the list of SDs of the response for each study for the prior for control</td>
+</tr>
+<tr class="odd">
+<td colspan="5">Hierarchical Prior AC Parameters (NOT USED IN FACTS 8.1.0)</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>ac_study_names</td>
+<td style="text-align: right;">ACS</td>
+<td>“”</td>
+<td>if historical_data_ac=1, this is the list of study names for the hierarchical prior for active comparator</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>hyperprior_mean_ac</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>if historical_data_ac=1, this value is the mean of the prior of the mean of the hierarchical model of the response on the active comparator arm (μ<sub>AC</sub>)</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>hyperprior_tau_ac</td>
+<td style="text-align: right;">&lt;gamma&gt;</td>
+<td>1,1</td>
+<td>Contains the values for the inverse-gamma prior for the variance of the hyperprior of a hierarchical prior on Active Comparator (τ<sub>AC</sub><sup>2</sup>).</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>ss_baac_study</td>
+<td style="text-align: right;">ACS</td>
+<td>“”</td>
+<td>if historical_data_ac=1, this is the list of sample sizes for each study for the prior for AC</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>cont_resp_ac_study</td>
+<td style="text-align: right;">ACS</td>
+<td>“”</td>
+<td>if historical_data_ac=1, this is the list of mean responses for each study for the prior for AC</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>dich_resp_ac_study</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td>dich_resp_ac_study</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>sd_baac_study</td>
+<td style="text-align: right;">ACS</td>
+<td>“”</td>
+<td>if historical_data_ac=1, this is the list of SDs of the response rate for each study for the prior for AC</td>
+</tr>
+<tr class="odd">
+<td colspan="5">Longitudinal Model Parameters (NOT USED IN FACTS 8.1.0)</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>long_model_type</td>
+<td style="text-align: right;">1</td>
+<td>3</td>
+<td><p>Flag that indicates the type of the longitudinal model. For a Continuous endpoint these are:</p>
+<p>1=linear regression,</p>
+<p>3=last observation carried forward,</p>
+<p>4=time course hierarchical,</p>
+<p>5=kernel density,</p>
+<p>8=ITP</p>
+<p>For a Dichotomous endpoint:</p>
+<p>2=Beta binomial</p>
+<p>3=last observation carried forward,</p>
+<p>7=Logistic regression</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>long_model_spec</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td><p>This flag indicates the number of longitudinal model instances</p>
+<p>0=Single model for all arms</p>
+<p>1=Model control separately</p>
+<p>2=Model comparator separately</p>
+<p>3=Model control and comparator separately</p>
+<p>4=Model all arms separately</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>long_prior_spec</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td><p>This flag indicates the number of separate priors for the longitudinal model parameters</p>
+<p>0=Same prior across all model instances and visits</p>
+<p>1=Specify per visit, across all model instances</p>
+<p>2=Specify priors per model instance and visit</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>long_alpha_mu</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td><p>When long_prior_spec=0, contains the values for the mean of the Normal prior for the intercept of the linear regression, models (α<sub>t</sub>) to be used for all models</p>
+<p>This is the value used when the same prior is used across all model instances and visits.</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>long_alpha_mu_matrix</td>
+<td style="text-align: right;">LM*V</td>
+<td>0, 0, …</td>
+<td><p>When long_prior_spec=1 or 2, contains the values for the mean of the Normal prior for the intercept of the linear regression, models (α<sub>t</sub>) with different values for each visit, and possibly each model.</p>
+<p>See the description of LM*V parameters before this table.</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>long_alpha_stdv</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td><p>When long_prior_spec=0, contains the values for the SD of the Normal prior for the intercept of the linear regression, models (α<sub>t</sub>) to be used for all models</p>
+<p>This is the value used when the same prior is used across all model instances and visits.</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>long_alpha_sd_matrix</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td><p>When long_prior_spec=1 or 2, contains the values for the SD of the Normal prior for the intercept of the linear regression, models (α<sub>t</sub>) with different values for each visit, and possibly each model.</p>
+<p>See the description of LM*V parameters before this table.</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>long_beta_mu</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td><p>When long_prior_spec=0, contains the values for the mean of the Normal prior for the slope of the linear regression, models (β<sub>t</sub>) to be used for all models</p>
+<p>This is the value used when the same prior is used across all model instances and visits.</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>long_beta_mu_matrix</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td><p>When long_prior_spec=1 or 2, contains the values for the mean of the Normal prior for the slope of the linear regression, models (β<sub>t</sub>) with different values for each visit, and possibly each model.</p>
+<p>See the description of LM*V parameters before this table.</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>long_beta_stdv</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td><p>When long_prior_spec=0, contains the values for the SD of the Normal prior for the slope of the linear regression, models (β<sub>t</sub>) to be used for all models</p>
+<p>This is the value used when the same prior is used across all model instances and visits.</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>long_beta_sd_matrix</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td><p>When long_prior_spec=1 or 2, contains the values for the SD of the Normal prior for the slope of the linear regression, models (β<sub>t</sub>) with different values for each visit, and possibly each model.</p>
+<p>See the description of LM*V parameters before this table.</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>tch_tau</td>
+<td style="text-align: right;">&lt;gamma&gt;*LM=The number of longitudinal models</td>
+<td>0.5, 1</td>
+<td><p>Contains the values for the inverse-gamma prior for the variance of the inter-subject error term (δ<sub>i</sub>) of the Time Course Hierarchical longitudinal model (τ<sup>2</sup>).</p>
+<p>The number of prior values depends on the number of longitudinal models, even if the same priors are used across all models. In which case the first values are used for all models.</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>tch_alpha</td>
+<td style="text-align: right;">&lt;meansdpair&gt;*LM*V</td>
+<td>0, 2, …</td>
+<td><p>Whether long_prior_spec=0 or 2, these are the priors for the α<sub>t</sub> parameter in the Time Course Hierarchical longitudinal model. α<sub>t</sub> is the log of the fraction of the final response seen at visit t.</p>
+<p>Unlike other LMs there always separate prior values for each visit. If long_prior_spec=0 only the values for the first model in the list are set.</p>
+<p>See the description of LM*V parameters before this table.</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>itp_k</td>
+<td style="text-align: right;">&lt;meansdpair&gt;*LM</td>
+<td>1,1</td>
+<td><p>Contains the values for the Normal prior for the ITP shape parameter (<em>k</em>) of the ITP longitudinal model.</p>
+<p>The number of prior values depends on the number of longitudinal models, even if the same priors are used across all models. In which case the first values are used for all models.</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>itp_tau</td>
+<td style="text-align: right;">&lt;gamma&gt;*LM</td>
+<td>1,1</td>
+<td><p>Contains the values for the inverse-gamma prior for the variance of the inter-subject error term (<em>s</em><sub>i</sub>) (subject specific random effect) of the ITP longitudinal model (τ<sup>2</sup>).</p>
+<p>The number of prior values depends on the number of longitudinal models, even if the same priors are used across all models. In which case the first values are used for all models.</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>itp_omega</td>
+<td style="text-align: right;">&lt;meansdpair&gt;*LM</td>
+<td>1,1</td>
+<td><p>Contains the values for the Normal prior for the mean final response of the ITP longitudinal model.</p>
+<p>The number of prior values depends on the number of longitudinal models, even if the same priors are used across all models. In which case the first values are used for all models.</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>long_lambda_single</td>
+<td style="text-align: right;">&lt;gamma&gt;</td>
+<td>0.5, 1</td>
+<td><p>Contains the values for the inverse-gamma prior for the variance of the residual error of the linear regression, time course hierarchical and ITP longitudinal models (λ<sup>2</sup>).</p>
+<p>This is the value used when the same prior is used across all model instances and visits.</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>long_lambda_list</td>
+<td style="text-align: right;">&lt;gamma&gt;*LM</td>
+<td>0.5, 1</td>
+<td><p>Contains the values for the inverse-gamma prior for the variance of the residual error of the time course hierarchical and ITP longitudinal models (λ<sup>2</sup>).</p>
+<p>This is the value used when a different prior is used across all model instances. These models do not have separate estimates of this parameter per visit, unlike the linear regression…</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>long_lambda_matrix</td>
+<td style="text-align: right;">&lt;gamma&gt;*LM*V</td>
+<td>0.5, 1</td>
+<td><p>Contains the values for the inverse-gamma prior for the variance of the residual error of the linear regression longitudinal model (λ<sup>2</sup>).</p>
+<p>See the description of LM*V parameters before this table.</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>kernel_bandwidth</td>
+<td style="text-align: right;">LM</td>
+<td>2</td>
+<td><p>This is the value of the kernel bandwidth parameter for the Kernel Density longitudinal model.</p>
+<p>The value is a list of items - one for each LM model. If long_prior_spec=0, and there are multiple models, just the first value in the list is used, even though entries for the other models are present.</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>kernel_min_subj</td>
+<td style="text-align: right;">LM</td>
+<td>6</td>
+<td><p>This is the value of the “minimum number of subjects before using” parameter for the Kernel Density longitudinal model.</p>
+<p>The value is a list of items - one for each LM model. If long_prior_spec=0, and there are multiple models, just the first value in the list is used, even though entries for the other models are present.</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>kernel_sd</td>
+<td style="text-align: right;">LM</td>
+<td>2</td>
+<td><p>This is the value of the “standard deviation of the prior mean” parameter for the Kernel Density longitudinal model.</p>
+<p>The value is a list of items - one for each LM model. If long_prior_spec=0, and there are multiple models, just the first value in the list is used, even though entries for the other models are present.</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>bb_alpha_mu_1</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>When long_prior_spec=0, this is the single prior for the α<sub>μ1</sub> parameter for the Beta Binomial prior for the probability that a subject with a response at a visit will have a response at the final visit – for all models and all visits.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>bb_alpha_mu_1_full</td>
+<td style="text-align: right;">LM*V</td>
+<td>1, 1, …</td>
+<td><p>When long_prior_spec=1 or 2, these are the priors for the α<sub>μ1</sub> parameter for the Beta Binomial prior for the probability that a subject with a response at a visit will have a response at the final visit across the different visits or models and visits.</p>
+<p>See the description of LM*V parameters before this table.</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>bb_beta_mu_1</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>When long_prior_spec=0, this is the single prior for the β<sub>μ1</sub> parameter for the Beta Binomial prior for the probability that a subject with a response at a visit will have a response at the final visit – for all models and all visits.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>bb_beta_mu_1_full</td>
+<td style="text-align: right;">LM*V</td>
+<td>1, 1, …</td>
+<td><p>When long_prior_spec=1 or 2, these are the priors for the β<sub>μ1</sub> parameter for the Beta Binomial prior for the probability that a subject with a response at a visit will have a response at the final visit across the different visits or models and visits.</p>
+<p>See the description of LM*V parameters before this table.</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>bb_alpha_mu_0</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>When long_prior_spec=0, this is the single prior for the α<sub>μ0</sub> parameter for the Beta Binomial prior for the probability that a subject without a response at a visit will have a response at the final visit – for all models and all visits.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>bb_alpha_mu_0_full</td>
+<td style="text-align: right;">LM*v</td>
+<td>1, 1, …</td>
+<td><p>When long_prior_spec=1 or 2, these are the priors for the α<sub>μ0</sub> parameter for the Beta Binomial prior for the probability that a subject without a response at a visit will have a response at the final visit across the different visits or models and visits.</p>
+<p>See the description of LM*V parameters before this table.</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>bb_beta_mu_0</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>When long_prior_spec=0, this is the single prior for the β<sub>μ0</sub> parameter for the Beta Binomial prior for the probability that a subject without a response at a visit will have a response at the final visit – for all models and all visits.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>bb_beta_mu_0_full</td>
+<td style="text-align: right;">LM*V</td>
+<td>1, 1, …</td>
+<td><p>When long_prior_spec=1 or 2, these are the priors for theβ<sub>μ0</sub> parameter for the Beta Binomial prior for the probability that a subject without a response at a visit will have a response at the final visit across the different visits or models and visits.</p>
+<p>See the description of LM*V parameters before this table.</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>long_rmm_alpha_0</td>
+<td style="text-align: right;">LM*V</td>
+<td>1, 1, …</td>
+<td><p>Whether long_prior_spec=0 or 2, these are the priors for the α<sub>0</sub> parameter for the Dirichlet prior in the Restricted Markov Model, for the probability that stable subject will be a fail at the final visit across the different visits.</p>
+<p>Unlike other LMs there always separate prior values for each visit. If long_prior_spec=0 only the values for the first model in the list are set.</p>
+<p>See the description of LM*V parameters before this table.</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>long_rmm_alpha_S</td>
+<td style="text-align: right;">LM*V</td>
+<td>1, 1, …</td>
+<td><p>Whether long_prior_spec=0 or 2, these are the priors for the α<sub>0</sub> parameter for the Dirichlet prior in the Restricted Markov Model, for the probability that stable subject will be stable at the final visit across the different visits.</p>
+<p>Unlike other LMs there always separate prior values for each visit. If long_prior_spec=0 only the values for the first model in the list are set.</p>
+<p>See the description of LM*V parameters before this table</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>long_rmm_alpha_1</td>
+<td style="text-align: right;">LM*V</td>
+<td>1, 1, …</td>
+<td><p>Whether long_prior_spec=0 or 2, these are the priors for the α<sub>0</sub> parameter for the Dirichlet prior in the Restricted Markov Model, for the probability that stable subject will be respnder at the final visit across the different visits.</p>
+<p>Unlike other LMs there always separate prior values for each visit. If long_prior_spec=0 only the values for the first model in the list are set.</p>
+<p>See the description of LM*V parameters before this table</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>lr_mu_1</td>
+<td style="text-align: right;">1</td>
+<td>0.5</td>
+<td>When long_prior_spec=0, this is the single prior for the μ<sub>1</sub> parameter for the Normal prior in the Logistic Regression longitudinal model, for the logit of the probability that a subject with a response at a visit will have a response at the final visit – for all models and all visits.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>lr_mu_1_matrix</td>
+<td style="text-align: right;">LM*V</td>
+<td>0.5, 0.5</td>
+<td><p>When long_prior_spec=1 or 2, these are the priors for the μ<sub>1</sub> parameters for the Normal prior in the Logistic Regression longitudinal model, for the logit of the probability that a subject with a response at a visit will have a response at the final visit across the different visits or models and visits.</p>
+<p>See the description of LM*V parameters before this table.</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>lr_mu_0</td>
+<td style="text-align: right;">1</td>
+<td>0.5</td>
+<td>When long_prior_spec=0, this is the single prior for the μ<sub>0</sub> parameter for the Normal prior in the Logistic Regression longitudinal model, for the logit of the probability that a subject without a response at a visit will have a response at the final visit – for all models and all visits.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>lr_mu_0_matrix</td>
+<td style="text-align: right;">LM*V</td>
+<td>0.5, 0.5</td>
+<td><p>When long_prior_spec=1 or 2, these are the priors for the μ<sub>0</sub> parameters for the Normal prior in the Logistic Regression longitudinal model, for the logit of the probability that a subject without a response at a visit will have a response at the final visit across the different visits or models and visits.</p>
+<p>See the description of LM*V parameters before this table.</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>lr_sd_1</td>
+<td style="text-align: right;">1</td>
+<td>0.5</td>
+<td>When long_prior_spec=0, this is the single prior for the σ<sub>1</sub> parameter for the Normal prior in the Logistic Regression longitudinal model, for the logit of the probability that a subject with a response at a visit will have a response at the final visit – for all models and all visits.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>lr_sd_1_matrix</td>
+<td style="text-align: right;">LM*V</td>
+<td>0.5, 0.5</td>
+<td><p>When long_prior_spec=1 or 2, these are the priors for the σ<sub>1</sub> parameters for the Normal prior in the Logistic Regression longitudinal model, for the logit of the probability that a subject with a response at a visit will have a response at the final visit across the different visits or models and visits.</p>
+<p>See the description of LM*V parameters before this table.</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>lr_sd_0</td>
+<td style="text-align: right;">1</td>
+<td>0.5</td>
+<td>When long_prior_spec=0, this is the single prior for the σ<sub>0</sub> parameter for the Normal prior in the Logistic Regression longitudinal model, for the logit of the probability that a subject without a response at a visit will have a response at the final visit – for all models and all visits.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>lr_sd_0_matrix</td>
+<td style="text-align: right;">LM*V</td>
+<td>0.5, 0.5</td>
+<td><p>When long_prior_spec=1 or 2, these are the priors for the σ<sub>0</sub> parameters for the Normal prior in the Logistic Regression longitudinal model, for the logit of the probability that a subject without a response at a visit will have a response at the final visit across the different visits or models and visits.</p>
+<p>See the description of LM*V parameters before this table.</p></td>
+</tr>
+<tr class="odd">
+<td colspan="5">Allocation Parameters</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>arm_drop</td>
+<td style="text-align: right;">1</td>
+<td>2</td>
+<td><p>If is_adaptive=1 then this flag (despite its name) actually indicates the type of allocation to be used:</p>
+<p>0=legacy adaptive allocation</p>
+<p>1=arm dropping</p>
+<p>2=fixed allocation</p>
+<p>3=adaptive allocation</p>
+<p>4=deterministic allocation</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>alloc_update_type</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>If is_adaptive=1, this flag indicates whether interims are: 0=by time, 1=by information</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>det_alloc_filename</td>
+<td style="text-align: right;">1</td>
+<td>“”</td>
+<td>If is_adaptive=1 and arm_drop=4 (deterministic allocation), this is the name of the file containing the allocations.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>min_alloc_prob</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>if is_adaptive=1 and arm_drop=0 or 3 (adaptive allocation), or if using cohorts and adaptive allocation, this is the floor probability for allocation, if an arm has less than this probability of allocation its probability is set to zero and the probabilities are re-normalized.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>arm_drop_limit_save</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td>if is_adaptive=1 and arm_drop=1 (arm dropping), this is the maximum number of arms that can be dropped during the study</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>dropped_arm_alloc</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td><p>if is_adaptive=1 and arm_drop=1 (arm dropping) this is the option of what to do with subject allocation post an arm drop</p>
+<p>0=Maintain study size, maintain block size</p>
+<p>1=Decrease Study size</p>
+<p>2=Maintain study size, reduce block size</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>prune_protect_low</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>if is_adaptive=1 and arm_drop=1 (arm dropping) this flag (if =1) indicates that arms should be dropped from the lowest, and can only be dropped if all lower arms have been dropped.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>prune_protect_high</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>if is_adaptive=1 and arm_drop=1 (arm dropping) this flag (if =1) indicates that arms should be dropped from the highest, and can only be dropped if all higher arms have been dropped.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>prune_priority</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td><p>if is_adaptive=1 and arm_drop=1 (arm dropping), there is a limit on how many arms can be dropped, and either both prune_protect_low and prune_protect_high are set, or neither are set, this flags specifies whether to drop the lower or higher dose for preference:</p>
+<p>0=prioritize lower</p>
+<p>1=prioritize higher</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>arm_drop_blocking</td>
+<td style="text-align: right;">D</td>
+<td>1, 1, …</td>
+<td>these are the static allocation ratios for the different arms.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>static_alloc</td>
+<td style="text-align: right;">D</td>
+<td>0, 1, 1, …</td>
+<td>if is_adaptive=1 and arm_drop=3 (adaptive allocation) and if the adaptive allocation includes some static allocation this list is the static weights to each arm.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>rr_power</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>if is_adaptive=1 and arm_drop=3 (adaptive allocation) this is the power to raise the allocation probabilities by</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>init_alloc_save</td>
+<td style="text-align: right;">D</td>
+<td>5, 5, …</td>
+<td>if is_adaptive=1 and arm_drop=0 or 3 (adaptive allocation), this list of values are the “pre-fist interim allocation ratios”</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>dose_fix_alloc_save</td>
+<td style="text-align: right;">D</td>
+<td>0, 0, …</td>
+<td><p>if is_adaptive=1 and arm_drop=3 (adaptive allocation), these flags correspond to the “fix Alloc” check boxes:</p>
+<p>1=fix alloc to this arm after first interim</p>
+<p>0=adaptive allocation to this arm after first interim</p></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>dose_fixed_prob_save</td>
+<td style="text-align: right;">D</td>
+<td>““,”“, …</td>
+<td>By default blank but with an item per dose. If is_adaptive=1 and arm_drop=0 (legacy adaptive allocation) the items that correspond to the arms for which the “dose_fix_alloc_save” flag has been set, contain the “Post burn-in Alloc Prob” value for the post first interim allocation.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>block_size</td>
+<td style="text-align: right;">1</td>
+<td>10</td>
+<td>If is_adaptive=1 and arm_drop=0 or arm_drop=3 (adaptive allocation) this is the “post first interim block size”.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>block_plac_rate</td>
+<td style="text-align: right;">1</td>
+<td>2</td>
+<td>If is_adaptive=1 and arm_drop=0 (legacy adaptive allocation) and Control does not have a fixed probability, then this is the “Control block rate” given the value of block-size (above).</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>block_alloc_gui</td>
+<td style="text-align: right;">D</td>
+<td>““,”“, …</td>
+<td>By default blank but with an item per dose. If is_adaptive=1 and arm_drop=3 (adaptive allocation) the items that correspond to the arms for which the “dose_fix_alloc_save” flag has been set, contain the “Alloc per Block” value for the post first interim allocation.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>first_cohort_alloc</td>
+<td style="text-align: right;">D</td>
+<td>0, 0, …</td>
+<td>Not used in Staged Design</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>cohort_alloc</td>
+<td style="text-align: right;">D</td>
+<td>0, 0, …</td>
+<td>Not used in Staged Design</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>sample_cohorts</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>Not used in Staged Design</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>cohort_control</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>Not used in Staged Design</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>cohort_comparator</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>Not used in Staged Design</td>
+</tr>
+<tr class="odd">
+<td colspan="5">Interims Parameter Set</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>update_freq_save</td>
+<td style="text-align: right;">1</td>
+<td>2</td>
+<td>If interims are defined by time, this is the update frequency in weeks.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>cohort_update_freq</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>Not used in Staged Design</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>cohort_updates_start</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>Not used in Staged Design</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>update_subjects</td>
+<td style="text-align: right;">I</td>
+<td>1, …</td>
+<td>If interims are defined by the amount of information, these values are the number of subjects/events enrolled / complete / opportunity to complete at each interim</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>interims_milestones_visits</td>
+<td style="text-align: right;">I</td>
+<td>““,”“,</td>
+<td>By default blank but if interims are by the amount of information this is the visit number of the information.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>single_burnin_new</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>If interims are by time, this is the amount of information required for the first interim to occur</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>first_interim_visit</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td><p>If is_adaptive=1, and alloc_info_type=1 or 2 and alloc_update_type=0, (So applies when the interims are by time and information is completed data at specified visit or opportunity to complete at specified visit).</p>
+<p>Represents the visit number text box when specifying first interim information in the context of interims by time.</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>continue_follow_success</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>This is the flag for whether to follow-up subjects if the trial has stopped early for success (1=follow-up, 0=don’t follow-up)</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>continue_follow_futility</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>This is the flag for whether to follow-up subjects if the trial has stopped early for futility (1=follow-up, 0=don’t follow-up)</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>continue_follow_arm_drop</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>This is the flag for whether to follow-up subjects on an arm that has been drpped (1=follow-up, 0=don’t follow-up)</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>stop_ia</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>If is_adaptive=1 and alloc_update_type=0, this flag controls whether to “discontinue interim analysis beyond full enrollment”, 0=don’t discontinue, 1=discontinue</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>continue_followup_grad</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>This is the flag for whether to follow-up subjects if the treatment arm graduates.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>s1_complete_data_a_gui</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>This is a flag for whether to perform Stage 1 complete data analysis for output.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>dose_selection_censors_output</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>This is a flag for whether to censor Stage 1 patients at dose selection in the output.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>delay_type</td>
+<td style="text-align: right;">1</td>
+<td>2</td>
+<td><p>A flag indicating whether to include a delay period after interim, before Stage 2 dose selection, and if included, why type of delay.</p>
+<p>0=Wait until a Stage 1 enrollee completes</p>
+<p>1=Wait a fixed time</p>
+<p>2=No delay</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>delay_fixed_weeks</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>If delay_type=1, the number of weeks to delay before Stage 2 dose selection.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>interim_information_stage1counts</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>This is a flag indicating, in Stage 2, what information an interim is based on: 0=Just Stage2 Data, 1=Stage 2 and included Stage 1 data</td>
+</tr>
+<tr class="odd">
+<td>Dirichlet Prior Model Parameter Set</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>ordinal_dirichlet_prior_exponents_ui</td>
+<td style="text-align: right;">OEV*D</td>
+<td>0</td>
+<td>A matrix representating the control arm prior exponents (Cumulative logistic model) or the independent arms prior exponents (Dirichlet model) as specified on the Stage 1/2 Design &gt; Dirichlet Model tab. Each items grouping pertaining to a specific ordinal value, and each item within a grouping pertains to the relevant arm. For the cumulative logistic model, only the first item within a items grouping is relevant as this pertains to the control arm.</td>
+</tr>
+<tr class="odd">
+<td colspan="5">Dropout Parameters</td>
+</tr>
+<tr class="even">
+<td>&lt;parameterSets</td>
+<td>type</td>
+<td style="text-align: right;">1</td>
+<td>DropoutParameterSet</td>
+<td>The collection of dropout profiles</td>
+</tr>
+<tr class="odd">
+<td>&lt;parameterSet</td>
+<td>name</td>
+<td style="text-align: right;"></td>
+<td>&lt;Profile name&gt;</td>
+<td>The name of the dropout profile</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>SetID</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td>see general comment on id’s in section 1</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>is_stage_two_data</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>flag used to indicate that (if=1) the profile is to be used in stage 2 of a staged design</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>enable_per_visit_dropouts</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td><p>flag used to indicate the type of dropout profile</p>
+<p>0: no dropouts</p>
+<p>1: dropouts per dose</p>
+<p>2: dropouts per dose per visit</p>
+<p>Note that the next two properties are always output by FACTS even if not required.</p></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>dropout_rate</td>
+<td style="text-align: right;">D</td>
+<td>0.05</td>
+<td>An items list with a drop out rates per treatment arm</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>visit_drop_out_rate</td>
+<td style="text-align: right;">D*V</td>
+<td>0</td>
+<td>An items list with an items list per visit, that (inner) items list is a list of dropout rates at that visit per treatment arm</td>
+</tr>
+<tr class="odd">
+<td>&lt;/parameterSet&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>&lt;/parameterSets&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="5">Ordinal Efficacy Parameters</td>
+</tr>
+<tr class="odd">
+<td>&lt;parameterSets</td>
+<td>type</td>
+<td style="text-align: right;">1</td>
+<td>OrdinalEfficacyParameterSet</td>
+<td>The collection of dose response VSR profiles</td>
+</tr>
+<tr class="even">
+<td>&lt;parameterSet</td>
+<td>name</td>
+<td style="text-align: right;"></td>
+<td>&lt;Profile name&gt;</td>
+<td>The name of the Virtual Subject Response profile</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>SetID</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td>see general comment on id’s in section 1</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>external_vsr_mean</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>The “Use external mean vsr file” flag. 0: don’t use (use the parameters here) 1: use the external file. Not currently supported in ordinal as of FACTS 8.1.0.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>vsr_use_proportional_odds</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>This flag indicates whether to simulate ordinal outcomes using proportional odds</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>vsr_odds_ratios</td>
+<td style="text-align: right;">D</td>
+<td>1,1,…</td>
+<td>This is the simulated odds ratio for each dose when using proportional odds. Used if vsr_use_proportional_odds=1</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>vsr_outcome_raw_numbers</td>
+<td style="text-align: right;">OEV*D</td>
+<td></td>
+<td>A matrix representing the simulated relative, unnormalized proportions for a patient on a given dose to receive a given outcome. These values are then normalized to obtain the probabilities for a patient on a given dose to receive a given outcome. Each items grouping pertaining to a specific ordinal value, and each item within a grouping pertains to the relevant arm. For the cumulative logistic model, only the first item within a items grouping is relevant as this pertains to the control arm.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>should_succeed</td>
+<td style="text-align: right;">D</td>
+<td>0</td>
+<td>The “should succeed” flag from the GUI: 0=not set, 1=set. Use by the GUI in reporting the results, not used by the simulator.</td>
+</tr>
+<tr class="odd">
+<td>&lt;/parameterSets&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td colspan="5">Recruitment Parameters</td>
+</tr>
+<tr class="odd">
+<td>&lt;parameterSets</td>
+<td>type</td>
+<td style="text-align: right;">1</td>
+<td>RecruitmentParameterSet</td>
+<td>The collection of accrual profiles</td>
+</tr>
+<tr class="even">
+<td>&lt;parameterSet</td>
+<td>name</td>
+<td style="text-align: right;"></td>
+<td>&lt;Profile name&gt;</td>
+<td>The name of the dropout profile</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>SetID</td>
+<td style="text-align: right;"></td>
+<td></td>
+<td>see general comment on id’s in section 1</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>is_stage_two_data</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>Only used in staged designs: 0 = this is the accrual profile for the first stage (or both stages)</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>location names</td>
+<td style="text-align: right;">R=number of profiles in accrual profile</td>
+<td>&lt;Region name&gt;</td>
+<td>The name of the regions – with an entry (&lt;item&gt;) for each region. All properties in this profile should have the same number of items.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>recruit_rates</td>
+<td style="text-align: right;">R</td>
+<td>5</td>
+<td>The peak mean accrual rate per region</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>start_dates</td>
+<td style="text-align: right;">R</td>
+<td>0</td>
+<td>The start date (in weeks from the start of the trial) of accrual per region</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>ramp_up</td>
+<td style="text-align: right;">R</td>
+<td>0</td>
+<td>A flag per region indicating if there is an initial ramp up stage (0= no ramp up, 1=ramp up)</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>peak_start</td>
+<td style="text-align: right;">R</td>
+<td></td>
+<td>Include but leave blank if no ramp up. A per region value of the end (in weeks from the start of the trial) of ramp up in that region</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>ramp_down</td>
+<td style="text-align: right;">R</td>
+<td>0</td>
+<td>A flag per region indicating if there is a ramp down stage (0= no ramp down, 1=ramp down)</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>start_day</td>
+<td style="text-align: right;">R</td>
+<td></td>
+<td>Include but leave blank if no ramp down. A per region value of the start (in weeks – despite the parameter name - from the start of the trial) of ramp down in that region</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>last_day</td>
+<td style="text-align: right;">R</td>
+<td></td>
+<td>Include but leave blank if no ramp down. A per region value of the end (in weeks – despite the parameter name - from the start of the trial) of ramp down in that region</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>common_accrual_profile</td>
+<td style="text-align: right;">R</td>
+<td>1</td>
+<td>Only used in staged designs: 1 = indicates that there is one accrual profile used for both stages.</td>
+</tr>
+<tr class="even">
+<td>&lt;/parameterSets&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Simulation Settings</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>&lt;simulation-settings</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>num_sims</td>
+<td style="text-align: right;">1</td>
+<td>5</td>
+<td>The number of simulations to run</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>burn</td>
+<td style="text-align: right;">1</td>
+<td>1000</td>
+<td>The number of iterations of the MCMC loop that are initially ignored before sampling starts</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>length</td>
+<td style="text-align: right;">1</td>
+<td>2500</td>
+<td>The number of iterations of the MCMC loop used to estimate the parameters</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>rv_seed_1</td>
+<td style="text-align: right;">1</td>
+<td>3500</td>
+<td>The first part (32 bits) of the random number seed for all simulations.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>rv_seed_2</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>The second part (32 bits) of the random number seed for all simulations.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>num_weeks_out</td>
+<td style="text-align: right;">1</td>
+<td>100</td>
+<td>The number of simulations which will have their interim analysis results written out to file.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>num_freq_weeks_out</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>The number of simulations which will have their interim frequentist analysis results written out to file.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>num_subj_out</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>The number of simulations which will have their subject data written out to file.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>num_mcmc_files</td>
+<td style="text-align: right;">1</td>
+<td>0</td>
+<td>The number of simulations which will have their MCMC samples written out to file.</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>mcmc_thin</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>This is the factor by which the MCMC samples are thinned *when writing out the MCMC file*, it does not thin the samples used within FACTS. There is no option to thin the sampling within FACTS.</td>
+</tr>
+<tr class="odd">
+<td>&lt;property&gt;</td>
+<td>mcmc_per_imputation</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td>The number of MCMC samples between each imputation of missing data using the longitudinal model</td>
+</tr>
+<tr class="even">
+<td>&lt;property&gt;</td>
+<td>is_local</td>
+<td style="text-align: right;">1</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>&lt;/simulation-settings&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>&lt;/facts&gt;</td>
+<td></td>
+<td style="text-align: right;"></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<!-- footer.html -->
+
+<!-- FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pF6W3...<truncated>...Q==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+<style>
+
+  /* Make all footer icons the same color */
+  footer .fab,
+  footer .fas,
+  footer svg {
+    color: #125740;           /* ← pick whatever color your share-icons are using */
+    fill: currentColor;    /* ensures the SVG Bluesky icon matches */
+  }
+
+  /* Prevent links from overriding that color */
+  footer a {
+    color: inherit;
+  }
+
+  /* Share menu positioning */
+  #share-wrapper { position: relative; }
+  #share-menu {
+    display: none;
+    position: absolute;
+    bottom: 3rem;               /* float above the footer */
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px #125740;
+    gap: 1rem;
+    z-index: 100;
+  }
+  body.menu-open #share-menu { display: flex; }
+  #share-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* Left column: text + social permalinks */
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+  }
+  .footer-left p { margin: 0; }
+  .footer-left a.social {
+    color: inherit;
+    text-decoration: none;
+  }
+  .footer-left a.social i { font-size: 1.2em; }
+  
+  
+    /* Text color left */
+  .footer-left p > a {
+    color: #125740;
+  }
+
+  /* Text color last item */
+  footer > p:last-child a {
+    color: #125740;
+  }
+  
+    /* Link hover colors */
+  .footer-left p > a:hover,
+  footer > p:last-child a:hover {
+    color: #11A473;
+    text-decoration: underline;
+  }
+  
+</style>
+
+<footer style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
+  
+  <!-- Left: Berry Consultants + social permalinks -->
+  <div class="footer-left">
+    <p>
+      © <a href="https://www.berryconsultants.com">Berry Consultants</a>
+    </p>
+    <a href="https://twitter.com/BerryConsultant" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on X">
+      <i class="fab fa-x"></i>
+    </a>
+    <a href="https://www.linkedin.com/company/berry-consultants-llc" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on LinkedIn">
+      <i class="fab fa-linkedin"></i>
+    </a>
+    <a href="https://www.youtube.com/c/berryconsultants" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on YouTube">
+      <i class="fab fa-youtube"></i>
+    </a>
+  </div>
+
+  <!-- Center: share toggle + popup -->
+  <div id="share-wrapper">
+    <button id="share-toggle" aria-label="Share this page">
+      <i class="fas fa-share-alt" style="font-size:1.6em;"></i>
+    </button>
+    <div id="share-menu">
+      <!-- share icons injected here -->
+    </div>
+  </div>
+
+  <!-- Right: How to Cite -->
+  <p style="margin: 0;">
+    <a href="../../../introduction/citation.html">Cite</a>
+  </p>
+</footer>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const url   = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+    const networks = [
+      { name: "X",        href: `https://twitter.com/intent/tweet?url=${url}&text=${title}`,          icon: `<i class="fab fa-x" style="font-size:1.4em;"></i>` },
+      { name: "LinkedIn", href: `https://www.linkedin.com/feed/?shareActive=true&text=${title}%20${url}`, icon: `<i class="fab fa-linkedin" style="font-size:1.4em;"></i>` },
+      { name: "Bluesky",  href: `https://bsky.app/intent/compose?text=${title}%20${url}`,              icon: `
+        <svg width="1.4em" height="1.4em" fill="currentColor" viewBox="0 0 600 530">
+          <path d="m135.72 44.03c66.496 49.921 138.02 151.14 164.28 205.46 26.262-54.316 97.782-155.54 164.28-205.46 47.98-36.021 125.72-63.892 125.72 24.795 0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.3797-3.6904-10.832-3.7077-7.8964-0.0174-2.9357-1.1937 0.51669-3.7077 7.8964-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.4491-163.25-81.433-5.9562-21.282-16.111-152.36-16.111-170.07 0-88.687 77.742-60.816 125.72-24.795z"/>
+        </svg>` },
+      { name: "Reddit",   href: `https://www.reddit.com/submit?url=${url}&title=${title}`,         icon: `<i class="fab fa-reddit" style="font-size:1.4em;"></i>` },
+      { name: "WhatsApp", href: `https://wa.me/?text=${title}%20${url}`,                             icon: `<i class="fab fa-whatsapp" style="font-size:1.4em;"></i>` },
+      { name: "Email",    href: `mailto:?subject=${title}&body=${title}%20${url}`,                    icon: `<i class="fas fa-envelope" style="font-size:1.4em;"></i>` }
+    ];
+
+    // inject share icons
+    const menu = document.getElementById("share-menu");
+    networks.forEach(net => {
+      const a = document.createElement("a");
+      a.href      = net.href;
+      a.target    = "_blank";
+      a.rel       = "noopener";
+      a.setAttribute("aria-label", `Share on ${net.name}`);
+      a.innerHTML = net.icon;
+      menu.appendChild(a);
+    });
+
+    // toggle menu
+    const toggle = document.getElementById("share-toggle");
+    toggle.addEventListener("click", e => {
+      e.stopPropagation();
+      document.body.classList.toggle("menu-open");
+    });
+
+    // close on outside click
+    document.addEventListener("click", () => {
+      document.body.classList.remove("menu-open");
+    });
+    menu.addEventListener("click", e => e.stopPropagation());
+  });
+</script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/docs\.berryconsultants\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

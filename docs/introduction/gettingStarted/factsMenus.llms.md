@@ -1,0 +1,116 @@
+## The “File” Menu
+
+FACTS has a File menu with commands similar to those found in most Windows applications, but also some unique to FACTS. The commands can be found in [Table 1](#tbl-filecommands).
+
+| Command | Definition |
+|:---|:---|
+| New | Allows the user to select a trial design type and start a new design; if there are unsaved changes in the current design the user is prompted to save them first. |
+| Open | Allows the user to select an existing FACTS file and open it; if there are unsaved changes in the current design the user is prompted to save them first. This is also how to open the example files downloaded from the “Example files” box at the top of each [tutorial](../../documentation/v82/tutorials/index.llms.md). |
+| Save | Saves the current changes in the design to the currently open FACTS file. |
+| Save As | Allows the current version of the design to be saved to a new FATCS file; this file is then the “currently open” FACTS file going forward. |
+| Export Project | Creates a “Zip” archive containing the current FACTS file and all the simulation results, so these can be easily archived, emailed, saved, etc. |
+| Recent Projects | Contains entries for the last ten FACTS files opened: selecting one re-opens it. |
+| Recent Folders | Contains entries for the folders that contain the last ten FACTS files opened: selecting one opens a file browser window on that folder allowing a ‘.facts’ file in that folder to be selected (or allowing the user to navigate to some different folder and select a ‘.facts’ file there). |
+| Close | Closes the current FACTS file, returning the user to the FACTS introduction screen. |
+| Exit | Closes FACTS altogether. |
+
+Table 1: List of commands in the CRM file menu
+
+## FACTS Settings Menu
+
+The “Settings” command menu allows the user to do 2 things:
+
+- Set various FACTS options to local settings – see below for details.
+- Reset the options based on the stored configuration file. This file, “config.xml”, will initially be installed during the FACTS installation process and is stored in the Windows “Program Files” folder, in the sub-folder where FACTS get installed.
+- Change the stored configuration file. This command allows you to select a new configuration file and have FACTS copy it to the sub-folder within the Windows “Program Files” folder, where FACTS get installed so it becomes the new stored configuration file. This allows IT support to easily disseminate configuration changes.
+- Enter a new or changed license key.
+
+### Set Options
+
+The FACTS Options dialog allows the user to:
+
+- Set and Test the connection parameters to access a compute grid for running simulations.
+- Configure the location of R, which FACTS uses to explore simulation results with AIRSHIP
+- Select how gamma distributions are parameterized.
+
+#### Grid Configuration
+
+A grid compute facility for running simulations will only be available if your local IT services have set one up. If they have done so, they
+
+- May have already set the appropriate parameters In the FACTS configuration file included with the FACTS installation files.
+- Inform you of the parameters to be set manually via this dialog
+- Send a new configuration file that can be installed using the “Load Options” menu command.
+
+If modifying the grid options manually, select the “Options” menu command and enter the values on the “Grid Configuration” tab of the displayed dialog window.
+
+![](factsMenusAttachments/images/clipboard-1963956967.png)
+
+Figure 1: Webservice Configuration
+
+First select the type of interface to the grid to be used, this is either:
+
+- Via a network shared drive (with a “sweeper script” running on a client machine to transfer jobs to the grid management system and return results from it).
+- Via a web service system using a webserver and database to communicate to a grid management system. The IT group supporting the grid should be able to tell you which interface they have implemented, if any. If access to the grid is via a Network Share it is necessary to specify:
+- The location of the network share folder, usually in the form \\server name\>\\folder name\\.
+- Whether the grid client is running Windows or Linux (so end-of-line characters can be corrected)
+- The listener delay – this is the interval between “looks” when FACTS is waiting for simulation results to be complete
+
+Once specified it is possible to use the “Test” button to check that the Network Shared folder is accessible and writeable.
+
+If access to the grid is via a web service:
+
+- The location of the web service endpoint.
+
+Clicking on “Test Configuration” and will cause FACTS will attempt to connect to the FACTS grid controller. The control will show which components of the connection are working.
+
+See the FACTS Installation Guide and FACTS Simple Grid Interface Guide for more details of setting up a grid.
+
+#### R Configuration
+
+FACTS uses R to explore simulation results with [AIRSHIP](https://el-meyer.github.io/airship/index.html): on the Simulation tab, click “Explore Results…” and then “Compare Scenarios in AIRSHIP” (at least two scenarios must have been simulated and their results aggregated). AIRSHIP needs an installation of R; RStudio is not required. FACTS runs the “Rscript.exe” found in the same folder as the configured “R.exe”. The first time AIRSHIP is used, FACTS installs the R packages “remotes” (from CRAN) and “airship” (from GitHub), so internet access is needed at that point.
+
+From FACTS 8.2 onwards, the Design Report does not use R. It is generated by FACTS itself, so R, RStudio, R packages and pandoc do not need to be installed to produce a design report.
+
+“Open in R” on the Simulation tab writes an R script that reads the simulation results and opens it with whichever program Windows uses for “.R” files (usually RStudio or R), so it does not depend on this setting.
+
+![](factsMenusAttachments/images/clipboard-1268844426.png)
+
+Figure 2: The R Configuration Dialog
+
+The dialog lists the locations of R (and RStudio) that FACTS knows about. To change one, select it and click “Edit”. This opens a normal Windows file browser: navigate to the R installation (for example “C:\Program Files\R\R-4.4.0\bin”), select the file R.exe, and click “Open”. The selected location replaces the highlighted entry.
+
+AIRSHIP uses the first entry that points to an “R.exe”, so make sure at least one entry does. An entry for RStudio alone is not enough.
+
+Clicking on “Test” checks whether the currently selected entry on the R configuration dialog is available, if it is not an error dialog is displayed:
+
+![](factsMenusAttachments/images/clipboard-2537319102.png)
+
+Figure 3: Example of R Configuration error
+
+#### Gamma Distribution Parameters
+
+In FACTS a number of parameters require inverse gamma distributions to be specified as priors for the parameter value. There are two different parameterization of the inverse gamma provided so that the user can select the form they find the most intuitive.
+
+![](factsMenusAttachments/images/clipboard-718655442.png)
+
+Figure 4: The parameterisation of Inverse Gamma Distributions
+
+The first form uses parameters that are the mean of the distribution and the equivalent weight in terms of the equivalent number of observations. The second form uses an ‘Alpha’ and ‘Beta’ parameterization that some statisticians are familiar with and will find natural to use.
+
+### Enter a license key
+
+If a new license key is required, this command can be used to enter one. There are two ways of entering a new license:
+
+![](factsMenusAttachments/images/clipboard-1671179033.png)
+
+Figure 5: Enter FACTS License Key
+
+The key can be entered directly, along with the associated Organization name, or by selecting a supplied license file.
+
+## The Help Menu
+
+FACTS has a Help menu with commands to assist you with the use of FACTS, providing links to user guides, tutorials and training videos. The documentation entries open the relevant pages of this Knowledge Hub in your web browser; they are listed in the “index.xml” file that the installer copies into the “doc” folder of the FACTS installation. The commands are:
+
+[TABLE]
+
+Table 2: List of commands in the CRM help menu

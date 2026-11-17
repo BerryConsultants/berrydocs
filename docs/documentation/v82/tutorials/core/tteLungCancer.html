@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Time-to-Event Endpoint (Lung Cancer)</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../">
+<link href="../../../../media/FACTS_icon.png" rel="icon" type="image/png">
+<script src="../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../site_libs/bootstrap/bootstrap-f24641f9662b15e1479722971e972498.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<!-- Roboto Serif -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
+
+<!-- Roboto Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WLMVE7GR4S');
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../../media/FACTSLogo.png" alt="" class="navbar-logo light-content">
+    <img src="../../../../media/FACTSLogo.png" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../introduction/index.html"> 
+<span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../documentation/index.html"> 
+<span class="menu-text">Documentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../get/index.html"> 
+<span class="menu-text">Get FACTS</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../contact/index.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Time-to-Event Endpoint (Lung Cancer)</h1>
+            <p class="subtitle lead">Phase 2 and 3 Design Tutorial</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#designs-featured" id="toc-designs-featured" class="nav-link" data-scroll-target="#designs-featured"><span class="header-section-number">2</span> Designs Featured</a></li>
+  <li><a href="#case-study-small-cell-lung-cancer" id="toc-case-study-small-cell-lung-cancer" class="nav-link" data-scroll-target="#case-study-small-cell-lung-cancer"><span class="header-section-number">3</span> Case Study: Small Cell Lung Cancer</a>
+  <ul>
+  <li><a href="#the-expected-event-rate-conventional-sample-size" id="toc-the-expected-event-rate-conventional-sample-size" class="nav-link" data-scroll-target="#the-expected-event-rate-conventional-sample-size"><span class="header-section-number">3.1</span> The Expected Event Rate &amp; Conventional Sample Size</a></li>
+  <li><a href="#study" id="toc-study" class="nav-link" data-scroll-target="#study"><span class="header-section-number">3.2</span> Study</a>
+  <ul class="collapse">
+  <li><a href="#study-info" id="toc-study-info" class="nav-link" data-scroll-target="#study-info"><span class="header-section-number">3.2.1</span> Study Info</a></li>
+  <li><a href="#visits" id="toc-visits" class="nav-link" data-scroll-target="#visits"><span class="header-section-number">3.2.2</span> Visits</a></li>
+  <li><a href="#treatment-arms" id="toc-treatment-arms" class="nav-link" data-scroll-target="#treatment-arms"><span class="header-section-number">3.2.3</span> Treatment Arms</a></li>
+  </ul></li>
+  <li><a href="#virtual-subject-response-explicitly-defined" id="toc-virtual-subject-response-explicitly-defined" class="nav-link" data-scroll-target="#virtual-subject-response-explicitly-defined"><span class="header-section-number">3.3</span> Virtual Subject Response – Explicitly Defined</a>
+  <ul class="collapse">
+  <li><a href="#control-hazard-rate" id="toc-control-hazard-rate" class="nav-link" data-scroll-target="#control-hazard-rate"><span class="header-section-number">3.3.1</span> Control Hazard Rate</a></li>
+  <li><a href="#dose-response" id="toc-dose-response" class="nav-link" data-scroll-target="#dose-response"><span class="header-section-number">3.3.2</span> Dose Response</a></li>
+  </ul></li>
+  <li><a href="#execution" id="toc-execution" class="nav-link" data-scroll-target="#execution"><span class="header-section-number">3.4</span> Execution</a>
+  <ul class="collapse">
+  <li><a href="#accrual" id="toc-accrual" class="nav-link" data-scroll-target="#accrual"><span class="header-section-number">3.4.1</span> Accrual</a></li>
+  <li><a href="#dropout-rate" id="toc-dropout-rate" class="nav-link" data-scroll-target="#dropout-rate"><span class="header-section-number">3.4.2</span> Dropout Rate</a></li>
+  </ul></li>
+  <li><a href="#quantities-of-interest" id="toc-quantities-of-interest" class="nav-link" data-scroll-target="#quantities-of-interest"><span class="header-section-number">3.5</span> Quantities of Interest</a></li>
+  <li><a href="#design" id="toc-design" class="nav-link" data-scroll-target="#design"><span class="header-section-number">3.6</span> Design</a>
+  <ul class="collapse">
+  <li><a href="#hazard-model" id="toc-hazard-model" class="nav-link" data-scroll-target="#hazard-model"><span class="header-section-number">3.6.1</span> Hazard Model</a></li>
+  <li><a href="#dose-response-1" id="toc-dose-response-1" class="nav-link" data-scroll-target="#dose-response-1"><span class="header-section-number">3.6.2</span> Dose Response</a></li>
+  <li><a href="#frequentist-analysis" id="toc-frequentist-analysis" class="nav-link" data-scroll-target="#frequentist-analysis"><span class="header-section-number">3.6.3</span> Frequentist Analysis</a></li>
+  <li><a href="#allocation" id="toc-allocation" class="nav-link" data-scroll-target="#allocation"><span class="header-section-number">3.6.4</span> Allocation</a></li>
+  <li><a href="#successfutility-criteria" id="toc-successfutility-criteria" class="nav-link" data-scroll-target="#successfutility-criteria"><span class="header-section-number">3.6.5</span> Success/Futility Criteria</a></li>
+  </ul></li>
+  <li><a href="#simulation" id="toc-simulation" class="nav-link" data-scroll-target="#simulation"><span class="header-section-number">3.7</span> Simulation</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">3.8</span> Results</a></li>
+  </ul></li>
+  <li><a href="#adaptive-design-early-stopping" id="toc-adaptive-design-early-stopping" class="nav-link" data-scroll-target="#adaptive-design-early-stopping"><span class="header-section-number">4</span> Adaptive Design: Early Stopping</a>
+  <ul>
+  <li><a href="#study-1" id="toc-study-1" class="nav-link" data-scroll-target="#study-1"><span class="header-section-number">4.1</span> Study</a>
+  <ul class="collapse">
+  <li><a href="#study-info-1" id="toc-study-info-1" class="nav-link" data-scroll-target="#study-info-1"><span class="header-section-number">4.1.1</span> Study Info</a></li>
+  </ul></li>
+  <li><a href="#design-1" id="toc-design-1" class="nav-link" data-scroll-target="#design-1"><span class="header-section-number">4.2</span> Design</a>
+  <ul class="collapse">
+  <li><a href="#allocation-1" id="toc-allocation-1" class="nav-link" data-scroll-target="#allocation-1"><span class="header-section-number">4.2.1</span> Allocation</a></li>
+  <li><a href="#interims" id="toc-interims" class="nav-link" data-scroll-target="#interims"><span class="header-section-number">4.2.2</span> Interims</a></li>
+  <li><a href="#simulation-1" id="toc-simulation-1" class="nav-link" data-scroll-target="#simulation-1"><span class="header-section-number">4.2.3</span> Simulation</a></li>
+  <li><a href="#successfutility-criteria-1" id="toc-successfutility-criteria-1" class="nav-link" data-scroll-target="#successfutility-criteria-1"><span class="header-section-number">4.2.4</span> Success/Futility Criteria</a></li>
+  <li><a href="#interim-1-criteria" id="toc-interim-1-criteria" class="nav-link" data-scroll-target="#interim-1-criteria"><span class="header-section-number">4.2.5</span> Interim 1 Criteria</a></li>
+  </ul></li>
+  <li><a href="#simulation-2" id="toc-simulation-2" class="nav-link" data-scroll-target="#simulation-2"><span class="header-section-number">4.3</span> Simulation</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<!-- example-files:begin -->
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Example files
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Download the FACTS files used in this tutorial and open them in FACTS with <em>File &gt; Open</em>.</p>
+<ul>
+<li><a href="tteLungCancerattachments/examples/Core TTE Lung Cancer Fixed.facts" download="Core TTE Lung Cancer Fixed.facts">Core TTE Lung Cancer Fixed.facts</a> (Fixed design)</li>
+<li><a href="tteLungCancerattachments/examples/Core TTE Lung Cancer Interims.facts" download="Core TTE Lung Cancer Interims.facts">Core TTE Lung Cancer Interims.facts</a></li>
+<li><a href="tteLungCancerattachments/examples/Core TTE Lung Cancer Earlystop.facts" download="Core TTE Lung Cancer Earlystop.facts">Core TTE Lung Cancer Earlystop.facts</a> (Adaptive design with early stopping)</li>
+</ul>
+</div>
+</div>
+<!-- example-files:end -->
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>This tutorial describes a Small Cell Lung Cancer example trial design using the FACTS Core Design Engine for a Time-to-Event Endpoint.</p>
+<p>For this version of the document, the screenshots are from the 6.3 release of FACTS.</p>
+<p>The screenshots provided are approximate and may not reflect the exact layout of the information in later versions of FACTS. The contents of each tab, however, will be consistent with the software.</p>
+<p>The designs presented are examples and may not be optimally calibrated.</p>
+</section>
+<section id="designs-featured" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Designs Featured</h1>
+<p>In this tutorial we create the following designs:</p>
+<ul>
+<li><p>Design 1</p>
+<ul>
+<li><p>Fixed design with no adaptations</p></li>
+<li><p>No predictor</p></li>
+<li><p>Include 2 arms, a control arm and a treatment arm</p></li>
+</ul></li>
+<li><p>Design 2:</p>
+<ul>
+<li>Add interim analyses to allow for early stopping for success or futility</li>
+</ul></li>
+</ul>
+</section>
+<section id="case-study-small-cell-lung-cancer" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Case Study: Small Cell Lung Cancer</h1>
+<p>The primary endpoint is progression free survival after 2 years.</p>
+<p>Patients will initially undergo 6 * 3 week cycles of treatment, followed by observation at quarterly intervals (every 12 weeks) to the end of the first year, and then observation at half-year intervals (every 25 weeks) for the second year. We expect that the rate of PFS events may vary across these time intervals. Patients are not followed beyond two years.</p>
+<p>This is a phase 3 trial and the basic design is Control plus the active treatment arm.</p>
+<p>The goal is to establish that there is a hazard ratio of 0.90 or less between the new treatment and the standard of care for these patients. Note that this is a super-superiority criterion. Showing simply statistical significance (HR &lt; 1) is not sufficient. The type-1 error must be controlled at the 5% level.</p>
+<section id="the-expected-event-rate-conventional-sample-size" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="the-expected-event-rate-conventional-sample-size"><span class="header-section-number">3.1</span> The Expected Event Rate &amp; Conventional Sample Size</h2>
+<p>The overall probability of survival in this patient population is 90% after the first 18 weeks of treatment, 70% after the first year and 37.5% after 2 years.</p>
+<p>For a one-sided significance of 0.05, assuming the accrual is over 3 years, with a two year follow up and 21 month median survival time, to detect a hazard ratio of 0.833 with 80% power, a conventional sample size calculation gives a required total sample size of 1059 subjects (Schoenfeld’s formula).</p>
+</section>
+<section id="study" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="study"><span class="header-section-number">3.2</span> Study</h2>
+<p>Start FACTS, double click on: Core Design – Time to Event.</p>
+<p><img src="tteLungCancerattachments/media/image2.png" class="img-fluid"></p>
+<p>Using the menu option “File &gt; Save As”, save this design as “Fixed-2-arm” in a convenient location (e.g.&nbsp;in a folder called FACTS\TTE--example in your ‘My Documents’ folder).</p>
+<section id="study-info" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="study-info"><span class="header-section-number">3.2.1</span> Study Info</h3>
+<p>The Study tab captures basic information about the trial. Set the following parameters:</p>
+<ul>
+<li><p>Select: Non-Adaptive design</p></li>
+<li><p>Do not select Include Predictor Type</p></li>
+<li><p>Set Maximum number of subjects: 1060</p></li>
+<li><p>We do not have a limit on number of events, so Set Maximum number of events: 1060</p></li>
+<li><p>Specify Max follow-up per subject (wks): 104 weeks (2 years).</p></li>
+<li><p>Set: Events indicate: Failure</p></li>
+</ul>
+<p><img src="tteLungCancerattachments/media/image3.png" class="img-fluid"></p>
+</section>
+<section id="visits" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="visits"><span class="header-section-number">3.2.2</span> Visits</h3>
+<ul>
+<li>Do not select “Restrict Event Times to Visits”</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tteLungCancerattachments/media/image4.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+</section>
+<section id="treatment-arms" class="level3" data-number="3.2.3">
+<h3 data-number="3.2.3" class="anchored" data-anchor-id="treatment-arms"><span class="header-section-number">3.2.3</span> Treatment Arms</h3>
+<p>Set the following parameters:</p>
+<ul>
+<li><p>A control arm is always included in TTE designs, because the analysis uses a hazard ratio.</p></li>
+<li><p>Add just 1 study dose with a level of 1 (the level is actually immaterial).</p></li>
+</ul>
+<p>The Dose Name may be changed by double-clicking on the relevant cell in the table. This name is simply a label for the treatment arms.</p>
+<p><img src="tteLungCancerattachments/media/image5.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="virtual-subject-response-explicitly-defined" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="virtual-subject-response-explicitly-defined"><span class="header-section-number">3.3</span> Virtual Subject Response – Explicitly Defined</h2>
+<section id="control-hazard-rate" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="control-hazard-rate"><span class="header-section-number">3.3.1</span> Control Hazard Rate</h3>
+<p>The Virtual Subject Response (VSR) tab describes how subject-level data will be generated for the simulations. For time-to-event endpoint, the VSR includes two components – the hazard rate for the control arm, and the hazard ratio for the treatment arm. Event times will be simulated according to a piecewise-exponential model.</p>
+<p>For now just one scenario is specified for the control hazard rate, others should be added reflecting the uncertainty in the true underlying rate, in order to provide a sensitivity analysis.</p>
+<p>Create one control profile by clicking the Add button. The Profile can be named by double-clicking on the default name, e.g.&nbsp;“CHaz 1” and renaming.</p>
+<ul>
+<li><p>Create segment breakpoints at 18, 30, 42, 54, 79 and 104<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> weeks giving an initial segment of 18 weeks (6 * 3 week treatment cycles), 3 * 12 week observations and 2 * 25 week observations.</p></li>
+<li><p>Set the event rate per unit time (weeks) to 0.005 for the first segment (0-18), 0.0075 for the 3 * 12 week segments, and 0.01 for the 2 * 25 week segments.</p></li>
+</ul>
+<!-- -->
+<ul>
+<li>Use the Graph drop down box to see the cumulative probability of having an event (progression) or not having an event (progression-free survival).</li>
+</ul>
+<p><img src="tteLungCancerattachments/media/image6.png" class="img-fluid"></p>
+</section>
+<section id="dose-response" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="dose-response"><span class="header-section-number">3.3.2</span> Dose Response</h3>
+<p>Dose response is defined as the overall hazard ratio for each dose relative to control. (For more complex dose response models, you may wish to generate the data for a patient population externally and load it as a file). In this trial there is only one study dose, thus the response scenarios are defined by a single number.</p>
+<p>Four different possible dose response scenarios will be simulated, where the hazard ratio is 1 (the ‘null case’), 0.9, 0.8 and 0.7 respectively. These are scenarios that represent a drug that is no different from the current standard of care, a weak performing drug, a good drug and an excellent drug.</p>
+<p>Create 4 scenarios:</p>
+<ul>
+<li><p>Null: where the hazard ratio is 1</p></li>
+<li><p>Weak: where the hazard ratio is 0.9</p></li>
+<li><p>Good: where the hazard ratio is 0.8</p></li>
+<li><p>Excellent: where the hazard ratio is 0.7</p></li>
+</ul>
+<p><img src="tteLungCancerattachments/media/image7.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="execution" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="execution"><span class="header-section-number">3.4</span> Execution</h2>
+<section id="accrual" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="accrual"><span class="header-section-number">3.4.1</span> Accrual</h3>
+<p>Add an accrual scenario by clicking the Add button on the far left, then add 1 region by clicking the Add button above the table. Set the peak accrual rate to 6.5 subjects per week, to give an overall recruitment period of ~3 years.</p>
+<p>The names of the accrual profile and the region may be renamed by double-clicking on them.</p>
+<p><img src="tteLungCancerattachments/media/image8.png" class="img-fluid"></p>
+</section>
+<section id="dropout-rate" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="dropout-rate"><span class="header-section-number">3.4.2</span> Dropout Rate</h3>
+<p>No results are expected to be missing at random, select “No Dropouts”.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tteLungCancerattachments/media/image9.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="quantities-of-interest" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="quantities-of-interest"><span class="header-section-number">3.5</span> Quantities of Interest</h2>
+<p>The Quantities of Interest (QOIs) are criteria on which decisions, interim or final analyses, will be made. Numerous QOIs are available and you may select multiple quantities for evaluation. A basic set of QOIs is provided by default. Additional QOIs may be added by clicking the Add row in the table. A QOI can be removed by clicking the X on the right side of the cell. Each QOI may be edited by clicking on it, which opens a pop-up box.</p>
+<p>The trial will be judged a success if at the end of the trial:</p>
+<ul>
+<li>The study arm has a posterior probability of at least 60% that the hazard ratio compared to Control is less than 0.9 (this 60% threshold was established by simulation to limit the proportion of successes when simulating the null case to &lt; 0.05).</li>
+</ul>
+<p>Otherwise the trial will be judged to be futile.</p>
+<p>Set the following parameters:</p>
+<ul>
+<li><p>At the bottom of the page, set the Clinically significant hazard ratio delta (CSHRD): 0.1 (i.e.&nbsp;hazard ratio 0.9 or less)</p></li>
+<li><p>For Posterior Probabilities:</p>
+<ul>
+<li><p>Pr(HR_d-1&lt;-0.1) is already added.</p></li>
+<li><p>Make sure Condition: &lt;</p></li>
+<li><p>Select Delta -0.1</p></li>
+<li><p>The above should have been automatically filled in because we already specified the CSHRD</p></li>
+</ul></li>
+<li><p>We are not interested in any Predictive Probabilities, so we delete these options to reduce output. However, it is acceptable to have them calculated even if it is not part of the design.</p></li>
+<li><p>For Probability of being Target, we keep Target Type: Max. Although, specifying a target is not necessary because there is only one dose and a control.</p></li>
+<li><p>For Decision Quantities (Scalars):</p>
+<ul>
+<li><p>QOI: Pr(HR_d-1&lt;-0.1)</p></li>
+<li><p>Evaluation Dose: Dose 1</p></li>
+</ul></li>
+</ul>
+<p><img src="tteLungCancerattachments/media/image10.png" class="img-fluid"></p>
+</section>
+<section id="design" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="design"><span class="header-section-number">3.6</span> Design</h2>
+<p>The statistical model must specify priors for the control hazard rate, and the hazard ratio. The hazard rate is expected to vary over time: from 0.005 per week during treatment, to 0.0075 for the rest of the first year, and then 0.01 for the second year.</p>
+<p>For a time-to-event endpoint we model event rates over a set of segments s є {1, ..., S}. The hazard rate of the control arm in each segment is λ<sub>s</sub>. For the treatment arm a proportional hazards model is assumed. The model hazard rate for dose d, and segment s, h<sub>sd</sub>. is:</p>
+<p><span class="math display">\[h_{sd} = \lambda_s e^{\theta_d},\]</span></p>
+<p>So θ<sub>d</sub> is the log hazard ratio:</p>
+<p><span class="math display">\[\theta_d = \log\left(h_{sd} / \lambda_s\right)\]</span></p>
+<p>where <em>d</em> is the dose and <em>θ</em><sub>0</sub>=0. The prior distribution for the control arm hazard rate in segment <em>s</em>, λ<sub>s</sub> is</p>
+<p><span class="math display">\[\lambda_s \sim \text{Gamma}\left(\lambda_n, \lambda_n \lambda_\mu\right)\]</span></p>
+<p>where λ<sub>μ</sub> is the prior mean of λ, and λ<sub>n</sub> is a subject equivalent weight. As there is only one study arm, the log hazard ratio of the treatment arm is simply modeled as independent and normally distributed with a prior of:</p>
+<p><span class="math display">\[\theta_d \sim N\left(\mu_{0d}, \nu_{0d}^2\right)\]</span></p>
+<section id="hazard-model" class="level3" data-number="3.6.1">
+<h3 data-number="3.6.1" class="anchored" data-anchor-id="hazard-model"><span class="header-section-number">3.6.1</span> Hazard Model</h3>
+<p>This tab captures the prior distribution for the control hazard rate. Set the following parameters:</p>
+<ul>
+<li><p>Select Hazard Model: Use piecewise exponential model</p></li>
+<li><p>Create the same segment breakpoints as for the control hazard rate: 18, 30, 42, 54 and 79 weeks. Note: it is not required for the same segments to be used for the model and for data generation.</p></li>
+<li><p>Presuming there is a lot of useful data on hazard rates for SCLC, we set priors that mirror the simulated hazard rate from the Virtual Subject Response tab, and give them a prior weight of 10 (equivalent to observing 10 events over the appropriate exposure period – i.e.&nbsp;equivalent to 1-2,000 weeks of data).</p></li>
+</ul>
+<p><img src="tteLungCancerattachments/media/image15.png" class="img-fluid"></p>
+</section>
+<section id="dose-response-1" class="level3" data-number="3.6.2">
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="dose-response-1"><span class="header-section-number">3.6.2</span> Dose Response</h3>
+<p>This tab captures the prior distribution on the log hazard ratio. Set the following parameters:</p>
+<ul>
+<li><p>Select: Independent Dose Mode, no model (i.e.&nbsp;pair-wise comparison)</p></li>
+<li><p>For the prior distributions for the normal distribution of the log-hazard ratio use a mean of 0 and Std Dev of 5. This is a weak prior. Too small a Std Dev will tend to affect the estimate of the hazard rate, it is difficult to judge ‘too small’ by analysis, but easy to see it in simulations where other effects (response modeling, early stopping, adaptive allocation) are disabled.</p></li>
+</ul>
+<p><img src="tteLungCancerattachments/media/image16.png" class="img-fluid"></p>
+</section>
+<section id="frequentist-analysis" class="level3" data-number="3.6.3">
+<h3 data-number="3.6.3" class="anchored" data-anchor-id="frequentist-analysis"><span class="header-section-number">3.6.3</span> Frequentist Analysis</h3>
+<p>Change the required alpha for the frequentist analysis to 0.05 one-sided and leave “Output frequentist files” checked. The results of these frequentist tests will be monitored in the output files, but are not used for decision-making in the simulations.</p>
+<p><img src="tteLungCancerattachments/media/image17.png" class="img-fluid"></p>
+</section>
+<section id="allocation" class="level3" data-number="3.6.4">
+<h3 data-number="3.6.4" class="anchored" data-anchor-id="allocation"><span class="header-section-number">3.6.4</span> Allocation</h3>
+<p>Because we selected Non-Adaptive on the Study Info screen, only fixed allocation is available. This initial design will use a fixed allocation of 1:1.</p>
+<p>Set the following parameters:</p>
+<ul>
+<li>Set the allocation ratio as 1:1 for Control, and the study arm.</li>
+</ul>
+<p><img src="tteLungCancerattachments/media/image18.png" class="img-fluid"></p>
+</section>
+<section id="successfutility-criteria" class="level3" data-number="3.6.5">
+<h3 data-number="3.6.5" class="anchored" data-anchor-id="successfutility-criteria"><span class="header-section-number">3.6.5</span> Success/Futility Criteria</h3>
+<p>The trial will be judged a success if at the end of the trial:</p>
+<ul>
+<li>the study arm has a posterior probability of at least 60% that the hazard ratio compared to Control is less than 0.9, (this threshold was established by simulation to limit the proportion of successes when simulating the null case to &lt; 0.05).</li>
+</ul>
+<p>Otherwise the trial will be judged to be futile.</p>
+<p>Set the following parameters</p>
+<ul>
+<li><p>Futility Evaluation:</p>
+<ul>
+<li><p>QOI: Pr(HR_d-1&lt;-0.1); d=Dose 1</p></li>
+<li><p>Condition: &lt;</p></li>
+<li><p>Threshold: 0.60</p></li>
+</ul></li>
+<li><p>Success Evaluation:</p>
+<ul>
+<li><p>QOI: Pr(HR_d-1&lt;-0.1); d=Dose 1</p></li>
+<li><p>Condition: &gt;</p></li>
+<li><p>Threshold: 0.60</p></li>
+</ul></li>
+</ul>
+<p><img src="tteLungCancerattachments/media/image19.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="simulation" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="simulation"><span class="header-section-number">3.7</span> Simulation</h2>
+<p>In order to get an initial check on the design set up, set the number of simulations to run to 10, then press Simulate. This allows us to make a quick assessment of whether the design is behaving as expected: that the Null scenario ends up mainly futile and the Excellent scenario mainly successful.</p>
+<p>If the results look reasonable, increase the number of simulations to run to 1000, (re-check all the scenario combinations) and then press Simulate again. This is a design that is very fast to simulate, even running 10,000 simulations for each scenario takes less than an hour on a laptop. If you have access to a computer grid, and your FACTS installation has been correctly configured to use it, you may use the grid’s parallel computing capabilities to improve computation speed. To do so, select “on Grid.”</p>
+</section>
+<section id="results" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="results"><span class="header-section-number">3.8</span> Results</h2>
+<p>Looking at the operating characteristics for each scenario:</p>
+<p><img src="tteLungCancerattachments/media/image20.png" class="img-fluid"></p>
+<p>The probabilities of success and futility are as we require: a false positive rate of 0.05 or less on the null scenario, a power of &gt; 80% for the good scenario and a power of 40% on the ‘weak’ scenario where the simulated hazard ratio is exactly the Clinically Significant Hazard Ration (CSHR) and our success criteria are a 60% posterior probability that we achieved it.</p>
+<p>Compare these results to the frequentist results (click on “Show Other Columns” and select “Frequentist Results”). The Bayesian analysis gives a little more power – e.g.&nbsp;for the ‘good’ scenario, where power of the above design is 90%, the proportion of simulations significant by most of the frequentist measures (Log-Rank test, Wilcox, Hazard Ratio) is 86%. For the other scenarios too (except the Null) the power of the Bayesian analysis is somewhat greater (probably because it does not assume a constant hazard rate, and in this example, we have simulated an increasing hazard rate over time).</p>
+<p><img src="tteLungCancerattachments/media/image21.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="adaptive-design-early-stopping" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Adaptive Design: Early Stopping</h1>
+<p>We now will add interim analyses to the fixed design with the possibility of early stopping. We will create the early stopping design in two steps, first we will simulate with interims and investigate the values of the Quantity of Interest over time and then second simulate with the early stopping criteria and thresholds specified.</p>
+<p>To create the adaptive version of this design, open the fixed design and use the menu option File &gt; SaveAs and save a version of the design with a new name, for example “Interims-2-arm”.</p>
+<p>The steps below will go through the portions of the design to be changed. If a feature is not discussed it is assumed to remain the same as the fixed design.</p>
+<section id="study-1" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="study-1"><span class="header-section-number">4.1</span> Study</h2>
+<section id="study-info-1" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="study-info-1"><span class="header-section-number">4.1.1</span> Study Info</h3>
+<p>We select the following options:</p>
+<ul>
+<li>Adaptive</li>
+</ul>
+<p><img src="tteLungCancerattachments/media/image22.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="design-1" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="design-1"><span class="header-section-number">4.2</span> Design</h2>
+<section id="allocation-1" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="allocation-1"><span class="header-section-number">4.2.1</span> Allocation</h3>
+<p>We will use fixed allocation but perform regular analysis in order to determine whether to stop the trial. To specify this:</p>
+<ul>
+<li><p>Select the “Fixed Allocation” option</p></li>
+<li><p>Specify 1:1 randomization</p></li>
+</ul>
+<blockquote class="blockquote">
+<p><img src="tteLungCancerattachments/media/image23.png" class="img-fluid"></p>
+</blockquote>
+</section>
+<section id="interims" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="interims"><span class="header-section-number">4.2.2</span> Interims</h3>
+<p>Set the following parameters:</p>
+<ul>
+<li><p>Set Subject Information Defined By: Events</p></li>
+<li><p>Set Specify Interims By:</p>
+<ul>
+<li><p>Time – every 16 weeks (or very 4 months) – given the length of accrual (~ 3 years) and follow up (~ 2 years)</p></li>
+<li><p>First interim at 50 events.</p></li>
+</ul></li>
+<li><p>For Subject Follow-up Options un-check both Continue follow-up if study stopped for success and Continue follow-up if study stopped for futility, the trial can stop when we have sufficient events to determine success or futility (in practice further follow up could take place but we wish the simulations to report the time to decision via the reported “duration” quantity).</p></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tteLungCancerattachments/media/image24.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+</section>
+<section id="simulation-1" class="level3" data-number="4.2.3">
+<h3 data-number="4.2.3" class="anchored" data-anchor-id="simulation-1"><span class="header-section-number">4.2.3</span> Simulation</h3>
+<p>We now simulate the trial. Each simulation will run to the end and evaluate each interim, we will use these simulated values at the interims to set the early stopping thresholds. In order that that the values at each interim are written out for each simulation, we need to set the “Number of Weeks files to output” – in this case to 1,000 to match the number of simulations we will run.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tteLungCancerattachments/media/image25.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<p>The number of Weeks files is 1,000.</p>
+<p>There is no early stopping for success or futility as we have not yet specified stopping criteria &amp; thresholds. In order to set these we will in this example, look to make decisions on the same criteria that we are using to make the final decision:</p>
+<ul>
+<li>Pr(HR_d-1&lt;-0.1); d=Dose 1</li>
+</ul>
+<p>We wish to set success early stopping thresholds so there is minimal additional false positive results in the “Null” scenario, and minimal additional false negative results in the “Good” scenario. We can get a good initial value to use (we may need to refine with a little trial and error) using the “Interim-2-arm” simulation results and the graphs “Explore: Early Success Criteria” from the “Null” scenario and “Explore: Early Futility Criteria” from the “Good” scenario.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tteLungCancerattachments/media/image26.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a cell phone Description automatically generated</figcaption>
+</figure>
+</div>
+<p>From the “Explore: Early Success Criteria” from the “Null” scenario we can see that a threshold of 0.98 will give a minimal (&lt; 1%) chance of the trial stopping early for success if there is in truth no treatment effect (HR=1). The solid bright green 0.98 line is just visible above the black “no early stopping” line.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tteLungCancerattachments/media/image27.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<p>From the “Explore: Early Futility Criteria” from the “Good” scenario we can see that a threshold of 0.05 will give a minimal (&lt; 1%) chance of the trial stopping early for futility if there is in truth a good treatment effect (HR=0.8). The solid bright red 0.05 line is just visible above the black “no early stopping” line.</p>
+</section>
+<section id="successfutility-criteria-1" class="level3" data-number="4.2.4">
+<h3 data-number="4.2.4" class="anchored" data-anchor-id="successfutility-criteria-1"><span class="header-section-number">4.2.4</span> Success/Futility Criteria</h3>
+<p>In order to decide whether to stop early, we will evaluate the same criteria used for the final analysis but use these much more conservative thresholds that we identified above. We will allow stopping for either success or futility. But early stopping will not be enabled until we have a desired amount of information. In this case we do not want to allow the trial to stop enrollment early until at least 50 total events have been observed, including 20 on the treatment arm.</p>
+</section>
+<section id="interim-1-criteria" class="level3" data-number="4.2.5">
+<h3 data-number="4.2.5" class="anchored" data-anchor-id="interim-1-criteria"><span class="header-section-number">4.2.5</span> Interim 1 Criteria</h3>
+<p>On this tab we specify the interim analyses early stopping criteria. In this example we keep the same criteria across all interims. If we wanted to have different criteria for different interims, we would select Create new interim criteria at interim and specify the interim where criteria changes.</p>
+<p>Set the following parameters:</p>
+<ul>
+<li><p>Select Futility Criteria</p>
+<ul>
+<li><p>Add a QOI:</p>
+<ul>
+<li><p>Select Pr(HR_d-1&lt;-0.1); d=Dose 1</p></li>
+<li><p>Select a Condition of &lt;</p></li>
+<li><p>Enter a threshold of 0.05</p></li>
+</ul></li>
+</ul>
+<!-- -->
+<ul>
+<li><p>Specify Minimum number of Events before trial can stop for futility: 50 (note this is “belt and braces” we have already specified that the first interim is to occur at 50 events so this criteria should always be true)</p></li>
+<li><p>Specify Pr(Max) as the evaluation dose, and that we require to have observed a minimum of 20 events on that arm before stopping.</p></li>
+</ul></li>
+<li><p>Select Success Criteria</p>
+<ul>
+<li><p>Add a QOI:</p>
+<ul>
+<li><p>Select Pr(HR_d-1&lt;-0.1); d=Dose 1</p></li>
+<li><p>Select a Condition of &gt;</p></li>
+<li><p>Enter a threshold of 0.98</p></li>
+</ul></li>
+</ul>
+<!-- -->
+<ul>
+<li><p>Specify Minimum number of Events before trial can stop for success: 50 (again this is belt and braces)</p></li>
+<li><p>Specify Pr(Max) as the evaluation dose, and that we require to have observed a minimum of 20 events on that arm before stopping.</p></li>
+</ul></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tteLungCancerattachments/media/image28.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<p>The Final Evaluation remains the same as the fixed design.</p>
+</section>
+</section>
+<section id="simulation-2" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="simulation-2"><span class="header-section-number">4.3</span> Simulation</h2>
+<p>Running the simulation is the same as for the fixed design (we no longer require 1,000 weeks files).</p>
+<p>Results can be compared between the designs in terms of</p>
+<ul>
+<li><p>Type 1 and type 2 errors: note that you will need to add together early success, late success, and futility to success flip flop for type 1 error in the Null scenario, and early futility, late futility, and success to futility flip flop for type 2 error in the other scenarios. The Type I error in this situation is 0.051 (0.006+0.045+0.0), which is greater than 0.05 but is within the simulation error, greater numbers of simulations will be required to see if a small increase in the final success threshold is necessary to keep the type-1 error below 0.05.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p></li>
+<li><p>The mean trial size ranges from 765-978, but we can’t assume that the distribution of the expected trial sizes will be uniform. For instance a scatter plot of the trial sizes for the ‘Good’ scenario shows a small group simulations stopping early for futility, then a regular stream stopping for success from about 400 subject onwards, and of course a large spike at the study cap.</p></li>
+</ul>
+<blockquote class="blockquote">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tteLungCancerattachments/media/image29.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a map Description automatically generated</figcaption>
+</figure>
+</div>
+</blockquote>
+<ul>
+<li>In this design we do not need to check for the risk of a ‘flip-flop’ (a trial that stopped early contradicting its reason for stopping early in the final analysis after full follow-up) as we have unchecked the “follow-up after early stopping” options..</li>
+</ul>
+<blockquote class="blockquote">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tteLungCancerattachments/media/image30.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+</blockquote>
+<p>Note that whilst still controlling the type-1 error (0.006+0.045=0.051), and without loss of power in the ‘Good’ (0.417+0.473=0.890) and ‘Excellent’ scenarios (0.921+0.077=0.998), there is the possibility of significant savings in time and cost – with fewer subjects being required on average and a 57% chance of stopping early in the Null scenario and 42% chance of stopping early in the ‘Good’ scenario and 92% chance of stopping early in the ‘Excellent’ scenario.</p>
+<p>This results in a reduction in expected mean sample size from 1060 to 870 in the Null, 950 in the Good and 770 in the Excellent scenarios, and reduction in expected mean duration from 267 weeks to 183 weeks (Null), 210 weeks (Good) and 130 weeks (Excellent). Note that as many of the interims will occur during the 104 week follow up after the last subject has been recruited some early stopping will only save time and not sample size.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tteLungCancerattachments/media/image31.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+
+
+</section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>It is not strictly necessary to specify the 104 week segment, we could simply specify the hazard rate from 79 weeks to infinity, but including the 104 week breakpoint forces the graph to display out until 104 weeks. Similarly, we could collapse the segments 18-54, and 54-infinity.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Running 10,000 simulations of the Null scenario the proportion of successful outcomes (type-1 errors) fell to 0.054.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<!-- footer.html -->
+
+<!-- FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pF6W3...<truncated>...Q==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+<style>
+
+  /* Make all footer icons the same color */
+  footer .fab,
+  footer .fas,
+  footer svg {
+    color: #125740;           /* ← pick whatever color your share-icons are using */
+    fill: currentColor;    /* ensures the SVG Bluesky icon matches */
+  }
+
+  /* Prevent links from overriding that color */
+  footer a {
+    color: inherit;
+  }
+
+  /* Share menu positioning */
+  #share-wrapper { position: relative; }
+  #share-menu {
+    display: none;
+    position: absolute;
+    bottom: 3rem;               /* float above the footer */
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px #125740;
+    gap: 1rem;
+    z-index: 100;
+  }
+  body.menu-open #share-menu { display: flex; }
+  #share-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* Left column: text + social permalinks */
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+  }
+  .footer-left p { margin: 0; }
+  .footer-left a.social {
+    color: inherit;
+    text-decoration: none;
+  }
+  .footer-left a.social i { font-size: 1.2em; }
+  
+  
+    /* Text color left */
+  .footer-left p > a {
+    color: #125740;
+  }
+
+  /* Text color last item */
+  footer > p:last-child a {
+    color: #125740;
+  }
+  
+    /* Link hover colors */
+  .footer-left p > a:hover,
+  footer > p:last-child a:hover {
+    color: #11A473;
+    text-decoration: underline;
+  }
+  
+</style>
+
+<footer style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
+  
+  <!-- Left: Berry Consultants + social permalinks -->
+  <div class="footer-left">
+    <p>
+      © <a href="https://www.berryconsultants.com">Berry Consultants</a>
+    </p>
+    <a href="https://twitter.com/BerryConsultant" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on X">
+      <i class="fab fa-x"></i>
+    </a>
+    <a href="https://www.linkedin.com/company/berry-consultants-llc" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on LinkedIn">
+      <i class="fab fa-linkedin"></i>
+    </a>
+    <a href="https://www.youtube.com/c/berryconsultants" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on YouTube">
+      <i class="fab fa-youtube"></i>
+    </a>
+  </div>
+
+  <!-- Center: share toggle + popup -->
+  <div id="share-wrapper">
+    <button id="share-toggle" aria-label="Share this page">
+      <i class="fas fa-share-alt" style="font-size:1.6em;"></i>
+    </button>
+    <div id="share-menu">
+      <!-- share icons injected here -->
+    </div>
+  </div>
+
+  <!-- Right: How to Cite -->
+  <p style="margin: 0;">
+    <a href="../../../../introduction/citation.html">Cite</a>
+  </p>
+</footer>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const url   = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+    const networks = [
+      { name: "X",        href: `https://twitter.com/intent/tweet?url=${url}&text=${title}`,          icon: `<i class="fab fa-x" style="font-size:1.4em;"></i>` },
+      { name: "LinkedIn", href: `https://www.linkedin.com/feed/?shareActive=true&text=${title}%20${url}`, icon: `<i class="fab fa-linkedin" style="font-size:1.4em;"></i>` },
+      { name: "Bluesky",  href: `https://bsky.app/intent/compose?text=${title}%20${url}`,              icon: `
+        <svg width="1.4em" height="1.4em" fill="currentColor" viewBox="0 0 600 530">
+          <path d="m135.72 44.03c66.496 49.921 138.02 151.14 164.28 205.46 26.262-54.316 97.782-155.54 164.28-205.46 47.98-36.021 125.72-63.892 125.72 24.795 0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.3797-3.6904-10.832-3.7077-7.8964-0.0174-2.9357-1.1937 0.51669-3.7077 7.8964-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.4491-163.25-81.433-5.9562-21.282-16.111-152.36-16.111-170.07 0-88.687 77.742-60.816 125.72-24.795z"/>
+        </svg>` },
+      { name: "Reddit",   href: `https://www.reddit.com/submit?url=${url}&title=${title}`,         icon: `<i class="fab fa-reddit" style="font-size:1.4em;"></i>` },
+      { name: "WhatsApp", href: `https://wa.me/?text=${title}%20${url}`,                             icon: `<i class="fab fa-whatsapp" style="font-size:1.4em;"></i>` },
+      { name: "Email",    href: `mailto:?subject=${title}&body=${title}%20${url}`,                    icon: `<i class="fas fa-envelope" style="font-size:1.4em;"></i>` }
+    ];
+
+    // inject share icons
+    const menu = document.getElementById("share-menu");
+    networks.forEach(net => {
+      const a = document.createElement("a");
+      a.href      = net.href;
+      a.target    = "_blank";
+      a.rel       = "noopener";
+      a.setAttribute("aria-label", `Share on ${net.name}`);
+      a.innerHTML = net.icon;
+      menu.appendChild(a);
+    });
+
+    // toggle menu
+    const toggle = document.getElementById("share-toggle");
+    toggle.addEventListener("click", e => {
+      e.stopPropagation();
+      document.body.classList.toggle("menu-open");
+    });
+
+    // close on outside click
+    document.addEventListener("click", () => {
+      document.body.classList.remove("menu-open");
+    });
+    menu.addEventListener("click", e => e.stopPropagation());
+  });
+</script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/docs\.berryconsultants\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

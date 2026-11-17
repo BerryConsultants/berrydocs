@@ -1,0 +1,97 @@
+# Introduction
+
+This document describes the template files available in FACTS. The templates are described as a “class”, with different versions for different types of endpoint.
+
+# Phase 1 Dose Escalation Designs
+
+## non Model i3+3, mTPI,mTPI-2, BOIN designs
+
+For all these designs the 6dose templates the the same and differ only in the design type used.
+
+There are 6 doses, these are derived from the CRM 11 dose example. The 11 dose eample has doses at dose strengths of: 25, 36.5, 50, 75, 100, 150, 200, 300, 400, 600 and 800. The 6 doses for the 6 dose example are the first and last dose and ever other dose in-between: 25, 50, 100, 200, 400 and 800. This might be the more normal phase 1, dose doubling arrangement, the 11 dose used to illustrate the CRM’s greater flexibility and and ability to target “in-between” doses.
+
+The non-Model methods don’t depend on the underlying dose strengths, they are simply a sequence of available doses, but the strengths were used to derive the dose-toxicity profiles simulated. See the CRM templates for details.
+
+| Profile | Dose 25 | 50    | 100   | 200   | 400   | 800   |
+|---------|---------|-------|-------|-------|-------|-------|
+| 037.5 f | 0.095   | 0.269 | 0.818 | 0.990 | 1.000 | 1.000 |
+| 050 f   | 0.125   | 0.222 | 0.364 | 0.533 | 0.696 | 0.820 |
+| 075 s   | 0.028   | 0.118 | 0.380 | 0.738 | 0.928 | 0.983 |
+| 100 s   | 0.023   | 0.047 | 0.182 | 0.818 | 0.999 | 1.000 |
+| 150 f   | 0.059   | 0.111 | 0.200 | 0.333 | 0.500 | 0.667 |
+| 200 f   | 0.020   | 0.048 | 0.110 | 0.233 | 0.428 | 0.648 |
+| 300 s   | 0.023   | 0.029 | 0.047 | 0.119 | 0.500 | 0.982 |
+| 400 s   | 0.000   | 0.000 | 0.001 | 0.017 | 0.219 | 0.817 |
+| 600 f   | 0.059   | 0.063 | 0.072 | 0.095 | 0.161 | 0.389 |
+| 800 s   | 0.000   | 0.000 | 0.000 | 0.000 | 0.010 | 0.247 |
+
+## CRM designs
+
+## 2D-CRM designs
+
+# Phase 2 and Phase 3 Designs
+
+## Single Arm trial
+
+These are examples show how to set up a FACTS design to simulate a simple, fixed, single arm trial.
+
+## Two arm group sequential trial
+
+These templates create a group sequential design, comparing a treatment against control. With two interims and alpha / beta spending boundaries to stop early for success or futility. The boundaries were derived outside of FACTS and are manually entered.
+
+We simulate 5 scenarios: - Null, with no difference in response between the treatment arm and control, with the expected value of the nuisance parameter. - Alternate with the treatment difference the trial has been powered for, with the expected value of the nuisance parameter. - Four sensitivity analysis scenarios, where either the treatment effect is +/- 20% than hoped for, or the value of the nuisance parameter is +/- 10% the expected value.
+
+The multiple endpoint template has two endpoints, the first is a continuous outcome and we use the same GS design for stopping criteria and fibnal decision. The second endpoint is a dichotomous safety endpoint where the rate on control is 0.1 and the non-inferiority delta is 0.1. Stopping bounds and final success criteria are in terms of the posterior probability that the difference between the safety rate on the treatment arm and on the control arm is \< 0.1. The false positive rate if either efficacy is null, or the safety rate = control+0.1, is controlled at \< 0.025. At the chosen overall sample size of 400, the power if the treatment is 1 point better than control and the safety rate the smae as contorl is between 0.85 and 0.9.
+
+The corresponding fixed design can be simulated by simply unchecking the “enable adaptive features” checkbox on the Study \> Study Info tab. Of course the fixed trial can use a slightly smaller maximum trial size.
+
+## Two arm Bayesian Goldilocks trial
+
+These templates are identical to the tow arm group sequential trial templates, except that they use Bayesian predictive probabilities to determine stopping. The final test is a p-value test and so should be acceptable to regulators, but the decision to stop is decided on the predictive probability of success of the current trial. If the predictive probability of success if the trial were to fully enrol is sufficiently low then the trial is stopped for futility, if the predictive probability of success if the trial were stop enrolling and follow-up the enrolled but as yet incomplete subjects is sufficiently high then the trial stops enrolling in expectation of success after fully following up the current patients.
+
+The thresholds used to decide to stop in this trial are: - to stop for futility if the predictive probability of success at the end of the trial is \< 0.05. - to stop enroling in the anticipation of success if the predictive probability of success after following the currently enrolled population is \> 0.95.
+
+Two advantages of the Goldilocks design are: - The framing of the stopping rules is more intuitive - A more complex design can include a longitudinal model to impute the final outcomes of the partially complete patients, increasing the information available at the interim.
+
+## Four arm, arm dropping trial
+
+These templates create a phase 2 like trial that tests 3 treatment arms against control, with 3 interims at which poorly performing arms can be dropped. Arms are dropped if the probability that they have the maximum response is \< 0.1. This can be seen to have good properties, having greater power and smaller expected sample size compared to a fixed trial.
+
+Four response profiles are included:
+
+- Lo Dose Only, where only the low dose has a clinically meaningful treatment effect
+- Linear, with a linear dose-response relationship
+- Med dose peak, where the medium dose has the largest treatment effect
+- Null, with no difference in treatment effect between any arm and control
+
+The corresponding fixed design can be simulated by simply unchecking the “enable adaptive features” checkbox on the Study \> Study Info tab. Of course the fixed trial can use a slightly smaller maximum trial size.
+
+# Enrichment Designs
+
+## 2 Groups
+
+This template defines a design testing a treatment against a control with 2 subgroups - a Biomarker Positive subgroup, and Biomarker Negative subgroup, the assumption is that the treatment is more likely to work in the Positive subgroup.
+
+The trial is a fixed design, there are no interims.
+
+We simulate the Positive subgroup being slightly more prevalent (60:40), and simulate 3 response profiles:
+
+- Null, no treatment difference from the control in either subgroup
+- Bio Positive successful, where only the Biomarker Positive subgroup shows a treatment effect
+- Both successful, where both subgroups show a treatment effect
+
+## 5 Groups with Hierarchical Modelling
+
+This template demonstrates a more complex enrichment design with 5 parallel subgroups. It uses hierarchical modelling to borrow strength across subgroups, improving estimation when subgroup sample sizes are limited.
+
+# Staged Designs
+
+## Seamless 4 arm Phase 2 leading to a fixed phase 3
+
+This template creates a seamless Phase 2/3 design where 3 treatment arms are tested against control in Phase 2. At the end of Phase 2, the best performing arm is selected to continue into Phase 3 along with control. The Phase 3 portion uses a fixed design with pre-specified sample size.
+
+# Platform Trials
+
+## Phase 2 screening study evaluating 6 potential treatments
+
+This template demonstrates a platform trial design for screening multiple treatments. Six potential treatments are evaluated against a shared control arm, with treatments able to enter and exit the platform based on pre-specified success and futility criteria.

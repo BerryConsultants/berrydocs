@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>CRM (Ordinal)</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../">
+<link href="../../../../media/FACTS_icon.png" rel="icon" type="image/png">
+<script src="../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../site_libs/bootstrap/bootstrap-f24641f9662b15e1479722971e972498.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background: #125740;
+      }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+<!-- Roboto Serif -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Serif:wght@400;700&amp;display=swap" rel="stylesheet">
+
+<!-- Roboto Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-WLMVE7GR4S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-WLMVE7GR4S');
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../../media/FACTSLogo.png" alt="" class="navbar-logo light-content">
+    <img src="../../../../media/FACTSLogo.png" alt="" class="navbar-logo dark-content">
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../introduction/index.html"> 
+<span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../documentation/index.html"> 
+<span class="menu-text">Documentation</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../concepts/index.html"> 
+<span class="menu-text">Concepts</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../blog/index.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../get/index.html"> 
+<span class="menu-text">Get FACTS</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../contact/index.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">CRM (Ordinal)</h1>
+            <p class="subtitle lead">Dose Escalation Design Tutorial</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#case-study-modified-goodman" id="toc-case-study-modified-goodman" class="nav-link" data-scroll-target="#case-study-modified-goodman"><span class="header-section-number">2</span> Case Study: Modified Goodman</a>
+  <ul>
+  <li><a href="#response-model" id="toc-response-model" class="nav-link" data-scroll-target="#response-model"><span class="header-section-number">2.1</span> Response Model</a></li>
+  <li><a href="#simulation-details" id="toc-simulation-details" class="nav-link" data-scroll-target="#simulation-details"><span class="header-section-number">2.2</span> Simulation Details</a></li>
+  <li><a href="#expected-performance" id="toc-expected-performance" class="nav-link" data-scroll-target="#expected-performance"><span class="header-section-number">2.3</span> Expected performance</a></li>
+  <li><a href="#designs-for-comparison" id="toc-designs-for-comparison" class="nav-link" data-scroll-target="#designs-for-comparison"><span class="header-section-number">2.4</span> Designs for comparison</a></li>
+  </ul></li>
+  <li><a href="#simulating-using-facts-crm" id="toc-simulating-using-facts-crm" class="nav-link" data-scroll-target="#simulating-using-facts-crm"><span class="header-section-number">3</span> Simulating using FACTS CRM</a>
+  <ul>
+  <li><a href="#study" id="toc-study" class="nav-link" data-scroll-target="#study"><span class="header-section-number">3.1</span> Study</a>
+  <ul class="collapse">
+  <li><a href="#study-info" id="toc-study-info" class="nav-link" data-scroll-target="#study-info"><span class="header-section-number">3.1.1</span> Study Info</a></li>
+  <li><a href="#treatment-arms" id="toc-treatment-arms" class="nav-link" data-scroll-target="#treatment-arms"><span class="header-section-number">3.1.2</span> Treatment Arms</a></li>
+  </ul></li>
+  <li><a href="#virtual-subject-response" id="toc-virtual-subject-response" class="nav-link" data-scroll-target="#virtual-subject-response"><span class="header-section-number">3.2</span> Virtual Subject Response</a>
+  <ul class="collapse">
+  <li><a href="#explicitly-defined-toxicity" id="toc-explicitly-defined-toxicity" class="nav-link" data-scroll-target="#explicitly-defined-toxicity"><span class="header-section-number">3.2.1</span> Explicitly Defined – Toxicity</a></li>
+  </ul></li>
+  <li><a href="#design" id="toc-design" class="nav-link" data-scroll-target="#design"><span class="header-section-number">3.3</span> Design</a>
+  <ul class="collapse">
+  <li><a href="#toxicity-response" id="toc-toxicity-response" class="nav-link" data-scroll-target="#toxicity-response"><span class="header-section-number">3.3.1</span> Toxicity Response</a></li>
+  <li><a href="#allocation-rule" id="toc-allocation-rule" class="nav-link" data-scroll-target="#allocation-rule"><span class="header-section-number">3.3.2</span> Allocation Rule</a></li>
+  <li><a href="#stopping-criteria" id="toc-stopping-criteria" class="nav-link" data-scroll-target="#stopping-criteria"><span class="header-section-number">3.3.3</span> Stopping Criteria</a></li>
+  </ul></li>
+  <li><a href="#simulation" id="toc-simulation" class="nav-link" data-scroll-target="#simulation"><span class="header-section-number">3.4</span> Simulation</a></li>
+  <li><a href="#non-fixed-prior-for-α3" id="toc-non-fixed-prior-for-α3" class="nav-link" data-scroll-target="#non-fixed-prior-for-α3"><span class="header-section-number">3.5</span> Non-fixed prior for α<sub>3</sub></a></li>
+  <li><a href="#lognormal-prior-for-β" id="toc-lognormal-prior-for-β" class="nav-link" data-scroll-target="#lognormal-prior-for-β"><span class="header-section-number">3.6</span> Lognormal prior for β</a></li>
+  </ul></li>
+  <li><a href="#summary-of-results" id="toc-summary-of-results" class="nav-link" data-scroll-target="#summary-of-results"><span class="header-section-number">4</span> Summary of results</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<!-- example-files:begin -->
+<div class="callout callout-style-simple callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Example files
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Download the FACTS files used in this tutorial and open them in FACTS with <em>File &gt; Open</em>.</p>
+<ul>
+<li><a href="crmOrdinalattachments/examples/Goodman (CRM-ordinal).facts" download="Goodman (CRM-ordinal).facts">Goodman (CRM-ordinal).facts</a> (CRM design)</li>
+<li><a href="crmOrdinalattachments/examples/Goodman (CRM-ordinal) -a3.facts" download="Goodman (CRM-ordinal) -a3.facts">Goodman (CRM-ordinal) -a3.facts</a> (Non-fixed prior for α<sub>3</sub>)</li>
+<li><a href="crmOrdinalattachments/examples/Goodman (CRM-ordinal) -logNB.facts" download="Goodman (CRM-ordinal) -logNB.facts">Goodman (CRM-ordinal) -logNB.facts</a> (Lognormal prior for β)</li>
+</ul>
+</div>
+</div>
+<!-- example-files:end -->
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>This tutorial describes the example trial design using the FACTS Dose Escalation Design Engine for Ordinal Toxicity.</p>
+<p>For this version of the document, the screenshots are from the v6.3 release of FACTS.</p>
+<p>The screenshots provided are approximate and may not reflect the exact layout of the information in later versions of FACTS. The contents of each tab, however, will be consistent with the software.</p>
+</section>
+<section id="case-study-modified-goodman" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Case Study: Modified Goodman</h1>
+<p>The example based on the example used for CRM Toxicity that was is taken from Steven Goodman’s 1995 paper on the Continual Reassessment Method.</p>
+<p>The patient endpoint is toxicity on a scale of 1 to 4 toxicity grades, where grade 1 is no or minimal toxicity, grade 2 is moderate toxicity, grade 3 is severe toxicity and grade 4 is extreme toxicity, possibly fatal.</p>
+<p>The target is to find the maximum tolerated dose with a target toxicity rate of 0.2 grade 3 toxicity.</p>
+<p>There are 6 treatment arms and a maximum of 24 subjects (8 cohorts).</p>
+<p>Subjects will be dosed in cohorts of 3, starting at the lowest dose.</p>
+<p>We will never increment by more than 1 dose strength.</p>
+<p>We will stop when we have allocated at least 4 cohorts and there is a dose with 50% or greater probability of being the MTD.</p>
+<section id="response-model" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="response-model"><span class="header-section-number">2.1</span> Response Model</h2>
+<p>If the probability of observing grade <em>i</em> or higher toxicity for a subject given dose <em>j</em> is <em>p<sub>ij</sub></em></p>
+<p>We will model the probability of toxicity across the range of doses:</p>
+<p><span class="math display">\[\log\left(\frac{p_{ij}}{1 - p_{ij}}\right) = \alpha_i + \beta\widehat{x_{j}}\]</span></p>
+<p>With <em>α<sub>3</sub></em> set to 3 and <em>β</em> given the prior distribution:</p>
+<p><span class="math display">\[\beta \sim \exp(1)\]</span></p>
+<p>And <em>α<sub>2</sub></em> and <em>α<sub>4</sub></em> given Normal prior distributions (mean 5, variance 4) and (mean 1 variance 4) respectively:</p>
+<p><span class="math display">\[\alpha_2 \sim N(5,4),\ \alpha_4 \sim N(1,4)\]</span></p>
+<p>Each dose <em>j</em> is given a ‘strength’ <span class="math inline">\(\widehat{x_{j}}\)</span> by fitting the user supplied prior expectations of toxicity for each dose <em>p<sup>0</sup><sub>3j</sub></em> to the above model with <em>β</em> set to 1. i.e.&nbsp;solving:</p>
+<p><span class="math display">\[\log\left(\frac{p^{0}_{3j}}{1 - p^{0}_{3j}}\right) = \alpha_3 + \widehat{x_{j}}\]</span></p>
+<p>for <span class="math inline">\(\widehat{x_{j}}\)</span>.</p>
+</section>
+<section id="simulation-details" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="simulation-details"><span class="header-section-number">2.2</span> Simulation Details</h2>
+<p>Six different possible dose toxicity responses will be simulated, in each scenario the target MTD is highlighted.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 17%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td colspan="6" style="text-align: center;"><strong>Dose</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Scenario#</strong></td>
+<td><strong>Toxicity</strong></td>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: center;"><strong>3</strong></td>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: center;"><strong>5</strong></td>
+<td style="text-align: center;"><strong>6</strong></td>
+</tr>
+<tr class="odd">
+<td rowspan="3"><strong>1</strong></td>
+<td>Pr(Tox 2+)</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.35</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0.7</td>
+</tr>
+<tr class="even">
+<td>Pr(Tox 3+)</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.35</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0.7</td>
+</tr>
+<tr class="odd">
+<td>Pr(Tox 4)</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="even">
+<td rowspan="3"><strong>2</strong></td>
+<td>Pr(Tox 2+)</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.35</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0.7</td>
+<td style="text-align: center;">0.85</td>
+<td style="text-align: center;">0.9</td>
+</tr>
+<tr class="odd">
+<td>Pr(Tox 3+)</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.35</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0.7</td>
+</tr>
+<tr class="even">
+<td>Pr(Tox 4)</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.35</td>
+</tr>
+<tr class="odd">
+<td rowspan="3"><strong>3</strong></td>
+<td>Pr(Tox 2+)</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.35</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0.7</td>
+<td style="text-align: center;">0.85</td>
+<td style="text-align: center;">0.9</td>
+</tr>
+<tr class="even">
+<td>Pr(Tox 3+)</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.01</td>
+</tr>
+<tr class="odd">
+<td>Pr(Tox 4)</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="even">
+<td rowspan="3"><strong>4</strong></td>
+<td>Pr(Tox 2+)</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.25</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">1</td>
+</tr>
+<tr class="odd">
+<td>Pr(Tox 3+)</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.25</td>
+<td style="text-align: center;">0.8</td>
+</tr>
+<tr class="even">
+<td>Pr(Tox 4)</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.25</td>
+</tr>
+<tr class="odd">
+<td rowspan="3"><strong>5</strong></td>
+<td>Pr(Tox 2+)</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.15</td>
+</tr>
+<tr class="even">
+<td>Pr(Tox 3+)</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.15</td>
+</tr>
+<tr class="odd">
+<td>Pr(Tox 4)</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="even">
+<td rowspan="3"><strong>6</strong></td>
+<td>Pr(Tox 2+)</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.3</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0.7</td>
+<td style="text-align: center;">0.95</td>
+</tr>
+<tr class="odd">
+<td>Pr(Tox 3+)</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.15</td>
+</tr>
+<tr class="even">
+<td>Pr(Tox 4)</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.1</td>
+</tr>
+</tbody>
+</table>
+<p>The grade 3 toxicities of Case 1 will be used as the prior expectations of toxicity for the calculation of the <span class="math inline">\(\widehat{x_{j}}\)</span> values.</p>
+</section>
+<section id="expected-performance" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="expected-performance"><span class="header-section-number">2.3</span> Expected performance</h2>
+<p>The probabilities of grade 3 or higher toxicity in scenarios #1 and #2 are the same. In scenario #1 the probabilities of grade 2 or higher are the same as for grade 3 toxicity and the probability of grade 4 toxicity is 0 – i.e.&nbsp;all that should be observed are grade 3 toxicities. In scenario #2 the probabilities of grade 2 or higher toxicity are the same as for grade 3 but shifted 2 doses to the left and the probabilities of grade 4 or higher are the same as for grade 3 but shifted 2 doses to the right. The operating characteristics of these scenarios can be compared to CRM toxicity tutorial scenario 1. If only grade 3 toxicity is observed (ordinal scenario #1) we would expect this to give very similar results to the non-ordinal case. If there is grade #2 toxicity with a similar but earlier dose-toxicity relationship, we might hope this improves our ability to determine the MTD.</p>
+<p>In scenario #3 there is effectively no grade 3 or grade 4 toxicity, however there is significant grade 2 toxicity, this tests the effect of grade 2 toxicity then that alone is what is observed.</p>
+<p>In scenario #4 there is only significant grade 3 toxicity at the highest two doses with significant grade 2 toxicity at the highest three doses. This can be compared to the CRM toxicity tutorial scenario 4.</p>
+<p>In scenarios #5 and #6 there is detectable but tolerable levels of grade 3 toxicity at the highest two doses. In scenario 5 the probabilities of grade 2 and 4 toxicity are identical to those for grade 3, so only grade 3 toxicity should be seen. The performance in this case should be comparable to CRM toxicity tutorial scenario #6. In scenario #6 the difference is that there is early high probability of grade 2 toxicity, this should give results similar to scenario #3 above.</p>
+</section>
+<section id="designs-for-comparison" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="designs-for-comparison"><span class="header-section-number">2.4</span> Designs for comparison</h2>
+<p>This example is very similar to the CRM-Toxicity example (also based on a paper by Goodman). The probabilities of Cat-3 toxicity are the same in the two examples in scenarios 1, 4 &amp; .</p>
+<p>CRM toxicity tutorial modified to use the same 50% stopping rule as this example:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 12%">
+<col style="width: 26%">
+<col style="width: 19%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Curve – true MTD</th>
+<th>Simulation</th>
+<th style="text-align: right;">Ppn times true target selected</th>
+<th style="text-align: right;">Ppn toxicity observed</th>
+<th style="text-align: right;">Average number of subjects</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1 – dose 3</td>
+<td>50% stop rule</td>
+<td style="text-align: right;">0.50</td>
+<td style="text-align: right;">0.18</td>
+<td style="text-align: right;">22.8</td>
+</tr>
+<tr class="even">
+<td>4 – dose 5</td>
+<td>50% stop rule</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">19.8</td>
+</tr>
+<tr class="odd">
+<td>6 - dose 6</td>
+<td>50% stop rule</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">19.2</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="simulating-using-facts-crm" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Simulating using FACTS CRM</h1>
+<p>Start FACTS Dose Escalating. Use the menu option File &gt; New &gt; Dose Escalation &gt; CRM (ordinal) to create a new CRM design.</p>
+<p>Using the menu option File &gt; Save As, save this design as for example “CRM-ord” in a convenient location (e.g.&nbsp;in a folder called FACTS\CRM-examples in your ‘My Documents’ folder).</p>
+<section id="study" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="study"><span class="header-section-number">3.1</span> Study</h2>
+<section id="study-info" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="study-info"><span class="header-section-number">3.1.1</span> Study Info</h3>
+<p>Set the following parameters:</p>
+<ul>
+<li><p>Maximum Trial Size (cohorts): 8</p></li>
+<li><p>Cohort size: 3</p></li>
+<li><p>Number of additional cohorts accrued before response from the current cohort is available: 0</p></li>
+<li><p>Use 4 category toxicity scale</p></li>
+<li><p>Target probability of grade 3 toxicity at MTD: 0.2</p></li>
+<li><p>Find Dose: Nearest target</p></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="crmOrdinalattachments/media/image7.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<p>We do not use single patient run-in or cohort expansion in this example.</p>
+</section>
+<section id="treatment-arms" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="treatment-arms"><span class="header-section-number">3.1.2</span> Treatment Arms</h3>
+<p>Create 6 doses 1 to 6 with no control:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="crmOrdinalattachments/media/image8.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="virtual-subject-response" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="virtual-subject-response"><span class="header-section-number">3.2</span> Virtual Subject Response</h2>
+<section id="explicitly-defined-toxicity" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="explicitly-defined-toxicity"><span class="header-section-number">3.2.1</span> Explicitly Defined – Toxicity</h3>
+<p>Add 6 response scenarios to be simulated, specify the P(tox) values for the 3 different toxicity grades, for each curve as follows:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 17%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td></td>
+<td></td>
+<td colspan="6" style="text-align: center;"><strong>Dose</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Scenario#</strong></td>
+<td><strong>Toxicity</strong></td>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: center;"><strong>3</strong></td>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: center;"><strong>5</strong></td>
+<td style="text-align: center;"><strong>6</strong></td>
+</tr>
+<tr class="odd">
+<td rowspan="3"><strong>1</strong></td>
+<td>Pr(Tox 2+)</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.35</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0.7</td>
+</tr>
+<tr class="even">
+<td>Pr(Tox 3+)</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.35</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0.7</td>
+</tr>
+<tr class="odd">
+<td>Pr(Tox 4)</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.35</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0.7</td>
+</tr>
+<tr class="even">
+<td rowspan="3"><strong>2</strong></td>
+<td>Pr(Tox 2+)</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.35</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0.7</td>
+<td style="text-align: center;">0.85</td>
+<td style="text-align: center;">0.9</td>
+</tr>
+<tr class="odd">
+<td>Pr(Tox 3+)</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.35</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0.7</td>
+</tr>
+<tr class="even">
+<td>Pr(Tox 4)</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.35</td>
+</tr>
+<tr class="odd">
+<td rowspan="3"><strong>3</strong></td>
+<td>Pr(Tox 2+)</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.35</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0.7</td>
+<td style="text-align: center;">0.85</td>
+<td style="text-align: center;">0.9</td>
+</tr>
+<tr class="even">
+<td>Pr(Tox 3+)</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.01</td>
+</tr>
+<tr class="odd">
+<td>Pr(Tox 4)</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="even">
+<td rowspan="3"><strong>4</strong></td>
+<td>Pr(Tox 2+)</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.25</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">1</td>
+</tr>
+<tr class="odd">
+<td>Pr(Tox 3+)</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.25</td>
+<td style="text-align: center;">0.8</td>
+</tr>
+<tr class="even">
+<td>Pr(Tox 4)</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.25</td>
+</tr>
+<tr class="odd">
+<td rowspan="3"><strong>5</strong></td>
+<td>Pr(Tox 2+)</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.15</td>
+</tr>
+<tr class="even">
+<td>Pr(Tox 3+)</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.15</td>
+</tr>
+<tr class="odd">
+<td>Pr(Tox 4)</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr class="even">
+<td rowspan="3"><strong>6</strong></td>
+<td>Pr(Tox 2+)</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.3</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0.7</td>
+<td style="text-align: center;">0.95</td>
+</tr>
+<tr class="odd">
+<td>Pr(Tox 3+)</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.15</td>
+</tr>
+<tr class="even">
+<td>Pr(Tox 4)</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0.1</td>
+</tr>
+</tbody>
+</table>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="crmOrdinalattachments/media/image9.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a computer Description automatically generated</figcaption>
+</figure>
+</div>
+<p>There are no externally defined curves in this example.</p>
+</section>
+</section>
+<section id="design" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="design"><span class="header-section-number">3.3</span> Design</h2>
+<section id="toxicity-response" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="toxicity-response"><span class="header-section-number">3.3.1</span> Toxicity Response</h3>
+<p>Set the parameters as follows (there is no choice of model type, for ordinal response only the logistic is available):</p>
+<ul>
+<li><p>Prior alpha for grade 2 toxicity: mean of 5, SD of 2</p></li>
+<li><p>Prior alpha for grade 4 toxicity: mean of 1, SD of 2</p></li>
+<li><p>Fix alpha: 3</p></li>
+<li><p>Prior type: exponential</p></li>
+<li><p>Minimum: 0</p></li>
+<li><p>Maximum 1</p></li>
+<li><p>Prior probability of Toxicity: 0.05, 0.1, 0.2, 0.35, 0.5, 0.7. Note how these give well-spaced ‘transformed dose strength’ values in the range -6 to -2</p></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="crmOrdinalattachments/media/image10.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<p>The graph shows the doses on the transformed dose strength, with a graph of the model at Beta=1 and the lower and upper limits of the model at 20-80% quantiles of the Beta prior distribution.</p>
+</section>
+<section id="allocation-rule" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="allocation-rule"><span class="header-section-number">3.3.2</span> Allocation Rule</h3>
+<p>Set the parameters as follows:</p>
+<ul>
+<li><p>No single patient run in.</p></li>
+<li><p>Maximum dose levels that can be incremented: 1</p></li>
+<li><p>Minimum cohorts on dose before incrementing: 1</p></li>
+<li><p>Maximum increment is relative to highest dose with at least 1 cohort allocated to it</p></li>
+<li><p>Starting dose level: 1</p></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="crmOrdinalattachments/media/image11.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+</section>
+<section id="stopping-criteria" class="level3" data-number="3.3.3">
+<h3 data-number="3.3.3" class="anchored" data-anchor-id="stopping-criteria"><span class="header-section-number">3.3.3</span> Stopping Criteria</h3>
+<ul>
+<li>Set the parameters as follows:</li>
+</ul>
+<!-- -->
+<ul>
+<li><p>Select rules for stopping trial early</p></li>
+<li><p>Stop when probability of dose being MTD is greater than: 0.5</p></li>
+<li><p>Don’t stop until a minimum of: 4 cohorts have been accrued</p></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="crmOrdinalattachments/media/image12.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="simulation" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="simulation"><span class="header-section-number">3.4</span> Simulation</h2>
+<p>Set the number of simulations to 1000, select all the scenarios and run the simulations (this takes a moderate time when run locally, it took 20 minutes on a 2.2 GHz Intel Core i7)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="crmOrdinalattachments/media/image13.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<p>Summary of results:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 14%">
+<col style="width: 10%">
+<col style="width: 8%">
+<col style="width: 15%">
+<col style="width: 10%">
+<col style="width: 8%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;"></th>
+<th colspan="3" style="text-align: center;">Ordinal Example (CRM Ordinal)</th>
+<th colspan="3" style="text-align: center;">Binary Example (CRM Toxicity)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Scenario</td>
+<td style="text-align: center;">Correct MTD</td>
+<td style="text-align: center;">Mean Subj</td>
+<td style="text-align: center;">PPn Tox</td>
+<td style="text-align: center;">% correct MTD+</td>
+<td style="text-align: center;">Mean Subj</td>
+<td style="text-align: center;">PPn Tox</td>
+<td style="text-align: center;">% correct MTD+</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Curve_1</td>
+<td style="text-align: center;">dose 3</td>
+<td style="text-align: center;">15.1</td>
+<td style="text-align: center;">0.15</td>
+<td style="text-align: center;">0.514</td>
+<td style="text-align: center;">22.8</td>
+<td style="text-align: center;">0.18</td>
+<td style="text-align: center;">0.498</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Curve_2</td>
+<td style="text-align: center;">dose 3</td>
+<td style="text-align: center;">19.7</td>
+<td style="text-align: center;">0.16</td>
+<td style="text-align: center;">0.552</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Curve_3</td>
+<td style="text-align: center;">above top dose</td>
+<td style="text-align: center;">14.8</td>
+<td style="text-align: center;">0.01</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Curve_4</td>
+<td style="text-align: center;">dose 5</td>
+<td style="text-align: center;">15.3</td>
+<td style="text-align: center;">0.07</td>
+<td style="text-align: center;">0.593</td>
+<td style="text-align: center;">19.8</td>
+<td style="text-align: center;">0.08</td>
+<td style="text-align: center;">0.437</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Curve_5</td>
+<td style="text-align: center;">above top dose</td>
+<td style="text-align: center;">15.5</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.428</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">Curve_6</td>
+<td style="text-align: center;">above top dose</td>
+<td style="text-align: center;">16.6</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.009</td>
+<td style="text-align: center;">19.2</td>
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.407</td>
+</tr>
+</tbody>
+</table>
+<p>In the scenarios Curve_1 and Curve_4 the ordinal model has increased probability of selecting the right dose with lower sample size and lower probability of toxicity than the dichotomous CRM. In Curve_6 the ordinal model has been too conservative and over-estimated the toxicity.</p>
+</section>
+<section id="non-fixed-prior-for-α3" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="non-fixed-prior-for-α3"><span class="header-section-number">3.5</span> Non-fixed prior for α<sub>3</sub></h2>
+<p>After running simulations it is unnecessary to save the current parameters from the GUI, they will have been saved prior to starting the simulations. Now to create a modified version of this design, from the <strong>File</strong> menu select <strong>Save As</strong> and save the project under an alternative name before modifying it.</p>
+<p>On the <strong>Design</strong> &gt; <strong>Toxicity Response</strong> tab, change the prior for α<sub>3</sub> to:</p>
+<ul>
+<li><p>Not fixed</p></li>
+<li><p>Mean of 3, SD of 2</p></li>
+</ul>
+<p>Return to the simulation tab and run 1,000 simulations of this modified design.</p>
+</section>
+<section id="lognormal-prior-for-β" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="lognormal-prior-for-β"><span class="header-section-number">3.6</span> Lognormal prior for β</h2>
+<p>Re-open the original example created above (with fixed alpha), again use Save As to create a new version of the project that can be modified (whilst preserving the previous design and simulation results).</p>
+<p>On the <strong>Design</strong> &gt; <strong>Toxicity Response</strong> tab, modify the prior for Beta to:</p>
+<ul>
+<li><p>Log normal</p></li>
+<li><p>Prior for mu_B: 0, prior for sigma_B: 1.5</p></li>
+</ul>
+<p>This specifies a log normal prior for Beta with mean 0 and SD 1.5. Note that with this value for sigma_B, this is a weaker prior for Beta than the exponential prior.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="crmOrdinalattachments/media/image14.png" class="img-fluid figure-img"></p>
+<figcaption>A screenshot of a social media post Description automatically generated</figcaption>
+</figure>
+</div>
+<p>Note that the log normal is highly skewed (except for σ &lt;&lt; 1), and the mode, median and mean of the distribution are different. For the 50% curve the median value is used (e<sup>μ</sup>).</p>
+<p>Return to the simulation tab and run 1,000 simulations of this modified design.</p>
+</section>
+</section>
+<section id="summary-of-results" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Summary of results</h1>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 36%">
+<col style="width: 13%">
+<col style="width: 20%">
+<col style="width: 12%">
+<col style="width: 14%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Curve – true MTD</td>
+<td>Simulation</td>
+<td>Ppn times true target selected (MTD+)</td>
+<td>Ppn toxicity observed</td>
+<td>Average number of subjects</td>
+</tr>
+<tr class="even">
+<td rowspan="4">1 – dose 3 – no grade 2 toxicity</td>
+<td>Non ordinal</td>
+<td>0.498</td>
+<td>0.177</td>
+<td>22.8</td>
+</tr>
+<tr class="odd">
+<td>Ordinal</td>
+<td>0.514</td>
+<td>0.152</td>
+<td>15.1</td>
+</tr>
+<tr class="even">
+<td>Ordinal unfixed α<sub>3</sub></td>
+<td>0.498</td>
+<td>0.164</td>
+<td>15.8</td>
+</tr>
+<tr class="odd">
+<td>Ordinal log normal prior</td>
+<td>0.488</td>
+<td>0.155</td>
+<td>15.2</td>
+</tr>
+<tr class="even">
+<td rowspan="4">2 – dose 3 – grade 2 toxicity</td>
+<td>Non ordinal</td>
+<td>0.498</td>
+<td>0.177</td>
+<td>22.8</td>
+</tr>
+<tr class="odd">
+<td>Ordinal</td>
+<td>0.552</td>
+<td>0.159</td>
+<td>19.7</td>
+</tr>
+<tr class="even">
+<td>Ordinal unfixed α<sub>3</sub></td>
+<td>0.544</td>
+<td>0.178</td>
+<td>20.6</td>
+</tr>
+<tr class="odd">
+<td>Ordinal log normal prior</td>
+<td>0.607</td>
+<td>0.164</td>
+<td>19.7</td>
+</tr>
+<tr class="even">
+<td rowspan="4">3 – MTD+ plus (non-toxic) – but grade 2 toxicity</td>
+<td>Non ordinal</td>
+<td>0.874</td>
+<td>0.006</td>
+<td>15.9</td>
+</tr>
+<tr class="odd">
+<td>Ordinal</td>
+<td>0</td>
+<td>0.008</td>
+<td>14.8</td>
+</tr>
+<tr class="even">
+<td>Ordinal unfixed α<sub>3</sub></td>
+<td>0</td>
+<td>0.007</td>
+<td>16.3</td>
+</tr>
+<tr class="odd">
+<td>Ordinal log normal prior</td>
+<td>0</td>
+<td>0.000</td>
+<td>14.6</td>
+</tr>
+<tr class="even">
+<td rowspan="4">4 – dose 5 – with grade 2 toxicity</td>
+<td>Non ordinal</td>
+<td>0.437</td>
+<td>0.081</td>
+<td>19.8</td>
+</tr>
+<tr class="odd">
+<td>Ordinal</td>
+<td>0.593</td>
+<td>0.069</td>
+<td>15.3</td>
+</tr>
+<tr class="even">
+<td>Ordinal unfixed α<sub>3</sub></td>
+<td>0.468</td>
+<td>0.082</td>
+<td>16.8</td>
+</tr>
+<tr class="odd">
+<td>Ordinal log normal prior</td>
+<td>0.544</td>
+<td>0.073</td>
+<td>15.1</td>
+</tr>
+<tr class="even">
+<td rowspan="4">5 – MTD+ plus (mild toxicity at dose 6) – no grade 2 toxicity</td>
+<td>Non ordinal</td>
+<td>0.407</td>
+<td>0.052</td>
+<td>19.2</td>
+</tr>
+<tr class="odd">
+<td>Ordinal</td>
+<td>0.428</td>
+<td>0.053</td>
+<td>15.5</td>
+</tr>
+<tr class="even">
+<td>Ordinal unfixed α<sub>3</sub></td>
+<td>0.384</td>
+<td>0.059</td>
+<td>17.5</td>
+</tr>
+<tr class="odd">
+<td>Ordinal log normal prior</td>
+<td>0.377</td>
+<td>0.056</td>
+<td>15.2</td>
+</tr>
+<tr class="even">
+<td rowspan="4">6 – MTD+ plus (mild toxicity at dose 6) – a lot of grade 2 toxicity</td>
+<td>Non ordinal</td>
+<td>0.407</td>
+<td>0.052</td>
+<td>19.2</td>
+</tr>
+<tr class="odd">
+<td>Ordinal</td>
+<td>0.009</td>
+<td>0.048</td>
+<td>16.6</td>
+</tr>
+<tr class="even">
+<td>Ordinal unfixed α<sub>3</sub></td>
+<td>0.013</td>
+<td>0.058</td>
+<td>19.8</td>
+</tr>
+<tr class="odd">
+<td>Ordinal log normal prior</td>
+<td>0.013</td>
+<td>0.048</td>
+<td>16.7</td>
+</tr>
+</tbody>
+</table>
+<p>In all the example curves all the ordinal designs used a smaller sample size and the same or fewer toxicities observed than the non-ordinal CRM.</p>
+<p>With the ordinal CRM with fixed alpha,</p>
+<ul>
+<li><p>In curves 1 &amp; 2 where the cat-3 toxicity is the same but in curve 1 there is no cat 2 toxicity, the selection of the MTD is almost identical, but on average it takes almost 5 additional subjects to achieve this. The ordinal model’s MTD selection is better than the binary model.</p></li>
+<li><p>In curves 3 &amp; 6 if there is no or very little grade 3 toxicity but there is significant grade 2 toxicity there is a strong tendency to select the MTD at one below the top dose. Here all the ordinal models perform worse than the binary, failing to recognize that the top dose is only weakly toxic or not-toxic at all.</p></li>
+<li><p>Where the MTD is high and there is some earlier grade 2 toxicity (Curve 4), or there is little grade 3 toxicity and little grade 2 toxicity (Curve 5) the ordinal case outperforms the binary case.</p></li>
+</ul>
+<p>Not fixing the alpha for grade 3 toxicity or using a more uninformative prior for Beta does not bring a significant or consistent benefit in these scenarios.</p>
+<p>This study suggests that unless there are high rates of category 2 toxicity and low rates of category 3 toxicity, using an ordinal CRM should be beneficial in identifying the MTD.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<!-- footer.html -->
+
+<!-- FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pF6W3...<truncated>...Q==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+<style>
+
+  /* Make all footer icons the same color */
+  footer .fab,
+  footer .fas,
+  footer svg {
+    color: #125740;           /* ← pick whatever color your share-icons are using */
+    fill: currentColor;    /* ensures the SVG Bluesky icon matches */
+  }
+
+  /* Prevent links from overriding that color */
+  footer a {
+    color: inherit;
+  }
+
+  /* Share menu positioning */
+  #share-wrapper { position: relative; }
+  #share-menu {
+    display: none;
+    position: absolute;
+    bottom: 3rem;               /* float above the footer */
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px #125740;
+    gap: 1rem;
+    z-index: 100;
+  }
+  body.menu-open #share-menu { display: flex; }
+  #share-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* Left column: text + social permalinks */
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+  }
+  .footer-left p { margin: 0; }
+  .footer-left a.social {
+    color: inherit;
+    text-decoration: none;
+  }
+  .footer-left a.social i { font-size: 1.2em; }
+  
+  
+    /* Text color left */
+  .footer-left p > a {
+    color: #125740;
+  }
+
+  /* Text color last item */
+  footer > p:last-child a {
+    color: #125740;
+  }
+  
+    /* Link hover colors */
+  .footer-left p > a:hover,
+  footer > p:last-child a:hover {
+    color: #11A473;
+    text-decoration: underline;
+  }
+  
+</style>
+
+<footer style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
+  
+  <!-- Left: Berry Consultants + social permalinks -->
+  <div class="footer-left">
+    <p>
+      © <a href="https://www.berryconsultants.com">Berry Consultants</a>
+    </p>
+    <a href="https://twitter.com/BerryConsultant" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on X">
+      <i class="fab fa-x"></i>
+    </a>
+    <a href="https://www.linkedin.com/company/berry-consultants-llc" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on LinkedIn">
+      <i class="fab fa-linkedin"></i>
+    </a>
+    <a href="https://www.youtube.com/c/berryconsultants" class="social" target="_blank" rel="noopener" aria-label="Berry Consultants on YouTube">
+      <i class="fab fa-youtube"></i>
+    </a>
+  </div>
+
+  <!-- Center: share toggle + popup -->
+  <div id="share-wrapper">
+    <button id="share-toggle" aria-label="Share this page">
+      <i class="fas fa-share-alt" style="font-size:1.6em;"></i>
+    </button>
+    <div id="share-menu">
+      <!-- share icons injected here -->
+    </div>
+  </div>
+
+  <!-- Right: How to Cite -->
+  <p style="margin: 0;">
+    <a href="../../../../introduction/citation.html">Cite</a>
+  </p>
+</footer>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const url   = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(document.title);
+    const networks = [
+      { name: "X",        href: `https://twitter.com/intent/tweet?url=${url}&text=${title}`,          icon: `<i class="fab fa-x" style="font-size:1.4em;"></i>` },
+      { name: "LinkedIn", href: `https://www.linkedin.com/feed/?shareActive=true&text=${title}%20${url}`, icon: `<i class="fab fa-linkedin" style="font-size:1.4em;"></i>` },
+      { name: "Bluesky",  href: `https://bsky.app/intent/compose?text=${title}%20${url}`,              icon: `
+        <svg width="1.4em" height="1.4em" fill="currentColor" viewBox="0 0 600 530">
+          <path d="m135.72 44.03c66.496 49.921 138.02 151.14 164.28 205.46 26.262-54.316 97.782-155.54 164.28-205.46 47.98-36.021 125.72-63.892 125.72 24.795 0 17.712-10.155 148.79-16.111 170.07-20.703 73.984-96.144 92.854-163.25 81.433 117.3 19.964 147.14 86.092 82.697 152.22-122.39 125.59-175.91-31.511-189.63-71.766-2.514-7.3797-3.6904-10.832-3.7077-7.8964-0.0174-2.9357-1.1937 0.51669-3.7077 7.8964-13.714 40.255-67.233 197.36-189.63 71.766-64.444-66.128-34.605-132.26 82.697-152.22-67.108 11.421-142.55-7.4491-163.25-81.433-5.9562-21.282-16.111-152.36-16.111-170.07 0-88.687 77.742-60.816 125.72-24.795z"/>
+        </svg>` },
+      { name: "Reddit",   href: `https://www.reddit.com/submit?url=${url}&title=${title}`,         icon: `<i class="fab fa-reddit" style="font-size:1.4em;"></i>` },
+      { name: "WhatsApp", href: `https://wa.me/?text=${title}%20${url}`,                             icon: `<i class="fab fa-whatsapp" style="font-size:1.4em;"></i>` },
+      { name: "Email",    href: `mailto:?subject=${title}&body=${title}%20${url}`,                    icon: `<i class="fas fa-envelope" style="font-size:1.4em;"></i>` }
+    ];
+
+    // inject share icons
+    const menu = document.getElementById("share-menu");
+    networks.forEach(net => {
+      const a = document.createElement("a");
+      a.href      = net.href;
+      a.target    = "_blank";
+      a.rel       = "noopener";
+      a.setAttribute("aria-label", `Share on ${net.name}`);
+      a.innerHTML = net.icon;
+      menu.appendChild(a);
+    });
+
+    // toggle menu
+    const toggle = document.getElementById("share-toggle");
+    toggle.addEventListener("click", e => {
+      e.stopPropagation();
+      document.body.classList.toggle("menu-open");
+    });
+
+    // close on outside click
+    document.addEventListener("click", () => {
+      document.body.classList.remove("menu-open");
+    });
+    menu.addEventListener("click", e => e.stopPropagation());
+  });
+</script>
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/docs\.berryconsultants\.com");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

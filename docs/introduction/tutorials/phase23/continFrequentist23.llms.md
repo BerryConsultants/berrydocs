@@ -1,0 +1,1 @@
+# Frequentist Seamless Trial with a Continuous Endpoint

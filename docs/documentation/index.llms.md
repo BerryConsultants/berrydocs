@@ -1,0 +1,22 @@
+Welcome to the Documentation section — your go-to repository of in-depth user guides and practical examples that illuminate every aspect of FACTS. Whether you’re just getting started or delving into advanced functionalities, these resources are designed to help you navigate our software with confidence and ease.
+
+## What You’ll Find Here
+
+- User Guides: Access detailed manuals covering the full range of our engines. From foundations to advanced features, learn how to set up your desired trial design, learn about best practices and obtain focused understanding of the subject matter, and troubleshoot common issues.
+
+  - [3+3 and mTPI - Rule Based Dose Escalation](../documentation/v82/userguides/de.llms.md)
+  - [Phase II & III Designs](../documentation/v82/userguides/core/index.llms.md)
+  - [Seamless Designs](../documentation/v82/userguides/staged.llms.md)
+  - [Enrichment Designs](../documentation/v82/userguides/enrichment/index.llms.md)
+  - [CRM - Model Based Dose Escalation](../documentation/v82/userguides/crm.llms.md)
+  - [2D CRM - 2D Model Based Dose Escalation](../documentation/v82/userguides/2dcrm.llms.md)
+  - [FACTS/R - How to Call FACTS from R](../documentation/v82/userguides/FACTSfromR.llms.md)
+  - [FLFLL - FACTS Linux File Loader Light](../documentation/v82/userguides/flfll.llms.md)
+  - [Platform Trials](../documentation/v82/userguides/platform.llms.md)
+  - [FACTS Design Report](../documentation/v82/userguides/dr.llms.md)
+
+- Examples: Explore a range of constructed and real-world studies that demonstrate FACTS’s capabilities in action and discover strategies to optimize performance.
+
+## How to Get the Most Out of This Section
+
+This section contains resources for the current and past versions of FACTS, which you can choose in the sidebar. If necessary, begin by reviewing the installation guides. Later, you may consult engine-specific user manuals for deeper insights, and explore our curated examples to bring theory into practice. With these resources at your fingertips, you’ll gain a richer, more informed understanding of FACTS and maximize your potential for success.

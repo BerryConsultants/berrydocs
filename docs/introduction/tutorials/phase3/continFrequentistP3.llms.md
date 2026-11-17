@@ -1,0 +1,1 @@
+# Frequentist Trial with a Continuous Endpoint
