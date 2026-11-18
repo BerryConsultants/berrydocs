@@ -11,25 +11,25 @@ FACTS Development Team. (2026). FACTS: Fixed and Adaptive Clinical Trial Simulat
 ## MLA
 
 ``` bibtex
-FACTS Development Team. FACTS: Fixed and Adaptive Clinical Trial Simulator. Berry Consultants LLC, 2026, https://www.berryconsultants.com/software/facts/. Accessed 17 Nov. 2026.
+FACTS Development Team. FACTS: Fixed and Adaptive Clinical Trial Simulator. Berry Consultants LLC, 2026, https://www.berryconsultants.com/software/facts/. Accessed 18 Nov. 2026.
 ```
 
 ## Chicago
 
 ``` bibtex
-FACTS Development Team. 2026. FACTS: Fixed and Adaptive Clinical Trial Simulator [Computer software]. Austin, TX: Berry Consultants LLC. https://www.berryconsultants.com/software/facts/ (accessed November 17, 2026).
+FACTS Development Team. 2026. FACTS: Fixed and Adaptive Clinical Trial Simulator [Computer software]. Austin, TX: Berry Consultants LLC. https://www.berryconsultants.com/software/facts/ (accessed November 18, 2026).
 ```
 
 ## Harvard
 
 ``` bibtex
-FACTS Development Team, 2026. FACTS: Fixed and Adaptive Clinical Trial Simulator [Computer software]. Austin, TX: Berry Consultants LLC. Available at: <https://www.berryconsultants.com/software/facts/> (Accessed: 17 November 2026).
+FACTS Development Team, 2026. FACTS: Fixed and Adaptive Clinical Trial Simulator [Computer software]. Austin, TX: Berry Consultants LLC. Available at: <https://www.berryconsultants.com/software/facts/> (Accessed: 18 November 2026).
 ```
 
 ## Vancouver
 
 ``` bibtex
-FACTS Development Team. FACTS: Fixed and Adaptive Clinical Trial Simulator [Computer software]. Austin, TX: Berry Consultants LLC; 2026. Available from: https://www.berryconsultants.com/software/facts/ [cited 2026 Nov 17].
+FACTS Development Team. FACTS: Fixed and Adaptive Clinical Trial Simulator [Computer software]. Austin, TX: Berry Consultants LLC; 2026. Available from: https://www.berryconsultants.com/software/facts/ [cited 2026 Nov 18].
 ```
 
 ## BibTex
@@ -69,31 +69,31 @@ If the webpage you are referencing does not contain an explicit author, use “B
 ## APA
 
 ``` bibtex
-Berry Consultants LLC. (2026). Longitudinal Models for Continuous Endpoints. Retrieved November 17, 2026, from https://docs.berryconsultants.com/documentation/v71/userguides/core/longitudinalmodels/continuous.html
+Berry Consultants LLC. (2026). Longitudinal Models for Continuous Endpoints. Retrieved November 18, 2026, from https://docs.berryconsultants.com/documentation/v71/userguides/core/longitudinalmodels/continuous.html
 ```
 
 ## MLA
 
 ``` bibtex
-Berry Consultants LLC. Longitudinal Models for Continuous Endpoints. 2026, https://docs.berryconsultants.com/documentation/v71/userguides/core/longitudinalmodels/continuous.html. Accessed 17 Nov. 2026.
+Berry Consultants LLC. Longitudinal Models for Continuous Endpoints. 2026, https://docs.berryconsultants.com/documentation/v71/userguides/core/longitudinalmodels/continuous.html. Accessed 18 Nov. 2026.
 ```
 
 ## Chicago
 
 ``` bibtex
-Berry Consultants LLC. 2026. Longitudinal Models for Continuous Endpoints. https://docs.berryconsultants.com/documentation/v71/userguides/core/longitudinalmodels/continuous.html (accessed November 17, 2026).
+Berry Consultants LLC. 2026. Longitudinal Models for Continuous Endpoints. https://docs.berryconsultants.com/documentation/v71/userguides/core/longitudinalmodels/continuous.html (accessed November 18, 2026).
 ```
 
 ## Harvard
 
 ``` bibtex
-Berry Consultants LLC, 2026. Longitudinal Models for Continuous Endpoints. [online] Available at: <https://docs.berryconsultants.com/documentation/v71/userguides/core/longitudinalmodels/continuous.html> [Accessed 17 November 2026].
+Berry Consultants LLC, 2026. Longitudinal Models for Continuous Endpoints. [online] Available at: <https://docs.berryconsultants.com/documentation/v71/userguides/core/longitudinalmodels/continuous.html> [Accessed 18 November 2026].
 ```
 
 ## Vancouver
 
 ``` bibtex
-Berry Consultants LLC. Longitudinal Models for Continuous Endpoints [Internet]. 2026 [cited 2026 Nov 17]. Available from: https://docs.berryconsultants.com/documentation/v71/userguides/core/longitudinalmodels/continuous.html
+Berry Consultants LLC. Longitudinal Models for Continuous Endpoints [Internet]. 2026 [cited 2026 Nov 18]. Available from: https://docs.berryconsultants.com/documentation/v71/userguides/core/longitudinalmodels/continuous.html
 ```
 
 ## BibTex
@@ -104,7 +104,7 @@ title = {{Longitudinal Models for Continuous Endpoints}},
 author = {{Berry Consultants LLC}},
 year = {2026},
 howpublished = {\url{https://docs.berryconsultants.com/documentation/v71/userguides/core/longitudinalmodels/continuous.html}},
-note = {[Online; accessed 2026-11-17]},
+note = {[Online; accessed 2026-11-18]},
 }
 ```
 
@@ -116,7 +116,7 @@ title = {{Longitudinal Models for Continuous Endpoints}},
 author = {{Berry Consultants LLC}},
 year = {2026},
 url   = {https://docs.berryconsultants.com/documentation/v71/userguides/core/longitudinalmodels/continuous.html},
-urldate = {2026-11-17},
+urldate = {2026-11-18},
 }
 ```
 
@@ -125,31 +125,31 @@ If the webpage you are referencing does contain an explicit author, like a blog 
 ## APA
 
 ``` bibtex
-Tom Parke. (2026). Optimizing Group Sequential Designs using Machine Learning. Retrieved November 17, 2026, from https://docs.berryconsultants.com/blog/posts/2025-03-04.html
+Tom Parke. (2026). Optimizing Group Sequential Designs using Machine Learning. Retrieved November 18, 2026, from https://docs.berryconsultants.com/blog/posts/2025-03-04.html
 ```
 
 ## MLA
 
 ``` bibtex
-Tom Parke. Optimizing Group Sequential Designs using Machine Learning. 2026, https://docs.berryconsultants.com/blog/posts/2025-03-04.html. Accessed 17 Nov. 2026.
+Tom Parke. Optimizing Group Sequential Designs using Machine Learning. 2026, https://docs.berryconsultants.com/blog/posts/2025-03-04.html. Accessed 18 Nov. 2026.
 ```
 
 ## Chicago
 
 ``` bibtex
-Tom Parke. 2026. Optimizing Group Sequential Designs using Machine Learning. https://docs.berryconsultants.com/blog/posts/2025-03-04.html (accessed November 17, 2026).
+Tom Parke. 2026. Optimizing Group Sequential Designs using Machine Learning. https://docs.berryconsultants.com/blog/posts/2025-03-04.html (accessed November 18, 2026).
 ```
 
 ## Harvard
 
 ``` bibtex
-Tom Parke, 2026. Optimizing Group Sequential Designs using Machine Learning. [online] Available at: <https://docs.berryconsultants.com/blog/posts/2025-03-04.html> [Accessed 17 November 2026].
+Tom Parke, 2026. Optimizing Group Sequential Designs using Machine Learning. [online] Available at: <https://docs.berryconsultants.com/blog/posts/2025-03-04.html> [Accessed 18 November 2026].
 ```
 
 ## Vancouver
 
 ``` bibtex
-Tom Parke. Optimizing Group Sequential Designs using Machine Learning [Internet]. 2026 [cited 2026 Nov 17]. Available from: https://docs.berryconsultants.com/blog/posts/2025-03-04.html
+Tom Parke. Optimizing Group Sequential Designs using Machine Learning [Internet]. 2026 [cited 2026 Nov 18]. Available from: https://docs.berryconsultants.com/blog/posts/2025-03-04.html
 ```
 
 ## BibTex
@@ -160,7 +160,7 @@ title = {{Optimizing Group Sequential Designs using Machine Learning}},
 author = {{Tom Parke}},
 year = {2026},
 howpublished = {\url{https://docs.berryconsultants.com/blog/posts/2025-03-04.html}},
-note = {[Online; accessed 2026-11-17]},
+note = {[Online; accessed 2026-11-18]},
 }
 ```
 
@@ -172,7 +172,7 @@ title = {{Optimizing Group Sequential Designs using Machine Learning}},
 author = {{Tom Parke}},
 year = {2026},
 url   = {https://docs.berryconsultants.com/blog/posts/2025-03-04.html},
-urldate = {2026-11-17},
+urldate = {2026-11-18},
 }
 ```
 

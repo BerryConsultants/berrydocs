@@ -66,7 +66,7 @@ FACTS 8.2.0 is now available for download via [FACTS Cloud](https://facts.berryc
 - The FACTS installation package now consists of “setup.exe”, “Setup.msi”, “Config.xml” and “index.xml”. “Documents.zip” and “Examples.zip” are no longer included. See the [installation guide](../../../introduction/gettingStarted/installation.llms.md) for details.
 - The FACTS documentation (user guides, tutorials, execution guides and FACTS file XML specifications) is available on the FACTS Knowledge Hub. The documentation entries of the Help menu open the relevant Knowledge Hub pages in your web browser; they are listed in “index.xml”, which the installer copies into the “doc” folder of the FACTS installation.
 - The “Design Specifications” entries have been removed from the Help menu, as the important information from the design specifications is now included in the user guides on the Knowledge Hub.
-- Example FACTS files are no longer installed with FACTS: the installer’s “Install example FACTS files” option and the “File \> Examples” menu have been removed. Instead, the example files used in each [tutorial](../../../documentation/v82/tutorials/index.llms.md) can be downloaded from the “Example files” box at the top of the tutorial, and opened with “File \> Open”.
+- Example FACTS files are no longer installed with FACTS: the installer’s “Install example FACTS files” option and the “File \> Examples” menu have been removed. Instead, the example files used in each [tutorial](../../../documentation/index.llms.md#tutorials) can be downloaded from the “Example files” box at the top of the tutorial, and opened with “File \> Open”.
 
 # General Improvements
 

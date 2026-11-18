@@ -1,4 +1,0 @@
-- [FACTS Command Line](../../../documentation/v82/executionguides/commandLine.llms.md): running all the simulations of one or more FACTS project files from the command line, as a batch action.
-- [FACTS Trial Execution](../../../documentation/v82/executionguides/trialExecution.llms.md): running interim analyses of a trial with the FACTS Core, Platform Trial and Enrichment Design engines from the command line (Trial Execution Mode), and from the “Analysis” tab.
-- [Dose Escalation Design Trial Execution](../../../documentation/v82/executionguides/deTrialExecution.llms.md): running the Dose Escalation design engine on the current trial data to obtain the recommended dose for the next cohort.
-- [FACTS Forward Simulation](../../../documentation/v82/executionguides/forwardSimulation.llms.md): running forward simulations with the FACTS Core engines from the command line (Forward Simulation Mode).

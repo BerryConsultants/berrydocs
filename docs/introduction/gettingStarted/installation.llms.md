@@ -64,7 +64,7 @@ These files are usually made available for download from the Berry Consultants F
 The installer copies “index.xml” into a “doc” folder within the FACTS installation folder. It contains only links to this Knowledge Hub, so the FACTS Help menu opens the user guides, tutorials, execution guides, FACTS file XML specifications and videos here, in your web browser. No documents or example files are installed with FACTS:
 
 - The FACTS documentation is available on this Knowledge Hub under [Documentation](../../documentation/index.llms.md).
-- The example “.facts” files used in the tutorials can be downloaded from the “Example files” box at the top of each [tutorial](../../documentation/v82/tutorials/index.llms.md).
+- The example “.facts” files used in the tutorials can be downloaded from the “Example files” box at the top of each [tutorial](../../documentation/index.llms.md#tutorials).
 
 Earlier versions of FACTS shipped the documentation and example files as “Documents.zip” and “Examples.zip” alongside the installer, with an installer option to install the example files.
 
