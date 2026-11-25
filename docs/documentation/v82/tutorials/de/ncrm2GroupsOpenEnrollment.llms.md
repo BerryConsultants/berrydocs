@@ -381,7 +381,10 @@ Data:
 | Peds Obs    |      0 |      0 |      0 |      0 |      0 |      0 |      0 |
 | Ped DLTs    |      0 |      0 |      0 |      0 |      0 |      0 |      0 |
 
-[TABLE]
+| Paper | FACTS Group 1 | FACTS Group 2 |
+|:--:|:--:|:--:|
+| ![](ncrm2GroupsOpenEnrollmentattachments/media/image30.png) | ![](ncrm2GroupsOpenEnrollmentattachments/media/image31.png) |  |
+| FACTS agrees with the paper in that the group 1 mean estimates of toxicity have Dose 4 just below 30% and Dose 5 just above. · In both FACTS and the paper doses 6 & 7 are unsafe for group 1. But dose 5 is borderline, in the paper it looks as though it would be flagged unsafe whilst in FACTS it would just be flagged safe. | ![](ncrm2GroupsOpenEnrollmentattachments/media/image32.png) |  |
 
 ### 4.1.2 Analysis 2
 
@@ -396,7 +399,10 @@ Data:
 | Peds Obs    |      0 |      1 |      0 |      0 |      0 |      0 |      0 |
 | Ped DLTs    |      0 |      0 |      0 |      0 |      0 |      0 |      0 |
 
-[TABLE]
+| Paper | FACTS Group 1 | FACTS Group 2 |
+|:--:|:--:|:--:|
+| ![](ncrm2GroupsOpenEnrollmentattachments/media/image33.png) | ![](ncrm2GroupsOpenEnrollmentattachments/media/image34.png) | ![](ncrm2GroupsOpenEnrollmentattachments/media/image35.png) |
+| FACTS mean estimates of toxicity look slightly below those in the paper (probably due to the slight difference in the Beta prior), but not enough to effect the selection of MTD. · In the paper for both groups both dose 6 & 7 are unsafe, whereas in FACTS in both groups only dose 7 is unsafe. | ![](ncrm2GroupsOpenEnrollmentattachments/media/image36.png) | ![](ncrm2GroupsOpenEnrollmentattachments/media/image37.png) |
 
 ### 4.1.3 Analysis 3
 
@@ -413,7 +419,10 @@ Data:
 | Peds Obs    |      0 |      1 |      0 |      0 |      1 |      0 |      0 |
 | Ped DLTs    |      0 |      0 |      0 |      0 |      1 |      0 |      0 |
 
-[TABLE]
+| Paper | FACTS Group 1 | FACTS Group 2 |
+|:--:|:--:|:--:|
+| ![](ncrm2GroupsOpenEnrollmentattachments/media/image38.png) | ![](ncrm2GroupsOpenEnrollmentattachments/media/image39.png) | ![](ncrm2GroupsOpenEnrollmentattachments/media/image40.png) |
+| FACTS agrees with the paper in that the group 1 mean estimates of toxicity has Dose 5 at about 30% and group 2 estimate has Dose 4 at about 30%. · As with the paper in group 1 doses 6 & 7 are unsafe, and for group 2 doses 5, 6 & 7 are unsafe. | ![](ncrm2GroupsOpenEnrollmentattachments/media/image41.png) | ![](ncrm2GroupsOpenEnrollmentattachments/media/image42.png) |
 
 ### 4.1.4 Analysis 4
 
@@ -430,9 +439,15 @@ Data:
 | Peds Obs    |      0 |      1 |      0 |      2 |      1 |      0 |      0 |
 | Ped DLTs    |      0 |      0 |      0 |      0 |      1 |      0 |      0 |
 
-[TABLE]
+| Paper | FACTS Group 1 | FACTS Group 2 |
+|:--:|:--:|:--:|
+| ![](ncrm2GroupsOpenEnrollmentattachments/media/image43.png) | ![](ncrm2GroupsOpenEnrollmentattachments/media/image44.png) | ![](ncrm2GroupsOpenEnrollmentattachments/media/image45.png) |
+| FACTS agrees with the paper in that the group 1 mean estimates of toxicity has Dose 6 at about 30% and group 2 estimate has Dose 5 at about 30%. · As with the paper in group 1 doses 6 & 7 are unsafe, and for group 2 doses 6 & 7 are unsafe. | ![](ncrm2GroupsOpenEnrollmentattachments/media/image46.png) | ![](ncrm2GroupsOpenEnrollmentattachments/media/image47.png) |
 
-[TABLE]
+| Paper | FACTS Group 1 | FACTS Group 2 |
+|:--:|:--:|:--:|
+| ![](ncrm2GroupsOpenEnrollmentattachments/media/image48.png) | ![](ncrm2GroupsOpenEnrollmentattachments/media/image49.png) | ![](ncrm2GroupsOpenEnrollmentattachments/media/image50.png) |
+| FACTS agrees with the paper in that the group 1 mean estimates of toxicity has Dose 6 at about 30% and group 2 estimate has Dose 7 just below 30%. · As with the paper in group 1 dose 7 is unsafe, and for group 2 no doses are unsafe. | ![](ncrm2GroupsOpenEnrollmentattachments/media/image51.png) | ![](ncrm2GroupsOpenEnrollmentattachments/media/image52.png) |
 
 ## 4.2 Mean Subject Allocation
 

@@ -1153,7 +1153,18 @@ Most of the summary results are as for FACTS CORE. The main differences are in t
 
 These are the columns displayed on the simulations tab after simulations are completed, they can also be displayed in the separate “Highlights” results window.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Select | 1 | Not an output column, this column contains check box to allow the user to select which scenario to simulate. The ‘Select All’ button causes them all to be checked. |
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Execution \> Dropout Rate’, · ’Virtual Subject Response \> Composite, · This is the same name as used for the results directory |
+| External Data File | Optional | This column is visible if any of the scenarios use an external data file to define the subject responses on each treatment arm, specified on the ‘Virtual Subject Response \> External Files’ tab. For those scenarios this gives the name of the external data file, otherwise it is blank. |
+| Num Sims | 1 | The number of simulations that were run to produce the displayed results. |
+| Comb. Mean Subj. | 1 | This is the mean (over the simulations) of the combined number of subjects recruited across both stages in this scenario. |
+| SD Comb. Subj. | 1 | This is the standard deviation across the simulations of the combined number of subjects recruited across both stages in this scenario. |
+| Comb. Subj 80% | 1 | This is the eightieth percentile across the simulations of the combined number of subjects recruited across both stages in this scenario |
+| Ppn Overall Success | 1 | This is the proportion of simulations that were successful – whether that was early success in Stage 1, late success in Stage 1, early success in Stage 2 or late success in Stage 2. |
+| Ppn Overall Futility | 1 | This is the proportion of simulations that were futile – whether that was early futility in Stage 1, late futility in Stage 1, early futility in Stage 2 or late futility in Stage 2. |
 
 There are then columns that report the type of outcome depending on whether that outcome happened in Stage 1 (S1), in Stage 2 after graduating early (at a Stage 1 interim) from Stage 1 (S2EG) or in Stage 2 after graduating late (at the Stage 1 final analysis) from Stage 1 (S2LG)
 
@@ -1179,7 +1190,30 @@ There are then columns that report the type of outcome depending on whether that
 
 These columns summarise the Stage 1 transition to Stage 2 after graduation.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Select | 1 | Not an output column, this column contains check box to allow the user to select which scenario to simulate. The ‘Select All’ button causes them all to be checked. |
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Execution \> Dropout Rate’, · ’Virtual Subject Response \> Composite, · This is the same name as used for the results directory |
+| External Data File | Optional | This column is visible if any of the scenarios use an external data file to define the subject responses on each treatment arm, specified on the ‘Virtual Subject Response \> External Files’ tab. For those scenarios this gives the name of the external data file, otherwise it is blank. |
+| Num Sims | 1 | The number of simulations that were run to produce the displayed results. |
+| Mean Subj. | 1 | This is the mean (over the simulations) of the number of subjects recruited in Stage 1 in this scenario. |
+| Ppn Early Success | 1 | This is the proportion of simulations that stopped early for success in Stage 1 (and did not regress to futility in the final analysis – though they might have regressed to ‘inconclusive’). |
+| Ppn Late Success | 1 | This is the proportion of simulations that did not stop early in Stage 1 but were successful in the final analysis of Stage 1. |
+| Ppn Early Graduation | 1 | This is the proportion of simulations that stopped early in Stage 1 for graduation to Stage 2. |
+| Ppn Late Graduation | 1 | This is the proportion of simulations that did not stop early in Stage 1 and graduated to Stage 2 at the final Stage 1 analysis. |
+| Ppn Late Futility | 1 | This is the proportion of simulations that did not stop early in Stage 1 but were futile in the final analysis of Stage 1. |
+| Ppn Early Futility | 1 | This is the proportion of simulations that stopped early for futility in Stage 1 (and did not regress to success in the final analysis – though they might have regressed to ‘inconclusive’). |
+| Ppn Suc-\>Fut Flipflop | 1 | This is the proportion of simulations that stopped early for success in Stage 1 but regressed to futility in the final analysis. |
+| Ppn Fut-\>Suc Flipflop | 1 | This is the proportion of simulations that stopped early for futility in Stage 1 but regressed to success in the final analysis. |
+| Ppn Inconclusive | 1 | This is the proportion of simulations that did not stop early and were neither successful nor futile nor graduated in the final analysis of Stage 1. |
+| Ppn Early Non-Graduation | 1 | This is the proportion of simulations that met graduation conditions at a Stage 1 interim, but then at arm selection were unable to find any arms that met the arm selection rules, so Stage 2 was not run. |
+| Ppn Late Non-Graduation | 1 | This is the proportion of simulations that met graduation conditions at the Stage 1 final analysis, but then at arm selection were unable to find any arms that met the arm selection rules, so Stage 2 was not run. |
+| Ppn Selected \<Dose\> | One per arm | This is the proportion of simulations that graduated to Stage 2 and selected this arm for inclusion in Stage 2. |
+| Mean Trt.: \<Dose\> | One per arm | This is the mean (over the simulations) of the estimate of the mean response on this arm at the ‘decision analysis’ in Stage 1. |
+| Ppn Arms Drop: \<Dose\> | One per arm | This is the number of times (over the simulations) that each arm was dropped during Stage1 by the Arm Dropping rules. Not selecting the arm for inclusion in Stage 2 is not counted as “dropping the arm” for the purposes of this count. |
+| Mean LP Enrolled | 1 | This is the mean, in weeks (over the simulations) of the duration of the trial from first patient first visit to the enrollment of the Last Patient (LP) in Stage 1 (i.e. the duration of accrual). |
+| Version | 1 | The FACTS version number at the time the simulations were run. |
 
 # Output Files
 
@@ -1263,7 +1297,14 @@ The new columns in the staged design output files are:
 
 In s1-summary and s1-ds-summary.csv:
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| P(EG) | 1 | The proportion of simulations where there was successful early graduation (at an interim) to Stage 2. |
+| P(LG) | 1 | The proportion of simulations where there was successful late graduation (at the final analysis) to Stage 2 |
+| P(ENG) | 1 | The proportion of simulations where there was a decision to graduate early (at an interim) to Stage 2, but then Stage 2 could not be run because no treatment arms met the dose selection criteria. (ENG=Early Non-Graduation) |
+| P(LNG) | 1 | The proportion of simulations where there was a decision to graduate late (at the final analysis) to Stage 2, but then Stage 2 could not be run because no treatment arms met the dose selection criteria. (LNG=Late Non-Graduation) |
+| Num Selected | 1 | In s1-ds-summary this is the average over the simulations where stage 1 graduated, of the number of doses selected. · In s1-summary this is the average over all the simulations of the number of doses selected. |
+| Ppn Selected \<dose\> | D | In s1-ds-summary this is the proportion of the simulations where stage 1 graduated, where this dose was selected · In s1-summary this is the proportion of all the simulations where this dose was selected. |
 
 ### New s1-cd-summary file fields
 
@@ -1276,7 +1317,13 @@ In s1-summary and s1-ds-summary.csv:
 
 ### New s1-weeks & s1-simulation file fields
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Outcome | 1 | This is the outcome status for the Stage 1 simulation – which has some additional possible outcome values compared to FACTS Core: · • 8: Early Graduation (EG) • 9: Late Graduation (LG) • 10: Early Non-Graduation (ENG) – the graduation criteria were met but no treatment arms met the dose selection criteria, hence Stage 2 was ‘Null’. • 11: Late Non-Graduation (LNG) – the graduation criteria were met but no treatment arms met the dose selection criteria, or the overall max sample size was reached in Stage 1, hence Stage 2 was ‘Null’. • 15: Early graduation, and meets Stage 1 final futility criteria in the complete data analysis • 16: Early graduation, and meets Stage 1 final success criteria in the complete data analysis • 17: Early graduation, and does not meet Stage 1 final futility or success criteria in the complete data analysis |
+| Num Selected | 1 | The number of treatment arms selected for inclusion in Stage 2 |
+| Select \<dose\> | D | A flag per arm (including Control) indicating whether it was selected for use in Stage 2 |
+| Graduation \<QOI\> | \- | A flag for each QOI in the Early Graduation criteria. In the weeks file on interim analysis rows these will be 1 if met and 0 if not met. However the row in simulations.csv corresponds to the 999 row (dose selection) where the EG criteria are not re-evaluated. Thus in s1-simulations these columns either have the value -1 not evaluated because stage 1 reached final analysis when early graduation criteria are not evaluated or -9999 because the values correspond to the dose selection analysis when no decision criteria are evaluated. |
+| Graduation Combined | 1 | A flag for whether the complete graduation criteria were met, including at the final analysis when graduation occurs if neither the final analysis Success or Futility criteria are met. If the trial stopped at an interim the value here will be -9999 as the row corresponds to the 999 row (dose selection) where the early decision criteria are not re-evaluated. |
 
 ## Additional columns in Stage 2 results files
 
@@ -1328,7 +1375,15 @@ In addition:
 
 The preceding columns are as per the Weeks and Simulations files for this endpoint in FACTS Core (see the corresponding User Guide for detailed listings), but note that if the Stage 2 did not run these columns will contain -9999 in the Simulations file and the Weeks file are empty of data rows.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Comb Weeks | 1 | Number of weeks into the trial from the start of Stage 1. |
+| Comb Outcome | 1 | This is the final outcome of both stages. If the outcome is in the range 1-6then the trial did not graduate to Stage 2 and the outcome of the trial is the outcome of Stage 1. · Outcome 7 does not occur as failing to meet final success or futility in the final analysis of Stage 1 results in Graduation to Stage 2, not an inconclusive outcome. · Outcomes: · 10: Early No Graduation – Stage 1 graduated early but no treatment arms were selected for Stage 2 · 11: Late No Graduation – Stage 1 graduated late but no treatment arms were selected for Stage 2 · 2N: Stage 1 graduated early, N will be in the range 1-7 and indicates the outcome of Stage 2 which is the outcome of the trial. · 3N: Stage 1 graduated late, N will be in the range 1-7 and indicates the outcome of Stage 2 which is the outcome of the trial. · 40: Stage 1 graduated to Stage 2 and dose selection was successful, but Stage 2 could not be run because the trial overall sample size had been reached in Stage 1 and Stage 1 data was not being used in Stage 2. |
+| Comb \# Subjects | 1 | The total number of subjects enrolled in the trial from both Stage 1 and Stage 2. |
+| Comb Alloc \<Dose\> | D | The total number of subjects allocated to each arm from both Stage 1 and Stage 2 |
+| Comb Duration | 1 | The total duration of the trial from the FPFV of Stage 1 to the final analysis of Stage 2. |
+| Comb LPFV | 1 | The total accrual period of the trial from the FPFV of Stage 1 to the LPFV of Stage 2 |
+| Null Stage | 1 | A flag value 0 or 1. A value of 1 indicates that Stage 2 was not run. |
 
 ## Data in the patients files
 

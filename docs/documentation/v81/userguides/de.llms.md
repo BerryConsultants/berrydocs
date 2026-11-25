@@ -535,7 +535,54 @@ There are several types of file:
 
 ## Contents of summary.csv
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Number of Sims | 1 | The number of simulations that were run to produce the displayed results. |
+| Random Number Seed | 1 | The random number seed used to simulate the scenario. |
+| Mean num subjects | 1 | This is the mean (over the simulations) of the number of subjects recruited in this scenario (including any single patient run-in, but excluding any expansion cohort.. |
+| Ppn Tox | 1 | This is the average proportion of the subjects recruited that experienced a toxicity in this scenario. |
+| SD Ppn Tox | 1 | This is the standard deviation of the proportion of toxicity across the simulations. |
+| True Mean Tox | 1 | This is the average true probability of toxicity over the simulations. The ‘true probability of toxicity’ in a simulated trial is the average of the probabilities of toxicity all the subjects are exposed to, given the toxicity response profile that we are simulating from. |
+| True Mean Eff | 1 – Efficacy only | This is the average true probability of efficacy over the simulations. The ‘true probability of efficacy’ in a simulated trial is the average of the probabilities of efficacy all the subjects are exposed to, given the efficacy response profile that we are simulating from. |
+| MTD Selection \<dose index\> | One per dose | For each dose, this is proportion of the simulations where it was selected as the MTD at the end of the study, as defined by the Selected MTD simulation results column. · Index starts at 0 if a control arm is included. |
+| OSD Selection \<dose index\> | One per dose | Unused \[it contains values that are copies of the MTD selection. OSD = Optimum Safe Dose, it differs from the MTD only if there is an efficacy endpoint to take into account too\] |
+| Mean Fitted Toxicity \<dose index\> | One per dose | This is the mean (over the simulations) of the mean estimate of toxicity from the fitted toxicity response model for each dose. |
+| SD Fitted Toxicity \<dose index\> | One per dose | This is the standard deviation of the mean estimates across the simulations for each dose. Note it is not based on the standard deviation estimated **in** the simulations, it is the SD observed **across** the simulation results. |
+| Mean Subj per dose\<dose index\> | One per dose | This is the mean (over the simulations) of the number of subjects assigned to each dose. |
+| SD Subj per dose \<dose index\> | One per dose | This is the standard deviation of the number of subjects assigned to each dose across the simulations. |
+| Mean Tox per dose \<dose index\> | One per dose | This is the mean (over the simulations) of the number of toxicities observed at each dose. |
+| SD Tox per dose \<dose index\> | One per dose | This is the standard deviation of the number of toxicities observed at each dose across the simulations. |
+| Mean Known per dose \<dose index\> | One per dose | The number of known patient outcomes for a dose. In N-CRM there is no simulation of drop-outs so this will always be the same as “Mean subj per dose” |
+| SD Known per dose \<dose index\> | One per dose | This is the standard deviation of the number of known patient outcomes for each dose across the simulations. In N-CRM there is no simulation of drop-outs so this will always be the same as “SD subj per dose” |
+| Num subj 80%ile | 1 | This is the eightieth percentile across the simulations of the number of subjects recruited into the trial. |
+| MTD+ \<1 | 1 | The number of times the MTD was deemed to be less than the lowest dose |
+| MTD+ \<dose index\> | One per dose | The number of times each dose was selected as the MTD |
+| MTD+ \>\<D\> | 1 | The number of times the MTD was deemed to be above the highest dose |
+| OSD+ \<1 | 1 | The same as MTD+ \<1, can be ignored |
+| OSD+ \<dose index\> | One per dose | The same as MTD+ \<dose index\>, can be ignored |
+| OSD+ \>\<D\> | 1 | The same as MTD+ \> \<D\>, can be ignored |
+| DE Version | 1 | This is the version of the Dose Esc design engine that simulated these trial results. |
+| GUI Version | 1 | This is the version of the FACTS GUI that was used to specify the parameters for the trials to be simulated. |
+| Project | 1 | The name of the project or design |
+| Scenario | 1 | The name of the scenario within the project or design |
+| Date/Time | 1 | The date and time the simulations were started |
+| True Toxicity \<Dose\> | One per dose | The actual toxicity rate being simulated for each dose |
+| Mean Lost | 1 – Open Enrolment only | The mean (over the simulations) of the number of subjects who were available for treatment but could not be included in the trial because the number of treated subjects for whom the final result is not available equals the maximum queue length. This only applies to Open Enrolment designs otherwise the column is omitted. |
+| s.d.Lost | 1 – Open Enrolment only | The SD (over the simulations) of the number of subjects ‘lost’ (see above). This only applies to Open Enrolment designs otherwise the column is omitted. |
+| Ppn(Esc) \<Dose\> | One per dose | The proportion of times the final data on the dose resulted in the decision “Escalate”. |
+| Ppn(Stay) \<Dose\> | One per dose | The proportion of times the final data on the dose resulted in the decision “Stay”. |
+| Ppn(DeEsc) \<Dose\> | One per dose | The proportion of times the final data on the dose resulted in the decision “De-escalate”. |
+| Ppn(Never) \<Dose\> | One per dose | The proportion of times the final data on the dose resulted in the decision “De-escalate and never return”. |
+|  |  | Note that there is a fifth outcome or state for a dose at the end of the trial – that is that it has no data. Hence for a given dose, the above 4 proportions don’t necessarily sum to 1. |
+| PostCE MTD+ \<1 | 1 – Cohort expansion only | The number of times after the Cohort Expansion the dose ‘below the first dose’ was selected as MTD+. (Omitted if no Expansion Cohort is defined) |
+| PostCE MTD+ \<Dose\> | One per dose – Cohort expansion only | The number of times after the Cohort Expansion the dose was selected as MTD+. (Omitted if no Expansion Cohort is defined) |
+| PostCE MTD+ \> \<D\> | 1 – Cohort expansion only | The number of times after the Cohort Expansion the dose ‘above the top dose’ was selected as MTD+. (Omitted if no Expansion Cohort is defined) |
+| PostCE OSD+ \<1 | 1 – Cohort expansion only | The number of times after the Cohort Expansion the dose ‘below the first dose’ was selected as OSD+. (Omitted if no Expansion Cohort is defined) |
+| PostCE OSD+ \<Dose\> | One per dose – Cohort expansion only | The number of times after the Cohort Expansion the dose was selected as OSD+. (Omitted if no Expansion Cohort is defined) |
+| PostCE OSD+ \> \<D\> | 1 – Cohort expansion only | The number of times after the Cohort Expansion the dose ‘above the top dose’ was selected as OSD+. (Omitted if no Expansion Cohort is defined) |
+| All Tox Stop | 1 | The proportion of the simulations that stopped because all doses were too toxic. |
+| Early Success | 1 | The proportion of the simulations that stopped because sufficient stopping rules were met before the maximum number of cohorts had been treated. |
+| Cap Stop | 1 | The proportion of the simulations that stopped because the maximum number of cohorts had been treated. |
 
 ## Contents of simulations.csv and cohortsNNN.csv
 
@@ -560,7 +607,28 @@ There are several types of file:
 
 ### Common simulations.csv and cohortsNNN.csv columns
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Model MTD | 1 | The dose index of the model MTD |
+| Model OSD | 1 \[simulations only\] | The index of the dose selected as the Optimal Safe Dose (OSD), in N-CRM this will always be the same as the MTD as there is no efficacy to take into consideration. |
+| Toxicity \<dose index\> | One per dose | The mean of the final posterior estimate of the toxicity rate at each dose. |
+| No. Subj \<dose index\> | One per dose | The number of subjects that have been allocated to each dose. |
+| Tox per dose \<dose index\> | One per dose | The number of toxicities that have observed at each dose |
+| Known per dose \<dose index\> | One per dose | The number of subjects for whom final results are available at each dose. |
+| Tox CI | 1 – MTD target only | Only used if targeting a single dose. It’s the CI used in the stopping rule “range of dose strength within the credible interval”, where the credible interval has a default alpha of 0.05. |
+| Flags | 1 | A flag value comprising a number of (possible) flag values ’OR’d together to show the current allocation or stopping decisions. See the Flag Values table below for details |
+| 1^(st) full size | 1 \[simulations only\] | The number of the first full sized cohort, this will be ‘1’ unless the small cohort run-in is enabled. If the small cohort run-in is enabled, then this is the index of the first full size cohort. |
+| Cohort size | 1 \[cohorts only\] | The number of patients in the cohort. |
+| MTD+ | 1 | The dose index of the model MTD+, this is the model MTD using the dose range extended by one dose either end. Dose 0 will be selected if all doses are too toxic and dose D+1 will be selected if no doses are toxic enough. |
+| OSD+ | 1 \[simulations only\] | The dose index of the model OSD+, will be the same as the model MED+ unless this is above the model MTD+, in which case it is same as the model MTD+. If there is no efficacy to take into consideration this is the same as the model MTD+.. |
+| True Toxicity \<Dose\> | One per dose | The toxicity rate being simulated for that dose in the scenario. |
+| Rec Time | 1 - Cohorts only | If the trial is using open enrolment this column record the time the subject was available to be dosed. |
+| Num Lost | 1 – Open enrolment only (simulations only) | If the trial is using open enrolment this is the total number of subjects ‘lost’ during the simulation, that is they couldn’t be allocated a dose because there were already the maximum number of subjects treated but not complete. |
+| Decision \<Dose\> | One per dose | Based on the data on that dose (in simulaitons.csv the data at the end of the trial) a code indicating the decision that the rules say should be taken if that were the dose last tested. · -3: No data · -2: De-escalate and never return · -1: De-escalate · 0: Stay · 1: Escalate |
+| PostCE MTD | 1 – Expansion cohort only (simulations only) | In the case of a trial using an expansion cohort, this is the dose that is the model MTD at the end of the dose escalation phase, after the expansion cohort. |
+| PostCE OSD | 1 – Expansion cohort only (simulations only) | In the case of a trial using an expansion cohort, this is the dose that is the model OSD at the end of the dose escalation phase, after the expansion cohort. |
+| PostCE MTD+ | 1 – Expansion cohort only (simulations only) | In the case of a trial using an expansion cohort, this is the dose that is the model MTD+ at the end of the dose escalation phase, after the expansion cohort. |
+| PostCE OSD+ | 1 – Expansion cohort only (simulations only) | In the case of a trial using an expansion cohort, this is the dose that is the model OSD+ at the end of the dose escalation phase, after the expansion cohort. |
 
 ### Aggregation
 

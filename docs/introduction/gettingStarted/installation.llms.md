@@ -140,7 +140,22 @@ Subsequent runs, and subsequent installations of mod level updates, will not req
 
 ## Installation Verification
 
-[TABLE]
+| **Action** | **Expected result** | **Actual result** | **Pass** | **Fail** |
+|:---|:---|:---|:---|:---|
+| Verify that the FACTS shortcut appears in the Start Menu and on the user’s desktop | Application shortcuts located |  |  |  |
+| Click the application shortcut to launch FACTS (Enter license key as necessary) | Application opens. |  |  |  |
+| Click the Help \> About menu item | About box appears. |  |  |  |
+| Verify the version number is the same as the version specified by Berry Consultants. | Version number is correct |  |  |  |
+| Download an example “.facts” file from the “Example files” box of one of the [tutorials](../../documentation/index.llms.md#tutorials), then click the File \> Open menu item and select the downloaded file. | Example project opens. |  |  |  |
+| Click the File \> Save As menu item. Choose a writeable location on the local drive and save a copy of the design. | New copy of project created. |  |  |  |
+| Click the Simulation tab, with “Locally” selected: Click “Select All” Click “Simulate” | Simulations start. After a short while, results are displayed in the GUI. |  |  |  |
+| Click the “Explore Results…” button and select one of the “Show … Graphs” options. | Graph window opens. Displayed graph updates when graph title selected in list. |  |  |  |
+| If the example file used above was not a “FACTS Core” example, repeat the steps above with a FACTS Core example, up to and including running the simulations. |  |  |  |  |
+| Click the “Design Report” button. | A Microsoft Word document describing the design and its simulation results is generated within a few seconds, saved in the design’s results folder and opened. No R installation is needed. |  |  |  |
+| Review the contents of the Word document. | It describes the example you have selected and simulated. |  |  |  |
+| *Optional, only needed if AIRSHIP will be used:* install R, then in FACTS open Settings \> Options… \> R Configuration, select the entry that points to R.exe and click “Test”. | The selected R installation is reported as available. |  |  |  |
+| *Optional:* with at least two scenarios simulated, click “Aggregate”, then click “Explore Results…” and select “Compare Scenarios in AIRSHIP”. | AIRSHIP opens with the simulation results. The first time, FACTS installs the R packages “remotes” and “airship”, which needs internet access. |  |  |  |
+| Click the File \> Exit menu item | Application closed. |  |  |  |
 
 Installation verification steps {.table-striped .table-hover .caption-top .table}
 
