@@ -360,7 +360,27 @@ summaries=count.wins(dat1=sims.out, success.thresh=0.60, dose.thresh=0.90)
 
 Below is a table of the results from the post-processing. The final column shows, for each arm, the proportion of simulated trials in which that arm was selected to be carried forward into a future trial.
 
-[TABLE]
+| **Scenario** | **Num sims** | **Pred. Prob. Future Trial Threshold** | **Other Treatment Arm Threshold** | **Arm** | **Probability of Selection** |
+|:--:|:--:|:--:|:--:|:--:|:--:|
+| none | 1000 | 0.6 | 0.9 | trt1 | 0.044 |
+| none | 1000 | 0.6 | 0.9 | trt2 | 0.042 |
+| none | 1000 | 0.6 | 0.9 | trt3 | 0.036 |
+| none | 1000 | 0.6 | 0.9 | trt4 | 0.039 |
+|  |  |  |  |  |  |
+| win1 | 1000 | 0.6 | 0.9 | trt1 | 0.832 |
+| win1 | 1000 | 0.6 | 0.9 | trt2 | 0.016 |
+| win1 | 1000 | 0.6 | 0.9 | trt3 | 0.012 |
+| win1 | 1000 | 0.6 | 0.9 | trt4 | 0.019 |
+|  |  |  |  |  |  |
+| win2.3 | 1000 | 0.6 | 0.9 | trt1 | 0.003 |
+| win2.3 | 1000 | 0.6 | 0.9 | trt2 | 0.529 |
+| win2.3 | 1000 | 0.6 | 0.9 | trt3 | 0.978 |
+| win2.3 | 1000 | 0.6 | 0.9 | trt4 | 0.011 |
+|  |  |  |  |  |  |
+| win.1.3.4 | 1000 | 0.6 | 0.9 | trt1 | 0.843 |
+| win.1.3.4 | 1000 | 0.6 | 0.9 | trt2 | 0.016 |
+| win.1.3.4 | 1000 | 0.6 | 0.9 | trt3 | 0.623 |
+| win.1.3.4 | 1000 | 0.6 | 0.9 | trt4 | 0.845 |
 
 The above code can be used to evaluate additional predictive probability and other treatment arm comparison thresholds. It also could be expanded to create other summaries of interest. For example, we could determine the proportion of trials in which exactly one arm was selected, two arms were selected, etc. Finally, the code could be expanded so different trial success thresholds other than 0.60 could be examined. In the current simulations, a predictive probability future trial threshold of 0.6 results in a proportion of late successes of 0.128 for the none scenario. Additions could be made to the code so that the proportion of late successes could be determined for multiple higher thresholds across all of the scenarios.
 

@@ -270,7 +270,11 @@ A screenshot of a social media post Description automatically generated
 
 The 5 composite scenarios:
 
-[TABLE]
+| **Flat** | **Linear** | **Logistic** |
+|:--:|:--:|:--:|
+| ![](multendptPainattachments/media/image11.png) · No doses “Should Succeed” | ![](multendptPainattachments/media/image12.png) · Doses 6 & 7 “Should Succeed” | ![](multendptPainattachments/media/image13.png) · Doses 5, 6 & 7 “Should Succeed” |
+| **Emax** | **Umbrella** |  |
+| ![](multendptPainattachments/media/image14.png) · Doses 2, 3, 4, 5, & 6 “Should Succeed” | ![](multendptPainattachments/media/image15.png) · Doses 3, 4, 5, & 6 “Should Succeed” |  |
 
 ## 3.3 Execution
 

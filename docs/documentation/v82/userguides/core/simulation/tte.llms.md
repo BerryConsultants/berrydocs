@@ -480,7 +480,31 @@ The following sections break down which columns are available by sorting to whic
 
 These are the columns displayed on the simulations tab after simulations are completed, the can also be displayed in the separate “Highlights” results window.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Select | 1 | Not an output column, this column contains check box to allow the user to select which scenario to simulate. The ‘Select All’ button causes them all to be checked. |
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Execution \> Dropout Rate’, · ‘Virtual Subject Response \> Explicitly Defined \> Arm Response’, · ’Virtual Subject Response \> Explicitly Defined \> Control Hazard rates, · ‘Virtual Subject Response \> Explicitly Defined \> Predictor’, · This is the same name as used for the results directory |
+| Random Number Seed | 1 | Base random number seed used to perform the simulations. |
+| Num Sims | 1 | The number of simulations that were run to produce the displayed results. |
+| Mean Subj. | 1 | This is the mean (over the simulations) of the number of subjects recruited in this scenario. |
+| Ppn Overall Success | 1 | This is the proportion of simulations that stopped for success, either early success or late success (as defined below). |
+| Ppn Early Success | 1 | This is the proportion of simulations that stopped early for success (and did not regress to futility in the final analysis – though they might have regressed to ‘inconclusive’). |
+| Ppn Late Success | 1 | This is the proportion of simulations that did not stop early but were successful in the final analysis. |
+| Ppn Overall Futility | 1 | This is the proportion of simulations that stopped for futility, either early futility or late futility (as defined below). |
+| Ppn Late Futility | 1 | This is the proportion of simulations that did not stop early but were futile in the final analysis. |
+| Ppn Early Futility | 1 | This is the proportion of simulations that stopped early for futility (and did not regress to success in the final analysis – though they might have regressed to ‘inconclusive’). |
+| Ppn S uc-\>Fut Flipflop | 1 | This is the proportion of simulations that stopped early for success but regressed to futility in the final analysis. |
+| Ppn F ut-\>Suc Flipflop | 1 | This is the proportion of simulations that stopped early for futility but regressed to success in the final analysis. |
+| Ppn Inco nclusive | 1 | This is the proportion of simulations that did not stop early and were neither successful nor futile in the final analysis. |
+| Early Success Time | 1 | This is the average time to an early decision to stop for success (i.e. the time excluding final follow up) over those simulations that did decide early to stop for success. |
+| Mean Trt. \<Dose\> | One per arm | This is the mean (over the simulations) of the hazard ratio of the treatment arms to control. The HZ for the control arm is always 1. |
+| Mean Duration | 1 | The mean over the simulations of the total duration from the start of enrolment to end of follow up. |
+| PPn Arms Drop: \< Dose\>\> | One per arm | This is the number of times (over the simulations) that each arm was dropped. |
+| Mean LP Enrolled | 1 | This is the mean, in weeks (over the simulations) of the duration of the trial from first patient first visit to Last Patient First Visit (i.e. the duration of accrual). |
+| Ppn Correct Arm | 1 | The proportion of simulations that met the success criteria and selected (by the target QOI specified on the Study \> Variant tab) one of the arms marked as “should succeed” on the Virtual Subject Response \> Explicitly Defined \> Arm Response tab |
+| Ppn Incorrect Arm | 1 | The proportion of simulations that met the success criteria and selected (by the target QOI specified on the Study \> Variant tab) one of the arms **not** marked as “should succeed” on the Virtual Subject Response \> Explicitly Defined \> Arm Response tab |
+| Version | 1 | The FACTS version number at the time the simulations were run. |
 
 The columns that are displayed by default in the simulations tab after time-to-event simulations have been run. {.caption-top .table}
 
@@ -488,7 +512,15 @@ The columns that are displayed by default in the simulations tab after time-to-e
 
 By right clicking and selecting the allocation columns, a pop-out will appear that provides the following columns.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Execution \> Dropout Rate’, · ‘Virtual Subject Response \> Explicitly Defined \> Arm Response’, · ’Virtual Subject Response \> Explicitly Defined \> Control Hazard rates, · ‘Virtual Subject Response \> Explicitly Defined \> Predictor’, · This is the same name as used for the results directory |
+| Mean Subj. | 1 | This is the mean (over the simulations) of the number of subjects recruited in this scenario. |
+| SD Mean Subj. | 1 | This is the standard deviation across the simulations of the number of subjects recruited. |
+| 80%-ile Subj | 1 | This is the eightieth percentile across the simulations of the number of subjects recruited into the trial. |
+| Mean Alloc.: \<Dose\> | One per arm | This is the mean (over the simulations) of the number of subjects recruited into each arm in this scenario. |
+| SD Alloc.: \<Dose\> | One per arm | This is the SD of the means (over the simulations) of the number of subjects allocated to each treatment arm. |
 
 The allocation tabs provided in FACTS output for time-to-event trials. {.caption-top .table}
 
@@ -496,7 +528,13 @@ The allocation tabs provided in FACTS output for time-to-event trials. {.caption
 
 The following columns provide summaries of the estimated hazard ratios based on the bayesian model incorporating the dose response model and the predictor model, if one is specified.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Execution \> Dropout Rate’, · ‘Virtual Subject Response \> Explicitly Defined \> Arm Response’, · ’Virtual Subject Response \> Explicitly Defined \> Control Hazard rates, · ‘Virtual Subject Response \> Explicitly Defined \> Predictor’, · This is the same name as used for the results directory |
+| Mean Trt. \<Dose\> | One per arm | This is the mean (over the simulations) of the hazard ratio of the treatment arms to control. The HZ for the control arm is always 1. |
+| SD Trt .: \<Dose\> | One per arm | This is the standard deviation (over the simulations) of the estimate of the treatment hazard ratio for each arm. The SD of the treatment response for the control arm is always 0. |
+| True Resp: \<Dose\> | One per arm | This is the true Hazard Ratio from which the simulation data was sampled. When using VSR with Event Rate \| Predictor, these rates will not be the same as the Arm Response HRs entered on the VSR \> Explicitly Defined (ER \| P) \> Arm Response tab. |
 
 Response columns available in FACTS output for time-to-event simulations. {.caption-top .table}
 
@@ -504,7 +542,16 @@ Response columns available in FACTS output for time-to-event simulations. {.capt
 
 By right clicking and selecting the Observed columns, a pop-out will appear that provides the following columns. These columns relate to the raw data observed in the trial.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Execution \> Dropout Rate’, · ‘Virtual Subject Response \> Explicitly Defined \> Arm Response’, · ’Virtual Subject Response \> Explicitly Defined \> Control Hazard rates, · ‘Virtual Subject Response \> Explicitly Defined \> Predictor’, · This is the same name as used for the results directory |
+| Mean Total Events | 1 | The mean (over the simulations) of the number of events observed in each trial. |
+| Mean Events \<Dose\> | One per arm | The mean (over the simulations) of the number of events observer in each arm in each trial. |
+| Mean Events \<Dose\> \<Segment\> | One per arm per segment | The mean (over the simulations) of the number of events observer in each arm and segment in each trial. |
+| Mean Complete Info \<Dose\> | One per arm | This is the mean (over the simulations) of information observed per arm as defined on the Interims tab (Subjects enrolled, Complete Predictor Data, Opportunity to Complete Predictor, Events, Predictor Events) in this scenario. |
+| Mean Dropouts \<Dose\> | One per arm | If dropouts are simulated this is the mean (over the simulations) of the number of subjects in each arm that dropout before an event is observed. |
+| Mean Exposure \<Dose\> \<Segment\> | One per arm | The mean (over the simulations), of the total exposure of the subjects observed on each arm and segment. |
 
 Observed columns available in FACTS output for time-to-event simulations. {.caption-top .table}
 
@@ -512,7 +559,11 @@ Observed columns available in FACTS output for time-to-event simulations. {.capt
 
 By right clicking and selecting the allocation columns, a pop-out will appear that provides the following columns. These columns provide summaries of the Quantities of Interest values.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Execution \> Dropout Rate’, · ‘Virtual Subject Response \> Explicitly Defined \> Arm Response’, · ’Virtual Subject Response \> Explicitly Defined \> Control Hazard rates, · ‘Virtual Subject Response \> Explicitly Defined \> Predictor’, · This is the same name as used for the results directory |
+| \<QOI\> \<Dose\> | One per arm per QOI | For each Posterior Probability and Predictive Probability QOI defined on this endpoint, this is the mean over the simulations of the estimate of the probability of the QOI for each dose. (P-value QOIs are reported in the frequentist results table). · For each Target QOI this is the proportion of simulations where this dose was selected at the end of the trial as the dose with the greatest probability of meeting the target condition. · The probability that each dose is the target at the end of a simulated trial is its marginal probability (the number of times it was the dose closest to the target in the MCMC sampling of the analysis at the end of the trial). The target of having the Max response on this endpoint, or some fraction of it (EDq) is always identifiable, so the Ppn(target) for these QOIs will sum to 1 across the doses. · An MED target is not guaranteed to be identifiable, if no dose meets the CSD criteria in any MCMC sample so all doses have a 0 probability of having a response greater than Control (or AC) by the CSD then no dose is the MED. So the sum of each Ppn(target) QOI across the doses should sum to between 0 and 1 inclusive. · Decision QOI’s are not reported here separately, but their component QOIs – the vector of values and target QOI used to select from them are. |
 
 Probabilities columns available in FACTS output for time-to-event simulations. {.caption-top .table}
 
@@ -520,7 +571,18 @@ Probabilities columns available in FACTS output for time-to-event simulations. {
 
 By right clicking and selecting the Hierarchical Prior Parameters columns, a pop-out will appear that provides the following columns.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Execution \> Dropout Rate’, · ‘Virtual Subject Response \> Explicitly Defined \> Arm Response’, · ’Virtual Subject Response \> Explicitly Defined \> Control Hazard rates, · ‘Virtual Subject Response \> Explicitly Defined \> Predictor’, · This is the same name as used for the results directory |
+| Mean BAC Mu | 1 | The average (over the simulation) of the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean Control responses, if a Hierarchical Prior is being used for Control is being used, otherwise the column contains -9999. |
+| SD BAC Mu | 1 | The average (over the simulations) of the standard deviation of the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean Control responses, if a Hierarchical Prior is being used for Control is being used, otherwise the column contains -9999. |
+| Mean BAC Tau | 1 | The average (over the simulations) of the posterior estimate of the standard deviation of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean Control responses, if a Hierarchical Prior is being used for Control is being used, otherwise the column contains -9999. |
+| SD BAC Tau | 1 | The standard deviation (over the simulations) of the posterior estimate of the standard deviation of the Bayesian Augmented Control (hierarchical Prior) distribution of mean Control responses, if a Hierarchical Prior is being used for Control is being used, otherwise the column contains -9999. |
+| Mean BAAC Mu | 1 | The average (over the simulation) of the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean Active Comparator responses, if a Hierarchical Prior is being used for Active Comparator is being used, otherwise the column contains -9999. |
+| SD BAAC Mu | 1 | The average (over the simulations) of the standard deviation of the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean Active Comparator responses, if a Hierarchical Prior is being used for Active Comparator is being used, otherwise the column contains -9999. |
+| Mean BAAC Tau | 1 | The average (over the simulations) of the posterior estimate of the standard deviation of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean Active Comparator responses, if a Hierarchical Prior is being used for Active Comparator is being used, otherwise the column contains -9999. |
+| SD BAAC Tau | 1 | The standard deviation (over the simulations) of the posterior estimate of the standard deviation of the Bayesian Augmented Active Comparator (hierarchical Prior) distribution of mean Active Comparator responses, if a Hierarchical Prior is being used for Active Comparator, otherwise the column contains -9999. |
 
 Hierarchical Prior Parameters columns available in FACTS output for time-to-event simulations. {.caption-top .table}
 
@@ -528,7 +590,20 @@ Hierarchical Prior Parameters columns available in FACTS output for time-to-even
 
 By right clicking and selecting the Predictor columns, a pop-out will appear that provides the following columns. These colums provide summaries of the bayesian model estimates relating to the predictor endpoint.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Execution \> Dropout Rate’, · ‘Virtual Subject Response \> Explicitly Defined \> Arm Response’, · ’Virtual Subject Response \> Explicitly Defined \> Control Hazard rates, · ‘Virtual Subject Response \> Explicitly Defined \> Predictor’, · This is the same name as used for the results directory |
+| Mean Pred. Resp.: \<Dose\> | One per arm | The mean (over the simulations) of the mean estimate of the predictor response for each arm. The response reported is: · Continuous predictor: The mean change from baseline · Dichotomous predictor: The response rate · TTE predictor: The hazard ratio · No predictor: 0 |
+| SD Pred. Resp.: \<Dose\> | One per arm | The SD (over the simulations) of the mean estimate of the predictor response for each arm. |
+| Mean Pred. Sigma | 1 | This is the average (over the simulations) of the estimate of sigma (SD of response) of a continuous predictor, if one was being used. Otherwise the column contains -9999. |
+| SD Pred Sigma | 1 | This is the standard deviation (over the simulations) of the estimate of the sigma (SD of the response) of a continuous predictor, if one was being used. Otherwise the column contains -9999. |
+| True Predictor · Resp: \<Dose\> | One per arm | This is the true predictor response from which the simulated subject predictor responses were sampled. For a continuous predictor this is the mean of the response, for a dichotomous predictor it is the predictor response rate and for a time-to-event predictor it is the hazard ratio of the predictor, otherwise the column contain -9999. |
+| True Predictor · Sigma: \<Dose\> | One per arm | This is the true standard deviation of the predictor response from which the simulated subject predictor responses were sampled when the predictor is a continuous measure, otherwise the column contains -9999 |
+| Mean Pred. Lambda: \<Dose\> | One per arm | This is the average (over the simulations) of the estimate of Lambda for each dose in the endpoint predictor model – the estimated mean time to the final event for each dose either where the predictor is zero for a continuous or dichotomous predictor, or for the time after observing the event of time-to-event predictor. Otherwise the column contains 0. |
+| SD Pred. Lambda: \<Dose\> | One per arm | This is the standard deviation (over the simulations) of the estimate of Lambda for each dose (see above). Otherwise the column contains 0. |
+| Mean Pred. Beta | 1 | This is the average (over the simulations) of the estimate of Beta – the coefficient that relates the predictor to the endpoint for a continuous or dichotomous predictor. Otherwise the column contains -9999. |
+| SD Pred. Beta | 1 | This is the standard deviations (over the simulations) of the estimate of Beta – the coefficient that relates the predictor to the endpoint for a continuous or dichotomous predictor. Otherwise the column contains -9999. |
 
 Predictor columns available in FACTS output for time-to-event simulations. {.caption-top .table}
 
@@ -536,7 +611,14 @@ Predictor columns available in FACTS output for time-to-event simulations. {.cap
 
 By right clicking and selecting the Model Parameters columns, a pop-out will appear that provides the following columns.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Execution \> Dropout Rate’, · ‘Virtual Subject Response \> Explicitly Defined \> Arm Response’, · ’Virtual Subject Response \> Explicitly Defined \> Control Hazard rates, · ‘Virtual Subject Response \> Explicitly Defined \> Predictor’, · This is the same name as used for the results directory |
+| True Predictor · Baseline Hazard Lambda: \<segment\> | One per VSR pr edictor hazard rate segment | The true hazard rate for the predictor (if the predictor is itself an event), in each of the predictor VSR time segments. |
+| Lambda: \<segment\> | One per Design, Hazard Model segment | The mean (over the simulations) of the mean estimate of lambda – the event rate (events per week) in each time segment of the hazard model. |
+| SE Lambda: \<segment\> | One per Design, Hazard Model segment | The standard error (over the simulations) of the mean estimate of lambda for each time segment of the hazard model. |
+| True Lambda: \<segment\> | One per VSR control hazard segment | The true hazard rate for each segment of the virtual subject response hazard rate profile. |
 
 Model Parameters columns available in FACTS output for time-to-event simulations. {.caption-top .table}
 
@@ -677,7 +759,27 @@ The first line is a header line, starting with a ‘#’, containing the FACTS G
 
 The second line is a header line, starting with a ‘#’, containing the following column headings.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Ppn LR Signif | 1 | The proportion of simulations where at least one of the unadjusted p-values (from the Log Rank test) is less than the user specified one-sided alpha. |
+| Ppn LR Signif \<dose\> | D | For each treatment arm, the proportion of simulations where the unadjusted p-value (from the Log Rank test) is less than the user specified one-sided alpha. · The marginal probability of significance per dose (using unadjusted p-values. |
+| Ppn LR Signif Bonf | 1 | The proportion of simulations where at least one of the unadjusted p-values (from the Log Rank test) is less than the Bonferroni corrected user specified one-sided alpha. |
+| Ppn LR Signif Bonf \<dose\> | D | For each treatment arm, the proportion of simulations where the unadjusted p-value (from the Log Rank test) is less than the Bonferroni corrected user specified one-sided alpha. |
+| Ppn Wilcox Signif | 1 | The proportion of simulations where at least one of the unadjusted p-values (from the Wilcoxon test) is less than the user specified one-sided alpha. |
+| Ppn Wilcox Signif \<dose\> | D | For each treatment arm, the proportion of simulations where the unadjusted p-value (from the Wilcoxon test) is less than the user specified one-sided alpha. · The marginal probability of significance per dose (using unadjusted p-values. |
+| Ppn Wilcox Signif Bonf | 1 | The proportion of simulations where at least one of the unadjusted p-values (from the Wilcoxon test) is less than the Bonferroni corrected user specified one-sided alpha. |
+| Ppn Wilcox Signif Bonf \<dose\> | D | For each treatment arm, the proportion of simulations where the unadjusted p-value (from the Wilcoxon test) is less than the Bonferroni correct user specified one-sided alpha. |
+| Mean HR \<dose\> | D | The mean Hazard Ratio per dose. |
+| SE HR \<dose\> | D | The standard error of the Hazard Ratio per dose |
+| Ppn HR Signif | 1 | The proportion of simulations where at least one of the unadjusted p-values (from the Cox model) is less than the user specified one-sided alpha. |
+| Ppn HR Signif \<dose\> | D | For each treatment arm, the proportion of simulations where the unadjusted p-value (from the Cox model) is less than the user specified one-sided alpha. · The marginal probability of significance per dose (using unadjusted p-values. |
+| Ppn HR Signif Bonf | 1 | The proportion of simulations where at least one of the unadjusted p-values (from the Cox model) is less than the Bonferroni corrected user specified one-sided alpha. |
+| Ppn HR Signif Bonf \<dose\> | D | For each treatment arm, the proportion of simulations where the unadjusted p-value (from the Cox model) is less than the Bonferroni correct user specified one-sided alpha. |
+| Bias \<dose\> | D | The mean, over the simulations, of the difference between the estimated hazard ratio (treatment effect vs control) and the true (simulated) hazard ratio per dose. |
+| Coverage \<dose\> | D | The proportion of simulations where the unadjusted confidence interval for the hazard ratio (treatment effect vs control) contains the true hazard ratio used to simulate subject responses. |
+| Mean KM med \<dose\> | D | The mean Kaplan-Meier estimate of the median survival time per dose |
+| SE KM med \<dose\> | D | The standard error of the Kaplan-Meier estimate of the median survival time per dose |
+| Predictor Cols |  | The appropriate output columns for the chosen type of predictor. See next tables for specifics of columns provided for each predictor type. |
 
 Contents of the summary_freq.csv file for time-to-event simulations. {.caption-top .table}
 
@@ -737,7 +839,67 @@ The second and third lines are header lines, starting with a ‘#’, and both c
 
 The two file types have the same columns, except for the first few columns that identify the simulation or analysis, as shown in the table. Both files include the success and futility evaluation columns.
 
-[TABLE]
+| Column Title | No. of cols | In sims file | In wk | Description |
+|----|----|----|----|----|
+| \# Weeks (Duration) | 1 |  | ✔ | The week of the analysis |
+| \#Sim | 1 | ✔ |  | The number of the simulation. |
+| Random Number Seed | 1 | ✔ |  | The random number seed used for the simulations. |
+| Interim Number | 1 |  | ✔ | Headed “InterimNumber”. The index of the analysis: the interim number, or 999 for the final analysis. |
+| Last Interim Number | 1 | ✔ |  | Headed “LastInterimNumber”. The index of the last interim performed the index of the interim immediately before the final interim (index ‘999’). Note this is not necessarily the interim when the trial stopped if the design includes follow-up after stopping. |
+| \#Subjects | 1 | ✔ | ✔ | The number of subjects recruited in the simulation. |
+| Outcome | 1 | ✔ | ✔ | A flag categorizing final study outcome: · 1. = Early success 2. = Late success 3. = Late futility 4. = Early futility 5. = Success to futility flip-flop 6. = Futility to success flip-flop 7. = Inconclusive |
+| Early Success | 1 | ✔ | ✔ | This is the time to the early success decision (-9999 if there was no early success decision). The from the start of the trial to the interim where the early success conditions were first met. It does not include the subsequent follow up time. |
+| Alloc \<dose\> | D | ✔ | ✔ | The number of subjects allocated to each arm. |
+| Pr(Alloc) \<dose\> | D | ✔ | ✔ | The probability of allocation to the different arms following the interim. |
+| Mean resp \<dose\> | D | ✔ | ✔ | The estimated hazard ratio of each treatment arm. |
+| SD Mean resp \<dose\> | D | ✔ | ✔ | The standard deviation of the estimate of the hazard ratio of each treatment arm. |
+| Resp (lower CI) \<dose\> | D | ✔ | ✔ | The lower bound of the 95% credible interval of the hazard ratio of each treatment arm. |
+| Resp (upper CI) \<dose\> | D | ✔ | ✔ | The upper bound of the 95% credible interval of the hazard ratio of each treatment arm. |
+| True Mean resp \<dose\> | D | ✔ | ✔ | The true mean response (hazard ratio) of each treatment arm for this simulation. · If the hazard ratio is specified over several time segments, this is the mean of the segment hazard ratios, weighted by the length of follow-up each segment covers. |
+| Mean Predictor Resp \<dose\> | D | ✔ | ✔ | The estimated response of the predictor at each treatment arm. · Cts: mean change from baseline · Dich: response rate · TTE: hazard ratio with control |
+| SD Predictor Resp \<dose\> | D | ✔ | ✔ | The standard deviation of the estimate of the predictor response. |
+| Mean Predictor Sigma | 1 | ✔ | ✔ | The mean of the estimate of the sigma of the predictor response (the sd of the response of a continuous predictor) |
+| SD Predictor Sigma | 1 | ✔ | ✔ | The SD of the estimate of the sigma of the predictor response (the sd of the response of a continuous predictor) |
+| TTE Predictor Resp (lower CI) \<dose\> | D | ✔ | ✔ | The lower bound of the 95% credible interval of the predictor hazard ratio of each treatment arm. Only present with a time-to-event predictor. |
+| TTE Predictor Resp (upper CI) \<dose\> | D | ✔ | ✔ | The upper bound of the 95% credible interval of the predictor hazard ratio of each treatment arm. Only present with a time-to-event predictor. |
+| True Predictor Mean resp \<dose\> | D | ✔ | ✔ | The true mean predictor response being simulated for each treatment arm (mean of a continuous predictor, response rate of a dichotomous predictor and the hazard ratio of a time-to-event predictor) |
+| True Predictor Sigma \<dose\> | D | ✔ | ✔ | The true sigma of the predictor response of each treatment arm, if the predictor is a continuous endpoint |
+| Mean Predictor Lambda \<dose\> | D | ✔ | ✔ | The mean of the estimate of Lambda for each dose in the endpoint predictor model – the estimated mean time to the final event for each dose where the predictor is zero for a continuous or dichotomous predictor or the time after observing the event of a time-to-event predictor. |
+| SD Predictor Lambda \<dose\> | D | ✔ | ✔ | The standard deviation of the estimate of Lambda for each dose in the endpoint predictor model (see above). |
+| Mean Predictor Beta | 1 | ✔ | ✔ | The mean of the estimate of the Beta coefficient in the endpoint predictor model. |
+| SD Predictor Beta | 1 | ✔ | ✔ | The standard deviation of the estimate of the Beta coefficient in the endpoint predictor model. |
+| Mean TTE Predictor Baseline Hazard Lambda \<seg\> | Sp | ✔ | ✔ | The mean estimate of the hazard rate of the predictor event on the control arm, when using a time-to-event predictor, for each time segment of the predictor control hazard model. |
+| SD TTE Predictor Baseline Hazard Lambda \<seg\> | Sp | ✔ | ✔ | The standard deviation of the estimate of the hazard rate of the predictor event on the control arm, when using a time-to-event predictor, for each time segment of the predictor control hazard model. |
+| True TTE Predictor Baseline Hazard Lambda \<seg\> | 1 per seg | ✔ | ✔ | The true hazard rate of the predictor event on the control arm used in the simulation, for each segment of the simulated predictor hazard (1 column, -9999, if there is no time-to-event predictor). |
+| Predictor Num Events \<dose\> \<seg\> | D \* Sp | ✔ | ✔ | The number of predictor events observed on each arm in each segment of the predictor hazard model. Only present with a time-to-event predictor. |
+| Predictor Exposure \<dose\> \<seg\> | D \* Sp | ✔ | ✔ | The total exposure (in weeks) to the predictor event of the subjects on each arm in each segment of the predictor hazard model. Only present with a time-to-event predictor. |
+| Predictor Mean Raw resp \<dose\> | D | ✔ | ✔ | The observed (raw) mean of the predictor on each arm: the mean value of a continuous predictor, or the response rate of a dichotomous predictor. Present unless the predictor is time-to-event; -9999 if there is no predictor. |
+| Predictor SE Mean Raw resp \<dose\> | D | ✔ | ✔ | The standard error of the observed mean of the predictor on each arm. Present unless the predictor is time-to-event; -9999 if there is no predictor. |
+| Predictor Observed \<dose\> | D | ✔ | ✔ | The number of subjects on each arm with an observed predictor value. Present unless the predictor is time-to-event; 0 if there is no predictor. |
+| Num Events \<dose\> \<seg\> | S \* D | ✔ | ✔ | The number of events observed on each arm in each control hazard model time segment. |
+| Total Exposure \<dose\> \<seg\> | S \* D | ✔ | ✔ | The total exposure (in weeks) of the subjects on each arm in each control hazard model time segment. |
+| Complete Info \<dose\> | D | ✔ | ✔ | Headed “Complete Information \<dose\>”. The information on each arm that counts towards the timing of interims as defined on the Interims tab: subjects enrolled, events observed, or subjects with (or with the opportunity for) a predictor observation. |
+| Num Dropouts \<dose\> | D | ✔ | ✔ | The number of subjects on each arm who have dropped out. |
+| DR Param \<param\> | 10 | ✔ | ✔ | The estimate of the mean value of each of the response model parameters. Ten columns are always written; columns a model does not use are 0. The model parameters are labeled α₁, α₂, .. the subscripts corresponding to the column their value appears in here. For the NDLM models and the hierarchical and hierarchical linear models, the tau or hierarchical SD parameter is in the last column. |
+| Sd DR Param \<param\> | 10 | ✔ | ✔ | The standard deviation of the estimate of the mean value of the corresponding response model parameter. |
+| Mean Lambda \<seg\> | S | ✔ | ✔ | The mean estimate of the hazard rate on the control arm, for each time segment of the analysis model. |
+| Mean Event Rate \<dose\> \<seg\> | S per trt arm | ✔ | ✔ | The mean estimate of the hazard rate on each treatment arm (excluding control), for each time segment of the analysis model: the control hazard rate multiplied by the arm’s hazard ratio. |
+| Sd Lambda \<seg\> | S | ✔ | ✔ | The standard deviation of the estimate of the hazard rate on the control arm, for each time segment of the analysis model. |
+| Sd Event Rate \<dose\> \<seg\> | S per trt arm | ✔ | ✔ | The standard deviation of the estimate of the hazard rate on each treatment arm (excluding control), for each time segment of the analysis model. |
+| True Lambda \<seg\> | 1 per seg | ✔ | ✔ | The true hazard rate on the control arm used to simulate the subjects’ event times, for each segment of the simulated control hazard. The number of columns is set by the Virtual Subject Response profile, not the analysis model. |
+| Num Events \<dose\> | D | ✔ | ✔ | The number of events observed on each treatment arm. |
+| BAC Mean | 1 | ✔ | ✔ | This is the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses. |
+| BAC Mean SD | 1 | ✔ | ✔ | This is the SD of the posterior estimate of the mean of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses. |
+| BAC Tau | 1 | ✔ | ✔ | This is the posterior estimate of the SD of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses. |
+| BAC Tau SD | 1 | ✔ | ✔ | This is the SD of the posterior estimate of the SD of the Bayesian Augmented Control (Hierarchical Prior) distribution of mean control responses. |
+| BAAC Mean | 1 | ✔ | ✔ | This is the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses. |
+| BAAC Mean SD | 1 | ✔ | ✔ | This is the SD of the posterior estimate of the mean of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses. |
+| BAAC Tau | 1 | ✔ | ✔ | This is the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses. |
+| BAAC Tau SD | 1 | ✔ | ✔ | This is the SD of the posterior estimate of the SD of the Bayesian Augmented Active Comparator (Hierarchical Prior) distribution of mean active comparator responses. |
+| Duration | 1 | ✔ | ✔ | The time in weeks to the analysis shown. |
+| Arm Drop Time \<dose\> | D | ✔ | ✔ | For each treatment arm, the time in weeks when it was decided to drop the arm. |
+| LPFV | 1 | ✔ | ✔ | The time in weeks to the last patient first visit. Headed “LP Enrolled” on the first column header line. |
+| QOI Columns |  |  |  |  |
 
 Simulations and weeks file column names for a time-to-event endpoint. {.caption-top .table}
 

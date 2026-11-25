@@ -168,7 +168,11 @@ Note that with the exception of curves 5 (all toxic) and 6 (non-toxic) the corre
 | 5 | 0.30 / 0.866 | 0.40 / 0.117 | 0.52 / 0.015 | 0.61 / 0.002 | 0.76 / 0.000 | 0.78 / 0.000 |
 | 6 | 0.05 / 0.050 | 0.05 / 0.022 | 0.05 / 0.026 | 0.05 / 0.097 | 0.10 / 0.140 | 0.15 0.665 |
 
-[TABLE]
+| **Distribution of MTD seleciton by Scenario: results for 3+3** |  |
+|----|----|
+| ![](crmToxicityattachments/media/image11.png) · Scenario 1 – true MTD is Dose 3 | ![](crmToxicityattachments/media/image12.png) · Scenario 2 – true MTD is Dose 4 |
+| ![](crmToxicityattachments/media/image13.png) · Scenario 3 – true MTD is Dose 5 | ![](crmToxicityattachments/media/image14.png) · Scenario 4 – true MTD is Dose 5 |
+| ![](crmToxicityattachments/media/image15.png) · Scenario 5 – all doses too toxic | ![](crmToxicityattachments/media/image16.png) · Scenario 6 – no dose too toxic |
 
 # 4 Simulating using mTPI
 
@@ -261,7 +265,11 @@ Note that with the exception of curves 5 (all toxic) and 6 (non-toxic) the corre
 | 6 | 0.05 / 0.040 | 0.05 / 0.038 | 0.05 / 0.035 | 0.05 / 0.098 | 0.10 / 0.161 | 0.15 / 0.628 |
 |  |  |  |  |  |  |  |
 
-[TABLE]
+| **Distribution of MTD seleciton by Scenario: results for mTPI** |  |
+|----|----|
+| ![](crmToxicityattachments/media/image22.png) · Scenario 1 – true MTD is Dose 3 | ![](crmToxicityattachments/media/image23.png) · Scenario 2 – true MTD is Dose 4 |
+| ![](crmToxicityattachments/media/image24.png) · Scenario 3 – true MTD is Dose 5 | ![](crmToxicityattachments/media/image25.png) · Scenario 4 – true MTD is Dose 5 |
+| ![](crmToxicityattachments/media/image26.png) · Scenario 5 – all doses too toxic | ![](crmToxicityattachments/media/image27.png) · Scenario 6 – no dose too toxic |
 
 # 5 Simulating using FACTS CRM
 
@@ -386,7 +394,11 @@ Goodman report results for a number of different designs, the results here are f
 
 We are uncertain as to why the selection of MTD by FACTS is better than that reported by Goodman, the sample sizes tend to be smaller because Goodman’s algorithm enforced a minimum trial size of 18 whereas we did not.
 
-[TABLE]
+| **Distribution of MTD seleciton by Scenario: results for CRM(Toxicity)** |  |
+|----|----|
+| ![](crmToxicityattachments/media/image35.png) · Scenario 1 – true MTD is Dose 3 | ![](crmToxicityattachments/media/image36.png) · Scenario 2 – true MTD is Dose 4 |
+| ![](crmToxicityattachments/media/image37.png) · Scenario 3 – true MTD is Dose 5 | ![](crmToxicityattachments/media/image38.png) · Scenario 4 – true MTD is Dose 5 |
+| ![](crmToxicityattachments/media/image39.png) · Scenario 5 – all doses too toxic | ![](crmToxicityattachments/media/image40.png) · Scenario 6 – no dose too toxic |
 
 ## 5.5 Alternative Stopping Rule
 
@@ -408,7 +420,11 @@ This specifies that the trial should not stop until one dose has a probability o
 
 Return to the simulation tab and run 1,000 simulations of this modified design. You should find that in all scenarios the proportion of times selection of the correct MTD has increased, but with an increase in the average number of subjects used.
 
-[TABLE]
+| **Distribution of MTD seleciton by Scenario: results for CRM(Toxicity), stop if probability of dose being MTD \> 0.5** |  |
+|----|----|
+| ![](crmToxicityattachments/media/image42.png) · Scenario 1 – true MTD is Dose 3 | ![](crmToxicityattachments/media/image43.png) · Scenario 2 – true MTD is Dose 4 |
+| ![](crmToxicityattachments/media/image44.png) · Scenario 3 – true MTD is Dose 5 | ![](crmToxicityattachments/media/image45.png) · Scenario 4 – true MTD is Dose 5 |
+| ![](crmToxicityattachments/media/image46.png) · Scenario 5 – all doses too toxic | ![](crmToxicityattachments/media/image47.png) · Scenario 6 – no dose too toxic |
 
 ## 5.6 Single Patient Run In
 
@@ -428,7 +444,11 @@ A screenshot of a social media post Description automatically generated
 
 Return to the simulation tab and run 1,000 simulations of this modified design. You should find that the scenarios where the correct MTD is a high dose (curves 3, 4 and 6), the proportion of times the correct MTD is selected has increased and in curves 1 and 2 it has decreased. In scenarios 3 and 4 the average number of subjects used has also decreased.
 
-[TABLE]
+| **Distribution of MTD seleciton by Scenario: results for CRM(Toxicity), stop if probability of dose being MTD \> 0.5, with a single patient run-in phase** |  |
+|----|----|
+| ![](crmToxicityattachments/media/image49.png) · Scenario 1 – true MTD is Dose 3 | ![](crmToxicityattachments/media/image50.png) · Scenario 2 – true MTD is Dose 4 |
+| ![](crmToxicityattachments/media/image51.png) · Scenario 3 – true MTD is Dose 5 | ![](crmToxicityattachments/media/image52.png) · Scenario 4 – true MTD is Dose 5 |
+| ![](crmToxicityattachments/media/image53.png) · Scenario 5 – all doses too toxic | ![](crmToxicityattachments/media/image54.png) · Scenario 6 – no dose too toxic |
 
 # 6 Summary of results
 
@@ -436,4 +456,43 @@ From the Goodman paper we report the results for “Mod CRM (3/group)” with th
 
 The CRM with single patient run-in is the best at MTD selection in all but the 2^(nd) scenario – where no design does well. Apart from scenario 2 it is conservative in its dose selection. Apart from scenario 2 it is more conservative than mTPI and apart from scenario 1 & 2 it is more conservative than 3+3. Due to the run-in it does have a slightly higher (~2 percentage points) probability of observing toxicities during the trial.
 
-[TABLE]
+|  |  |  |  |  |  |  |
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| **Curve – true MTD** | **Design** | **% times MTD selected** | **% toxicity observed** | **Average number of subjects** |  |  |
+| **Below true MTD** | **On true MTD** | **Over true MTD** |  |  |  |  |
+| 1 – dose 3 | Goodman | 46 | 30 | 24 | 18.9 | 19.1 |
+| 3+3 | 42 | 36 | 22 | 19.8 | 16.9 |  |
+| mTPI | 21 | 41 | 38 | 18.1 | 18.7 |  |
+| CRM(Tox) | 38 | 32 | 30 | 18.2 | 14.3 |  |
+| \+ 50% stop rule | 24 | 50 | 26 | 17.9 | 23.1 |  |
+| \+ 1 pat run-in | 20 | 50 | 29 | 21.6 | 24.3 |  |
+| 2 – dose 4 | Goodman | 67 | 19 | 14 | 14.7 | 19.5 |
+| 3+3 | 52 | 19 | 29 | 16.6 | 18.6 |  |
+| mTPI | 43 | 28 | 29 | 15.2 | 19.7 |  |
+| CRM(Tox) | 51 | 25 | 24 | 15.3 | 15.3 |  |
+| \+ 50% stop rule | 47 | 26 | 28 | 14.2 | 22.7 |  |
+| \+ 1 pat run-in | 31 | 23 | 46 | 16.7 | 20.1 |  |
+| 3 – dose 5 | Goodman | 82 | 15 | 3 | 14.4 | 20.3 |
+| 3+3 | 62 | 38 | 1 | 19.2 | 18.9 |  |
+| mTPI | 56 | 31 | 14 | 16.1 | 19.6 |  |
+| CRM(Tox) | 66 | 33 | 1 | 16.8 | 15.0 |  |
+| \+ 50% stop rule | 63 | 36 | 1 | 14.3 | 21.6 |  |
+| \+ 1 pat run-in | 41 | 59 | 0 | 18.2 | 19.8 |  |
+| 4 – dose 5 | Goodman | 69 | 25 | 6 | 14.5 | 20.2 |
+| 3+3 | 51 | 48 | 1 | 16.6 | 21.0 |  |
+| mTPI | 29 | 52 | 19 | 14.5 | 22.6 |  |
+| CRM(Tox) | 37 | 62 | 1 | 13.2 | 19.5 |  |
+| \+ 50% stop rule | 31 | 68 | 2 | 13.5 | 22.3 |  |
+| \+ 1 pat run-in | 26 | 74 | 0 | 18.6 | 19.2 |  |
+| 5 – all toxic · here we count selecting dose 1 as MTD as correct | Goodman | 0 | 78 | 22 | 33.1 | 18.2 |
+| 3+3 | 0 | 87 | 13 | 40.6 | 8.6 |  |
+| mTPI | 0 | 77 | 23 | 35.8 | 11.1 |  |
+| CRM(Tox) | 0 | 88 | 12 | 35.4 | 7.8 |  |
+| \+ 50% stop rule | 0 | 95 | 5 | 33.9 | 13.8 |  |
+| \+ 1 pat run-in | 0 | 95 | 5 | 35.7 | 15.4 |  |
+| 6 - dose 6 | Goodman | 86 | 14 | 0 | 7.1 | 21.3 |
+| 3+3 | 34 | 67 | 0 | 8.1 | 20.2 |  |
+| mTPI | 37 | 63 | 0 | 8.3 | 22.4 |  |
+| CRM(Tox) | 62 | 38 | 0 | 9.0 | 18.0 |  |
+| \+ 50% stop rule | 53 | 47 | 0 | 7.1 | 22.1 |  |
+| \+ 1 pat run-in | 32 | 68 | 0 | 8.7 | 15.7 |  |

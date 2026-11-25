@@ -125,7 +125,16 @@ The Virtual Subject Response (VSR) tab describes how subject-level data will be 
 
 - Add the following 6 profiles:
 
-[TABLE]
+|  |  |  |  |  |  |  |  |  |
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+|  | Treatment Arm |  |  |  |  |  |  |  |
+|  | Ctrl (ATA 1.0); No NBH | ATA 1.5; No NBH | ATA 2.0; No NBH | Ctrl (ATA 1.0); With NBH | ATA 2.5; No NBH | ATA 1.5; With NBH | ATA 2.0; With NBH | ATA 2.5; With NBH |
+| Null | 0.41 | 0.41 | 0.41 | 0.41 | 0.41 | 0.41 | 0.41 | 0.41 |
+| Large Monotone | 0.41 | 0.348 | 0.435 | 0.478 | 0.522 | 0.609 | 0.696 | 0.783 |
+| NBH Only | 0.41 | 0.348 | 0.348 | 0.783 | 0.348 | 0.783 | 0.783 | 0.783 |
+| Overdose | 0.41 | 0.348 | 0.435 | 0.522 | 0.783 | 0.522 | 0.174 | 0.087 |
+| Cont. Factorial | 0.41 | 0.484 | 0.559 | 0.534 | 0.631 | 0.607 | 0.676 | 0.738 |
+| Disc. Factorial | 0.41 | 0.363 | 0.642 | 0.459 | 0.534 | 0.534 | 0.783 | 0.698 |
 
 The Profiles can be named by double clicking on the default name, e.g. “Response 1” and renaming. A wide range of profiles should be chosen so that you can examine the strengths and weakness of a design.
 

@@ -867,31 +867,136 @@ See the [FACTS Design Report User Guide](../../../documentation/v80/userguides/d
 
 These are the care completed. They can also be displayed in the separate “Highlights” columns displayed on the simulations tab after simulations results window.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Select | 1 | Not an output column, this column contains check box to allow the user to select which scenario to simulate. The ‘Select All’ button causes them all to be checked. |
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Virtual Response \> Dropout Rate’, · ‘Virtual Response \> Arm Response’, · ‘Trial \> Trial Arms \> Arrivals’ · This is the same name as used for the results directory |
+| Num Sims | 1 | The number of simulations that were run to produce the displayed results. |
+| Random Number Seed | 1 | Base random number seed used to perform the simulations. |
+| Mean Tr eatments Started | 1 | The average number (over the simulations) of non-control treatments that entered the trial and were eligible to enrollment participants. |
+| Mean Tr eatments Analyzed | 1 | The average number (over the simulations) of non-control treatments that reached a final analysis within the trial – either because they reached an early stopping decision with no follow-up or because they completed follow-up on all participants. |
+| Mean Good Tr eatments Analyzed | 1 | The average number (over the simulations) of “good” treatment arms that reached a final analysis, “good” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean Unac ceptable Tr eatments Analyzed | 1 | The average number (over the simulations) of “unacceptable” treatment arms that reached a final analysis, “unacceptable” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean Unac ceptable Tr eatments Analyzed | 1 | The average number (over the simulations) of “mediocre” treatment arms that reached a final analysis, “mediocre” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean S uccesses | 1 | The average number (over the simulations) of treatment arms that were declared successful at a final analysis. |
+| Mean Good T reatment S uccesses | 1 | The average number (over the simulations) of “good” treatment arms that were declared successful at a final analysis, “good” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean Unac ceptable T reatment S uccesses | 1 | The average number (over the simulations) of “unacceptable” treatment arms that were declared successful at a final analysis, “unacceptabl” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean Mediocre T reatment S uccesses | 1 | The average number (over the simulations) of “mediocre” treatment arms that were declared successful at a final analysis, “mediocre” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean Fu tilities | 1 | The average number (over the simulations) of treatment arms that were declared futile at a final analysis. |
+| Mean Good T reatment Fu tilities | 1 | The average number (over the simulations) of “good” treatment arms that were declared futile at a final analysis, “good” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean Unac ceptable T reatment Fu tilities | 1 | The average number (over the simulations) of “unacceptable” treatment arms that were declared futile at a final analysis, “unacceptabl” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean Mediocre T reatment Fu tilities | 1 | The average number (over the simulations) of “mediocre” treatment arms that were declared futile at a final analysis, “mediocre” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean Incon clusives | 1 | The average number (over the simulations) of treatment arms that were declared inconclusive at a final analysis. |
+| Mean Good T reatment Incon clusives | 1 | The average number (over the simulations) of “good” treatment arms that were declared inconclusive at a final analysis, “good” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean Unac ceptable T reatment Incon clusives | 1 | The average number (over the simulations) of “unacceptable” treatment arms that were declared inconclusive at a final analysis, “unacceptabl” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean Mediocre T reatment Incon clusives | 1 | The average number (over the simulations) of “mediocre” treatment arms that were declared inconclusive at a final analysis, “mediocre” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn S uccesses \| T reatment Good | 1 | Amongst the “good” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared successful – “good” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Fu tilities \| T reatment Good | 1 | Amongst the “good” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared futile – “good” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Incon clusives \| T reatment Good | 1 | Amongst the “good” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared inconclusive – “good” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn S uccesses \| T reatment Unac ceptable | 1 | Amongst the “unacceptable” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared successful – “unacceptable” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Fu tilities \| T reatment Unac ceptable | 1 | Amongst the “unacceptable” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared futile – “unacceptable” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Incon clusives \| T reatment Unac ceptable | 1 | Amongst the “unacceptable” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared inconclusive – “unacceptable” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn S uccesses \| T reatment Mediocre | 1 | Amongst the “mediocre” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared successful – “mediocre” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Fu tilities \| T reatment Mediocre | 1 | Amongst the “mediocre” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared futile – “mediocre” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Incon clusives \| T reatment Mediocre | 1 | Amongst the “mediocre” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared inconclusive – “mediocre” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Good Tr eatments \| Success | 1 | Amongst the treatment arms that reached final analysis and were declared successful (across all simulations), the proportion of those arms that were “good” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Unac ceptable Tr eatments \| Success | 1 | Amongst the treatment arms that reached final analysis and were declared successful (across all simulations), the proportion of those arms that were “unacceptable” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Mediocre Tr eatments \| Success | 1 | Amongst the treatment arms that reached final analysis and were declared successful (across all simulations), the proportion of those arms that were “mediocre” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Good Tr eatments \| Futility | 1 | Amongst the treatment arms that reached final analysis and were declared futile (across all simulations), the proportion of those arms that were “good” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Unac ceptable Tr eatments \| Futility | 1 | Amongst the treatment arms that reached final analysis and were declared futile (across all simulations), the proportion of those arms that were “unacceptable” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Mediocre Tr eatments \| Futility | 1 | Amongst the treatment arms that reached final analysis and were declared futile (across all simulations), the proportion of those arms that were “mediocre” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Good Tr eatments \| Inco nclusive | 1 | Amongst the treatment arms that reached final analysis and were declared inconclusive (across all simulations), the proportion of those arms that were “good” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Unac ceptable Tr eatments \| Inco nclusive | 1 | Amongst the treatment arms that reached final analysis and were declared inconclusive (across all simulations), the proportion of those arms that were “unacceptable” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Mediocre Tr eatments \| Inco nclusive | 1 | Amongst the treatment arms that reached final analysis and were declared inconclusive (across all simulations), the proportion of those arms that were “mediocre” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn 1+ S uccesses | 1 | The proportion of simulations that had at least one treatment arm declared successful. |
+| Ppn Good Tr eatments \| 1+ S uccesses | 1 | The proportion of simulations that had at least one “good” treatment arm declared successful, “good” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Su ccesses: \<Arm\> | 1 per arm | Amongst simulations in which a final analysis was reached for the arm, the proportion of simulations where the arm was declared successful. |
+| Ppn Fut ilities: \<Arm\> | 1 per arm | Amongst simulations in which a final analysis was reached for the arm, the proportion of simulations where the arm was declared futile. |
+| Ppn Inconc lusives: \<Arm\> | 1 per arm | Amongst simulations in which a final analysis was reached for the arm, the proportion of simulations where the arm was declared inconclusive. |
+| Ppn Good T reatment \| E nrolled: \<Arm\> | 1 per arm | Amongst simulations in which the arm was open to enroll participants in the trial, the proportion of simulations in which the arm was actually “good”, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Unac ceptable T reatment \| E nrolled: \<Arm\> | 1 per arm | Amongst simulations in which the arm was open to enroll participants in the trial, the proportion of simulations in which the arm was actually “unacceptable”, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Mediocre T reatment \| E nrolled: \<Arm\> | 1 per arm | Amongst simulations in which the arm was open to enroll participants in the trial, the proportion of simulations in which the arm was actually “mediocre”, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Good T reatment \| A nalyzed: \<Arm\> | 1 per arm | Amongst simulations in which the arm reached a final analysis in the trial, the proportion of simulations in which the arm was actually “good”, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Unac ceptable T reatment \| A nalyzed: \<Arm\> | 1 per arm | Amongst simulations in which the arm reached a final analysis in the trial, the proportion of simulations in which the arm was actually “unacceptable”, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Mediocre T reatment A nalyzed: \<Arm\> | 1 per arm | Amongst simulations in which the arm reached a final analysis in the trial, the proportion of simulations in which the arm was actually “mediocre”, as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean Duration | 1 | The average (in weeks) over the simulations of the duration of the trial from the start to completion of the trial. |
+| Mean First Success Time | 1 | Amongst simulations that had at least one success, the average time (in weeks) at which the first success was declared. |
+| Mean Part icipants | 1 | The average number of participants enrolled across all simulations. |
+| Mean A vailable Time: \<Arm\> | 1 | The average time across simulations that the treatment arm became available to enter the trial (regardless of whether the trial ended prior to it becoming available). |
+| Version | 1 | The FACTS version number at the time the simulations were run. |
 
 ### Timing
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Virtual Response \> Dropout Rate’, · ‘Virtual Response \> Arm Response’, · ‘Trial \> Trial Arms \> Arrivals’ · This is the same name as used for the results directory |
+| Mean Duration | 1 | The average (in weeks) over the simulations of the duration of the trial from the start to completion of the trial. |
+| Mean First Success Time | 1 | Amongst simulations that had at least one success, the average time (in weeks) at which the first success was declared. |
+| Mean A vailable Time: \<Arm\> | 1 per arm | The average time (in weeks) across all simulations at which the treatment because available for entry into the trial. Note: the available time is reported whether or not it became available after the end of the trial. |
+| Mean Start Time: \<Arm\> | 1 per arm | Amongst simulations in which the arm became available to enroll participants, the average time (in weeks) that the arm became eligible for enrollment. |
+| Mean End Time: \<Arm\> | 1 per arm | Amongst simulations in which the arm became available to enroll participants, the average time (in weeks) that the arm became stopped enrolling. |
+| Mean Final Analysis Time: \<Arm\> | 1 per arm | Amongst simulations in which the arm reached a final analysis, the average time (in weeks) that the arm’s final analysis occurred. |
 
 ### Allocation
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Virtual Response \> Dropout Rate’, · ‘Virtual Response \> Arm Response’, · ‘Trial \> Trial Arms \> Arrivals’ · This is the same name as used for the results directory |
+| Mean Part icipants | 1 | The average number (over the simulations) of participants enrolled in the trial. |
+| SD Mean Part icipants | 1 | The standard deviation of the number (over the simulations) of participants enrolled in the trial. |
+| Mean Alloc.: \<Arm\> | 1 per arm | The average (over the simulations) of the number of participants enrolled onto the arm. |
+| SD Alloc.: \<Arm\> | 1 per arm | The standard deviation (over the simulations) of the number of participants enrolled onto the arm. |
 
 ### Response
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Virtual Response \> Dropout Rate’, · ‘Virtual Response \> Arm Response’, · ‘Trial \> Trial Arms \> Arrivals’ · This is the same name as used for the results directory |
+| Mean Resp.: \<Arm\> | 1 per arm | Average (over the simulations) of the estimate of the mean response for the arm at the end of the trial. |
+| SD Resp.: \<Arm\> | 1 per arm | Standard deviation (over the simulations) of the estimate of the mean response for the arm at the end of the trial. |
+| Mean Sigma | 1 | Average (over the simulations) of the estimate of the SD of the dose response across all the treatment arms (‘sigma’) |
+| SD Mean Sigma | 1 | Standard deviation (over the simulations) of the estimate of the SD of the dose response across all the treatment arms. |
+| True Mean Resp: \<Arm\> | 1 per arm | True mean response from which the simulated participant data was sampled for the arm. |
+| SD True Resp.: \<Arm\> | 1 per arm | True standard deviation of the simulated participant data for the arm. |
+| Mean Baseline Beta |  | This is the mean (over the simulations) of the estimate of “Beta” in the Baseline Adjusted dose response model. |
+| SD Baseline Beta |  | This is the SD (over the simulations) of the estimate of “Beta” in the Baseline Adjusted dose response model. |
+| Mean Baseline | 1 | Average (over the simulations) of the estimate of the mean baseline score. |
+| SD Baseline | 1 | Standard deviation (over the simulations) of the estimate of the mean baseline score. |
+| True Mean Baseline | 1 | True mean from which baseline scores where simulated (including accounting for possible truncation of the baseline scores) |
+| True SD Baseline | 1 | True standard deviation of the distribution from which baseline scores were simulated (including accounting for possible truncation of the baseline scores) |
 
 ### Observed
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Virtual Response \> Dropout Rate’, · ‘Virtual Response \> Arm Response’, · ‘Trial \> Trial Arms \> Arrivals’ · This is the same name as used for the results directory |
+| Mean Complete \<Arm\> | One per arm | This is the mean (over the simulations) of the number of subjects recruited per arm which have had their endpoint observed in this scenario. |
+| Mean Complete Info \<Arm\> | One per arm | This is the mean (over the simulations) of information observed per arm as defined on the Interims tab (Subjects enrolled, Complete Data at Specified Visit, Opportunity to Complete at Specified Visit) in this scenario. |
+| Mean D ropouts: \<Arm\>, \<Visit\> | 1 per arm per visit | Average (across the simulations) of the number of dropouts for the arm by visit. |
 
 ### Probabilities
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Virtual Response \> Dropout Rate’, · ‘Virtual Response \> Arm Response’, · ‘Trial \> Trial Arms \> Arrivals’ · This is the same name as used for the results directory |
+| \<QOI\>: \<Arm\> | 1 per arm per QOI | For each Posterior Probability, Predictive Probability, p-value, or Target QOI, this is the mean over the simulations of the estimate of the probability of the QOI for each dose. · For each Target QOI this is the proportion of simulations where this dose was selected at the end of the trial as the dose with the greatest probability of meeting the target condition. The probability that each dose is the target at the end of a simulated trial is its marginal probability (the number of times it was the dose closest to the target in the MCMC sampling of the analysis at the end of the trial). |
 
 ### Model Parameters
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Virtual Response \> Dropout Rate’, · ‘Virtual Response \> Arm Response’, · ‘Trial \> Trial Arms \> Arrivals’ · This is the same name as used for the results directory |
+| Mean Sigma | 1 | Average (over the simulations) of the posterior estimate of sigma, the SD in the participant’s final responses. |
+| SD Mean Sigma | 1 | Standard deviation (over the simulations) of the posterior estimate of sigma, the SD in the participant’s final responses. |
+| Mean Baseline Beta | 1 | Average (over the simulations) of the estimate of the Beta parameter when Baseline Adjustment is Modeled. |
+| SD Baseline Beta | 1 | Standard deviation (over the simulations) of the estimate of the Beta parameter when Baseline Adjustment is Modeled. |
 
 ### Detailed Per Simulation Results
 
@@ -1129,7 +1234,81 @@ In the scenario directory there are the following types of results file:
 
 The first line is a header line, starting with a ‘#’, containing the column headings.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Project | 1 | The name of the facts file |
+| Scenario | 1 | The name of the scenario |
+| Timestamp | 1 | The time the simulations were run |
+| Version | 1 | The version of FACTS that was used to run the simulations |
+| Nsim | 1 | The number of simulations contributing to the summary file. |
+| Mean Treatments Started | 1 | The average number (over the simulations) of non-control treatments that entered the trial and were eligible to enroll participants. |
+| Mean Treatments Analyzed | 1 | The average number (over the simulations) of non-control treatments that reached a final analysis within the trial – either because they reached an early stopping decision with no follow-up or because they completed follow-up on all participants. |
+| Mean Good Treatments Analyzed | 1 | The average number (over the simulations) of “good” treatment arms that reached a final analysis, “good” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean U nacceptable Treatments Analyzed | 1 | The average number (over the simulations) of “unacceptable” treatment arms that reached a final analysis, “unacceptable” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean U nacceptable Treatments Analyzed | 1 | The average number (over the simulations) of “mediocre” treatment arms that reached a final analysis, “mediocre” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean Successes | 1 | The average number (over the simulations) of treatment arms that were declared successful at a final analysis. |
+| Mean Good Treatment Successes | 1 | The average number (over the simulations) of “good” treatment arms that were declared successful at a final analysis, “good” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean U nacceptable Treatment Successes | 1 | The average number (over the simulations) of “unacceptable” treatment arms that were declared successful at a final analysis, “unacceptabl” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean Mediocre Treatment Successes | 1 | The average number (over the simulations) of “mediocre” treatment arms that were declared successful at a final analysis, “mediocre” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean Futilities | 1 | The average number (over the simulations) of treatment arms that were declared futile at a final analysis. |
+| Mean Good Treatment Futilities | 1 | The average number (over the simulations) of “good” treatment arms that were declared futile at a final analysis, “good” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean U nacceptable Treatment Futilities | 1 | The average number (over the simulations) of “unacceptable” treatment arms that were declared futile at a final analysis, “unacceptabl” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean Mediocre Treatment Futilities | 1 | The average number (over the simulations) of “mediocre” treatment arms that were declared futile at a final analysis, “mediocre” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean In conclusives | 1 | The average number (over the simulations) of treatment arms that were declared inconclusive at a final analysis. |
+| Mean Good Treatment In conclusives | 1 | The average number (over the simulations) of “good” treatment arms that were declared inconclusive at a final analysis, “good” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean U nacceptable Treatment In conclusives | 1 | The average number (over the simulations) of “unacceptable” treatment arms that were declared inconclusive at a final analysis, “unacceptabl” as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean Mediocre Treatment In conclusives | 1 | The average number (over the simulations) of “mediocre” treatment arms that were declared inconclusive at a final analysis, “mediocre” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Successes \| Treatment Good | 1 | Amongst the “good” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared successful – “good” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Futilities \| Treatment Good | 1 | Amongst the “good” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared futile – “good” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn In conclusives \| Treatment Good | 1 | Amongst the “good” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared inconclusive – “good” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Successes \| Treatment U nacceptable | 1 | Amongst the “unacceptable” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared successful – “unacceptable” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Futilities \| Treatment U nacceptable | 1 | Amongst the “unacceptable” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared futile – “unacceptable” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn In conclusives \| Treatment U nacceptable | 1 | Amongst the “unacceptable” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared inconclusive – “unacceptable” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Successes \| Treatment Mediocre | 1 | Amongst the “mediocre” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared successful – “mediocre” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Futilities \| Treatment Mediocre | 1 | Amongst the “mediocre” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared futile – “mediocre” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn In conclusives \| Treatment Mediocre | 1 | Amongst the “mediocre” treatment arms that reached final analysis across all simulations, the proportion of those arms that were declared inconclusive – “mediocre” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Good Treatments \| Success | 1 | Amongst the treatment arms that reached final analysis and were declared successful (across all simulations), the proportion of those arms that were “good” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn U nacceptable Treatments \| Success | 1 | Amongst the treatment arms that reached final analysis and were declared successful (across all simulations), the proportion of those arms that were “unacceptable” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Mediocre Treatments \| Success | 1 | Amongst the treatment arms that reached final analysis and were declared successful (across all simulations), the proportion of those arms that were “mediocre” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Good Treatments \| Futility | 1 | Amongst the treatment arms that reached final analysis and were declared futile (across all simulations), the proportion of those arms that were “good” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn U nacceptable Treatments \| Futility | 1 | Amongst the treatment arms that reached final analysis and were declared futile (across all simulations), the proportion of those arms that were “unacceptable” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Mediocre Treatments \| Futility | 1 | Amongst the treatment arms that reached final analysis and were declared futile (across all simulations), the proportion of those arms that were “mediocre” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Good Treatments \| I nconclusive | 1 | Amongst the treatment arms that reached final analysis and were declared inconclusive (across all simulations), the proportion of those arms that were “good” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn U nacceptable Treatments \| I nconclusive | 1 | Amongst the treatment arms that reached final analysis and were declared inconclusive (across all simulations), the proportion of those arms that were “unacceptable” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Mediocre Treatments \| I nconclusive | 1 | Amongst the treatment arms that reached final analysis and were declared inconclusive (across all simulations), the proportion of those arms that were “mediocre” treatment arms, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn 1+ Successes | 1 | The proportion of simulations that had at least one treatment arm declared successful. |
+| Ppn Good Treatments \| 1+ Successes | 1 | The proportion of simulations that had at least one “good” treatment arm declared successful, “good” as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Success \<Arm\> | 1 per arm | Amongst simulations in which a final analysis was reached for the arm, the proportion of simulations where the arm was declared successful. |
+| Ppn Futility \<Arm\> | 1 per arm | Amongst simulations in which a final analysis was reached for the arm, the proportion of simulations where the arm was declared futile. |
+| Ppn In conclusives \<Arm\> | 1 per arm | Amongst simulations in which a final analysis was reached for the arm, the proportion of simulations where the arm was declared inconclusive. |
+| Ppn Good Treatment \| Started \<Arm\> | 1 per arm | Amongst simulations in which the arm was open to enroll participants in the trial, the proportion of simulations in which the arm was actually “good”, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn U nacceptable Treatment \| Started \<Arm\> | 1 per arm | Amongst simulations in which the arm was open to enroll participants in the trial, the proportion of simulations in which the arm was actually “unacceptable”, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Mediocre Treatment \| Started \<Arm\> | 1 per arm | Amongst simulations in which the arm was open to enroll participants in the trial, the proportion of simulations in which the arm was actually “mediocre”, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Good Treatment \| Analyzed \<Arm\> | 1 per arm | Amongst simulations in which the arm reached a final analysis in the trial, the proportion of simulations in which the arm was actually “good”, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn U nacceptable Treatment \| Analyzed \<Arm\> | 1 per arm | Amongst simulations in which the arm reached a final analysis in the trial, the proportion of simulations in which the arm was actually “unacceptable”, as defined on the Virtual Response \> Treatment Classification tab. |
+| Ppn Mediocre Treatment Analyzed \<Arm\> | 1 per arm | Amongst simulations in which the arm reached a final analysis in the trial, the proportion of simulations in which the arm was actually “mediocre”, as defined on the Virtual Response \> Treatment Classification tab. |
+| Mean Duration | 1 | The average (in weeks) over the simulations of the duration of the trial from the start to completion of the trial. |
+| Mean First Success Time | 1 | Amongst simulations that had at least one success, the average time (in weeks) at which the first success was declared. |
+| Mean Available Time \<Arm\> | 1 per arm | The average time (in weeks) across all simulations at which the treatment because available for entry into the trial. Note: the available time is reported whether or not it became available after the end of the trial. |
+| Mean Start Time \<Arm\> | 1 per arm | Amongst simulations in which the arm became open to enroll participants, the average time (in weeks) that the arm began enrolling. |
+| Mean End Time \<Arm\> | 1 per arm | Amongst simulations in which the arm became open to enroll participants, the average time (in weeks) that the arm stopped enrolling. |
+| Mean Final Analysis Time \<Arm\> | 1 per arm | Amongst simulations in which the arm reached a final analysis, the average time (in weeks) that the arm’s final analysis occurred. |
+| Mean No. P articipants | 1 | The average number of participants enrolled across all simulations. |
+| SE P articipants | 1 | The standard error of the number of participants enrolled across all simulations. |
+| Mean P articipants | 1 | The average number (over the simulations) of participants enrolled in the trial. |
+| SE Mean P articipants | 1 | The standard error (over the simulations) of the number of participants enrolled in the trial. |
+| Mean Alloc \<Arm\> | 1 per arm | The average (over the simulations) of the number of participants enrolled onto the arm. |
+| SE Alloc \<Arm\> | 1 per arm | The standard error (over the simulations) of the number of participants enrolled onto the arm. |
+| Mean resp \<Arm\> | 1 per arm | Average (over the simulations) of the estimate of the mean response for the arm at the end of the trial. |
+| SE resp \<Arm\> | 1 per arm | Standard error (over the simulations) of the estimate of the mean response for the arm at the end of the trial. |
+| Mean Sigma | 1 | Average (over the simulations) of the estimate of the SD of the dose response across all the treatment arms (‘sigma’) |
+| SE Mean Sigma | 1 | Standard error (over the simulations) of the estimate of the SD of the dose response across all the treatment arms. |
+| True Mean resp \<Arm\> | 1 per arm | True mean response from which the simulated participant data was sampled for the arm. |
+| True SD resp \<Arm\> | 1 per arm | True standard deviation of the simulated participant data for the arm. |
+| N o.Dropouts: \<Arm\>, \<Visit\> | 1 per arm per visit | Average (across the simulations) of the number of dropouts for the arm by visit. |
+| Mean Baseline Beta |  | This is the mean (over the simulations) of the estimate of “Beta” in the Baseline Adjusted dose response model. \[Continuous endpoint only\] |
+| SD Baseline Beta |  | This is the SD (over the simulations) of the estimate of “Beta” in the Baseline Adjusted dose response model. \[Continuous endpoint only\] |
+| QOIs (named according to QOI naming convention, as described in the QOIMappi ngFile.csv) | 1 per arm per QOI | For each Posterior Probability, Predictive Probability, p-value, or Target QOI, this is the mean over the simulations of the estimate of the probability of the QOI for each dose. · For each Target QOI this is the proportion of simulations where this dose was selected at the end of the trial as the dose with the greatest probability of meeting the target condition. The probability that each dose is the target at the end of a simulated trial is its marginal probability (the number of times it was the dose closest to the target in the MCMC sampling of the analysis at the end of the trial). |
 
 Contents of the summary.csv file. {.caption-top .table}
 
@@ -1153,7 +1332,62 @@ The second and third lines are header lines. Most header names are identical in 
 
 Most of the columns are common to the simulations and weeks file types, except as noted below.
 
-[TABLE]
+| Column Title | Number of columns | In simulations file | In weeks file | Description |
+|----|----|----|----|----|
+| \# Weeks (Duration) | 1 |  | ✔ | The week of the analysis |
+| \#Sim | 1 | ✔ |  | The number of the simulation. |
+| Update Number | 1 |  | ✔ | The index of the interim analysis being performed. |
+| Stage | 1 | ✔ | ✔ | 0 = Accruing (standard trial update) 1 = Final (final analysis for a particular arm) 2 = Accrued (standard trial update after full enrollment) 4 = Paused (accrual is paused – currently not allowed) |
+| \# Participants | 1 | ✔ | ✔ | Number of participants enrolled in the trial |
+| Alloc \<Arm\> | 1 per arm |  |  | Number of participants enrolled on the arm |
+| Status \<Arm\> | 1 per arm | ✔ | ✔ | Status of the treatment arm: -99 = Turned Away (could not enter trial) -98 = Waiting In Treatment Queue -97 = Never Arrived, (trial ended before arm arrived) -1 = Not Started (weeks file only) 0 = Enrolling 1 = In Followup (done enrolling) 2 = Paused (not currently available) 99 = Complete |
+| Available Time \<Arm\> | 1 per arm | ✔ | ✔ | The time (in weeks) at which the treatment becomes available for entry into the trial. Note: the available time is always reported, even before the trial has reached that point. |
+| Start Time \<Arm\> | 1 per arm | ✔ | ✔ | The time (in weeks) that the arm became eligible to enroll participants. If not reached, -9999 is used. |
+| End Time \<Arm\> | 1 per arm | ✔ | ✔ | The time (in weeks) that the arm stopped enrolling participants. If not reached, -9999 is used. |
+| Final Analysis Time \<Arm\> | 1 per arm | ✔ | ✔ | The time (in weeks) that the arm’s final analysis occurred. If not reached, -9999 is used. |
+| Milestone \<Arm\> | 1 per arm | ✔ | ✔ | The milestone being evaluated for the treatment arm at the given trial update. -1 indicates no milestone is being evaluated. 9999 indicates a final analysis. |
+| Outcome \<Arm\> | 1 per arm | ✔ | ✔ | A flag categorizing final study outcome: -9999 = Not applicable (for control arm) -1 = Not available (arm enrolling but no outcome yet) 0 = Not started (arm still hasn’t entered the trial) 1 = Early success 2 = Late success 3 = Late futility 4 = Early futility 5 = Success to futility flip-flop 6 = Futility to success flip-flop 7 = Inconclusive 8 = Success to inconclusive flip-flop 9 = Futility to inconclusive flip-flop 10 = Incomplete (trial ended without reaching final analysis) |
+| Desired Outcome \<Arm\> | 1 per arm | ✔ | ✔ | Treatment effect classification for the treatment arm for this simulation. 0 = “Unacceptable” 1 = “Mediocre” 2 = “Good” |
+| \#Enrolled Treatments | 1 | ✔ | ✔ | The number of arms that have been open to enrollment in the trial. |
+| \#Analyzed Treatments | 1 | ✔ | ✔ | The number of arms that have reached a final analysis in the trial. |
+| First Success Time | 1 | ✔ | ✔ | If any treatment has been declared successful, the time of the first successful final analysis. Otherwise, -9999. |
+| \#Successes | 1 | ✔ | ✔ | The number of arms that have been declared successful. |
+| \#Futilities | 1 | ✔ | ✔ | The number of arms that have been declared futile. |
+| \#Inconclusive | 1 | ✔ | ✔ | The number of arms that have been declared inconclusive. |
+| \#GoodTrt | 1 | ✔ | ✔ | The number of arms with treatment effects considered “good.” |
+| \#GoodSucc | 1 | ✔ | ✔ | The number of “good” arms that have been declared successful. |
+| \#GoodFut | 1 | ✔ | ✔ | The number of “good” arms that have been declared futile. |
+| \#GoodInconc | 1 | ✔ | ✔ | The number of “good” arms that have been declared inconclusive. |
+| \#UnaccTrt | 1 | ✔ | ✔ | The number of arms with treatment effects considered “unacceptable.” |
+| \#UnaccSucc | 1 | ✔ | ✔ | The number of “unacceptable” arms that have been declared successful. |
+| \#UnaccFut | 1 | ✔ | ✔ | The number of “unacceptable” arms that have been declared futile. |
+| \#UnaccInconc | 1 | ✔ | ✔ | The number of “unacceptable” arms that have been declared inconclusive. |
+| \#MedTrt | 1 | ✔ | ✔ | The number of arms with treatment effects considered “mediocre.” |
+| \#MedSucc | 1 | ✔ | ✔ | The number of “mediocre” arms that have been declared successful. |
+| \#MedFut | 1 | ✔ | ✔ | The number of “mediocre” arms that have been declared futile. |
+| \#MedInconc | 1 | ✔ | ✔ | The number of “mediocre” arms that have been declared inconclusive. |
+| Pr(Alloc) \<Arm\> | 1 per arm | ✔ | ✔ | The probability of allocation to the different arms following the update. |
+| Mean resp \<Arm\> | 1 per arm | ✔ | ✔ | The estimated response (or response rate for Dichotomous endpoints) of each treatment arm. |
+| SD resp \<Arm\> | 1 per arm | ✔ | ✔ | The standard deviation of the estimate of response of each treatment arm. |
+| Mean resp (lower CI) \<Arm\> | 1 per arm | ✔ | ✔ | The lower bound of the 95% credible interval for response rate. (Dichotomous only) |
+| Mean resp (upper CI) | 1 per arm | ✔ | ✔ | The upper bound of the 95% credible interval for response rate. (Dichotomous only) |
+| True Mean \<Arm\> | 1 per arm | ✔ | ✔ | The true response for the arm for this simulation. |
+| True SD resp | 1 per arm | ✔ | ✔ | The true standard deviation of the observed response for the arm. (Continuous only) |
+| Sigma | 1 | ✔ | ✔ | The (posterior mean) estimate of sigma, the pooled standard deviation for observations. (Continuous only) |
+| SD_Sigma | 1 | ✔ | ✔ | The posterior standard deviation of the sigma parameter. (Continuous only) |
+| Beta | 1 | ✔ | ✔ | The estimate of ‘Beta’ the baseline adjustment coefficient, if baseline adjustment is being used. (Continuous only) |
+| SD_Beta | 1 | ✔ | ✔ | The SD of the estimate of ‘Beta’ the baseline adjustment coefficient. (Continuous only) |
+| Mean Baseline | 1 | ✔ | ✔ | The estimate of the mean baseline score. (Continuous only) |
+| SE Mean Baseline | 1 | ✔ | ✔ | The standard error of the estimate of the mean baseline score. (Continuous only) |
+| SD Baseline | 1 | ✔ | ✔ | The estimate of the SD of the baseline score. (Continuous only) |
+| True Mean Baseline | 1 | ✔ | ✔ | The true mean of the simulated baseline score. (Continuous only) |
+| True SD Baseline | 1 | ✔ | ✔ | The true SD of the simulated baseline score. (Continuous only) |
+| Mean Raw Response \<Arm\> | 1 per arm | ✔ | ✔ | The observed mean response on each treatment arm (unadjusted by any modeling). |
+| SE Mean Raw Response \<Arm\> | 1 per arm | ✔ | ✔ | The standard error of the estimate of the mean raw response on each dose. |
+| Complete \<Arm\> | 1 per arm | ✔ | ✔ | The number of completed subjects on each treatment arm at the time of the analysis. |
+| Complete Information \<Arm\> | 1 per arm | ✔ | ✔ | The number of subject who count as complete for the purposes of update timing, as defined on the Design \> Trial Updates tab: enrolled, complete, or opportunity to complete. |
+| \#Dropouts \<Arm\> \<Visit\> | 1 per arm per visit | ✔ | ✔ | The number of dropouts on the arm, broken out into the visit at which they dropped. (The current implementation has only a single visit.) |
+| QOI Columns | 1 per arm per QOI\* | ✔ | ✔ | All QOI values are reported for each arm. The row 1 and row 2 names for the columns are given in the QOIMappingFile.csv that is output in the top-level “\_results” folder. There is an additional column for each Target QOI that specifies the arm index of the arm with the highest posterior probability of being the target arm. |
 
 Contents of the simulations/weeks files. {.caption-top .table}
 
@@ -1238,6 +1472,20 @@ Contents of the QOIMappingFile {.caption-top .table}
 
 This file provides a comprehensive list of all QOIs that are used in futility and success decisions throughout the trial.
 
-[TABLE]
+| Column Title | Description |
+|:---|:---|
+| FACTS filename | The .facts file from which the QOI mapping was constructed. |
+| Decision Category Index | Index value of the type of decision for which the QOI is being used. 1 = Futility, 2 = Success. |
+| Decision Category (text) | Text version of the Decision Category Index |
+| QOI Category Index | Index of the QOI category for the QOI being used in the decision 1 = Posterior Probability, 2 = Predictive Probability, 3 = p-value, 4 = Target Probability |
+| QOI Category (text) | Text version of the QOI category index. |
+| QOI Alternate Name | Text name of the QOI, as defined by QOI Alternate Name in QOIMappingFile.csv. |
+| Condition | The direction of comparison (\> or \<). |
+| Threshold | For threshold the QOI is being comparing to. |
+| Decision Variable | For posterior probabilities, the absolute reference value being compared to, or for relative comparisons, the additional delta value to add to the relative treatment arm parameter. |
+| Decision Label | A full text description of the decision and the comparison being computed. |
+| Start At Milestone Index | The first milestone at which this decision is evaluated. |
+| End Before Milestone Index | The first milestone at which this decision is no longer evaluated. |
+| Treatment | The treatment arm to which this decision applies, either given by the treatment name or “All Treatments” if it applies to all arms. |
 
 Contents of the DecisionMappingFile. {.caption-top .table}

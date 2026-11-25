@@ -748,7 +748,26 @@ The following sections break down which columns are available by sorting to whic
 
 These are the columns displayed on the simulations tab after simulations are completed, the can also be displayed in the separate “Highlights” results window.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Select | 1 | Not an output column, this column contains check box to allow the user to select which scenario to simulate. The ‘Select All’ button causes them all to be checked. |
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Execution \> Dropout Rate’, · ‘Virtual Subject Response \> Explicitly Defined \> Dose Response’, · This is the same name as used for the results directory |
+| Num Sims | 1 | The number of simulations that were run to produce the displayed results. |
+| Mean Subj. | 1 | This is the mean (over the simulations) of the number of subjects recruited in this scenario. |
+| Ppn Overall Success | 1 | This is the proportion of simulations that stopped for success, either early success or late success (as defined below). |
+| Ppn Overall Futility | 1 | This is the proportion of simulations that stopped for futility, either early futility or late futility (as defined below). |
+| Ppn Early Success | 1 | This is the proportion of simulations that stopped early for success (and did not regress to futility in the final analysis – though they might have regressed to ‘inconclusive’). |
+| Ppn Late Success | 1 | This is the proportion of simulations that did not stop early but were successful in the final analysis. |
+| Ppn Late Futility | 1 | This is the proportion of simulations that did not stop early but were futile in the final analysis. |
+| Ppn Early Futility | 1 | This is the proportion of simulations that stopped early for futility (and did not regress to success in the final analysis – though they might have regressed to ‘inconclusive’). |
+| Ppn · Suc-\>Fut Flipflop | 1 | This is the proportion of simulations that stopped early for success but regressed to futility in the final analysis. |
+| Ppn · Fut-\>Suc Flipflop | 1 | This is the proportion of simulations that stopped early for futility but regressed to success in the final analysis. |
+| Ppn Incon- clusive | 1 | This is the proportion of simulations that did not stop early and were neither successful nor futile in the final analysis. |
+| Mean Duration | 1 | The mean over the simulations of the total duration from the start of enrolment to end of follow up. |
+| Ppn Correct Arm | 1 | The proportion of simulations that met the success criteria and selected (by the target QOI specified on the Study \> Variant tab) one of the arms marked as “should succeed” on the Virtual Subject Response \> Explicitly Defined \> Dose Response tab |
+| Ppn · Incorrect Arm | 1 | The proportion of simulations that met the success criteria and selected (by the target QOI specified on the Study \> Variant tab) one of the arms **not** marked as “should succeed” on the Virtual Subject Response \> Explicitly Defined \> Dose Response tab |
+| Version | 1 | The FACTS version number at the time the simulations were run. |
 
 The columns that are displayed by default in the simulations tab after ordinal simulations have been run. {.caption-top .table}
 
@@ -756,7 +775,16 @@ The columns that are displayed by default in the simulations tab after ordinal s
 
 By right clicking and selecting the allocation columns, a pop-out will appear that provides the following columns.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Execution \> Dropout Rate’, · ‘Virtual Subject Response \> Explicitly Defined \> Dose Response’, · This is the same name as used for the results directory |
+| Mean Subj. | 1 | This is the mean (over the simulations) of the number of subjects recruited in this scenario. |
+| SD Mean Subj. | 1 | This is the standard deviation across the simulations of the number of subjects recruited. |
+| Num Subj. 80% | 1 | This is the eightieth percentile across the simulations of the number of subjects recruited into the trial. |
+| Mean Alloc.: \<Dose\> | One per arm | This is the mean (over the simulations) of the number of subjects recruited into each arm in this scenario. |
+| SD Alloc.: \<Dose\> | One per arm | This is the SD (over the simulations) of the number of subjects allocated to each treatment arm. |
+| PPn Arms Drop: \< Dose\> | One per arm | This is the number of times (over the simulations) that each arm was dropped. |
 
 The allocation columns provided in FACTS output for ordinal trials. {.caption-top .table}
 
@@ -766,25 +794,46 @@ The allocation columns provided in FACTS output for ordinal trials. {.caption-to
 
 In ordinal trials, some elements of the Response results depend on whether the ordinal endpoint has been modeled using the cumulative logistic framework or using independent Dirichlet models.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Execution \> Dropout Rate’, · ’Virtual Subject Response \> Composite, · This is the same name as used for the results directory |
+| Mean Resp: \<Dose\> | One per arm | This is the mean (over the simulations) of the estimate of a quantity summarizing this arm. · For cumulative logistic modeling, this is the log odds ratio (zero for control). · For Dirichlet modeling, this is the expected utility. |
+| SD Resp: \<Dose\> | One per arm | This is the standard deviation (over the simulations) of the estimate of the response on this arm, either the log odds ratio or the expected utility as above. |
+| True Mean Resp: \<Dose\> | One per arm | This is the true value of the expected utility for each under the distribution from which the simulation data was sampled. This is true regardless of how the ordinal endpoint is being modeled. (The “true log odds ratio” is not necessarily a well-defined quantity.) |
 
 Response columns available in FACTS output for ordinal simulations. {.caption-top .table}
 
 ### Observed
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Execution \> Dropout Rate’, · ’Virtual Subject Response \> Composite, · This is the same name as used for the results directory |
+| Mean Complete \<Dose\> | One per arm | This is the mean (over the simulations) of the number of subjects recruited per arm which have had their endpoint observed in this scenario. |
+| Mean Complete Info \<Dose\> | One per arm | This is the mean (over the simulations) of information observed per arm as defined on the Interims tab (Subjects enrolled, Complete Data at Specified Visit, Opportunity to Complete at Specified Visit) in this scenario. |
+| Mean Dropouts \<Dose\> \<Visit\> | One per arm per visit | This is the mean (over the simulations) of dropouts per arm per visit in this scenario. |
 
 Observed columns available in FACTS output for ordinal simulations. {.caption-top .table}
 
 ### Probabilities
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Execution \> Dropout Rate’, · ’Virtual Subject Response \> Composite, · This is the same name as used for the results directory |
+| \<QOI\> \<Dose\> | One per arm per QOI | For each Posterior Probability and Predictive Probability QOI defined on this endpoint, this is the mean over the simulations of the estimate of the probability of the QOI for each dose. (P-value QOIs are reported in the frequentist results table). · For each Target QOI this is the proportion of simulations where this dose was selected at the end of the trial as the dose with the greatest probability of meeting the target condition. · The probability that each dose is the target at the end of a simulated trial is its marginal probability (the number of times it was the dose closest to the target in the MCMC sampling of the analysis at the end of the trial). The target of having the Max response on this endpoint, or some fraction of it (EDq) is always identifiable, so the Ppn(target) for these QOIs will sum to 1 across the doses. · An MED target is not guaranteed to be identifiable, if no dose meets the CSD criteria in any MCMC sample so all doses have a 0 probability of having a response greater than Control (or AC) by the CSD then no dose is the MED. So the sum of each Ppn(target) QOI across the doses should sum to between 0 and 1 inclusive. · Decision QOI’s are not reported here separately, but their component QOIs – the vector of values and target QOI used to select from them are. |
 
 Probabilities columns available in FACTS output for ordinal simulations. {.caption-top .table}
 
 ### Timing
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Status | 1 | This column reports on the current status of simulations: Completed, Running, No Results, Out of date, Error. It is updated automatically. |
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Execution \> Dropout Rate’, · ’Virtual Subject Response \> Composite, · This is the same name as used for the results directory |
+| Early Success Time | 1 | This is the average time to an early decision to stop for success (i.e. the time excluding final follow up) over those simulations that did decide early to stop for success. |
+| Mean LP Enrolled | 1 | This is the mean, in weeks (over the simulations) of the duration of the trial from first patient first visit to Last Patient First Visit (i.e. the duration of accrual). |
 
 Timing columns available in FACTS output for ordinal simulations. {.caption-top .table}
 
@@ -794,7 +843,10 @@ Timing columns available in FACTS output for ordinal simulations. {.caption-top 
 
 NOTE: we do not yet have a “Model Parameters” option for ordinal available under the “Show More Columns” button.
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Scenario | 1 | This column gives the name of the scenario, concatenating together the profile names from the following tabs: · ‘Execution \> Accrual’, · ‘Execution \> Dropout Rate’, · ’Virtual Subject Response \> Composite, · This is the same name as used for the results directory |
+|  |  |  |
 
 Model Parameters columns available in FACTS output for ordinal simulations. {.caption-top .table}
 
@@ -834,7 +886,46 @@ The second line is a header line, starting with a ‘#’, containing the follow
 
 ## Ordinal
 
-[TABLE]
+| Column Title | Number of columns | Description |
+|----|----|----|
+| Project | 1 | The name of the facts file |
+| Scenario | 1 | The name of the scenario |
+| Timestamp | 1 | The time the simulations were run |
+| Version | 1 | The version of FACTS that was used to run the simulations |
+| NSim | 1 | The number of simulation run. |
+| Random Number Seed | 1 | The random number seed |
+| No. Subj | 1 | The mean, over the simulations, of the total number of subjects recruited in the trial. |
+| SE Subj. | 1 | The standard error of the total number of subjects recruited into the trials. |
+| No.Subj 80%ile | 1 | The 80^(th) percentile, over the simulations, of the total number of subjects recruited in the trial. |
+| Ppn Overall Success | 1 | The proportion of simulations that were successful (P(ES) + P(LS)) |
+| Ppn Overall Futility | 1 | The proportion of simulations that were futile (P(EF) + P(LF)) |
+| P(ES) | 1 | The proportion of simulations that stopped early for success. |
+| P(LS) | 1 | The proportion of simulations that did not stop early, and were successful on final evaluation. |
+| P(LF) | 1 | The proportion of simulations that did not stop early, and were futile on final evaluation. |
+| P(EF) | 1 | The proportion of simulations that stopped early for futility. |
+| SFFF | 1 | The proportion of simulations that stopped early for success, but at final analysis were futile (Success-Futility ‘flip-flops’). |
+| FSFF | 1 | The proportion of simulations that stopped early for futility, but at final analysis were successful (Futility- Success ‘flip-flops’). |
+| Undec. | 1 | The proportion of simulations that did not stop early, and met neither the success or futility final evaluation criteria and hence are counted as ‘undecided’. |
+| Early Success Time | 1 | This is the mean early decision time (over the simulations stopped early for success), it is the time from the start of the trial to the interim where early success was declared. It does not include the subsequent follow up time. |
+| Mean Alloc \<Dose\> | D | The mean (over the simulations) of the number of subjects allocated to each treatment arm. |
+| SE Alloc \<Dose\> | D | The standard error (over the simulations) of the number of subjects allocated to each treatment arm. |
+| Mean Resp · \<Dose\> | D | The mean, over the simulations, of the estimates of a quantity summarizing this arm. For cumulative logistic modeling, this is the log odds ratio (zero for control). For Dirichlet modeling, this is the expected utility. |
+| SE Resp \<Dose\> | D | The standard error, over the simulations, of the estimate of response on each arm arm, either the log odds ratio or the expected utility as above. |
+| log OR (lower CI) \<Dose\> | D | The lower limit of a 95% credible interval for the log odds ratio (zero for control). Available only when using cumulative logistic modeling. |
+| log OR (upper CI) \<Dose\> | D | The upper limit of a 95% credible interval for the log odds ratio (zero for control). Available only when using cumulative logistic modeling. |
+| True Mean resp \<Dose\> | D | The true expected utility for each treatment arm used when sampling the simulated subject responses. Note that in general the true log-odds ratio is undefined. |
+| True SD resp \<Dose\> | D | The true SD of utility for each treatment arm used when sampling the simulated subject responses. |
+| Mean Raw Response \<Dose\> | D | The average, over simulations, of the mean observed utility for each arm. |
+| SE Mean Raw Response \<\<Dose\> | D | The standard error, over simulations, of the mean observed utility for each arm. |
+| Mean Complete \<Dose\> | D | The mean number of completers for each treatment arm |
+| Mean Complete Info \<Dose\> | D | The mean number of complete information (as specified by the interim information type on the Interims tab) for each treatment arm |
+| No .Dropouts \<Dose\> \<Visit\> | D\*V | The mean number of dropouts per treatment arm per visit |
+| Mean Duration | 1 | The mean, over the simulations, of the overall duration of the trials, from first person first visit, to last person last visit. |
+| Ppn Arms Dropped \<Dose\> | D | The proportion of the simulations in which each arm was dropped. These will be zero if arm dropping is not selected as the means of adaptive allocation. |
+| Mean LPFV time | 1 | The mean, over the simulations, of the accrual period of the trials, from first person first visit, to last person first visit (LPFV). |
+| Ppn Correct Arm | 1 | The proportion of the simulations where the correct arm has been selected, where an arm is deemed “correct” based on whether it was marked as “Should Succeed” for the relevant scenario on the VSR tab. |
+| Ppn Incorrect Arm | 1 | The proportion of the simulations where the incorrect correct arm has been selected, where an arm is deemed “incorrect” based on whether it wasn’t marked as “Should Succeed” for the relevant scenario on the VSR tab. |
+| QOI Columns |  | See next section. |
 
 Contents of the summary.csv file for ordinal simulations. {.caption-top .table}
 
@@ -866,7 +957,37 @@ Most of the columns are common to the two file types, but the weeks file does no
 
 ## Ordinal
 
-[TABLE]
+| Column Title | Number of columns | In simulations file | In weeks file | Description |
+|----|----|----|----|----|
+| \# Weeks (Duration) | 1 |  | ✔ | The week of the analysis |
+| \#Sim | 1 | ✔ |  | The number of the simulation. |
+| Random Number Seed | 1 | ✔ | ✔ | Base random number seed. |
+| LastInterim | 1 | ✔ |  | The index of the last interim performed the index of the interim immediately before the final interim (index ‘999’). Note this is not necessarily the interim when the trial stopped if the design includes follow-up after stopping. |
+| \#Subjects | 1 | ✔ | ✔ | The number of subjects recruited in the simulation. |
+| Outcome | 1 | ✔ | ✔ | A flag categorizing final study outcome: 1 = Early success 2 = Late success 3 = Late futility 4 = Early futility 5 = Success to futility flip-flop 6 = Futility to success flip-flop 7 = Inconclusive |
+| Early Success Time | 1 | ✔ | ✔ | This is the time to the early success decision (-9999 if there was no early success decision). The from the start of the trial to the interim where the early success conditions were first met. It does not include the subsequent follow up time. |
+| Alloc \<Dose\> | D | ✔ | ✔ | The number of subjects allocated to each arm. |
+| Pr(Alloc) \<Dose\> | D | ✔ | ✔ | The probability of allocation to the different arms following the interim. |
+| Mean resp \<Dose\> | D | ✔ | ✔ | The posterior mean of a quantity summarizing each treatment arm. If cumulative logistic modeling is used, this is the log odds ratio. If Dirichlet modeling is used, this is the expected utility. |
+| SD Mean resp \<Dose\> | D | ✔ | ✔ | The standard deviation of the estimate of either the log odds ratio or the expected utility (see above) for each treatment arm. |
+| log OR (lower CI) \<Dose\> | D | ✔ | ✔ | The lower bound of a 95% credible interval for the log odds ratio, only when cumulative logistic modeling is used. |
+| log OR (upper CI) \<Dose\> | D | ✔ | ✔ | The upper bound of a 95% credible interval for the log odds ratio, only when cumulative logistic modeling is used. |
+| True Mean resp \<Dose\> | D | ✔ | ✔ | The true expected utility of each treatment arm for this simulation. |
+| True SD resp \<Dose\> | D | ✔ | ✔ | The true SD of the utility of each treatment arm for this simulation |
+| Mean Raw Response \<Dose\> | D | ✔ | ✔ | The observed mean utility on each treatment arm (unadjusted by any modeling). |
+| SE Mean Raw Response \<Dose\> | D | ✔ | ✔ | The SE of the estimate of the expected utility on each dose. |
+| Complete \<Dose\> | D | ✔ | ✔ | The number of completed subjects on each treatment arm at the time of the analysis. |
+| Complete Information \<Dose\> | D | ✔ | ✔ | The number of subject who count as complete for the purposes of timing interims – whether complete or opportunity to complete and at which visit is as defined on the Interims tab. If interims are by enrolment then CompleteInformation is the number of subjects that have completed – final endpoint data is available. |
+| \#Dropouts \<Dose\> \<Visit\> | D \* V | ✔ | ✔ | The number of subjects dropped out on each treatment arm and each visit. |
+| Mean P \<Dose\> \<Outcome\> | D \* K | ✔ | ✔ | Posterior mean of the probability of each ordinal outcome for each arm |
+| SD P \<Dose\> \<Outcome\> | D \* K | ✔ | ✔ | Posterior SD of the probability of each ordinal outcome for each arm |
+| N \<Dose\> \<Outcome\> | D \* K | ✔ | ✔ | Number of subjects for each treatment arm and outcome. |
+| DR Param \<Param\> | 10 | ✔ | ✔ | The estimate of the mean value of each of the response model parameters. The response models require up to 10 parameters, most less. The model parameters are labeled $\alpha_1$, $\alpha_2$, .. the subscripts corresponding to the index “\<Param\>”. |
+| Sd DR Param \<Param\> | 4 | ✔ | ✔ | The standard deviation of the estimate of the mean value of the corresponding response model parameter. |
+| Duration | 1 | ✔ | ✔ | The time in weeks to the analysis shown. |
+| Arm Drop Time \<Dose\> | D | ✔ | ✔ | For each treatment arm, the time in weeks when it was decided to drop the arm. |
+| LPFV | 1 | ✔ | ✔ | The time in weeks to the last patient first visit. |
+| QOI Columns |  | ✔ | ✔ | See next section. |
 
 ### QOI Columns
 

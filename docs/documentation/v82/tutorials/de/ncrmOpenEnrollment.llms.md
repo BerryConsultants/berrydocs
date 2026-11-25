@@ -135,7 +135,12 @@ A screenshot of a social media post Description automatically generated
 
 We can check our overdose control limit and prior using the analysis tab and checking a number of situations to ensure that together they allow escalation when we would wish it. Here we just show 4:
 
-[TABLE]
+| Data Analyzed · \<Dose\>: \<Tox\>/\<Obs\> | Fitted Toxicity | Posterior probability of DLT rate in bands | Next: |
+|----|----|----|----|
+| 500mg: 0/3 | ![](ncrmOpenEnrollmentattachments/media/image13.png) | ![](ncrmOpenEnrollmentattachments/media/image14.png) | We can escalate to 7500mg, limited by the escalation rules. Keeping to Pr(Tox \> 0.3) \< 0.25 would allow us to escalate to 1000mg |
+| 500mg: 0/3 · 750mg: 0/3 | ![](ncrmOpenEnrollmentattachments/media/image15.png) | ![](ncrmOpenEnrollmentattachments/media/image16.png) | We can escalate to 1000mg, limited by the escalation rules. Keeping to Pr(Tox \> 0.3) \< 0.25 would allow us to escalate to 1500mg |
+| 500mg: 0/3 · 750mg: 0/3 · 1000mg: 1/3 | ![](ncrmOpenEnrollmentattachments/media/image17.png) | ![](ncrmOpenEnrollmentattachments/media/image18.png) | We must re-dose at 1000mg. We are limited from preventing further to remain within Pr(Tox \> 0.3) \< 0.25. At 1000mg Pr(Tox \> 0.3) \< 0.2 we don’t have to de-escalate. |
+| 500mg: 0/3 · 750mg: 0/3 · 1000mg: 1/6 | ![](ncrmOpenEnrollmentattachments/media/image19.png) | ![](ncrmOpenEnrollmentattachments/media/image20.png) | We can escalate to 1250mg, which is the MTD and has Pr(Tox \> 0.3) is just below 0.2 |
 
 ## 3.7 Simulation
 
